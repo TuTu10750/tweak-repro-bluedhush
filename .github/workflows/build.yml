@@ -1,0 +1,66 @@
+name: build
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          brew install ldid xz make 2>/dev/null || brew install ldid xz
+          echo "--- clang ---"
+          clang --version | head -3
+
+      - name: Fetch Theos + iPhoneOS SDKs
+        run: |
+          export THEOS=$HOME/theos
+          git clone --recursive --depth 1 https://github.com/theos/theos.git "$THEOS"
+          mkdir -p "$THEOS/sdks"
+          curl -fsSL https://github.com/theos/sdks/archive/master.tar.gz -o /tmp/sdks.tar.gz
+          tar xzf /tmp/sdks.tar.gz -C /tmp
+          # 只搬运 iOS SDK，避免占用 runner 空间
+          for d in /tmp/sdks-master/iPhoneOS*.sdk; do
+            cp -R "$d" "$THEOS/sdks/" 2>/dev/null || true
+          done
+          ls "$THEOS/sdks"
+
+      - name: Build tweak
+        env:
+          THEOS: /Users/runner/theos
+          THEOS_MAKE_PATH: /Users/runner/theos/makefiles
+        run: |
+          set -o pipefail
+          make clean || true
+          make FINALPACKAGE=1 2>&1 | tee build.log
+          echo "--- artifacts ---"
+          find . -name '*.dylib' -o -name '*.deb' | sort
+
+      - name: Verify dylib arch
+        run: |
+          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
+          echo "dylib=$DYLIB"
+          lipo -info "$DYLIB" || file "$DYLIB"
+
+      - name: Upload dylib artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BluedHushREA-dylib
+          path: |
+            .theos/obj/**/BluedHushREA.dylib
+            packages/*.deb
+          if-no-files-found: warn
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore

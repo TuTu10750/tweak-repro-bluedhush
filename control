@@ -1,0 +1,9 @@
+Package: com.rea.bluedhush
+Name: BluedHushREA
+Version: 0.1.0
+Architecture: iphoneos-arm
+Description: Blued 7.50.3 (com.danlan.xiaolan) 行为复现件 —— 由 BluedHush_5.19.dylib 静态逆向结果重写
+Depends: mobilesubstrate
+Maintainer: REA
+Author: REA
+Section: Tweaks

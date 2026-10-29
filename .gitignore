@@ -1,0 +1,6 @@
+﻿.theos/
+packages/
+build.log
+*.o
+*.dSYM/
+.DS_Store
