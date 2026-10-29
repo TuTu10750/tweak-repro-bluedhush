@@ -11,6 +11,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 #define REA_SWITCH_PREFIX @"switch_"
 
@@ -174,16 +175,23 @@ static inline void REALog(NSString *fmt, ...) {
     %orig;
 }
 
+// 注意: Logos 的 %hook 内没有 super 上下文，强制显隐改为在布局 Hook 里
+// 通过 objc_msgSendSuper 直接调父类实现，避免无限递归。
 - (void)setHidden:(BOOL)hidden {
-    if (REAFlag(@"switch_private_photo")) {
-        [super setHidden:NO];
+    if (REAFlag(@"switch_private_photo") && hidden) {
+        struct objc_super sp = { self, class_getSuperclass(object_getClass(self)) };
+        ((void (*)(struct objc_super *, SEL, BOOL))objc_msgSendSuper)(&sp, @selector(setHidden:), NO);
         return;
     }
     %orig;
 }
 
 - (void)setAlpha:(CGFloat)alpha {
-    if (REAFlag(@"switch_private_photo")) { [super setAlpha:1.0]; return; }
+    if (REAFlag(@"switch_private_photo") && alpha < 0.99) {
+        struct objc_super sp = { self, class_getSuperclass(object_getClass(self)) };
+        ((void (*)(struct objc_super *, SEL, CGFloat))objc_msgSendSuper)(&sp, @selector(setAlpha:), 1.0);
+        return;
+    }
     %orig;
 }
 
