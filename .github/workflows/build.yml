@@ -8,6 +8,11 @@ on:
 jobs:
   build:
     runs-on: macos-14
+
+    env:
+      THEOS: /Users/runner/theos
+      THEOS_MAKE_PATH: /Users/runner/theos/makefiles
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,83 +20,125 @@ jobs:
       - name: Install toolchain
         run: |
           brew install ldid xz make 2>/dev/null || brew install ldid xz
-          echo "--- clang ---"
           clang --version | head -3
 
       - name: Fetch Theos + iPhoneOS SDKs
         run: |
-          export THEOS=$HOME/theos
           git clone --recursive --depth 1 https://github.com/theos/theos.git "$THEOS"
           mkdir -p "$THEOS/sdks"
           curl -fsSL https://github.com/theos/sdks/archive/master.tar.gz -o /tmp/sdks.tar.gz
           tar xzf /tmp/sdks.tar.gz -C /tmp
-          # 只搬运 iOS SDK，避免占用 runner 空间
           for d in /tmp/sdks-master/iPhoneOS*.sdk; do
             cp -R "$d" "$THEOS/sdks/" 2>/dev/null || true
           done
           ls "$THEOS/sdks"
 
       - name: Build tweak
-        env:
-          THEOS: /Users/runner/theos
-          THEOS_MAKE_PATH: /Users/runner/theos/makefiles
         run: |
           set -o pipefail
           make clean || true
           make FINALPACKAGE=1 2>&1 | tee build.log
-          echo "--- artifacts ---"
-          find . -name '*.dylib' -o -name '*.deb' | sort
+          echo "--- raw outputs ---"
+          find .theos/obj -name '*.dylib' 2>/dev/null | sort
+          ls packages 2>/dev/null || true
 
-      - name: Verify dylib arch
+      # ================= 硬门禁 =================
+      - name: Gate - arch + no substrate + no rootful path
         run: |
-          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
+          DYLIB=$(find .theos/obj -name 'BluedHushREA.dylib' | head -1)
           echo "dylib=$DYLIB"
-          lipo -info "$DYLIB" || file "$DYLIB"
-
-      # ==== 硬门禁：Rootless 设备只能加载 @rpath，绝不能出现 rootful 绝对路径 ====
-      - name: Gate - no rootful absolute paths, no CydiaSubstrate
-        run: |
-          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
+          lipo -info "$DYLIB"
           echo "== otool -L =="
           otool -L "$DYLIB" | tee deps.txt
-          echo "== install_name / rpaths =="
+          echo "== install_name =="
           otool -D "$DYLIB" || true
-          otool -l "$DYLIB" | grep -A2 LC_RPATH || echo "(no LC_RPATH)"
+          echo "== LC_RPATH =="
+          otool -l "$DYLIB" | grep -A2 LC_RPATH || echo "(none)"
 
-          if grep -q 'CydiaSubstrate' deps.txt; then
-            echo "::error::still links CydiaSubstrate -> rootless devices will silently skip this dylib"
+          if grep -qi 'CydiaSubstrate' deps.txt; then
+            echo "::error::still links CydiaSubstrate -> non-jailbroken / LiveContainer load will fail"
             exit 1
           fi
           if grep -qE '/Library/(MobileSubstrate|Frameworks)' deps.txt; then
-            echo "::error::rootful absolute path in dependencies -> rootless devices cannot resolve it"
+            echo "::error::rootful absolute dependency path -> cannot resolve outside jailbreak"
             exit 1
           fi
-          echo "OK: dependency list is rootless-safe"
+          echo "OK: dependency list is jailbreak-free"
 
-      - name: Gate - objc-free substrate symbols
+      - name: Gate - no Logos / substrate symbols
         run: |
-          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
-          if nm -u "$DYLIB" 2>/dev/null | grep -qi 'MSHookMessageEx\|MSHookIvar\|MSHookFunction'; then
-            echo "::error::binary still references MSHook* symbols"
-            exit 1
+          DYLIB=$(find .theos/obj -name 'BluedHushREA.dylib' | head -1)
+          echo "== undefined MSHook* =="
+          if nm -u "$DYLIB" | grep -i 'MSHook'; then
+            echo "::error::binary still references MSHook*"; exit 1
+          else
+            echo "OK: no MSHook* symbol"
           fi
-          echo "OK: no MSHook* symbol"
-          echo "== v3 strings =="
-          strings -a "$DYLIB" | grep -E 'REA-Test|msgId shim|hooks installed|stage ' | sort -u
+          echo "== Logos symbols =="
+          if nm "$DYLIB" | grep -i 'logos'; then
+            echo "::error::Logos runtime symbols present"; exit 1
+          else
+            echo "OK: no Logos symbols"
+          fi
+          echo "== must-have strings (ASCII) =="
+          strings -a "$DYLIB" | grep -E 'REA-Test|msgId shim|hooks installed ok|premain|ctor-first' | sort -u
+          if strings -a "$DYLIB" | grep -q 'REA-Test'; then echo "OK: REA-Test tag present"; else echo "::error::REA-Test tag missing"; exit 1; fi
+          echo "OK: gates passed"
+
+      # ================= 打包（关键：确保 zip 不为空） =================
+      - name: Stage dist (dylib + plist + notes)
+        if: always()
+        run: |
+          rm -rf dist && mkdir -p dist
+          FAT=$(find .theos/obj -maxdepth 3 -name 'BluedHushREA.dylib' | head -1)
+          echo "FAT=$FAT"
+          if [ -n "$FAT" ]; then cp "$FAT" dist/BluedHushREA.dylib; fi
+          for arch in arm64 arm64e; do
+            f=".theos/obj/$arch/BluedHushREA.dylib"
+            if [ -f "$f" ]; then mkdir -p "dist/$arch"; cp "$f" "dist/$arch/"; fi
+          done
+          cp BluedHushREA.plist dist/ || true
+          for d in packages/*.deb; do [ -f "$d" ] && cp "$d" dist/; done
+          cat > dist/INSTALL.txt <<'EOF'
+BluedHushREA v4  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
+
+文件说明
+  BluedHushREA.dylib        FAT 双切片（arm64 + arm64e），非越狱/自签/LiveContainer 用这个
+  arm64/BluedHushREA.dylib  仅 arm64（老设备 A11 及以前）
+  arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后，绝大多数机器）
+  BluedHushREA.plist        substrate 过滤器（仅越狱环境需要，非越狱可忽略）
+
+非越狱 + Esign / Sideloadly 注入
+  1. 用 Esign 打开已重签的 Blued IPA -> 「注入/插入动态库」选择 BluedHushREA.dylib
+  2. 注入路径填 @executable_path/Frameworks/BluedHushREA.dylib
+  3. 重新签名（证书 + 描述文件必须与主 App 一致）后安装
+  4. 日志：Console.app 过滤 "REA-Test"，或 LiveContainer 内查看 stdout
+     第一行应为：[REA-Test] Runtime 注入成功!
+
+LiveContainer 特别说明
+  LiveContainer 里 App 运行在宿主进程内，dyld 注入方式仍然有效；
+  但 substrate 过滤器不生效（没有 substrate 运行时），所以 plist 只对越狱环境有意义。
+  若在 LiveContainer 里仍然完全没有日志 => dylib 没被 dyld 加载，检查注入路径与签名。
+EOF
+          echo "--- dist tree ---"
+          ls -lR dist
+          test -s dist/BluedHushREA.dylib && echo "dist OK: $(wc -c < dist/BluedHushREA.dylib) bytes"
 
       - name: Upload dylib artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: BluedHushREA-dylib
-          path: |
-            .theos/obj/**/BluedHushREA.dylib
-            packages/*.deb
-          if-no-files-found: warn
+          path: dist/**
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload build log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: build-log
-          path: build.log
+          path: |
+            build.log
+            deps.txt
           if-no-files-found: ignore

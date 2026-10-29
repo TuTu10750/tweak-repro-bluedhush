@@ -1,1 +1,15 @@
-{ Filter = { Bundles = ( "com.danlan.xiaolan" ); }; }
+{
+  Filter = {
+    Bundles = (
+      "com.danlan.xiaolan",
+      "com.kdt.livecontainer",
+      "com.kdt.livecontainer.ios",
+      "com.rileytestut.AltStore.LiveContainer"
+    );
+    Executables = (
+      "Blued",
+      "LiveContainer",
+      "LiveContainerTrampoline"
+    );
+  };
+}

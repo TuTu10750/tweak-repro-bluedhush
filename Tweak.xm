@@ -642,6 +642,8 @@ static void REABoot(NSString *stage) {
         return;
     }
     done = YES;
+    // 第一行日志：只要这一行进控制台，就证明 dylib 已被 dyld 正常加载并跑到了初始化
+    NSLog(@"[REA-Test] Runtime 注入成功!");
     @autoreleasepool {
         @try {
             REALog(@"---- stage %@ | pid=%d uid=%d ----", stage, getpid(), getuid());
