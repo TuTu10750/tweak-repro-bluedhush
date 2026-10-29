@@ -16,12 +16,15 @@ jobs:
         run: |
           set -x
           sudo apt-get update -qq
-          sudo apt-get install -y -qq clang lld ld64 ldid make git curl xz-utils file fakeroot dpkg-dev libtinfo5 || \
-          sudo apt-get install -y -qq clang lld ld64 ldid make git curl xz-utils file fakeroot dpkg-dev
+          # Ubuntu 没有 ld64 / ldid 包：lld 自带 Mach-O 链接器 ld64.lld，ldid 用 Procursus 预编译二进制
+          sudo apt-get install -y -qq clang lld make git curl xz-utils file fakeroot dpkg-dev zlib1g-dev libssl-dev
+          sudo ln -sf "$(command -v ld64.lld)" /usr/local/bin/ld64
+          curl -fsSL -o /tmp/ldid \
+            https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64
+          sudo install -m755 /tmp/ldid /usr/local/bin/ldid
           clang --version | head -2
-          which ld64 || true
-          which ldid || true
-          ldid -v 2>/dev/null | head -2 || true
+          which ld64 && ld64 --version 2>&1 | head -2 || true
+          which ldid && ldid -h 2>&1 | head -2 || true
 
       - name: Fetch Theos + iPhoneOS SDKs
         run: |
