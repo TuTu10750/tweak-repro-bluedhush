@@ -1,0 +1,70 @@
+name: build-linux
+
+# 备用构建通道：GitHub 的 macOS 跑者排队过久时使用。
+# 只在手动触发时运行，不干扰 build.yml 的 macOS 队列。
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          set -x
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang lld ld64 ldid make git curl xz-utils file fakeroot dpkg-dev libtinfo5 || \
+          sudo apt-get install -y -qq clang lld ld64 ldid make git curl xz-utils file fakeroot dpkg-dev
+          clang --version | head -2
+          which ld64 || true
+          which ldid || true
+          ldid -v 2>/dev/null | head -2 || true
+
+      - name: Fetch Theos + iPhoneOS SDKs
+        run: |
+          export THEOS=$HOME/theos
+          git clone --recursive --depth 1 https://github.com/theos/theos.git "$THEOS"
+          mkdir -p "$THEOS/sdks"
+          curl -fsSL https://github.com/theos/sdks/archive/master.tar.gz -o /tmp/sdks.tar.gz
+          tar xzf /tmp/sdks.tar.gz -C /tmp
+          for d in /tmp/sdks-master/iPhoneOS*.sdk; do
+            cp -R "$d" "$THEOS/sdks/" 2>/dev/null || true
+          done
+          ls "$THEOS/sdks"
+
+      - name: Build tweak
+        env:
+          THEOS: /home/runner/theos
+          THEOS_MAKE_PATH: /home/runner/theos/makefiles
+        run: |
+          set -o pipefail
+          make clean || true
+          make FINALPACKAGE=1 DEBUG=0 2>&1 | tee build.log
+          echo "--- artifacts ---"
+          find . \( -name '*.dylib' -o -name '*.deb' \) | sort
+
+      - name: Verify dylib arch
+        run: |
+          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
+          echo "dylib=$DYLIB"
+          file "$DYLIB" || true
+
+      - name: Upload dylib artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BluedHushREA-dylib-linux
+          path: |
+            .theos/obj/**/BluedHushREA.dylib
+            packages/*.deb
+          if-no-files-found: warn
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log-linux
+          path: build.log
+          if-no-files-found: ignore
