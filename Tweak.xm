@@ -1,6 +1,15 @@
-// BluedHushREA v3 —— 自研 Hook 引擎版（彻底去掉 CydiaSubstrate 硬依赖）
+// BluedHushREA v4 —— 纯 ObjC Runtime Hook 版（零 Logos、零 CydiaSubstrate、面向非越狱自签 + LiveContainer）
 // 目标: com.danlan.xiaolan (Blued 7.50.3) / iOS 14.0+ / arm64 + arm64e
 //
+// ============================================================================
+// v4 相对 v3 的变更（用户实测环境：未越狱 / 个人自签 Esign / 主要在 LiveContainer 内运行）
+//   a) 初始化第一行就打印 NSLog(@"[REA-Test] Runtime 注入成功!")，用它判定
+//      "dylib 到底有没有被 dyld 加载"，与"Hook 有没有装上"两件事分开归因。
+//   b) 全文件不实现任何越狱检测 / 反调试 / ptrace 探测；只把 App 自带的反越狱方法
+//      强制返回 NO（纯 bypass，不做环境反查），避免在 LiveContainer 里被自家逻辑判死。
+//   c) plist 过滤同时列出 App 与 LiveContainer 的 Bundle/Executable 名。
+//   d) workflow 用 dist 暂存 + if-no-files-found: error，产物 zip 不可能再为空。
+
 // ============================================================================
 // v3 修复的核心问题（v2 真机"无崩溃也无功能"的根因，静态可证）
 //

@@ -100,26 +100,26 @@ jobs:
           cp BluedHushREA.plist dist/ || true
           for d in packages/*.deb; do [ -f "$d" ] && cp "$d" dist/; done
           cat > dist/INSTALL.txt <<'EOF'
-BluedHushREA v4  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
+          BluedHushREA v4  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
 
-文件说明
-  BluedHushREA.dylib        FAT 双切片（arm64 + arm64e），非越狱/自签/LiveContainer 用这个
-  arm64/BluedHushREA.dylib  仅 arm64（老设备 A11 及以前）
-  arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后，绝大多数机器）
-  BluedHushREA.plist        substrate 过滤器（仅越狱环境需要，非越狱可忽略）
+          文件说明
+            BluedHushREA.dylib        FAT 双切片（arm64 + arm64e），非越狱/自签/LiveContainer 用这个
+            arm64/BluedHushREA.dylib  仅 arm64（老设备 A11 及以前）
+            arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后，绝大多数机器）
+            BluedHushREA.plist        substrate 过滤器（仅越狱环境需要，非越狱可忽略）
 
-非越狱 + Esign / Sideloadly 注入
-  1. 用 Esign 打开已重签的 Blued IPA -> 「注入/插入动态库」选择 BluedHushREA.dylib
-  2. 注入路径填 @executable_path/Frameworks/BluedHushREA.dylib
-  3. 重新签名（证书 + 描述文件必须与主 App 一致）后安装
-  4. 日志：Console.app 过滤 "REA-Test"，或 LiveContainer 内查看 stdout
-     第一行应为：[REA-Test] Runtime 注入成功!
+          非越狱 + Esign / Sideloadly 注入
+            1. 用 Esign 打开已重签的 Blued IPA -> 「注入/插入动态库」选择 BluedHushREA.dylib
+            2. 注入路径填 @executable_path/Frameworks/BluedHushREA.dylib
+            3. 重新签名（证书 + 描述文件必须与主 App 一致）后安装
+            4. 日志：Console.app 过滤 "REA-Test"，或 LiveContainer 内查看 stdout
+               第一行应为：[REA-Test] Runtime 注入成功!
 
-LiveContainer 特别说明
-  LiveContainer 里 App 运行在宿主进程内，dyld 注入方式仍然有效；
-  但 substrate 过滤器不生效（没有 substrate 运行时），所以 plist 只对越狱环境有意义。
-  若在 LiveContainer 里仍然完全没有日志 => dylib 没被 dyld 加载，检查注入路径与签名。
-EOF
+          LiveContainer 特别说明
+            LiveContainer 里 App 运行在宿主进程内，dyld 注入方式仍然有效；
+            但 substrate 过滤器不生效（没有 substrate 运行时），所以 plist 只对越狱环境有意义。
+            若在 LiveContainer 里仍然完全没有日志 => dylib 没被 dyld 加载，检查注入路径与签名。
+          EOF
           echo "--- dist tree ---"
           ls -lR dist
           test -s dist/BluedHushREA.dylib && echo "dist OK: $(wc -c < dist/BluedHushREA.dylib) bytes"
