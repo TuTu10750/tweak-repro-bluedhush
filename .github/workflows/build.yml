@@ -59,7 +59,7 @@ jobs:
             echo "::error::still links CydiaSubstrate -> non-jailbroken / LiveContainer load will fail"
             exit 1
           fi
-          if grep -qE '/Library/(MobileSubstrate|Frameworks)' deps.txt; then
+          if grep -qE '^[[:space:]]*/Library/(MobileSubstrate|Frameworks)/' deps.txt; then
             echo "::error::rootful absolute dependency path -> cannot resolve outside jailbreak"
             exit 1
           fi
