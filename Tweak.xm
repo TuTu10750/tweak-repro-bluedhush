@@ -103,41 +103,69 @@ static void REALog(NSString *fmt, ...) {
 
 static int gREAOK = 0, gREAMiss = 0;
 
+// 幂等记账：LiveContainer 里 App 主二进制是 dlopen 进来的，某些类可能晚于本 dylib 的
+// 初始化才注册。因此允许"延迟重试安装"：已装过的 (类,选) 直接返回原 IMP，
+// 绝不会把我们的 IMP 当成 orig 造成无限递归。
+static NSMutableDictionary<NSString *, id> *gREAOrig;   // key -> NSValue(IMP)
+static NSMutableSet<NSString *>           *gREADone;
+static NSObject                           *gREALock;
+
+static void REARegistryInit(void) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        gREAOrig = [NSMutableDictionary dictionary];
+        gREADone = [NSMutableSet set];
+        gREALock = [[NSObject alloc] init];
+    });
+}
+
+static NSString *REAKey(Class cls, const char *selName) {
+    return [NSString stringWithFormat:@"%s|%s", class_getName(cls), selName];
+}
+
 // 语义与 MSHookMessageEx 一致：
 //   · 类自己拥有该方法 → method_setImplementation
 //   · 只有父类实现     → class_addMethod 到本类（只影响本类，orig 指向父类实现）
 // 返回原实现；调用 orig(self, _cmd, ...) 走原逻辑，不会递归。
 static IMP REASwap(Class cls, const char *selName, IMP newImp) {
     if (!cls || !selName) { gREAMiss++; return NULL; }
+    REARegistryInit();
     SEL sel = sel_registerName(selName);
+    NSString *key = REAKey(cls, selName);
 
-    Method own = NULL;
-    unsigned int n = 0;
-    Method *list = class_copyMethodList(cls, &n);
-    if (list) {
-        for (unsigned int i = 0; i < n; i++) {
-            if (method_getName(list[i]) == sel) { own = list[i]; break; }
+    @synchronized (gREALock) {
+        id cached = gREAOrig[key];
+        if (cached) return (IMP)[cached pointerValue];   // 已装过：返还原 IMP，不重复替换
+
+        Method own = NULL;
+        unsigned int n = 0;
+        Method *list = class_copyMethodList(cls, &n);
+        if (list) {
+            for (unsigned int i = 0; i < n; i++) {
+                if (method_getName(list[i]) == sel) { own = list[i]; break; }
+            }
+            free(list);
         }
-        free(list);
-    }
 
-    if (own) {
-        IMP old = method_getImplementation(own);
-        method_setImplementation(own, newImp);
+        IMP old = NULL;
+        if (own) {
+            old = method_getImplementation(own);
+            method_setImplementation(own, newImp);
+        } else {
+            Method inh = class_getInstanceMethod(cls, sel);
+            if (!inh) {
+                gREAMiss++;
+                REALog(@"hook MISS %s %s (方法不存在)", class_getName(cls), selName);
+                return NULL;
+            }
+            old = method_getImplementation(inh);
+            class_addMethod(cls, sel, newImp, method_getTypeEncoding(inh));
+        }
         gREAOK++;
+        [gREADone addObject:key];
+        gREAOrig[key] = [NSValue valueWithPointer:(void *)old];
         return old;
     }
-
-    Method inh = class_getInstanceMethod(cls, sel);
-    if (!inh) {
-        gREAMiss++;
-        REALog(@"hook MISS %s %s (方法不存在)", class_getName(cls), selName);
-        return NULL;
-    }
-    IMP old = method_getImplementation(inh);
-    class_addMethod(cls, sel, newImp, method_getTypeEncoding(inh));
-    gREAOK++;
-    return old;
 }
 
 #define REAHOOK(clsName, selStr, fn, origVar) \
@@ -676,6 +704,27 @@ static void REABoot(NSString *stage) {
                    (unsigned long)alive.count, (unsigned long)probe.count,
                    [alive componentsJoinedByString:@","]);
             NSLog(@"[REA-Test] 注入成功");
+
+            // 延迟重试：LiveContainer 里宿主二进制是 dlopen 进来的，个别类可能晚于本 dylib
+            // 的初始化才注册。REASwap 有幂等记账，重装只会补上之前 MISS 的项，不会递归。
+            static const int64_t delays[3] = { 1, 3, 8 };
+            for (int i = 0; i < 3; i++) {
+                int64_t d = delays[i];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, d * NSEC_PER_SEC),
+                               dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+                    @try {
+                        int beforeOK = gREAOK;
+                        gREAOK = 0; gREAMiss = 0;
+                        REAInstallAllShims();
+                        REAInstallHooks();
+                        REALog(@"retry +%llds: newly hooked=%d miss=%d (total=%d)",
+                               (long long)d, gREAOK, gREAMiss, beforeOK + gREAOK);
+                        if (gREAOK > 0) NSLog(@"[REA-Test] 注入成功");
+                    } @catch (NSException *e) {
+                        REALog(@"retry exception swallowed: %@ / %@", e.name, e.reason);
+                    }
+                });
+            }
         } @catch (NSException *e) {
             REALog(@"BOOT EXCEPTION swallowed: %@ / %@", e.name, e.reason);
         }
