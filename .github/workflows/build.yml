@@ -48,6 +48,37 @@ jobs:
           echo "dylib=$DYLIB"
           lipo -info "$DYLIB" || file "$DYLIB"
 
+      # ==== 硬门禁：Rootless 设备只能加载 @rpath，绝不能出现 rootful 绝对路径 ====
+      - name: Gate - no rootful absolute paths, no CydiaSubstrate
+        run: |
+          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
+          echo "== otool -L =="
+          otool -L "$DYLIB" | tee deps.txt
+          echo "== install_name / rpaths =="
+          otool -D "$DYLIB" || true
+          otool -l "$DYLIB" | grep -A2 LC_RPATH || echo "(no LC_RPATH)"
+
+          if grep -q 'CydiaSubstrate' deps.txt; then
+            echo "::error::still links CydiaSubstrate -> rootless devices will silently skip this dylib"
+            exit 1
+          fi
+          if grep -qE '/Library/(MobileSubstrate|Frameworks)' deps.txt; then
+            echo "::error::rootful absolute path in dependencies -> rootless devices cannot resolve it"
+            exit 1
+          fi
+          echo "OK: dependency list is rootless-safe"
+
+      - name: Gate - objc-free substrate symbols
+        run: |
+          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
+          if nm -u "$DYLIB" 2>/dev/null | grep -qi 'MSHookMessageEx\|MSHookIvar\|MSHookFunction'; then
+            echo "::error::binary still references MSHook* symbols"
+            exit 1
+          fi
+          echo "OK: no MSHook* symbol"
+          echo "== v3 strings =="
+          strings -a "$DYLIB" | grep -E 'REA-Test|msgId shim|hooks installed|stage ' | sort -u
+
       - name: Upload dylib artifact
         uses: actions/upload-artifact@v4
         with:
