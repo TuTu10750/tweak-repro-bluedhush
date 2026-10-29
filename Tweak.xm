@@ -435,6 +435,37 @@ static void rea_checkForkWithCompletion(id self, SEL _cmd, void (^done)(BOOL)) {
     if (p_forkCompletion) ((REA_V_Blk)p_forkCompletion)(self, _cmd, done);
 }
 
+// 全局扫描：这些 selector 在主二进制里查不到（属于 framework 里的同名类），
+// 原版逻辑也只能在类真正注册后再打。这里遍历所有已加载类，命中就打一次，
+// 保证不管它们来自哪个镜像都能被处置；REASwap 幂等，重复扫描无副作用。
+static const char *kREAAntiTamperSels[] = {
+    "amIJailBroken", "amIRunInEmulator", "checkDYLD", "checkFork",
+    "checkExistenceOfSuspiciousFiles", "checkSuspiciousFilesCanBeOpened",
+    "checkRestrictedDirectoriesWriteable", "checkSymbolicLinks", "checkURLSchemes",
+    "emulatorCheckCompile", "emulatorCheckRuntime", NULL
+};
+
+static void REASweepAntiTamper(void) {
+    int total = objc_getClassList(NULL, 0);
+    if (total <= 0) return;
+    Class *classes = (Class *)malloc(sizeof(Class) * (size_t)total);
+    if (!classes) return;
+    total = objc_getClassList(classes, total);
+    int hits = 0;
+    for (int i = 0; i < total; i++) {
+        Class c = classes[i];
+        const char *cn = class_getName(c);
+        if (!cn || strncmp(cn, "REA", 3) == 0) continue;
+        for (int k = 0; kREAAntiTamperSels[k]; k++) {
+            if (!class_getInstanceMethod(c, sel_registerName(kREAAntiTamperSels[k]))) continue;
+            IMP r = REASwap(c, kREAAntiTamperSels[k], (IMP)rea_ret_NO);
+            if (r) { hits++; REALog(@"anti-tamper swept %s -[%s]", cn, kREAAntiTamperSels[k]); }
+        }
+    }
+    free(classes);
+    REALog(@"anti-tamper sweep done, hits=%d", hits);
+}
+
 // ============================================================================
 #pragma mark - 4. 隐私相册  switch_private_photo
 // ============================================================================
@@ -665,6 +696,9 @@ static void REAInstallHooks(void) {
     REAHOOK("NewKeyBoardPhotoView", "resetLoadData", rea_resetLoadData, p_resetLoadData);
     REAHOOK("NewKeyBoardPhotoView", "actionDes:", rea_actionDes, p_actionDes);
     REAHOOK("NewKeyBoard", "p_showKeyboardStateRecentPhoto", rea_showRecentPhoto, p_showRecentPhoto);
+
+    // 最后做一次全类扫描，处理"类晚注册 / 类在别的镜像里"的情况
+    REASweepAntiTamper();
 }
 
 // ============================================================================
