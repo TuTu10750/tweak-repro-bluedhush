@@ -730,44 +730,6 @@ static void reaActionSetLocation(REAItem *item)
     return;
 }
 
-static void reaActionSetLocationLegacy(REAItem *item)
-{
-    NSDictionary *cur = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kREAFakeLocationKey];
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"设置虚拟坐标"
-                                                              message:@"纬度 / 经度 / 海拔"
-                                                       preferredStyle:UIAlertControllerStyleAlert];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
-        tf.placeholder = @"纬度 39.9042";
-        tf.keyboardType = UIKeyboardTypeDecimalPad;
-        tf.text = cur[@"lat"] ? [cur[@"lat"] stringValue] : @"";
-    }];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
-        tf.placeholder = @"经度 116.4074";
-        tf.keyboardType = UIKeyboardTypeDecimalPad;
-        tf.text = cur[@"lng"] ? [cur[@"lng"] stringValue] : @"";
-    }];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
-        tf.placeholder = @"海拔 50";
-        tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-        tf.text = cur[@"alt"] ? [cur[@"alt"] stringValue] : @"";
-    }];
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"保存" style:UIAlertActionStyleDefault
-                                          handler:^(UIAlertAction *a) {
-        double lat = [ac.textFields[0].text doubleValue];
-        double lng = [ac.textFields[1].text doubleValue];
-        double alt = [ac.textFields[2].text doubleValue];
-        NSDictionary *loc = @{ @"lat": @(lat), @"lng": @(lng), @"alt": @(alt) };
-        NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
-        [d setObject:loc forKey:kREAFakeLocationKey];
-        [d setBool:YES forKey:@"switch_virtual_location"];
-        [d synchronize];
-        REAUILog(@"虚拟坐标写入 %.6f,%.6f alt=%.1f", lat, lng, alt);
-        REAToast([NSString stringWithFormat:@"已保存：%.6f, %.6f（海拔 %.1f）", lat, lng, alt]);
-    }]];
-    REAPresentFromBest(ac);
-}
-
 static void reaActionClearLocation(REAItem *item)
 {
     NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
