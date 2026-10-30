@@ -21,6 +21,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <objc/runtime.h>
 
 #define REA_LOC_KEY      @"rea_fake_location"
 #define REA_LOC_HIST_KEY @"rea_loc_history"
