@@ -41,13 +41,6 @@ void   REALocClear(void);
 void   REAShowLocationPicker(void);
 void   REAPushFakeLocationToHost(void);
 
-static BOOL REALocFlag(NSString *key) {
-    @try {
-        id v = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-        if (!v) return YES;                 // 与 REAFlag 同语义：没设过就当作开
-        return [v boolValue];
-    } @catch (NSException *e) { return YES; }
-}
 
 double REALocLat(void) {
     @try {
