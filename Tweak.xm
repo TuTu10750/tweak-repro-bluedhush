@@ -2,6 +2,24 @@
 // 目标: com.danlan.xiaolan (Blued 7.50.3) / iOS 14.0+ / arm64 + arm64e
 //
 // ============================================================================
+// v8 变更（真机日志 D:\...\BluedHushREA.log + 屏幕报告实证：ctor 装上 34 条 / MISS 只剩 2）
+//   日志关键行：
+//     pass[ctor]  ok=34 miss=2 (total ok=34)
+//     pass[main+2s] ok=0  miss=2            ← 幂等，说明 ctor 那轮全装上了
+//     hook MISS GJIMSessionService -gji_updateMessage:      → 候选: addMessageService:, …
+//     hook MISS GJIMSessionService -gji_insertForMessages:  → 候选: addMessageService:, …
+//     badge=16 at 2 / badge=3 at 2          ← BluedTabBar Hook 确实在被调用（Hook 引擎是活的）
+//
+//   静态查证（_work/sel_owner.py，全量扫描宿主 14,839 个类 / 264,012 个方法条目）：
+//     · `gji_updateMessage:`     唯一所有者 = **GJIMDBService 的 metaclass**，types = v24@0:8@16，imp 0x101c66634
+//     · `gji_insertForMessages:` 唯一所有者 = **GJIMDBService 的 metaclass**，types = v24@0:8@16，imp 0x101c662c4
+//     · 实例侧（GJIMSessionService / GJIMMessageService）**都没有** —— v7 挂实例侧，所以必然 2 条 MISS。
+//   ① 新增 REAHOOKM()：对 Class 取 object_getClass() 得到 metaclass 再换实现，补上这两个类方法 Hook。
+//   ② REASweepAntiTamper 升级为"实例表 + 类方法表"双扫描（REASweepOneClass），
+//      这样以后任何"其实是类方法"的选择子也能被自动捞到。
+//   ③ 报告里单独说明 12 个反越狱选择子在本版本不存在（原版同样落空），避免被误读成漏 Hook。
+//   ④ 触发统计提前到 main+15s（先用后一条 45s 再记一次到文件，不重复弹窗）。
+// ============================================================================
 // v6 变更（用户 m01177：不闪退了，但"没有任何功能"，且手机里找不到 tmp 日志）
 //   a) 日志：`BluedHushREA.log` 改为**多路径同时写**，第一顺位就是 Documents
 //      （NSDocumentDirectory），其次 Library/Caches、tmp、/var/mobile/Documents。
@@ -181,7 +199,7 @@ static void REALog(NSString *fmt, ...) {
 }
 
 // ============================================================================
-#pragma mark - 自研 Hook 引擎（等价 MSHookMessageEx 语义，零 substrate 依赖）
+#pragma mark - 自研 Hook 引擎（与 substrate 同语义，零依赖）
 // ============================================================================
 
 static int gREAOK = 0, gREAMiss = 0;
@@ -227,7 +245,10 @@ static void REARegistryInit(void) {
 }
 
 static NSString *REAKey(Class cls, const char *selName) {
-    return [NSString stringWithFormat:@"%s|%s", class_getName(cls), selName];
+    // v8：metaclass 与类可能同名（class_getName 对 metaclass 返回同一个类名），
+    //     加 M 前缀区分，避免"类方法 Hook"命中"实例方法 Hook"的缓存键。
+    BOOL meta = class_isMetaClass(cls);
+    return [NSString stringWithFormat:@"%s%s|%s", meta ? "M:" : "", class_getName(cls), selName];
 }
 
 // 本类**自有**方法查找：class_copyMethodList 只 realize 类、不触发 +initialize（安全）。
@@ -287,7 +308,8 @@ static IMP REASwap(Class cls, const char *selName, IMP newImp) {
         Method own = REAOwnedMethod(cls, sel);
         if (!own) {
             gREAMiss++;
-            NSString *desc = [NSString stringWithFormat:@"%s -%s", class_getName(cls), selName];
+            NSString *desc = [NSString stringWithFormat:@"%s %c%s", class_getName(cls),
+                                                        class_isMetaClass(cls) ? '+' : '-', selName];
             NSArray<NSString *> *cand = REACandidates(cls, selName);
             if (cand.count) desc = [desc stringByAppendingFormat:@" → 候选: %@", [cand componentsJoinedByString:@", "]];
             [gREAMissList addObject:desc];
@@ -299,7 +321,8 @@ static IMP REASwap(Class cls, const char *selName, IMP newImp) {
         method_setImplementation(own, newImp);
         gREAOK++;
         [gREADone addObject:key];
-        [gREAOKList addObject:[NSString stringWithFormat:@"%s -%s", class_getName(cls), selName]];
+        [gREAOKList addObject:[NSString stringWithFormat:@"%s %c%s", class_getName(cls),
+                                                         class_isMetaClass(cls) ? '+' : '-', selName]];
         gREAOrig[key] = [NSValue valueWithPointer:(void *)old];
         return old;
     }
@@ -307,6 +330,19 @@ static IMP REASwap(Class cls, const char *selName, IMP newImp) {
 
 #define REAHOOK(clsName, selStr, fn, origVar) \
     do { origVar = REASwap(objc_getClass(clsName), selStr, (IMP)(fn)); } while (0)
+
+// v8：类方法（metaclass）Hook。
+// 证据：宿主二进制 __objc_classlist 全量扫描（14,839 类 / 264,012 个方法条目）后，
+//   `gji_updateMessage:` / `gji_insertForMessages:` 的唯一所有者是 **GJIMDBService 的 metaclass**
+//   （types 均为 v24@0:8@16，imp 0x101c66634 / 0x101c662c4）；
+//   GJIMSessionService / GJIMMessageService 的实例方法表里根本没有它们 —— 这就是 v7 那 2 条 MISS 的真相。
+// 对 Class 取 object_getClass() 得到 metaclass，class_copyMethodList(metaclass) 拿到类方法表。
+#define REAHOOKM(clsName, selStr, fn, origVar)                                        \
+    do {                                                                              \
+        Class __rea_c = objc_getClass(clsName);                                       \
+        origVar = REASwap(__rea_c ? object_getClass((id)__rea_c) : Nil, selStr,        \
+                          (IMP)(fn));                                                 \
+    } while (0)
 
 // 原实现调用用显式 typedef，避免可变参数宏把"表达式"当成"类型"
 typedef void   (*REA_V_V)(id, SEL);
@@ -593,6 +629,35 @@ static const char *kREAAntiTamperSels[] = {
     "checkRestrictedDirectoriesWriteable", "checkSymbolicLinks", "checkURLSchemes",
     "emulatorCheckCompile", "emulatorCheckRuntime", "performChecks", NULL
 };
+// 扫描单个 Class（或 metaclass）的自有方法表，把命中名单的选择子替换成 rea_ret_NO。
+// 只 realize，不 initialize；已是自身 IMP 的跳过（幂等）。
+static int REASweepOneClass(Class c, int *hits) {
+    if (!c) return 0;
+    const char *cn = class_getName(c);
+    if (!cn || strncmp(cn, "REA", 3) == 0) return 0;
+    unsigned int n = 0;
+    Method *list = class_copyMethodList(c, &n);
+    if (!list) return 0;
+    int touched = 0;
+    for (unsigned int k = 0; k < n; k++) {
+        const char *mn = sel_getName(method_getName(list[k]));
+        if (!mn) continue;
+        for (int s = 0; kREAAntiTamperSels[s]; s++) {
+            if (strcmp(mn, kREAAntiTamperSels[s]) != 0) continue;
+            if (method_getImplementation(list[k]) != (IMP)rea_ret_NO) {
+                method_setImplementation(list[k], (IMP)rea_ret_NO);
+                gREAOK++;
+                if (hits) (*hits)++;
+                touched++;
+                REALog(@"anti-tamper swept %s -[%s]", cn, mn);
+            }
+            break;
+        }
+    }
+    free(list);
+    return touched;
+}
+
 static void REASweepAntiTamper(void) {
     int total = objc_getClassList(NULL, 0);
     if (total <= 0) return;
@@ -602,26 +667,9 @@ static void REASweepAntiTamper(void) {
     int hits = 0;
     for (int i = 0; i < total; i++) {
         Class c = classes[i];
-        const char *cn = class_getName(c);
-        if (!cn || strncmp(cn, "REA", 3) == 0) continue;
-        unsigned int n = 0;
-        Method *list = class_copyMethodList(c, &n);   // 只 realize，不 initialize
-        if (!list) continue;
-        for (unsigned int k = 0; k < n; k++) {
-            const char *mn = sel_getName(method_getName(list[k]));
-            if (!mn) continue;
-            for (int s = 0; kREAAntiTamperSels[s]; s++) {
-                if (strcmp(mn, kREAAntiTamperSels[s]) != 0) continue;
-                if (method_getImplementation(list[k]) != (IMP)rea_ret_NO) {
-                    method_setImplementation(list[k], (IMP)rea_ret_NO);
-                    gREAOK++;
-                    hits++;
-                    REALog(@"anti-tamper swept %s -[%s]", cn, mn);
-                }
-                break;
-            }
-        }
-        free(list);
+        // v8：实例方法表 + 类方法表（metaclass）都扫 —— gji_* 就是这么找到真正宿主的。
+        REASweepOneClass(c, &hits);
+        REASweepOneClass(object_getClass((id)c), &hits);
     }
     free(classes);
     REALog(@"anti-tamper sweep done, hits=%d", hits);
@@ -790,9 +838,10 @@ static void REAInstallHooks(void) {
     REAHOOK("GJIMSessionService", "addMessage:", rea_addMessage, p_addMessage);
     REAHOOK("GJIMSessionService", "addMessages:", rea_addMessages, p_addMessages);
     REAHOOK("GJIMSessionService", "updateMessage:", rea_updateMessage, p_updateMessage);
-    // v7：截图实测 gji_* 不在 GJIMMessageService 上（那边 MISS），补到 GJIMSessionService
-    REAHOOK("GJIMSessionService", "gji_updateMessage:", rea_gji_updateMessage, p_gji_updateMessage);
-    REAHOOK("GJIMSessionService", "gji_insertForMessages:", rea_gji_insertForMessages, p_gji_insertForMessages);
+    // v8：静态证实 gji_updateMessage: / gji_insertForMessages: 是 **GJIMDBService 的类方法**
+    //     （metaclass 方法表，types = v24@0:8@16）。v7 挂在 GJIMSessionService 实例侧，所以 2 条 MISS。
+    REAHOOKM("GJIMDBService", "gji_updateMessage:", rea_gji_updateMessage, p_gji_updateMessage);
+    REAHOOKM("GJIMDBService", "gji_insertForMessages:", rea_gji_insertForMessages, p_gji_insertForMessages);
 
     REAHOOK("GJIMMessageService", "deleteMessage:", rea_deleteMessage, p_deleteMessage);
 
@@ -976,6 +1025,9 @@ static void REAPublishReport(NSString *tag, int passOK, int passMiss) {
             for (NSUInteger i = 0; i < cap; i++) [body appendFormat:@"· %@\n", missAll[i]];
             if (missAll.count > cap) [body appendFormat:@"…余下 %lu 条见日志\n", (unsigned long)(missAll.count - cap)];
         }
+        // v8：把"原版同样是 no-op"的选择子单独说明，避免它们被误读成漏 Hook
+        [body appendString:@"\n注: amIJailBroken / checkDYLD / checkFork / performChecks 等 12 个反越狱选择子"
+                          @"在 7.50.3 全量 14,839 个类里不存在（原版 dylib 挂它们同样落空），不计 MISS。"];
 
         REALog(@"---- REPORT ----\n%@", body);
         REATryShowReport(@"[REA-Test] Hook 报告", body, &gREAReportShown, 0);
@@ -1074,9 +1126,13 @@ static void REAScheduleInstall(void) {
         REAInstallPass(@"main+2s", YES);
     });
 
-    // ③ main+30s：触发统计（回答"Hook 到底有没有被调用"）
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)),
+    // ③ main+15s：触发统计（回答"Hook 到底有没有被调用"）；main+45s 再记一次到文件（不再弹窗）
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
+        REAPublishHitReport();
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(45 * NSEC_PER_SEC)),
+                   dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
         REAPublishHitReport();
     });
 
