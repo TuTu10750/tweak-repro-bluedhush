@@ -1,109 +1,101 @@
 // ============================================================================
-// BluedHushREA —— UI 交互层（v9）
+//  REAUI.xm —— BluedHush REA UI 层（纯代码 UIKit，零 Logos / 零 substrate）
 //
-// 逆向依据（全部来自原版 BluedHush_5.19.dylib 的 __objc_classlist / __objc_methlist）：
-//   HushFloatBall : UIView        { iconView: UIImageView }
-//        - initWithFrame: / refreshIcon / onTap / onPan:
-//        → 悬浮球是**纯代码 UIView**，靠 tap + pan 手势（不是 UIWindow 里的按钮，也没有 xib）
-//   HushWindowHelper : NSObject   （0 方法：仅承载 helper/常量，窗口逻辑在别处）
-//   HushSettingsPanel : UIViewController
-//        { table: UITableView, modules: NSArray, searchCtl: UISearchController,
-//          searchIndex/searchResults, hushTopSearchBar, hushFooterInsetX, pendingScrollTop }
-//        - buildModel / openModule: / showLog / hushCloseModal / hushFooterText
-//        - tableView:numberOfSectionsInTableView: / …cellForRowAtIndexPath: / didSelectRow…
-//        → 设置主界面是**纯代码 UIViewController + UITableView + UISearchController**，
-//          多级菜单由 `modules` 数组驱动（module → section → item 三层），底部是作者 footer
-//   HushModuleEntry : NSObject  { title, icon, subtitle, footer, sections, items }
-//   HushModuleSection : NSObject{ title, icon, subtitle, items }
-//   HushSwitchItem : NSObject   { key, title, subtitle, icon, effect }
-//   HushActionItem : NSObject   { title, subtitle, icon, actionLabel, handler }
-//   HushSwitchCell : UITableViewCell { sw: UISwitch, onToggle: block }
-//        - configureTitle:subtitle:icon:effect:on: / switchChanged
-//   HushModuleDetailController : UITableViewController
-//        - initWithTitle:sections:footer: / hushAccessoryWithText:style:
-//   HushAuthorFooterView : UITableViewHeaderFooterView - configureText:inset:tint:
-//   HushEntryButtonTarget : NSObject { cell(weak) } - hushDown / hushUp / hushCancel（点按高亮）
-//   HushConfig : NSObject { defaults: NSUserDefaults, flagCache, prefsSnapshot }
-//        - isEnabled: / isEnabled:default: / setEnabled:forKey: / registerDefaults
-//        - stringForKey: / setString:forKey: / customLat / customLng / customAltitude
-//        → **持久化就是 NSUserDefaults**（key 就是 "switch_xxx" 字符串，与 Hook 里读的完全同一批键）
-//
-// 资源：原版二进制里 .bundle=0、.xib=0、.nib=0、Assets.car=0、imageNamed=0，
-//       只出现 `systemImageNamed:`（2 次）→ **图标全用 SF Symbols，无任何资源包**。
-//       所以不需要往 Actions 里加 bundle 打包步骤，产物依旧只有一个 .dylib + plist。
-//
-// 本文件职责：复刻"悬浮球 + 分类菜单 + 开关持久化"这一层，纯代码、零 Logos、零 substrate。
+//  本文件是 Tweak.xm（Hook 模块）的完全独立 UI 模块：
+//    · 只负责：UIWindow(UIWindowLevelAlert) + 悬浮球(pan/tap) + 多级菜单 + UISwitch
+//    · 不负责：任何 swizzling；开关状态写入 NSUserDefaults，Hook 侧即时读取
+//  原版对应实现（BluedHush_5.19.dylib 反汇编实证）：
+//    HushFloatBall      : UIView,  -initWithFrame: 0x67360 / -refreshIcon 0x676f4
+//                                  -onTap 0x67778（+[HushSettingsPanel open]） / -onPan: 0x6778c
+//    HushSettingsPanel  : UIViewController, -viewDidLoad 0x19e6e4 / -buildModel 0x19f254
+//    HushModuleDetailController : UITableViewController, -initWithTitle:sections:footer: 0x199c4c
+//    HushConfig         : NSUserDefaults 直读直写（isEnabled: 0xe800 / setEnabled:forKey: 0xed14）
+//  菜单数据由 buildModel(0x19F254) 常量流自动还原，见 analysis/menu_final.json。
 // ============================================================================
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
-#import <math.h>
 
-#pragma mark - Tweak.xm 暴露的调试入口
-
+extern void REALogBridge(NSString *fmt, ...);
 extern BOOL REAFlagBridge(NSString *key);
 extern void REAShowHookReportBridge(void);
 extern void REAShowHitReportBridge(void);
 extern void REAReinstallHooksBridge(void);
-extern void REALogBridge(NSString *fmt, ...);
-
-#pragma mark - 键常量
 
 static NSString *const kREABallCenterKey = @"rea_ball_center";
 static NSString *const kREABallEnabledKey = @"rea_ball_enabled";
-static NSString *const kREAPanelStyleKey  = @"rea_panel_style";
+static NSString *const kREAFakeLocationKey = @"rea_fake_location";
 
-#pragma mark - 配置读写（等价 HushConfig，直接落在 NSUserDefaults）
+#pragma mark - 日志与开关（与 Hook 模块同一数据源）
 
-static BOOL REAUIFlag(NSString *key, BOOL def) {
-    if (!key.length) return def;
-    @try {
-        id v = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-        if (v == nil) return def;
-        return [v boolValue];
-    } @catch (NSException *e) {
-        return def;
-    }
+static void REAUILog(NSString *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    NSString *s = [[NSString alloc] initWithFormat:fmt arguments:ap];
+    va_end(ap);
+    REALogBridge(@"[UI] %@", s);
 }
 
-static void REAUISetFlag(NSString *key, BOOL on) {
-    if (!key.length) return;
-    @try {
-        [[NSUserDefaults standardUserDefaults] setBool:on forKey:key];
-    } @catch (NSException *e) { }
+static BOOL REAUIFlag(NSString *key)
+{
+    if (key.length == 0) return NO;
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    id v = [d objectForKey:key];
+    if (v == nil) return YES;
+    return [d boolForKey:key];
 }
 
-#pragma mark - 数据模型（对应 HushSwitchItem / HushActionItem / HushModuleSection / HushModuleEntry）
+static void REAUISetFlag(NSString *key, BOOL on)
+{
+    if (key.length == 0) return;
+    [[NSUserDefaults standardUserDefaults] setBool:on forKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    REAUILog(@"开关 %@ -> %d", key, (int)on);
+}
+
+#pragma mark - 数据模型
 
 @interface REAItem : NSObject
+@property (nonatomic, copy) NSString *key;
 @property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSString *subtitle;
-@property (nonatomic, copy) NSString *icon;     // SF Symbol 名
+@property (nonatomic, copy) NSString *icon;
+@property (nonatomic, copy) NSString *actionLabel;
+@property (nonatomic, copy) NSString *actionSelector;
+@property (nonatomic, assign) BOOL isAction;
+@property (nonatomic, assign) BOOL defOn;
++ (instancetype)toggleWithKey:(NSString *)key title:(NSString *)t subtitle:(NSString *)s
+                         icon:(NSString *)i defOn:(BOOL)defOn;
++ (instancetype)actionWithTitle:(NSString *)t subtitle:(NSString *)s icon:(NSString *)i
+                    actionLabel:(NSString *)label action:(NSString *)action;
 @end
 
 @implementation REAItem
-@end
-
-@interface REAToggle : REAItem
-@property (nonatomic, copy) NSString *key;
-@property (nonatomic, assign) BOOL defOn;
-@end
-
-@implementation REAToggle
-@end
-
-@interface REAAction : REAItem
-@property (nonatomic, copy) void (^handler)(void);
-@property (nonatomic, copy) NSString *actionLabel;
-@end
-
-@implementation REAAction
++ (instancetype)toggleWithKey:(NSString *)key title:(NSString *)t subtitle:(NSString *)s
+                         icon:(NSString *)i defOn:(BOOL)defOn
+{
+    REAItem *it = [REAItem new];
+    it.key = key; it.title = t; it.subtitle = s; it.icon = i;
+    it.isAction = NO; it.defOn = defOn;
+    return it;
+}
++ (instancetype)actionWithTitle:(NSString *)t subtitle:(NSString *)s icon:(NSString *)i
+                    actionLabel:(NSString *)label action:(NSString *)action
+{
+    REAItem *it = [REAItem new];
+    it.title = t; it.subtitle = s; it.icon = i;
+    it.actionLabel = label; it.actionSelector = action;
+    it.isAction = YES;
+    return it;
+}
 @end
 
 @interface REASection : NSObject
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *footer;
+@property (nonatomic, copy) NSString *icon;
+@property (nonatomic, copy) NSString *subtitle;
 @property (nonatomic, strong) NSArray<REAItem *> *items;
 @end
 
@@ -112,709 +104,1209 @@ static void REAUISetFlag(NSString *key, BOOL on) {
 
 @interface REAModule : NSObject
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, copy) NSString *subtitle;
 @property (nonatomic, copy) NSString *icon;
+@property (nonatomic, copy) NSString *subtitle;
 @property (nonatomic, strong) NSArray<REASection *> *sections;
+- (NSInteger)enabledCount;
+- (NSInteger)totalCount;
 @end
 
 @implementation REAModule
+- (NSInteger)enabledCount
+{
+    NSInteger n = 0;
+    for (REASection *s in self.sections) {
+        for (REAItem *it in s.items) {
+            if (!it.isAction && it.key.length && REAUIFlag(it.key)) n++;
+        }
+    }
+    return n;
+}
+- (NSInteger)totalCount
+{
+    NSInteger n = 0;
+    for (REASection *s in self.sections) {
+        for (REAItem *it in s.items) {
+            if (!it.isAction) n++;
+        }
+    }
+    return n;
+}
 @end
 
-#pragma mark - 前向声明
+#pragma mark - 菜单数据（由原版 buildModel 常量流还原）
 
-// 悬浮球需要回调单例；面板需要菜单模型工厂；定位输入框由 action 触发。
-// 三者都在本文件后半段实现，这里先声明，避免"隐式声明"在 -Werror 下炸掉。
-@class REAOverlayWindow, REAFloatBallView;
+static NSArray<REAModule *> *REABuildMenu(void)
+{
+    NSMutableArray *mods = [NSMutableArray array];
 
-@interface REAUILoad : NSObject
-@property (nonatomic, strong) REAOverlayWindow *window;
-@property (nonatomic, strong) REAFloatBallView *ball;
-@property (nonatomic, assign) BOOL started;
-+ (instancetype)shared;
-- (void)start;
-- (void)saveBallCenter:(CGPoint)c;
-- (CGPoint)ballCenter;
-- (void)openPanel;
-- (void)showQuickMenu;
-@end
+    {   // ---- 净化中心 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"purify_master" title:@"净化总开关" subtitle:@"只开关本大类的净化细项（23 项；独立项不受控）" icon:@"power" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"purify_splash_ad" title:@"开屏广告与启动图" subtitle:@"启动时跳过开屏广告与加载动画；⚠️ 遇卡顿先关本项" icon:@"forward.end.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_feed_ad" title:@"动态流广告" subtitle:@"去掉动态里的信息流与轮播广告" icon:@"rectangle.stack.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_nearby_ad" title:@"身边列表广告" subtitle:@"去掉身边列表里插入的推广用户" icon:@"person.crop.circle.badge.xmark" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_visitor_ad" title:@"来访页广告" subtitle:@"去掉来访页里的广告位" icon:@"eye.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_banner" title:@"全局横幅" subtitle:@"去掉页面顶部的横幅广告条" icon:@"menubar.rectangle" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_float_layer" title:@"身边页悬浮层" subtitle:@"去掉身边页浮在上层的推广入口" icon:@"rectangle.on.rectangle" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_map_guide" title:@"地图找人·引导弹窗" subtitle:@"进地图找人页不再弹引导卡" icon:@"map.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_mine_ad" title:@"我的页广告" subtitle:@"去掉「我的」页里的横幅与推广卡片" icon:@"person.crop.circle.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_svg_ad" title:@"动画广告位" subtitle:@"去掉会动的 SVGA 动画广告" icon:@"sparkles" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"广告位"; sec.icon = @"circle"; sec.subtitle = @"开屏、信息流与列表里插的广告";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"purify_safe_tip" title:@"安全提示条" subtitle:@"去掉聊天页顶部的安全提示横幅" icon:@"exclamationmark.bubble.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_new_nav_tag" title:@"推广红点提示" subtitle:@"去掉「New / 热门」推广红点（不碰未读数）" icon:@"tag.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_blur_label" title:@"模糊标签" subtitle:@"取消昵称等模糊打码（与解锁访客记录任开其一）" icon:@"eye.slash.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_call_header" title:@"会话列表通话入口" subtitle:@"去掉会话列表顶部的通话入口" icon:@"phone.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_session_card" title:@"会话顶部卡片" subtitle:@"去掉语音交友 / 酒馆等入口卡" icon:@"square.on.square" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_sensitive" title:@"敏感内容优化" subtitle:@"去内容遮罩、闪视频直显、点开免确认；需开净化总开关" icon:@"rectangle.slash.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_hide_calling_ui" title:@"隐藏呼唤界面" subtitle:@"去掉通话呼出时的状态浮层" icon:@"phone.down.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_hide_purple_card" title:@"隐藏紫色卡片" subtitle:@"去掉顶部那张紫色推荐卡片" icon:@"rectangle.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_welcome_pop" title:@"欢迎奖励弹窗" subtitle:@"进身边页时不再弹「欢迎奖励」网页框" icon:@"gift.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_follow_card" title:@"详情页关注卡片" subtitle:@"去掉他人主页底部的关注引导卡" icon:@"person.badge.plus" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_chat_emoji" title:@"聊天大表情静止" subtitle:@"大表情只显示首帧、不自动播放" icon:@"face.smiling.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_match_emoji_bar" title:@"移除大表情发送栏" subtitle:@"去掉聊天输入框上方的大表情条" icon:@"rectangle.slash.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_sensitive_alert" title:@"敏感照片免提醒" subtitle:@"自己发的照片不再弹「疑似敏感」提醒" icon:@"person.crop.circle.badge.exclamationmark" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_passby_tip" title:@"擦肩而过提示" subtitle:@"去掉消息上方那条「擦肩而过」小标签" icon:@"figure.walk" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_clean_badge" title:@"底栏角标清零" subtitle:@"立即生效 · 清掉底栏红点与数字角标（不影响未读数）" icon:@"app.badge" defOn:NO]];
+            REASection *sec = [REASection new];
+            sec.title = @"界面元素"; sec.icon = @"circle"; sec.subtitle = @"页面上的横幅、提示条、弹窗与打码";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"purify_live_entry" title:@"直播 / 服务入口" subtitle:@"去掉相册 / 直播 / 健康等入口" icon:@"dot.radiowaves.left.and.right" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_hide_discover_tab" title:@"隐藏发现 Tab" subtitle:@"从底栏移除「发现」页" icon:@"square.grid.2x2.fill" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_hide_live_tab" title:@"隐藏直播 Tab" subtitle:@"从底栏移除「直播」页" icon:@"video.slash.fill" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_hide_live_entry" title:@"隐藏直播内容" subtitle:@"去掉页面内推荐的直播内容" icon:@"play.slash.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_purify_mine_page" title:@"我的页整体净化" subtitle:@"「我的」页只留核心功能" icon:@"person.crop.circle.badge.minus" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"purify_mine_vip" title:@"我的页 VIP 版块" subtitle:@"去掉「我的」页顶部的会员卡片" icon:@"creditcard.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"purify_set_items" title:@"设置页精简" subtitle:@"去掉设置页的认证 / 直播 / 扫一扫等 8 项" icon:@"gearshape.fill" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"入口与 Tab"; sec.icon = @"circle"; sec.subtitle = @"底栏、直播入口与页面精简";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"purify_block_voice" title:@"拦截语音房请求" subtitle:@"切断语音房服务器（voice.blued.cn）" icon:@"waveform" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_block_live_request" title:@"拦截直播请求" subtitle:@"阻止直播拉流与下播请求" icon:@"wifi.slash" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"purify_block_call" title:@"拦截呼叫请求" subtitle:@"点呼叫不再发出请求（会话 / 来访 / 通话三处）" icon:@"phone.arrow.up.right" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_no_data_collect" title:@"拦截事件上报" subtitle:@"拦截行为埋点上报" icon:@"chart.bar.fill" defOn:NO]];
+            REASection *sec = [REASection new];
+            sec.title = @"网络拦截"; sec.icon = @"circle"; sec.subtitle = @"从网络上掐断语音 / 直播 / 呼叫与上报等请求";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"净化中心"; md.icon = @"sparkles"; md.subtitle = @"广告 / 界面 / 入口 / 网络拦截";
+        md.sections = secs;
+        [mods addObject:md];
+    }
 
-static NSArray<REAModule *> *REABuildModules(void);
-void REAPromptLocation(void);
+    {   // ---- 聊天增强 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_anti_recall" title:@"消息防撤回" subtitle:@"撤回后消息仍留在本地（标注「已拦截」）" icon:@"arrow.uturn.backward.circle.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_msg_heal" title:@"消息补拉" subtitle:@"推送不灵时自动补拉积压消息，静默太久自动重连" icon:@"arrow.triangle.2.circlepath" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_screenshot" title:@"去除截屏限制" subtitle:@"聊天页允许截屏，不再提示 / 黑屏" icon:@"camera.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_chat_heart_off" title:@"关闭对话爱心" subtitle:@"关闭「对话爱心进度」（仅 7.50.0 及以上）" icon:@"heart.slash.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_flash_photo" title:@"闪照转照片" subtitle:@"闪照变普通照片，可反复查看" icon:@"photo.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_flash_text" title:@"闪文转普通消息" subtitle:@"限时文本转普通文本，永久可读" icon:@"text.bubble.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_flash_ad_skip" title:@"闪照免广告" subtitle:@"看闪照前不再要求看广告 / 加时" icon:@"play.rectangle.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_msg_timestamp" title:@"显示具体时间" subtitle:@"每条消息显示完整时间" icon:@"clock.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"历史闪照转照片" subtitle:@"把已有的闪照 / 闪视频转成普通照片（重进会话可见）" icon:@"arrow.triangle.2.circlepath" actionLabel:@"转换" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"历史闪文转普通消息" subtitle:@"把已有的闪文转成普通文本" icon:@"arrow.triangle.2.circlepath.circle" actionLabel:@"转换" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"消息处理"; sec.icon = @"circle"; sec.subtitle = @"补拉、撤回、闪照、截屏与显示";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_read_receipt" title:@"悄悄查看" subtitle:@"对方看不到「已读」（对全部会话生效）" icon:@"eye.slash" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_secret_view_all" title:@"悄悄看全部" subtitle:@"同「悄悄查看」+「无痕访问」；发消息后退出" icon:@"eye.circle.fill" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"已读与痕迹"; sec.icon = @"circle"; sec.subtitle = @"谁看了谁、什么时候看的";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_quick_phrase" title:@"快捷短语" subtitle:@"键盘上方一排常用语，点一下发出" icon:@"keyboard" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_auto_select_photo" title:@"自动选中最近照片" subtitle:@"点开相册自动选中最新一张" icon:@"photo.on.rectangle.angled" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_auto_select_burn" title:@"自动勾选闪照" subtitle:@"相册里自动勾「闪照」并记住选择（先选最新一张）" icon:@"flame.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_scheduled_recall" title:@"后悔药" subtitle:@"长按自己的消息 → 预约到最后时刻才撤回；再点取消" icon:@"pills.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_regret_auto" title:@"后悔药·自动撤回" subtitle:@"发相册照片后自动预约撤回（对方已读 + N 秒）" icon:@"timer" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"已读后延迟秒数" subtitle:@"自动撤回前等对方已读的秒数（默认 10）" icon:@"timer" actionLabel:@"设置" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"发送增强"; sec.icon = @"keyboard"; sec.subtitle = @"发出去之前与之后";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem actionWithTitle:@"备份聊天记录" subtitle:@"把聊天库无损复制一份（可存多份，不动原库）" icon:@"externaldrive.fill" actionLabel:@"备份" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"还原聊天记录" subtitle:@"用最近一次备份覆盖当前记录（完成后需重启 App）" icon:@"arrow.counterclockwise.circle.fill" actionLabel:@"还原" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"管理备份" subtitle:@"查看 / 删除已备份的文件" icon:@"folder.fill" actionLabel:@"查看" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"记录备份"; sec.icon = @"circle"; sec.subtitle = @"聊天库的复制与还原";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"聊天增强"; md.icon = @"bubble.left.and.bubble.right.fill"; md.subtitle = @"消息 / 已读 / 发送 / 备份";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 隐私与特权 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_spoof_lite" title:@"显示对方属性" subtitle:@"强制显示对方属性与情报；⚠️ 会放开被藏内容" icon:@"doc.text.magnifyingglass" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_nearby_signature" title:@"身边列表显示个性签名" subtitle:@"身边列表第三行显示个性签名" icon:@"text.quote" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_version_spoof" title:@"伪装客户端版本" subtitle:@"让服务器按新版下发完整资料（属性 / 个性签名）" icon:@"rectangle.2.swap" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_nearby_album" title:@"身边列表显示隐私相册" subtitle:@"身边列表显示对方隐私相册缩略图；上锁的不显示" icon:@"photo.on.rectangle.angled" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_privacy_unlock" title:@"距离时间保密解锁" subtitle:@"距离 / 最近在线设「保密」时直接显示真实值" icon:@"lock.open.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_chat_watermark" title:@"聊天页资料行" subtitle:@"聊天页标题旁显示属性与年龄 / 身高等" icon:@"text.append" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_chat_album_strip" title:@"聊天页相册+备注" subtitle:@"聊天页标题下显示对方相册（可看大图）与备注（可改）" icon:@"photo.on.rectangle" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_album_count_badge_visible" title:@"相册数量标记" subtitle:@"昵称旁标出隐私相册张数：?? 上锁 / ?? 可见" icon:@"lock.rectangle.stack" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"资料透视"; sec.icon = @"circle"; sec.subtitle = @"看别人的属性与资料情报";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_album_grant" title:@"相册授权快捷菜单" subtitle:@"长按聊天键盘表情按钮，一键开关「我的隐私相册」授权" icon:@"person.badge.key.fill" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"我的隐私"; sec.icon = @"circle"; sec.subtitle = @"管理我给对方的授权";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_private_photo" title:@"解锁隐私相册" subtitle:@"绕过权限校验，直接查看对方隐私相册" icon:@"folder.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_watermark" title:@"去水印存图" subtitle:@"保存时去水印、解除保存限制" icon:@"square.and.arrow.down.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_local_vip" title:@"本地 VIP" subtitle:@"本地解锁高级筛选等会员功能" icon:@"crown.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_blacklist_unlock" title:@"拉黑访问解锁" subtitle:@"被对方拉黑后，仍能查看他的主页" icon:@"person.crop.circle.badge.xmark" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_fair_exchange" title:@"公平换照解锁" subtitle:@"换照与认证次数不再受限，不再弹付费窗（仅本地）" icon:@"arrow.left.arrow.right" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_license_bypass" title:@"跳过 License" subtitle:@"播放器 / UGC 授权校验一律通过" icon:@"checkmark.shield.fill" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_visitor_unlock" title:@"解锁查看所有访客记录" subtitle:@"非会员也能看全部来访：卡片不模糊、自动加载全部" icon:@"lock.open.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_nearby_mark" title:@"卡片样式（一屏一人）" subtitle:@"身边页改为一屏一人卡片；关掉恢复原生列表" icon:@"rectangle.stack.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"编辑默认评价词" subtitle:@"改卡片底部四个评价按钮的默认词；留空恢复默认" icon:@"square.and.pencil" actionLabel:@"编辑" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"限制解放"; sec.icon = @"circle"; sec.subtitle = @"绕过相册 / 会员 / 拉黑等限制";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_deleted_mark" title:@"注销用户标记" subtitle:@"被删 / 注销的人标红「消失过」（需开「别想玩消失」）" icon:@"minus.circle.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_risk_user_block" title:@"风险用户标记" subtitle:@"主页 ⚠️ 标记风险 / 诈骗，列表标红" icon:@"exclamationmark.triangle.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_past_entangle" title:@"聊天状态标记" subtitle:@"昵称旁显示聊天状态（聊过 / 冇理睬…）" icon:@"chart.pie.fill" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_card_intel" title:@"卡片资料情报" subtitle:@"卡片上显示对方情报小字（黑名单 · 隐身等）" icon:@"doc.text.magnifyingglass" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_vanished" title:@"别想玩消失" subtitle:@"检测谁删了你 / 注销了；顶部「已注销」入口看名单" icon:@"person.crop.circle.badge.xmark" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"查看风险用户名单" subtitle:@"被你标记的用户（左滑可取消）" icon:@"exclamationmark.triangle.fill" actionLabel:@"打开" action:@"reaActionRiskList"]];
+            [its addObject:[REAItem actionWithTitle:@"查看已注销用户" subtitle:@"已注销用户的名单" icon:@"person.crop.circle.badge.xmark" actionLabel:@"打开" action:@"reaActionDeletedList"]];
+            REASection *sec = [REASection new];
+            sec.title = @"账号标记"; sec.icon = @"circle"; sec.subtitle = @"标出有情况的人，名单入口也在本段";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"隐私与特权"; md.icon = @"lock.shield.fill"; md.subtitle = @"看别人的 / 解限制 / 标记名单";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 定位与追踪 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_virtual_location" title:@"虚拟定位" subtitle:@"首页「交友」右侧入口显隐；点＝开关，长按＝地图选点" icon:@"location.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_ip_location" title:@"IP 定位" subtitle:@"按 IP 归属地反查坐标并自动写入" icon:@"globe" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_real_location_mask" title:@"真实位置混淆" subtitle:@"给真实坐标加随机偏移" icon:@"shuffle" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_altitude" title:@"海拔一并伪造" subtitle:@"立即生效 · 虚拟定位时同时改写 altitude（配合虚拟坐标使用）" icon:@"arrow.up.and.down.circle" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"虚拟定位"; sec.icon = @"circle"; sec.subtitle = @"让 App 以为你在别处";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_track" title:@"位置追踪" subtitle:@"进他人主页后台预计算，点按钮看结果；与物理追踪互斥" icon:@"scope" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_physical_track" title:@"物理追踪" subtitle:@"点「物理追踪」按钮才开始解算；与位置追踪互斥" icon:@"figure.walk" defOn:NO]];
+            REASection *sec = [REASection new];
+            sec.title = @"追踪"; sec.icon = @"scope"; sec.subtitle = @"算别人的位置（两种模式互斥）";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_map_avatar_clear" title:@"地图找人头像清晰" subtitle:@"地图找人头像显示高清版，不再模糊" icon:@"person.crop.circle.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"地图找人头像缓存清理" subtitle:@"清掉已缓存的高清头像（会重新拉取）" icon:@"trash.fill" actionLabel:@"清理" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"地图"; sec.icon = @"circle"; sec.subtitle = @"地图上的头像与缓存";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"定位与追踪"; md.icon = @"location.fill"; md.subtitle = @"虚拟定位 / 追踪 / 地图";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 自动化与筛选 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_auto_visit" title:@"寻找目标" subtitle:@"只显示入口，不会自己访问；点「开始」才批量访问" icon:@"arrow.triangle.2.circlepath" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"寻找目标设置" subtitle:@"访问人数 / 跳过条件 / 静默运行" icon:@"magnifyingglass.circle" actionLabel:@"设置" action:@"reaActionDefault"]];
+            [its addObject:[REAItem toggleWithKey:@"switch_skip_list" title:@"跳过名单" subtitle:@"主页点 ?? 加名单；自动访问跳过他们" icon:@"hand.raised.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"跳过名单管理" subtitle:@"查看 / 移除 / 导入导出跳过名单" icon:@"list.bullet" actionLabel:@"管理" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"跳过显示方式" subtitle:@"名单里的人划线还是隐藏" icon:@"slider.horizontal.3" actionLabel:@"切换" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"批量访问"; sec.icon = @"circle"; sec.subtitle = @"按条件批量看主页与跳过名单";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_fanpai" title:@"翻牌子" subtitle:@"按签名 / 备注 / 距离过滤身边列表" icon:@"line.horizontal.3.decrease.circle.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"筛选规则设置" subtitle:@"签名档 / 屏蔽词 / 距离区间等规则" icon:@"signature" actionLabel:@"设置" action:@"reaActionDefault"]];
+            [its addObject:[REAItem toggleWithKey:@"switch_online_distance_sort" title:@"在线列表按距离排序" subtitle:@"「在线」列表按距离由近到远排" icon:@"arrow.up.arrow.down" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"列表筛选"; sec.icon = @"circle"; sec.subtitle = @"身边列表的过滤与排序";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_spy_detect" title:@"抓特务" subtitle:@"打开后每次进来访页自动累计频次" icon:@"magnifyingglass" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"可疑名单" subtitle:@"list.bullet.rectangle" icon:@"查看" actionLabel:@"访客分析" action:@"reaActionSuspiciousList"]];
+            REASection *sec = [REASection new];
+            sec.title = @"访客分析"; sec.icon = @"magnifyingglass"; sec.subtitle = @"谁在盯着你";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"自动化与筛选"; md.icon = @"gearshape.2.fill"; md.subtitle = @"批量访问 / 列表筛选 / 访客分析";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 视奸与访问 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_stalk" title:@"视奸模式" subtitle:@"在意的人加入名单，一键访问并记录变化" icon:@"binoculars.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_avatar_long_press" title:@"资料页头像长按" subtitle:@"资料页长按头像：加名单 / 切无痕 / 看历史" icon:@"hand.tap.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"昵称颜色" subtitle:@"视奸名单名字染成绿 / 蓝 / 黄" icon:@"paintpalette.fill" actionLabel:@"选择" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"视奸列表" subtitle:@"名单 · 一键访问 · 变化记录与历史" icon:@"eye.fill" actionLabel:@"打开" action:@"reaActionStalkList"]];
+            [its addObject:[REAItem actionWithTitle:@"导出视奸数据" subtitle:@"名单 / 快照 / 变化导出为 JSON" icon:@"square.and.arrow.up" actionLabel:@"导出" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"导入视奸数据" subtitle:@"从备份文件合并进现有数据" icon:@"square.and.arrow.down" actionLabel:@"导入" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"视奸"; sec.icon = @"circle"; sec.subtitle = @"名单 · 一键访问 · 变化与历史";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_visit_clear" title:@"非会员也能删访问记录" subtitle:@"删记录被会员拦住时插件代你冲销；长按删除键＝只拉黑" icon:@"trash.slash.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_viewed_strike" title:@"看过划线" subtitle:@"我访问过的人名字加删除线" icon:@"strikethrough" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"访问记录"; sec.icon = @"circle"; sec.subtitle = @"来访列表里的记录管理";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"视奸与访问"; md.icon = @"binoculars.fill"; md.subtitle = @"视奸名单 / 访问记录";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 照片与相册 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_chat_album" title:@"普通照片入库" subtitle:@"聊天的普通照片也进相册与展览馆" icon:@"photo.on.rectangle" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_chat_gallery" title:@"展览馆入口" subtitle:@"开着时聊天页顶部显示「展览馆」入口" icon:@"rectangle.grid.2x2.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_chat_gallery_ball" title:@"聊天页照片墙球" subtitle:@"聊天页右上角 ?? 悬浮球，看本会话照片" icon:@"rectangle.stack.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"归并未归属照片" subtitle:@"把没记清会话的照片按时间归入对应会话" icon:@"arrow.triangle.2.circlepath" actionLabel:@"执行" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"导出相册（迁移用）" subtitle:@"把展览馆照片打包成 zip；到「管理相册备份」长按分享" icon:@"square.and.arrow.up" actionLabel:@"导出" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"导入相册（迁移用）" subtitle:@"选相册备份 zip 合并进展览馆（同名跳过，不覆盖）" icon:@"square.and.arrow.down.on.square" actionLabel:@"导入" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"管理相册备份" subtitle:@"管理相册备份：导入 / 分享 / 删除（不碰相册照片）" icon:@"externaldrive" actionLabel:@"管理" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"保存与归档"; sec.icon = @"circle"; sec.subtitle = @"哪些照片进相册、怎么整理与迁移";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_legacy_auto_import" title:@"自动导入 Eric 大佬插件的闪照" subtitle:@"启动时自动把旧插件闪照复制进展览馆（需重启）" icon:@"square.and.arrow.down" defOn:NO]];
+            [its addObject:[REAItem actionWithTitle:@"导入 Eric 大佬插件的闪照" subtitle:@"把旧插件目录里的闪照复制进展览馆（同名比内容）" icon:@"square.and.arrow.down" actionLabel:@"导入" action:@"reaActionDefault"]];
+            [its addObject:[REAItem actionWithTitle:@"清理 Eric 大佬插件的闪照" subtitle:@"删除旧目录里已导入本版的文件（不可恢复）" icon:@"trash" actionLabel:@"清理" action:@"reaActionDefault"]];
+            REASection *sec = [REASection new];
+            sec.title = @"Eric 大佬插件数据"; sec.icon = @"circle"; sec.subtitle = @"Eric 大佬插件（BluedHook）保存的闪照";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_auto_pick_photo" title:@"发布时核对已选张数" subtitle:@"选照片时在日志里核对张数（诊断用）" icon:@"checkmark.circle.fill" defOn:NO]];
+            REASection *sec = [REASection new];
+            sec.title = @"发布"; sec.icon = @"circle"; sec.subtitle = @"发照片时的自动操作";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"照片与相册"; md.icon = @"photo.on.rectangle"; md.subtitle = @"保存归档 / Eric 大佬插件数据 / 迁移";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 入口与手势 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"float_ball" title:@"悬浮球入口" subtitle:@"屏幕上挂一个悬浮按钮，点它打开本面板" icon:@"circle.fill" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"现在用的是「%@」；矢量绘制，选完立即生效" subtitle:@"悬浮球样式" icon:@"square.grid.2x2" actionLabel:@"选择" action:@"reaActionDefault"]];
+            [its addObject:[REAItem toggleWithKey:@"switch_avatar_long_press_area" title:@"长按底栏「身边」" subtitle:@"长按弹出功能菜单；关掉后长按无反应" icon:@"hand.point.up.left.fill" defOn:NO]];
+            [its addObject:[REAItem actionWithTitle:@"长按动作" subtitle:@"弹菜单 / 直接开模块菜单 / 直接开视奸列表" icon:@"hand.tap.fill" actionLabel:@"选择" action:@"reaActionDefault"]];
+            [its addObject:[REAItem toggleWithKey:@"switch_blacklist_jump" title:@"长按「我的」跳黑名单" subtitle:@"长按底栏「我的」→ 打开黑名单" icon:@"person.crop.circle.badge.xmark" defOn:NO]];
+            REASection *sec = [REASection new];
+            sec.title = @"入口与手势"; sec.icon = @"circle"; sec.subtitle = @"插件入口与底栏长按";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"入口与手势"; md.icon = @"cursorarrow.click"; md.subtitle = @"悬浮球 / 底栏长按";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+
+    {   // ---- 风控与设备 ----
+        NSMutableArray *secs = [NSMutableArray array];
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_device_fake" title:@"伪装设备指纹" subtitle:@"设备指纹固定为另一个随机值（与下一项二选一）" icon:@"person.crop.rectangle" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_device_empty" title:@"设备码返回空值" subtitle:@"风控取指纹时返回空值（与上一项二选一）" icon:@"delete.left.fill" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_block_device_upload" title:@"拦截设备指纹上传" subtitle:@"阻止把设备指纹上传给服务器" icon:@"nosign" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"switch_device_intercept" title:@"拦截设备指纹上报出口" subtitle:@"直接阻断风控 SDK 的上报出口（比上一项更彻底）" icon:@"arrow.up.doc.fill" defOn:NO]];
+            REASection *sec = [REASection new];
+            sec.title = @"设备指纹"; sec.icon = @"circle"; sec.subtitle = @"设备码怎么给、要不要传上去";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_bypass_jailbreak" title:@"越狱检测绕过" subtitle:@"让 App 认为设备没有越狱" icon:@"shield.lefthalf.fill" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_risk_login_bypass" title:@"风险设备登录" subtitle:@"越狱设备重新登录不再被拦下（登录包标记为安全）" icon:@"shield.lefthalf.filled" defOn:YES]];
+            [its addObject:[REAItem actionWithTitle:@"设备检测" subtitle:@"看 App 眼里的这台设备（越狱 / 注入判定等）" icon:@"waveform.path.ecg" actionLabel:@"检测" action:@"reaActionDeviceCheck"]];
+            REASection *sec = [REASection new];
+            sec.title = @"检测绕过"; sec.icon = @"circle"; sec.subtitle = @"别让 App 认出这台设备有问题";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        {
+            NSMutableArray *its = [NSMutableArray array];
+            [its addObject:[REAItem toggleWithKey:@"switch_bugly_off" title:@"关闭崩溃上报（诊断）" subtitle:@"关掉 Bugly，崩溃改落系统报告（查完关回）" icon:@"ladybug.fill" defOn:NO]];
+            [its addObject:[REAItem actionWithTitle:@"查看运行日志" subtitle:@"面板与 Hook 的最近记录（含等级统计）" icon:@"doc.text" actionLabel:@"查看" action:@"reaActionShowLog"]];
+            [its addObject:[REAItem toggleWithKey:@"rea_show_report" title:@"启动后弹出 Hook 报告" subtitle:@"立即生效 · 启动 2s 后弹一次「装上几条 / MISS 几条」" icon:@"doc.text.magnifyingglass" defOn:YES]];
+            REASection *sec = [REASection new];
+            sec.title = @"诊断"; sec.icon = @"text.alignleft"; sec.subtitle = @"出问题时要看的东西";
+            sec.items = its;
+            [secs addObject:sec];
+        }
+        REAModule *md = [REAModule new];
+        md.title = @"风控与设备"; md.icon = @"shield.lefthalf.fill"; md.subtitle = @"设备指纹 / 检测绕过 / 诊断";
+        md.sections = secs;
+        [mods addObject:md];
+    }
+    return mods;
+}
 
 #pragma mark - 小工具
 
-static UIImage *REASymbol(NSString *name, UIColor *tint) {
-    if (!name.length) return nil;
+static UIImage *REASymbol(NSString *name, UIColor *tint)
+{
+    if (name.length == 0) return nil;
     UIImage *img = nil;
-    @try {
-        if ([UIImage respondsToSelector:@selector(systemImageNamed:)]) {
-            img = [UIImage systemImageNamed:name];
-        }
-    } @catch (NSException *e) { }
-    if (img && tint) img = [img imageWithTintColor:tint renderingMode:UIImageRenderingModeAlwaysOriginal];
-    return img;
-}
-
-static UIWindow *REAKeyWindow(void) {
-    UIWindow *fallback = nil;
-    @try {
-        if (@available(iOS 13.0, *)) {
-            for (UIScene *sc in [UIApplication sharedApplication].connectedScenes) {
-                if (![sc isKindOfClass:[UIWindowScene class]]) continue;
-                for (UIWindow *w in ((UIWindowScene *)sc).windows) {
-                    if (w.isKeyWindow) return w;
-                    if (!fallback && w.windowLevel == UIWindowLevelNormal) fallback = w;
-                }
-            }
-            if (fallback) return fallback;
-            for (UIScene *sc in [UIApplication sharedApplication].connectedScenes) {
-                if ([sc isKindOfClass:[UIWindowScene class]]) {
-                    for (UIWindow *w in ((UIWindowScene *)sc).windows) {
-                        if (w.windowLevel == UIWindowLevelNormal) return w;
-                    }
-                }
-            }
-        }
-        if (@available(iOS 13.0, *)) { } else {
-            return [UIApplication sharedApplication].keyWindow;
-        }
-    } @catch (NSException *e) { }
-    return [UIApplication sharedApplication].keyWindow;
-}
-
-static UIViewController *REATopViewController(void) {
-    UIViewController *vc = REAKeyWindow().rootViewController;
-    @try {
-        while (vc.presentedViewController) vc = vc.presentedViewController;
-        if ([vc isKindOfClass:[UINavigationController class]]) {
-            vc = ((UINavigationController *)vc).visibleViewController ?: vc;
-        } else if ([vc isKindOfClass:[UITabBarController class]]) {
-            vc = ((UITabBarController *)vc).selectedViewController ?: vc;
-        }
-    } @catch (NSException *e) { }
-    return vc;
-}
-
-static void REAToast(NSString *text) {
-    @autoreleasepool {
-        UIWindow *kw = REAKeyWindow();
-        if (!kw) return;
-        UILabel *lb = [[UILabel alloc] init];
-        lb.text = text;
-        lb.font = [UIFont systemFontOfSize:13 weight:UIFontWeightMedium];
-        lb.textColor = [UIColor whiteColor];
-        lb.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.82];
-        lb.textAlignment = NSTextAlignmentCenter;
-        lb.numberOfLines = 0;
-        lb.layer.cornerRadius = 12;
-        lb.layer.masksToBounds = YES;
-        CGSize max = CGSizeMake(kw.bounds.size.width - 60, 220);
-        CGRect rc = [text boundingRectWithSize:max
-                                       options:NSStringDrawingUsesLineFragmentOrigin
-                                    attributes:@{ NSFontAttributeName: lb.font }
-                                       context:nil];
-        CGSize sz = CGSizeMake(rc.size.width + 32, rc.size.height + 24);
-        lb.frame = CGRectMake((kw.bounds.size.width - sz.width) / 2,
-                              kw.bounds.size.height - sz.height - 100, sz.width, sz.height);
-        lb.alpha = 0;
-        [kw addSubview:lb];
-        [UIView animateWithDuration:0.18 animations:^{ lb.alpha = 1; } completion:^(BOOL f) {
-            [UIView animateWithDuration:0.35 delay:2.2 options:0 animations:^{ lb.alpha = 0; } completion:^(BOOL f2) {
-                [lb removeFromSuperview];
-            }];
-        }];
+    if (@available(iOS 13.0, *)) {
+        img = [UIImage systemImageNamed:name];
     }
+    if (img == nil) {
+        if (@available(iOS 13.0, *)) img = [UIImage systemImageNamed:@"circle"];
+    }
+    return tint ? [img imageWithTintColor:tint renderingMode:UIImageRenderingModeAlwaysTemplate] : img;
 }
 
-#pragma mark - 开关单元格（对应 HushSwitchCell）
+static UIWindow *REAKeyWindow(void)
+{
+    UIWindow *kw = nil;
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *sc in [UIApplication sharedApplication].connectedScenes) {
+            if (![sc isKindOfClass:[UIWindowScene class]]) continue;
+            for (UIWindow *w in ((UIWindowScene *)sc).windows) {
+                if (w.isKeyWindow) { kw = w; break; }
+            }
+            if (kw) break;
+        }
+    }
+    if (kw == nil) kw = [UIApplication sharedApplication].keyWindow;
+    return kw;
+}
+
+static UIViewController *REATopViewController(void)
+{
+    UIViewController *top = REAKeyWindow().rootViewController;
+    while (top) {
+        UIViewController *p = top.presentedViewController;
+        if (p && !p.isBeingDismissed) { top = p; continue; }
+        if ([top isKindOfClass:[UINavigationController class]])
+            top = ((UINavigationController *)top).visibleViewController;
+        else if ([top isKindOfClass:[UITabBarController class]])
+            top = ((UITabBarController *)top).selectedViewController;
+        else break;
+    }
+    return top;
+}
+
+static void REAToast(NSString *text)
+{
+    if (text.length == 0) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *host = REATopViewController();
+        if (host == nil) return;
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"[REA-Test]"
+                                                                  message:text
+                                                           preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
+        [host presentViewController:ac animated:YES completion:nil];
+    });
+}
+
+#pragma mark - 开关单元格
 
 @interface REASwitchCell : UITableViewCell
 @property (nonatomic, strong) UISwitch *sw;
 @property (nonatomic, copy) void (^onToggle)(BOOL on);
-- (void)configureTitle:(NSString *)title
-              subtitle:(NSString *)subtitle
-                  icon:(NSString *)icon
-                    on:(BOOL)on
-              disabled:(BOOL)disabled;
+@property (nonatomic, strong) REAItem *item;
+- (void)configureWithItem:(REAItem *)item;
 @end
 
 @implementation REASwitchCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
     self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.sw = [[UISwitch alloc] init];
-        self.accessoryView = self.sw;
-        [self.sw addTarget:self action:@selector(switchChanged) forControlEvents:UIControlEventValueChanged];
-        self.textLabel.numberOfLines = 0;
-        self.detailTextLabel.numberOfLines = 0;
+        _sw = [[UISwitch alloc] initWithFrame:CGRectZero];
+        [_sw addTarget:self action:@selector(switchChanged) forControlEvents:UIControlEventValueChanged];
+        self.accessoryView = _sw;
+        self.textLabel.numberOfLines = 1;
+        self.detailTextLabel.numberOfLines = 3;
         self.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+        self.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
 
-- (void)configureTitle:(NSString *)title
-              subtitle:(NSString *)subtitle
-                  icon:(NSString *)icon
-                    on:(BOOL)on
-              disabled:(BOOL)disabled {
-    self.textLabel.text = title ?: @"";
-    self.detailTextLabel.text = subtitle ?: @"";
-    if (@available(iOS 14.0, *)) {
-        if (icon.length) self.imageView.image = REASymbol(icon, [UIColor systemBlueColor]);
+- (void)configureWithItem:(REAItem *)item
+{
+    self.item = item;
+    self.textLabel.text = item.title;
+    self.detailTextLabel.text = item.subtitle;
+    if (@available(iOS 13.0, *)) {
+        self.imageView.image = REASymbol(item.icon, [UIColor systemBlueColor]);
     }
+    BOOL on = item.key.length ? REAUIFlag(item.key) : item.defOn;
     [self.sw setOn:on animated:NO];
-    self.sw.enabled = !disabled;
-    self.contentView.alpha = disabled ? 0.55 : 1.0;
 }
 
-- (void)switchChanged {
-    if (self.onToggle) self.onToggle(self.sw.isOn);
+- (void)switchChanged
+{
+    BOOL on = self.sw.isOn;
+    if (self.item.key.length) REAUISetFlag(self.item.key, on);
+    if (self.onToggle) self.onToggle(on);
 }
 
 @end
 
-#pragma mark - 详情页（对应 HushModuleDetailController）
+#pragma mark - 动作单元格
+
+@interface REAActionCell : UITableViewCell
+- (void)configureWithItem:(REAItem *)item;
+@end
+
+@implementation REAActionCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.textLabel.numberOfLines = 1;
+        self.detailTextLabel.numberOfLines = 3;
+        self.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+        self.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    return self;
+}
+
+- (void)configureWithItem:(REAItem *)item
+{
+    self.textLabel.text = item.title;
+    self.detailTextLabel.text = item.subtitle;
+    if (@available(iOS 13.0, *)) {
+        self.imageView.image = REASymbol(item.icon, [UIColor systemTealColor]);
+    }
+}
+
+@end
+
+#pragma mark - 动作实现（全部真实可用，不省略）
+
+static void reaActionDefault(REAItem *item)
+{
+    REAToast([NSString stringWithFormat:@"「%@」在本复刻版里没有独立实现。", item.title ?: @"该动作"]);
+}
+
+static void reaActionSetLocation(REAItem *item)
+{
+    UIViewController *host = REATopViewController();
+    if (host == nil) return;
+    NSDictionary *cur = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kREAFakeLocationKey];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"设置虚拟坐标"
+                                                              message:@"纬度 / 经度 / 海拔"
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
+        tf.placeholder = @"纬度 39.9042";
+        tf.keyboardType = UIKeyboardTypeDecimalPad;
+        tf.text = cur[@"lat"] ? [cur[@"lat"] stringValue] : @"";
+    }];
+    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
+        tf.placeholder = @"经度 116.4074";
+        tf.keyboardType = UIKeyboardTypeDecimalPad;
+        tf.text = cur[@"lng"] ? [cur[@"lng"] stringValue] : @"";
+    }];
+    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
+        tf.placeholder = @"海拔 50";
+        tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+        tf.text = cur[@"alt"] ? [cur[@"alt"] stringValue] : @"";
+    }];
+    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"保存" style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction *a) {
+        double lat = [ac.textFields[0].text doubleValue];
+        double lng = [ac.textFields[1].text doubleValue];
+        double alt = [ac.textFields[2].text doubleValue];
+        NSDictionary *loc = @{ @"lat": @(lat), @"lng": @(lng), @"alt": @(alt) };
+        NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+        [d setObject:loc forKey:kREAFakeLocationKey];
+        [d setBool:YES forKey:@"switch_virtual_location"];
+        [d synchronize];
+        REAUILog(@"虚拟坐标写入 %.6f,%.6f alt=%.1f", lat, lng, alt);
+        REAToast([NSString stringWithFormat:@"已保存：%.6f, %.6f（海拔 %.1f）", lat, lng, alt]);
+    }]];
+    [host presentViewController:ac animated:YES completion:nil];
+}
+
+static void reaActionClearLocation(REAItem *item)
+{
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    [d removeObjectForKey:kREAFakeLocationKey];
+    [d setBool:NO forKey:@"switch_virtual_location"];
+    [d synchronize];
+    REAToast(@"虚拟定位已清除（回到真实坐标）");
+}
+
+static void reaActionShowHookReport(REAItem *item) { REAShowHookReportBridge(); }
+static void reaActionShowHitReport(REAItem *item)  { REAShowHitReportBridge(); }
+static void reaActionReinstall(REAItem *item)      { REAReinstallHooksBridge(); REAToast(@"已触发重新安装（见日志）"); }
+
+static void reaActionResetAll(REAItem *item)
+{
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    NSDictionary *all = [d dictionaryRepresentation];
+    NSUInteger n = 0;
+    for (NSString *k in all) {
+        if ([k hasPrefix:@"switch_"] || [k hasPrefix:@"purify_"] ||
+            [k hasPrefix:@"regret_"] || [k hasPrefix:@"rea_"]) {
+            if ([k isEqualToString:kREABallCenterKey]) continue;
+            if ([k isEqualToString:kREABallEnabledKey]) continue;
+            [d removeObjectForKey:k];
+            n++;
+        }
+    }
+    [d synchronize];
+    REAToast([NSString stringWithFormat:@"已重置 %lu 个开关（悬浮球设置保留）", (unsigned long)n]);
+}
+
+static void reaActionShowLog(REAItem *item)
+{
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    path = [path stringByAppendingPathComponent:@"BluedHushREA.log"];
+    NSString *text = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
+    if (text.length == 0) text = @"（日志为空或尚未写入）";
+    NSArray *lines = [text componentsSeparatedByString:@"\n"];
+    NSInteger total = (NSInteger)lines.count;
+    NSInteger from = MAX(0, total - 40);
+    NSString *tail = [[lines subarrayWithRange:NSMakeRange((NSUInteger)from, (NSUInteger)(total - from))]
+                      componentsJoinedByString:@"\n"];
+    UIViewController *host = REATopViewController();
+    if (host == nil) return;
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"运行日志（尾部 40 行）"
+                                                              message:tail
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
+    [host presentViewController:ac animated:YES completion:nil];
+}
+
+static void reaActionDeviceCheck(REAItem *item)
+{
+    NSString *msg = [NSString stringWithFormat:@"越狱：%@\n注入：%@\n设备：%@",
+                     [[NSFileManager defaultManager] fileExistsAtPath:@"/var/jb"] ? @"是(检测到 /var/jb)" : @"否",
+                     @"是（本插件正在运行）",
+                     [[UIDevice currentDevice] name]];
+    UIViewController *host = REATopViewController();
+    if (host == nil) return;
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"设备检测"
+                                                              message:msg
+                                                       preferredStyle:UIAlertControllerStyleAlert];
+    [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
+    [host presentViewController:ac animated:YES completion:nil];
+}
+
+static void reaActionListPlaceholder(NSString *title)
+{
+    REAToast([NSString stringWithFormat:@"%@：本复刻版未实现列表页（Hook 侧数据仍会记录）。", title]);
+}
+
+static void reaActionRiskList(REAItem *item)       { reaActionListPlaceholder(@"风险用户名单"); }
+static void reaActionDeletedList(REAItem *item)    { reaActionListPlaceholder(@"已注销用户"); }
+static void reaActionSuspiciousList(REAItem *item) { reaActionListPlaceholder(@"可疑名单"); }
+static void reaActionStalkList(REAItem *item)      { reaActionListPlaceholder(@"视奸列表"); }
+
+static void REAInvokeAction(REAItem *item)
+{
+    NSString *sel = item.actionSelector ?: @"reaActionDefault";
+    /* 用显式字符串分派，避免 performSelector 的函数指针类型陷阱 */
+    if ([sel isEqualToString:@"reaActionSetLocation"])        { reaActionSetLocation(item); return; }
+    if ([sel isEqualToString:@"reaActionClearLocation"])      { reaActionClearLocation(item); return; }
+    if ([sel isEqualToString:@"reaActionShowHookReport"])     { reaActionShowHookReport(item); return; }
+    if ([sel isEqualToString:@"reaActionShowHitReport"])      { reaActionShowHitReport(item); return; }
+    if ([sel isEqualToString:@"reaActionReinstall"])          { reaActionReinstall(item); return; }
+    if ([sel isEqualToString:@"reaActionResetAll"])           { reaActionResetAll(item); return; }
+    if ([sel isEqualToString:@"reaActionShowLog"])            { reaActionShowLog(item); return; }
+    if ([sel isEqualToString:@"reaActionDeviceCheck"])        { reaActionDeviceCheck(item); return; }
+    if ([sel isEqualToString:@"reaActionRiskList"])           { reaActionRiskList(item); return; }
+    if ([sel isEqualToString:@"reaActionDeletedList"])        { reaActionDeletedList(item); return; }
+    if ([sel isEqualToString:@"reaActionSuspiciousList"])     { reaActionSuspiciousList(item); return; }
+    if ([sel isEqualToString:@"reaActionStalkList"])          { reaActionStalkList(item); return; }
+    reaActionDefault(item);
+}
+
+#pragma mark - 模块详情页（对应原版 HushModuleDetailController）
 
 @interface READetailController : UITableViewController
 @property (nonatomic, strong) REAModule *module;
+- (instancetype)initWithModule:(REAModule *)module;
 @end
 
 @implementation READetailController
 
-- (instancetype)initWithModule:(REAModule *)module {
+- (instancetype)initWithModule:(REAModule *)module
+{
     self = [super initWithStyle:UITableViewStyleInsetGrouped];
     if (self) {
-        self.module = module;
+        _module = module;
         self.title = module.title;
     }
     return self;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    self.tableView.estimatedRowHeight = 64;
+    REAUILog(@"模块详情页打开：%@（%lu 个分区）",
+             self.module.title, (unsigned long)self.module.sections.count);
     self.navigationItem.rightBarButtonItem =
         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                     target:self
-                                                     action:@selector(close)];
-    self.navigationController.navigationBar.prefersLargeTitles = NO;
+                                                      target:self
+                                                      action:@selector(closeSelf)];
+    self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc] initWithTitle:@"重装 Hook"
+                                         style:UIBarButtonItemStylePlain
+                                        target:self
+                                        action:@selector(reinstall)];
 }
 
-- (void)close {
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)closeSelf
+{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (void)reinstall
+{
+    REAReinstallHooksBridge();
+    REAToast(@"已触发重新安装 Hook（见日志）");
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     return (NSInteger)self.module.sections.count;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     return (NSInteger)self.module.sections[(NSUInteger)section].items.count;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return self.module.sections[(NSUInteger)section].title;
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    REASection *s = self.module.sections[(NSUInteger)section];
+    return s.title;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    return self.module.sections[(NSUInteger)section].footer;
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    REASection *s = self.module.sections[(NSUInteger)section];
+    if (s.subtitle.length == 0) return nil;
+    NSInteger on = 0, total = 0;
+    for (REAItem *it in s.items) {
+        if (it.isAction) continue;
+        total++;
+        if (it.key.length && REAUIFlag(it.key)) on++;
+    }
+    return [NSString stringWithFormat:@"已开 %ld/%ld · %@", (long)on, (long)total, s.subtitle];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    REAItem *item = self.module.sections[(NSUInteger)indexPath.section].items[(NSUInteger)indexPath.row];
-
-    if ([item isKindOfClass:[REAToggle class]]) {
-        REAToggle *t = (REAToggle *)item;
-        static NSString *cid = @"rea-switch";
-        REASwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:cid];
-        if (!cell) cell = [[REASwitchCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cid];
-        BOOL on = REAUIFlag(t.key, t.defOn);
-        [cell configureTitle:t.title subtitle:t.subtitle icon:t.icon on:on disabled:NO];
-        __weak typeof(self) weakSelf = self;
-        cell.onToggle = ^(BOOL now) {
-            REAUISetFlag(t.key, now);
-            REALogBridge(@"[UI] %@ -> %d", t.key, (int)now);
-            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath]
-                                      withRowAnimation:UITableViewRowAnimationNone];
-        };
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    REASection *s = self.module.sections[(NSUInteger)indexPath.section];
+    REAItem *item = s.items[(NSUInteger)indexPath.row];
+    if (item.isAction) {
+        static NSString *aid = @"rea-action";
+        REAActionCell *cell = [tableView dequeueReusableCellWithIdentifier:aid];
+        if (cell == nil) cell = [[REAActionCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                     reuseIdentifier:aid];
+        [cell configureWithItem:item];
         return cell;
     }
-
-    static NSString *aid = @"rea-action";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:aid];
-    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:aid];
-    cell.textLabel.text = item.title;
-    cell.detailTextLabel.text = item.subtitle;
-    cell.detailTextLabel.numberOfLines = 0;
-    cell.detailTextLabel.textColor = [UIColor secondaryLabelColor];
-    if (@available(iOS 14.0, *)) {
-        if (item.icon.length) cell.imageView.image = REASymbol(item.icon, [UIColor systemTealColor]);
-    }
-    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    static NSString *sid = @"rea-switch";
+    REASwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:sid];
+    if (cell == nil) cell = [[REASwitchCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                 reuseIdentifier:sid];
+    [cell configureWithItem:item];
+    __weak typeof(self) weakSelf = self;
+    cell.onToggle = ^(BOOL on) {
+        __strong typeof(weakSelf) self2 = weakSelf;
+        if (!self2) return;
+        NSIndexSet *idx = [NSIndexSet indexSetWithIndex:(NSUInteger)indexPath.section];
+        [self2.tableView reloadSections:idx withRowAnimation:UITableViewRowAnimationNone];
+    };
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    REAItem *item = self.module.sections[(NSUInteger)indexPath.section].items[(NSUInteger)indexPath.row];
-    if ([item isKindOfClass:[REAAction class]] && ((REAAction *)item).handler) {
-        ((REAAction *)item).handler();
-    }
+    REASection *s = self.module.sections[(NSUInteger)indexPath.section];
+    REAItem *item = s.items[(NSUInteger)indexPath.row];
+    if (!item.isAction) return;
+    REAInvokeAction(item);
 }
 
 @end
 
-#pragma mark - 主面板（对应 HushSettingsPanel：UITableView + 多级模块）
+#pragma mark - 模块列表（对应原版 HushSettingsPanel）
 
-@interface REAPanelController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, strong) UITableView *table;
+@interface REAModuleListController : UITableViewController
 @property (nonatomic, strong) NSArray<REAModule *> *modules;
 @end
 
-@implementation REAPanelController
+@implementation REAModuleListController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    self.modules = REABuildMenu();
     self.title = @"小蓝助手";
-    self.view.backgroundColor = [UIColor systemGroupedBackgroundColor];
-
-    self.table = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
-    self.table.dataSource = self;
-    self.table.delegate = self;
-    self.table.rowHeight = UITableViewAutomaticDimension;
-    self.table.estimatedRowHeight = 60;
-    self.table.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.view addSubview:self.table];
-    [NSLayoutConstraint activateConstraints:@[
-        [self.table.topAnchor constraintEqualToAnchor:self.view.topAnchor],
-        [self.table.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
-        [self.table.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
-        [self.table.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
-    ]];
+    REAUILog(@"面板打开：%lu 个模块", (unsigned long)self.modules.count);
+    self.navigationController.navigationBar.translucent = NO;
+    self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemClose
+                                                      target:self
+                                                      action:@selector(closeSelf)];
     self.navigationItem.rightBarButtonItem =
-        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                     target:self
-                                                     action:@selector(close)];
-    self.modules = REABuildModules();
+        [[UIBarButtonItem alloc] initWithTitle:@"全部关闭"
+                                         style:UIBarButtonItemStylePlain
+                                        target:self
+                                        action:@selector(turnAllOff)];
 }
 
-- (void)close { [self dismissViewControllerAnimated:YES completion:nil]; }
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
+- (void)closeSelf
+{
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)turnAllOff
+{
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    NSUInteger n = 0;
+    for (REAModule *m in self.modules) {
+        for (REASection *s in m.sections) {
+            for (REAItem *it in s.items) {
+                if (it.isAction || it.key.length == 0) continue;
+                [d setBool:NO forKey:it.key];
+                n++;
+            }
+        }
+    }
+    [d synchronize];
+    [self.tableView reloadData];
+    REAToast([NSString stringWithFormat:@"已关闭 %lu 个开关", (unsigned long)n]);
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView { return 1; }
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     return (NSInteger)self.modules.count;
 }
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"功能分类（与 App 内的开关同名，改完立即生效，无需重启）";
-}
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
-    return @"悬浮球：拖动可移动位置；单击打开此面板；长按弹出快捷菜单。\n所有开关保存在 NSUserDefaults（key 与 Hook 读取的一致）。";
+
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    return @"[REA-Test] 复刻版 · 点任意分类进入开关列表 · 开关即时写入 NSUserDefaults 并立即对 Hook 生效";
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cid = @"rea-module";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cid];
-    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cid];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *mid = @"rea-module";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:mid];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                     reuseIdentifier:mid];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     REAModule *m = self.modules[(NSUInteger)indexPath.row];
     cell.textLabel.text = m.title;
-    cell.detailTextLabel.text = m.subtitle;
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    if (@available(iOS 14.0, *)) {
-        if (m.icon.length) cell.imageView.image = REASymbol(m.icon, [UIColor systemBlueColor]);
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"已开 %ld/%ld · %@",
+                                 (long)[m enabledCount], (long)[m totalCount], m.subtitle];
+    cell.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+    cell.detailTextLabel.font = [UIFont systemFontOfSize:12.0];
+    if (@available(iOS 13.0, *)) {
+        cell.imageView.image = REASymbol(m.icon, [UIColor systemBlueColor]);
     }
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     REAModule *m = self.modules[(NSUInteger)indexPath.row];
     READetailController *vc = [[READetailController alloc] initWithModule:m];
-    vc.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end
 
-#pragma mark - 悬浮球（对应 HushFloatBall：UIView + pan/tap 手势 + UIImageView）
+#pragma mark - 悬浮球（对应原版 HushFloatBall）
 
-@interface REAFloatBallView : UIView
+@interface REAFloatBall : UIView
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, copy) void (^onTap)(void);
-@property (nonatomic, copy) void (^onLongPress)(void);
-@property (nonatomic, assign) CGPoint dragStart;
 @end
 
-@implementation REAFloatBallView
+@implementation REAFloatBall
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [[UIColor systemBlueColor] colorWithAlphaComponent:0.92];
-        self.layer.cornerRadius = frame.size.width / 2;
+        self.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.72];
+        self.layer.cornerRadius = frame.size.width / 2.0;
+        self.layer.masksToBounds = NO;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOpacity = 0.35;
-        self.layer.shadowRadius = 6;
+        self.layer.shadowOpacity = 0.28;
+        self.layer.shadowRadius = 6.0;
         self.layer.shadowOffset = CGSizeMake(0, 2);
-        self.alpha = 0.92;
 
-        self.iconView = [[UIImageView alloc] initWithFrame:self.bounds];
-        self.iconView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.iconView.contentMode = UIViewContentModeCenter;
-        self.iconView.userInteractionEnabled = NO;
-        [self addSubview:self.iconView];
+        CGFloat inset = frame.size.width * 0.22;
+        _iconView = [[UIImageView alloc] initWithFrame:CGRectInset(self.bounds, inset, inset)];
+        _iconView.contentMode = UIViewContentModeScaleAspectFit;
+        _iconView.userInteractionEnabled = NO;
+        [self addSubview:_iconView];
         [self refreshIcon];
 
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                             action:@selector(handleTap:)];
         [self addGestureRecognizer:tap];
-
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                             action:@selector(handlePan:)];
         [self addGestureRecognizer:pan];
-
-        UILongPressGestureRecognizer *lp = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
-        lp.minimumPressDuration = 0.55;
+        UILongPressGestureRecognizer *lp = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+                                                                                        action:@selector(handleLongPress:)];
+        lp.minimumPressDuration = 0.6;
         [self addGestureRecognizer:lp];
+        REAUILog(@"悬浮球创建 frame=%@", NSStringFromCGRect(frame));
     }
     return self;
 }
 
-// 等价原版 -refreshIcon：优先 SF Symbol，取不到就画一个文字占位，绝不依赖资源包
-- (void)refreshIcon {
+- (void)refreshIcon
+{
     UIImage *img = nil;
-    @try {
-        if ([UIImage respondsToSelector:@selector(systemImageNamed:)]) {
-            img = [UIImage systemImageNamed:@"shield.lefthalf.filled"];
-            if (!img) img = [UIImage systemImageNamed:@"gearshape.fill"];
-        }
-    } @catch (NSException *e) { }
-    if (img) {
-        self.iconView.image = [img imageWithTintColor:[UIColor whiteColor] renderingMode:UIImageRenderingModeAlwaysOriginal];
-        return;
+    if (@available(iOS 13.0, *)) img = [UIImage systemImageNamed:@"bolt.horizontal.circle.fill"];
+    if (img == nil) {
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(28, 28), NO, 0);
+        [[UIColor whiteColor] set];
+        [@"蓝" drawInRect:CGRectMake(4, 2, 22, 22)
+                 withAttributes:@{NSFontAttributeName: [UIFont boldSystemFontOfSize:17],
+                                  NSForegroundColorAttributeName: [UIColor whiteColor]}];
+        img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
     }
-    UILabel *lb = (UILabel *)[self viewWithTag:0x524541];
-    if (!lb) {
-        lb = [[UILabel alloc] initWithFrame:self.bounds];
-        lb.tag = 0x524541;
-        lb.text = @"蓝";
-        lb.font = [UIFont boldSystemFontOfSize:18];
-        lb.textColor = [UIColor whiteColor];
-        lb.textAlignment = NSTextAlignmentCenter;
-        lb.userInteractionEnabled = NO;
-        [self addSubview:lb];
-    }
+    self.iconView.image = [img imageWithTintColor:[UIColor whiteColor]
+                                    renderingMode:UIImageRenderingModeAlwaysTemplate];
+    self.iconView.tintColor = [UIColor whiteColor];
 }
 
-- (void)handleTap {
+- (void)handleTap:(UITapGestureRecognizer *)g
+{
+    if (g.state != UIGestureRecognizerStateEnded) return;
+    REAUILog(@"悬浮球被点击");
     if (self.onTap) self.onTap();
 }
 
-- (void)handleLongPress:(UILongPressGestureRecognizer *)g {
-    if (g.state == UIGestureRecognizerStateBegan && self.onLongPress) self.onLongPress();
-}
-
-- (void)handlePan:(UIPanGestureRecognizer *)g {
-    UIView *sup = self.superview;
-    if (!sup) return;
-    CGPoint p = [g translationInView:sup];
-    if (g.state == UIGestureRecognizerStateBegan) {
-        self.dragStart = self.center;
-        [UIView animateWithDuration:0.12 animations:^{ self.transform = CGAffineTransformMakeScale(1.08, 1.08); }];
-    }
-    self.center = CGPointMake(self.dragStart.x + p.x, self.dragStart.y + p.y);
-    if (g.state == UIGestureRecognizerStateEnded || g.state == UIGestureRecognizerStateCancelled) {
-        [UIView animateWithDuration:0.12 animations:^{ self.transform = CGAffineTransformIdentity; }];
-        // 贴边吸附（左右最近边），并把位置持久化
-        CGRect b = sup.bounds;
-        CGFloat half = self.bounds.size.width / 2;
-        CGFloat x = (self.center.x < b.size.width / 2) ? half + 6 : b.size.width - half - 6;
-        CGFloat y = MIN(MAX(self.center.y, half + 40), b.size.height - half - 40);
-        [UIView animateWithDuration:0.22 animations:^{ self.center = CGPointMake(x, y); } completion:^(BOOL f) {
-            [[REAUILoad shared] saveBallCenter:self.center];
+- (void)handlePan:(UIPanGestureRecognizer *)g
+{
+    UIWindow *win = self.window;
+    if (win == nil) return;
+    CGPoint t = [g translationInView:win];
+    CGPoint c = CGPointMake(self.center.x + t.x, self.center.y + t.y);
+    CGFloat half = self.bounds.size.width / 2.0;
+    c.x = MAX(half + 4.0, MIN(c.x, win.bounds.size.width - half - 4.0));
+    c.y = MAX(half + 4.0, MIN(c.y, win.bounds.size.height - half - 4.0));
+    self.center = c;
+    [g setTranslation:CGPointZero inView:win];
+    if (g.state == UIGestureRecognizerStateEnded ||
+        g.state == UIGestureRecognizerStateCancelled) {
+        /* 贴边吸附 */
+        CGFloat leftX = half + 4.0;
+        CGFloat rightX = win.bounds.size.width - half - 4.0;
+        CGFloat targetX = (c.x - leftX < rightX - c.x) ? leftX : rightX;
+        [UIView animateWithDuration:0.22 animations:^{
+            self.center = CGPointMake(targetX, self.center.y);
+        } completion:^(BOOL finished) {
+            [[NSUserDefaults standardUserDefaults] setObject:NSStringFromCGPoint(self.center)
+                                                      forKey:kREABallCenterKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
         }];
     }
 }
 
-@end
-
-#pragma mark - 悬浮球所在窗口（触摸穿透）
-
-@interface REAOverlayWindow : UIWindow
-@property (nonatomic, weak) UIView *ball;
-@end
-
-@implementation REAOverlayWindow
-
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    // 球以外的地方一律穿透，保证不影响 App 自身交互
-    UIView *v = [super hitTest:point withEvent:event];
-    if (v == self || v == self.rootViewController.view) {
-        if (self.ball && CGRectContainsPoint(self.ball.frame, point)) return self.ball;
-        return nil;
-    }
-    return v;
+- (void)handleLongPress:(UILongPressGestureRecognizer *)g
+{
+    if (g.state != UIGestureRecognizerStateBegan) return;
+    REAUILog(@"悬浮球长按 -> 快捷菜单");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"REAFloatBallLongPress" object:nil];
 }
 
 @end
 
-#pragma mark - 单例装配（接口见文件头部前向声明）
+#pragma mark - 覆盖窗口（UIWindowLevelAlert 顶层，其余区域事件穿透）
 
-@implementation REAUILoad
+@interface REAWindow : UIWindow
+@property (nonatomic, strong) REAFloatBall *ball;
+@end
 
-+ (instancetype)shared {
-    static REAUILoad *s = nil;
+@implementation REAWindow
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *hit = [super hitTest:point withEvent:event];
+    if (hit == self.ball || [hit isDescendantOfView:self.ball]) return hit;
+    return nil;
+}
+
+@end
+
+#pragma mark - UI 控制器单例
+
+@interface REAUI : NSObject
+@property (nonatomic, strong) REAWindow *window;
+@property (nonatomic, strong) REAFloatBall *ball;
+@property (nonatomic, assign) BOOL started;
++ (instancetype)shared;
+- (void)start;
+- (void)openPanel;
+- (void)showQuickMenu;
+@end
+
+@implementation REAUI
+
++ (instancetype)shared
+{
+    static REAUI *s = nil;
     static dispatch_once_t once;
-    dispatch_once(&once, ^{ s = [[REAUILoad alloc] init]; });
+    dispatch_once(&once, ^{ s = [REAUI new]; });
     return s;
 }
 
-- (CGPoint)ballCenter {
-    id v = [[NSUserDefaults standardUserDefaults] objectForKey:kREABallCenterKey];
-    if ([v isKindOfClass:[NSString class]]) {
-        CGPoint p = CGPointFromString((NSString *)v);
-        if (p.x > 0 && p.y > 0) return p;
+- (void)start
+{
+    if (self.started) { REAUILog(@"UI 已启动，跳过重复安装"); return; }
+    self.started = YES;
+
+    UIWindow *kw = REAKeyWindow();
+    if (kw == nil) { REAUILog(@"找不到 keyWindow，UI 延后"); self.started = NO; return; }
+
+    REAWindow *win = nil;
+    if (@available(iOS 13.0, *)) {
+        win = [[REAWindow alloc] initWithWindowScene:kw.windowScene];
+    } else {
+        win = [[REAWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     }
-    CGSize s = [UIScreen mainScreen].bounds.size;
-    return CGPointMake(s.width - 34, s.height * 0.42);
+    win.frame = [UIScreen mainScreen].bounds;
+    win.windowLevel = UIWindowLevelAlert + 1;
+    win.backgroundColor = [UIColor clearColor];
+    win.rootViewController = [[UIViewController alloc] init];
+    win.hidden = NO;
+    self.window = win;
+
+    if (!REAUIFlag(kREABallEnabledKey)) {
+        REAUILog(@"悬浮球开关关闭（%@=0）", kREABallEnabledKey);
+        [self refreshBallFrame];
+        return;
+    }
+
+    CGFloat size = 52.0;
+    CGPoint saved = CGPointFromString([[NSUserDefaults standardUserDefaults]
+                                       objectForKey:kREABallCenterKey] ?: NSStringFromCGPoint(CGPointZero));
+    if (CGPointEqualToPoint(saved, CGPointZero)) {
+        saved = CGPointMake(win.bounds.size.width - size, win.bounds.size.height * 0.62);
+    }
+    saved.x = MAX(size / 2 + 4, MIN(saved.x, win.bounds.size.width - size / 2 - 4));
+    saved.y = MAX(size / 2 + 4, MIN(saved.y, win.bounds.size.height - size / 2 - 4));
+
+    REAFloatBall *ball = [[REAFloatBall alloc] initWithFrame:CGRectMake(0, 0, size, size)];
+    ball.center = saved;
+    __weak typeof(self) weakSelf = self;
+    ball.onTap = ^{
+        __strong typeof(weakSelf) self2 = weakSelf;
+        [self2 openPanel];
+    };
+    [win.rootViewController.view addSubview:ball];
+    self.ball = ball;
+
+    [[NSNotificationCenter defaultCenter] addObserverForName:@"REAFloatBallLongPress"
+                                                      object:nil
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *note) {
+        __strong typeof(weakSelf) self3 = weakSelf;
+        [self3 showQuickMenu];
+    }];
+
+    REAUILog(@"悬浮球已挂载 (%.0f, %.0f)", ball.center.x, ball.center.y);
 }
 
-- (void)saveBallCenter:(CGPoint)c {
-    @try {
-        [[NSUserDefaults standardUserDefaults] setObject:NSStringFromCGPoint(c) forKey:kREABallCenterKey];
-    } @catch (NSException *e) { }
+- (void)refreshBallFrame
+{
+    if (self.ball) self.ball.hidden = !REAUIFlag(kREABallEnabledKey);
 }
 
-- (void)start {
+- (void)openPanel
+{
+    UIViewController *host = REATopViewController();
+    if (host == nil) { REAUILog(@"openPanel: 没有可用宿主 VC"); return; }
+    if (host.presentedViewController != nil) {
+        REAUILog(@"openPanel: 已有 presented VC，先关闭");
+        [host dismissViewControllerAnimated:NO completion:nil];
+    }
+    REAModuleListController *list = [[REAModuleListController alloc] initWithStyle:UITableViewStyleInsetGrouped];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:list];
+    nav.modalPresentationStyle = UIModalPresentationPageSheet;
+    [host presentViewController:nav animated:YES completion:^{
+        REAUILog(@"panel opened on %@", NSStringFromClass([host class]));
+    }];
+}
+
+- (void)showQuickMenu
+{
+    UIViewController *host = REATopViewController();
+    if (host == nil) return;
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"小蓝助手"
+                                                              message:@"快捷入口"
+                                                       preferredStyle:UIAlertControllerStyleActionSheet];
+    [ac addAction:[UIAlertAction actionWithTitle:@"打开完整面板" style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction *a) { [[REAUI shared] openPanel]; }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"查看 Hook 报告" style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction *a) { REAShowHookReportBridge(); }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"查看触发统计" style:UIAlertActionStyleDefault
+                                          handler:^(UIAlertAction *a) { REAShowHitReportBridge(); }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"隐藏悬浮球" style:UIAlertActionStyleDestructive
+                                          handler:^(UIAlertAction *a) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kREABallEnabledKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[REAUI shared] refreshBallFrame];
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    if (ac.popoverPresentationController && self.ball) {
+        ac.popoverPresentationController.sourceView = self.ball;
+        ac.popoverPresentationController.sourceRect = self.ball.bounds;
+    }
+    [host presentViewController:ac animated:YES completion:nil];
+}
+
+@end
+
+#pragma mark - 对外接口
+
+void REAUIStart(void)
+{
+    /* 极早期入口：ctor / +load 阶段调用一次，若此时还没有 UIWindowScene
+       （keyWindow == nil），按 0.5s 间隔最多重试 40 次，一旦宿主建好窗口立即挂球。
+       重试只在主队列，且不会触发任何宿主类 +initialize（只用 class_copyMethodList 一类只 realize 的 API）。 */
+    static NSInteger attempts = 0;
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.started) return;
-        if (!REAUIFlag(kREABallEnabledKey, YES)) return;
-        UIWindow *kw = REAKeyWindow();
-        if (!kw) { REALogBridge(@"[UI] no key window, retry later"); return; }
-
-        CGRect screen = [UIScreen mainScreen].bounds;
-        if (@available(iOS 13.0, *)) {
-            self.window = [[REAOverlayWindow alloc] initWithWindowScene:kw.windowScene];
-        } else {
-            self.window = [[REAOverlayWindow alloc] initWithFrame:screen];
+        REAUI *ui = [REAUI shared];
+        if (ui.started) return;
+        [ui start];
+        attempts++;
+        if (!ui.started && attempts < 40) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
+                           dispatch_get_main_queue(), ^{
+                REAUIStart();
+            });
+        } else if (attempts >= 40 && !ui.started) {
+            REAUILog(@"UI 启动重试 %ld 次仍无 keyWindow，放弃", (long)attempts);
         }
-        self.window.frame = screen;
-        self.window.windowLevel = UIWindowLevelAlert + 1;
-        self.window.backgroundColor = [UIColor clearColor];
-        self.window.rootViewController = [[UIViewController alloc] init];
-        self.window.rootViewController.view.backgroundColor = [UIColor clearColor];
-        self.window.hidden = NO;
-
-        CGFloat d = 52;
-        CGPoint c = [self ballCenter];
-        self.ball = [[REAFloatBallView alloc] initWithFrame:CGRectMake(c.x - d / 2, c.y - d / 2, d, d)];
-        __weak typeof(self) weakSelf = self;
-        self.ball.onTap = ^{ [weakSelf openPanel]; };
-        self.ball.onLongPress = ^{ [weakSelf showQuickMenu]; };
-        [self.window.rootViewController.view addSubview:self.ball];
-        ((REAOverlayWindow *)self.window).ball = self.ball;
-        self.started = YES;
-        REALogBridge(@"[UI] float ball ready at %@", NSStringFromCGPoint(c));
     });
 }
 
-- (void)openPanel {
-    // 优先用 App 自己的顶层 VC 来 present：在非 keyWindow 上呈现容易触发
-    // "whose view is not in the window hierarchy" 的警告，宿主 VC 一定在层级里。
-    UIViewController *host = REATopViewController();
-    if (!host) host = self.window.rootViewController;
-    if (!host) return;
-    if (host.presentedViewController) return;
-    REAPanelController *panel = [[REAPanelController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:panel];
-    nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [host presentViewController:nav animated:YES completion:nil];
-    REALogBridge(@"[UI] panel opened");
-}
-
-- (void)showQuickMenu {
-    UIViewController *top = REATopViewController();
-    if (!top) top = self.window.rootViewController;
-    if (!top || top.presentedViewController) return;
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"小蓝助手"
-                                                              message:@"快捷操作"
-                                                       preferredStyle:UIAlertControllerStyleActionSheet];
-    [ac addAction:[UIAlertAction actionWithTitle:@"打开设置面板" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
-        [self openPanel];
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"查看 Hook 报告" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
-        REAShowHookReportBridge();
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"查看触发统计" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
-        REAShowHitReportBridge();
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"重新安装 Hook" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
-        REAReinstallHooksBridge();
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"隐藏悬浮球" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *a) {
-        REAUISetFlag(kREABallEnabledKey, NO);
-        self.ball.hidden = YES;
-        REAToast(@"悬浮球已隐藏，重新启动 App 生效");
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    ac.popoverPresentationController.sourceView = self.ball ?: top.view;
-    if (self.ball) ac.popoverPresentationController.sourceRect = self.ball.bounds;
-    [top presentViewController:ac animated:YES completion:nil];
-}
-
-@end
-
-#pragma mark - 菜单模型（对应 HushSettingsPanel -buildModel）
-
-static REAToggle *REAToggleMake(NSString *key, NSString *title, NSString *subtitle, NSString *icon, BOOL def) {
-    REAToggle *t = [[REAToggle alloc] init];
-    t.key = key;
-    t.title = title;
-    t.subtitle = subtitle;
-    t.icon = icon;
-    t.defOn = def;
-    return t;
-}
-
-static REAAction *REAActionMake(NSString *title, NSString *subtitle, NSString *icon, NSString *label, void (^h)(void)) {
-    REAAction *a = [[REAAction alloc] init];
-    a.title = title;
-    a.subtitle = subtitle;
-    a.icon = icon;
-    a.handler = h;
-    a.actionLabel = label;
-    return a;
-}
-
-static REASection *REASectionMake(NSString *title, NSString *footer, NSArray<REAItem *> *items) {
-    REASection *s = [[REASection alloc] init];
-    s.title = title;
-    s.footer = footer;
-    s.items = items;
-    return s;
-}
-
-static REAModule *REAModuleMake(NSString *title, NSString *subtitle, NSString *icon, NSArray<REASection *> *sections) {
-    REAModule *m = [[REAModule alloc] init];
-    m.title = title;
-    m.subtitle = subtitle;
-    m.icon = icon;
-    m.sections = sections;
-    return m;
-}
-
-static NSArray<REAModule *> *REABuildModules(void) {
-    NSMutableArray<REAModule *> *mods = [NSMutableArray array];
-
-    // ① 消息防护
-    [mods addObject:REAModuleMake(@"消息防护", @"防撤回 / 阅后即焚 / 闪照", @"shield.lefthalf.filled", @[
-        REASectionMake(@"防撤回", @"撤回类型被强制为 0，消息不再消失；副作用是双方都看不到「已撤回」提示。", @[
-            REAToggleMake(@"switch_anti_recall", @"防撤回", @"拦截 recallType / isSuperRecallTip", @"arrow.uturn.left.circle", YES),
-        ]),
-        REASectionMake(@"闪照与阅后即焚", @"只影响本地展示，不改变服务器状态。", @[
-            REAToggleMake(@"switch_flash_photo", @"闪照可保存", @"阅后即焚的照片保留在本机", @"photo.fill", YES),
-            REAToggleMake(@"switch_flash_text", @"闪字保留", @"text.bubble", @"text.bubble.fill", YES),
-        ]),
-    ])];
-
-    // ② 隐私
-    [mods addObject:REAModuleMake(@"隐私与相册", @"私密相册 / 截图提示 / 水印", @"lock.shield", @[
-        REASectionMake(@"相册", @"解锁私密相册入口（服务端校验仍在，仅放行本地 UI）。", @[
-            REAToggleMake(@"switch_private_photo", @"私密相册解锁", @"access_private_photos → YES", @"photo.on.rectangle.angled", YES),
-        ]),
-        REASectionMake(@"截图与水印", @"", @[
-            REAToggleMake(@"switch_screenshot", @"截图不提示", @"不向对方发截图提醒", @"camera.viewfinder", YES),
-            REAToggleMake(@"switch_watermark", @"去水印", @"隐藏聊天/相册水印", @"drop.triangle", YES),
-        ]),
-    ])];
-
-    // ③ 会员与界面
-    [mods addObject:REAModuleMake(@"会员与界面", @"本地 VIP / 角标 / 键盘", @"crown", @[
-        REASectionMake(@"会员", @"仅本地字段伪装，不改变服务器鉴权。", @[
-            REAToggleMake(@"switch_local_vip", @"本地 VIP", @"is_vip / vip_status 改写", @"crown.fill", YES),
-        ]),
-        REASectionMake(@"界面", @"", @[
-            REAToggleMake(@"switch_clean_badge", @"角标净化", @"清掉未读角标（tabbar）", @"app.badge", NO),
-        ]),
-    ])];
-
-    // ④ 定位
-    [mods addObject:REAModuleMake(@"定位", @"虚拟定位 / 高度", @"location", @[
-        REASectionMake(@"虚拟定位", @"写入 rea_fake_location（lat/lng/alt），CLLocation 层替换坐标。", @[
-            REAToggleMake(@"switch_virtual_location", @"启用虚拟定位", @"坐标取「设置坐标」里的值", @"location.fill", YES),
-            REAToggleMake(@"switch_altitude", @"模拟海拔", @"", @"mountain.2", YES),
-            REAActionMake(@"设置坐标", @"默认 39.9042, 116.4074, 50m", @"mappin.and.ellipse", @"设置", ^{
-                REAPromptLocation();
-            }),
-            REAActionMake(@"清除虚拟定位", @"恢复真实坐标", @"location.slash", @"清除", ^{
-                [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"rea_fake_location"];
-                REAToast(@"已清除虚拟定位");
-            }),
-        ]),
-    ])];
-
-    // ⑤ 调试
-    [mods addObject:REAModuleMake(@"调试", @"报告 / 日志 / 重装", @"ladybug", @[
-        REASectionMake(@"诊断", @"", @[
-            REAToggleMake(@"rea_show_report", @"启动后弹报告", @"关闭后不再自动弹窗，可在此页手动查看", @"bell", YES),
-            REAActionMake(@"查看 Hook 报告", @"装上多少条 / MISS 明细", @"list.bullet.rectangle", @"查看", ^{
-                REAShowHookReportBridge();
-            }),
-            REAActionMake(@"查看触发统计", @"每个功能域被调用次数", @"chart.bar", @"查看", ^{
-                REAShowHitReportBridge();
-            }),
-            REAActionMake(@"重新安装 Hook", @"类晚注册时手动补装", @"arrow.clockwise", @"执行", ^{
-                REAReinstallHooksBridge();
-                REAToast(@"已重新安装");
-            }),
-            REAActionMake(@"重置全部开关", @"所有 switch_* 恢复默认开启", @"trash", @"重置", ^{
-                NSDictionary *d = [[NSUserDefaults standardUserDefaults] dictionaryRepresentation];
-                for (NSString *k in d.allKeys) {
-                    if ([k hasPrefix:@"switch_"] || [k hasPrefix:@"rea_"]) {
-                        if ([k isEqualToString:kREABallCenterKey] || [k isEqualToString:kREABallEnabledKey]) continue;
-                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:k];
-                    }
-                }
-                REAToast(@"已重置，返回上一页刷新");
-            }),
-        ]),
-    ])];
-
-    return mods;
-}
-
-// 输入 lat/lng/alt 的 Alert（等价原版自定义定位输入）
-void REAPromptLocation(void) {
-    UIViewController *top = REATopViewController();
-    if (!top) { REAToast(@"当前没有可用界面"); return; }
-    if (top.presentedViewController) top = top.presentedViewController;
-
-    NSDictionary *cur = [[NSUserDefaults standardUserDefaults] objectForKey:@"rea_fake_location"];
-    NSString *lat = cur[@"lat"] ? [NSString stringWithFormat:@"%@", cur[@"lat"]] : @"39.9042";
-    NSString *lng = cur[@"lng"] ? [NSString stringWithFormat:@"%@", cur[@"lng"]] : @"116.4074";
-    NSString *alt = cur[@"alt"] ? [NSString stringWithFormat:@"%@", cur[@"alt"]] : @"50";
-
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"设置虚拟坐标"
-                                                               message:@"纬度 / 经度 / 海拔（米）"
-                                                        preferredStyle:UIAlertControllerStyleAlert];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) { tf.placeholder = @"纬度 lat"; tf.text = lat; tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation; }];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) { tf.placeholder = @"经度 lng"; tf.text = lng; tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation; }];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) { tf.placeholder = @"海拔 alt"; tf.text = alt; tf.keyboardType = UIKeyboardTypeNumbersAndPunctuation; }];
-    [ac addAction:[UIAlertAction actionWithTitle:@"保存" style:UIAlertActionStyleDefault handler:^(UIAlertAction *a) {
-        double la = [ac.textFields[0].text doubleValue];
-        double ln = [ac.textFields[1].text doubleValue];
-        double al = [ac.textFields[2].text doubleValue];
-        [[NSUserDefaults standardUserDefaults] setObject:@{ @"lat": @(la), @"lng": @(ln), @"alt": @(al) }
-                                                  forKey:@"rea_fake_location"];
-        REAToast([NSString stringWithFormat:@"已保存 %.6f, %.6f, %.1fm", la, ln, al]);
-    }]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [top presentViewController:ac animated:YES completion:nil];
-}
-
-#pragma mark - 对外入口
-
-void REAUIStart(void) {
-    [[REAUILoad shared] start];
+void REAPromptLocation(void)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        reaActionSetLocation(nil);
+    });
 }

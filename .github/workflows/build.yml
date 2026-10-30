@@ -100,7 +100,7 @@ jobs:
           cp BluedHushREA.plist dist/ || true
           for d in packages/*.deb; do [ -f "$d" ] && cp "$d" dist/; done
           cat > dist/INSTALL.txt <<'EOF'
-          BluedHushREA v9  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
+          BluedHushREA v10  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
 
           文件说明
             BluedHushREA.dylib        FAT 双切片（arm64 + arm64e），非越狱/自签/LiveContainer 用这个
@@ -108,14 +108,25 @@ jobs:
             arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后，绝大多数机器）
             BluedHushREA.plist        substrate 过滤器（仅越狱环境需要，非越狱可忽略）
 
-          v9 新功能：悬浮球 + 分类菜单（UI 层复刻，纯代码，无资源包）
-            启动 1.5 秒后屏幕右侧出现蓝色悬浮球（盾牌图标）
-            · 单击  → 打开设置面板（消息防护 / 隐私与相册 / 会员与界面 / 定位 / 调试）
+          v10 界面（按原版 19 张截图还原：9 大模块 / 27 个分区 / 105 个开关）
+            窗口立刻挂球：REAUIStart 每 0.5s 重试、最多 40 次，宿主一建好窗口就出现蓝色悬浮球（闪电圆环）
+            · 单击  → present 设置面板（模块列表，每行显示「已开 x/y · 说明」）
+            · 进入模块 → 分区列表，每个开关是真实 UISwitch，分区页脚「已开 x/y · 该分区作用」
             · 拖动  → 移动位置，松手自动贴边，位置记在 NSUserDefaults 的 rea_ball_center
-            · 长按  → 快捷菜单（Hook 报告 / 触发统计 / 重装 Hook / 隐藏悬浮球）
-            面板里每个开关就是 Hook 读取的同一个 key（switch_anti_recall 等），改完立即生效，无需重启。
+            · 长按  → 快捷菜单（打开完整面板 / Hook 报告 / 触发统计 / 隐藏悬浮球）
+            · 面板右上「全部关闭」一键清空所有开关
+            模块划分：净化中心 / 聊天增强 / 隐私与特权 / 定位与追踪 / 自动化与筛选 /
+                      视奸与访问 / 照片与相册 / 入口与手势 / 风控与设备
+            面板里每个开关写的都是 Hook 读取的同一个 key（switch_xxx / purify_xxx），
+            改完立即生效、无需重启；杀进程重启后开关与球的位置都保留（NSUserDefaults）。
             原版图标全部是 SF Symbols（dylib 内 .bundle/.xib/.nib/Assets.car/imageNamed 均为 0 次），
             因此本工程不携带任何资源包，产物只有 dylib + plist。
+
+          v10 Hook 模块（Tweak.xm）与 UI 模块（REAUI.xm）完全解耦
+            Tweak.xm  : 36 条显式 Hook + 12 个反越狱选择子全类扫描，每条 Hook 第一行先读开关，
+                        开关为 OFF 时直接调用原实现 / 返回原值（不产生任何副作用）。
+            REAUI.xm  : 只有 UIKit 与 NSUserDefaults 读写，零 swizzling，通过 5 个桥函数与 Hook 层通信。
+            日志：App 沙盒 Documents/BluedHushREA.log（含 [UI] 前缀的界面事件与 pass/ok/miss 统计）。
 
           非越狱 + Esign / Sideloadly 注入
             1. 用 Esign 打开已重签的 Blued IPA -> 「注入/插入动态库」选择 BluedHushREA.dylib

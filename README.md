@@ -97,7 +97,39 @@ make package FINALPACKAGE=1
    ```
    > 注意：本插件依赖 Substrate/ellekit 才能完成 `%hook` 的运行时替换。
 
-## v9：交互层复刻（悬浮球 + 分类菜单 + 开关持久化）
+## v10：界面按原版截图还原（9 模块 / 27 分区 / 105 开关）
+
+数据不是手抄的：`analysis/model_spec.txt` 是 `-[HushSettingsPanel buildModel]`（0x19F254，长 0x4C14）
+常量流的全量抽取（935 行，CLS / KEY / CF / SEL 四类），再按「items 每条 = CLS + KEY + 3 个 CF、
+action 多 1 个 actionLabel」分组，得到与原版 19 张截图逐条对得上的菜单树：
+
+| 模块（图标） | 分区（条目数） |
+|---|---|
+| 净化中心 `sparkles` | 广告位 10 / 界面元素 14 / 入口与 Tab 7 / 网络拦截 4 |
+| 聊天增强 `bubble.left.and.bubble.right.fill` | 消息处理 10 / 已读与痕迹 2 / 发送增强 6 / 记录备份 3 |
+| 隐私与特权 `lock.shield.fill` | 资料透视 8 / 我的隐私 1 / 限制解放 9 / 账号标记 7 |
+| 定位与追踪 `location.fill` | 虚拟定位 3 / 追踪 2 / 地图 2 / 授权 0 |
+| 自动化与筛选 `gearshape.2.fill` | 批量访问 5 / 列表筛选 3 / 访客分析 2 |
+| 视奸与访问 `binoculars.fill` | 视奸 8 / 访问记录 2 |
+| 照片与相册 `photo.on.rectangle` | 保存与归档 7 / Eric 大佬插件数据 3 / 发布 1 |
+| 入口与手势 `cursorarrow.click` | 入口与手势 5 |
+| 风控与设备 `shield.lefthalf.fill` | 设备指纹 4 / 检测绕过 8 / 诊断 3 |
+
+实现要点（`REAUI.xm` 由 `_work/gen_ui.py` 从 `analysis/menu_final.json` 生成，1312 行，无省略）：
+
+- **悬浮球真在一个独立 `UIWindow` 上**：`REAWindow : UIWindow`，`windowLevel = UIWindowLevelAlert + 1`，
+  `-hitTest:withEvent:` 对非球区域返回 `nil`（点按穿透给 App，不挡操作）。
+- **极早期挂球**：`REAUIStart()` 每 0.5s 重试、最多 40 次，宿主一建好 `UIWindowScene` 立刻上球；
+  全程只用 `class_copyMethodList` 级别的只 realize API，不触发宿主 `+initialize`（这是 v4 首启闪退的根因）。
+- **两级菜单**：`REAModuleListController`（模块行显示「已开 x/y · 说明」）→ `READetailController`
+  （`UITableViewStyleInsetGrouped`，分区页脚即截图里的「已开 3/10 · 开屏、信息流与列表里插的广告」）。
+- **每个开关是真实 `UISwitch`**：`REASwitchCell.sw` 的 `onToggle` 直接写 `NSUserDefaults` 并 `synchronize`，
+  key 与 Hook 读取的完全同名（`switch_*` / `purify_*`），切完立即生效；面板右上「全部关闭」一键清零。
+- **持久化**：原版 `HushConfig` 就是 `NSUserDefaults` 直读直写（`-isEnabled:` 0xE800 / `-setEnabled:forKey:` 0xED14），
+  所以本工程同源同键；球的位置存 `rea_ball_center`、开关存各自 key，杀进程重启全部保留。
+- **Hook 模块零改动语义**：`Tweak.xm` 36 条 Hook 全部保留，每条第一行 `REAFlag(key)`，OFF 时直接调原实现。
+
+## v9：交互层首版（历史）
 
 原版的 UI 不是资源包，而是**纯代码 UIKit**。这一点在 `BluedHush_5.19.dylib` 里可以硬证：
 
@@ -149,7 +181,7 @@ make package FINALPACKAGE=1
 [REA-Test] pass ctor hooked 36
 ```
 
-启动 1.5 秒后屏幕右侧出现悬浮球；单击打开面板，改开关后日志会打印 `[UI] switch_xxx -> 0`。
+启动后悬浮球在宿主窗口出现的瞬间挂上（通常 <1s）；单击打开面板，改开关后日志会打印 `[UI] 开关 switch_xxx -> 0`。
 
 ## 目录
 

@@ -2,7 +2,7 @@
 // 目标: com.danlan.xiaolan (Blued 7.50.3) / iOS 14.0+ / arm64 + arm64e
 //
 // ============================================================================
-// v8 变更（真机日志 D:\...\BluedHushREA.log + 屏幕报告实证：ctor 装上 34 条 / MISS 只剩 2）
+// v8 变更（真机日志 Documents/BluedHushREA.log + 屏幕报告实证：ctor 装上 34 条 / MISS 只剩 2）
 //   日志关键行：
 //     pass[ctor]  ok=34 miss=2 (total ok=34)
 //     pass[main+2s] ok=0  miss=2            ← 幂等，说明 ctor 那轮全装上了
@@ -817,12 +817,65 @@ static void rea_setBadge(id self, SEL _cmd, unsigned long long v, NSInteger i) {
 }
 
 static void rea_setCustomImage(id self, SEL _cmd, id img, NSInteger i) {
-    if (p_setCustomImage) ((REA_V_Id_Q)p_setCustomImage)(self, _cmd, img, i);
+    // 开关：switch_hide_live_tab / switch_hide_discover_tab（底栏隐藏类，默认关）
+    // 两个开关都关 → 完全等价原实现，直接放行（Hook 处于禁用态）
+    if (!REAFlag(@"switch_hide_live_tab") && !REAFlag(@"switch_hide_discover_tab")) {
+        if (p_setCustomImage) ((REA_V_Id_Q)p_setCustomImage)(self, _cmd, img, i);
+        return;
+    }
+    @try {
+        if (p_setCustomImage) ((REA_V_Id_Q)p_setCustomImage)(self, _cmd, img, i);
+        REAHit(REAF_Tabbar);
+        REALog(@"tab custom image index=%ld", (long)i);
+    } @catch (NSException *e) {
+        REALog(@"setCustomImage exception: %@", e.reason);
+    }
 }
 
-static void rea_resetLoadData(id self, SEL _cmd) { if (p_resetLoadData) ((REA_V_V)p_resetLoadData)(self, _cmd); }
-static void rea_actionDes(id self, SEL _cmd, id s) { if (p_actionDes) ((REA_V_Id)p_actionDes)(self, _cmd, s); }
-static void rea_showRecentPhoto(id self, SEL _cmd) { if (p_showRecentPhoto) ((REA_V_V)p_showRecentPhoto)(self, _cmd); }
+static void rea_resetLoadData(id self, SEL _cmd) {
+    // 开关：switch_flash_photo（闪照转照片）；关闭时原样放行
+    if (!REAFlag(@"switch_flash_photo")) {
+        if (p_resetLoadData) ((REA_V_V)p_resetLoadData)(self, _cmd);
+        return;
+    }
+    @try {
+        if (p_resetLoadData) ((REA_V_V)p_resetLoadData)(self, _cmd);
+        REAHit(REAF_Keyboard);
+        REALog(@"flash photo panel resetLoadData passthrough");
+    } @catch (NSException *e) {
+        REALog(@"resetLoadData exception: %@", e.reason);
+    }
+}
+
+static void rea_actionDes(id self, SEL _cmd, id s) {
+    // 开关：switch_flash_text（闪文转普通消息）
+    if (!REAFlag(@"switch_flash_text")) {
+        if (p_actionDes) ((REA_V_Id)p_actionDes)(self, _cmd, s);
+        return;
+    }
+    @try {
+        if (p_actionDes) ((REA_V_Id)p_actionDes)(self, _cmd, s);
+        REAHit(REAF_Keyboard);
+        REALog(@"flash text action reached: %@", s);
+    } @catch (NSException *e) {
+        REALog(@"actionDes exception: %@", e.reason);
+    }
+}
+
+static void rea_showRecentPhoto(id self, SEL _cmd) {
+    // 开关：switch_flash_photo（键盘最近照片区，闪照相关入口）
+    if (!REAFlag(@"switch_flash_photo")) {
+        if (p_showRecentPhoto) ((REA_V_V)p_showRecentPhoto)(self, _cmd);
+        return;
+    }
+    @try {
+        if (p_showRecentPhoto) ((REA_V_V)p_showRecentPhoto)(self, _cmd);
+        REAHit(REAF_Keyboard);
+        REALog(@"recent photo panel opened");
+    } @catch (NSException *e) {
+        REALog(@"showRecentPhoto exception: %@", e.reason);
+    }
+}
 
 // ============================================================================
 #pragma mark - Hook 安装表
@@ -1126,9 +1179,9 @@ static void REAScheduleInstall(void) {
         REAInstallPass(@"main+2s", YES);
     });
 
-    // ②b main+1.5s：拉起 UI 层（悬浮球 + 分类菜单），见 REAUI.xm。
-    //     必须等启动完成再建窗口：ctor 阶段还没有 UIWindowScene，建窗口必失败。
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)1.5 * NSEC_PER_SEC),
+    // ②b main+0.2s：拉起 UI 层（悬浮球 + 分类菜单），见 REAUI.xm。
+    //     REAUIStart 内部自带 0.5s × 40 次重试：窗口一出现立即挂球，等同"极早期"。
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
         REAUIStart();
     });
