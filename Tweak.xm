@@ -130,6 +130,7 @@
 #import <stdio.h>
 #import <string.h>
 #import <sys/time.h>
+#import <pthread.h>
 
 #define REA_TAG @"[BLUEDHUSH]"
 

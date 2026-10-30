@@ -1,0 +1,397 @@
+{
+ " GJIMEngine.": [
+  " GJIMEngine.p_handleAMessageWithData PingPackage type=2",
+  " GJIMEngine.p_handleAMessageWithData ConnAckPackage type=1",
+  " GJIMEngine.handleingGRPCPrivatePackage PushPackage messageType=22 type=0 messageId=127539 sess=<len=1,h=052> from=<len=8,h=172>",
+  " GJIMEngine.handleingGRPCPrivatePackage PushPackage messageType=1 type=0 messageId=113 sess=<len=7,h=254> from=<len=7,h=254> extra{time_limited_status=0}"
+ ],
+ "[Chat][补拉]": [
+  "[Chat][补拉]（来源=NSTimer）推送已静默 152 秒（最近一次收包 4 秒前）→ 主动同步一次",
+  "[Chat][补拉] 同步请求已发出",
+  "[Chat][补拉]（来源=ÂõûÂâçÂè∞）推送已静默 712 秒（最近一次收包 113 秒前）→ 主动同步一次",
+  "[Chat][补拉] 已就绪（触发＝收包 hook + NSTimer 2 秒 + dispatch 2 秒 + 回前台；静默 3 秒、节流 3 秒）",
+  "[Chat][补拉]（来源=Êî∂ÂåÖ）推送已静默 1135 秒（最近一次收包 0 秒前）→ 主动同步一次"
+ ],
+ " SessionServ": [
+  " SessionService.p_fetchSyncMessages type=2 localId=0",
+  " SessionService.addMessages NSArray(0)",
+  " SessionService.addMessages NSArray(104) [0]=GJIMMessageModel type=68 msgId=68 status=4 recallType=0 sess=<len=2,h=635> fromId=<len=2,h=635>",
+  " SessionService.addMessages NSArray(1) [0]=GJIMMessageModel type=1 msgId=95 status=3 recallType=0 sess=<len=8,h=359> fromId=<len=8,h=359> extra{time_limited_status=0}",
+  " SessionService.addMessages NSArray(1) [0]=GJIMMessageModel type=2 msgId=117 status=3 recallType=0 sess=<len=7,h=254> fromId=<len=7,h=254> extra{is_super_recall=0,status=0}"
+ ],
+ "[Purify]": [
+  "[Purify] ◀◀ showCoverWithType:3 isColdLaunch=0",
+  "[Purify] 拦截附近大图广告插入",
+  "[Purify] 通话头部高度挂钩: p_baseHeaderHeightp_callNewGuestHeaderHeightWithTip:(无 currentHeight)",
+  "[Purify] 分组装载完成",
+  "[Purify] ◀ getSplashAdForColdLaunch",
+  "[Purify] ◀ p_getSplashAdvertisementForColdLaunch",
+  "[Purify] 拦截会话呼叫请求（URL 置空）",
+  "[Purify] 身边页隐藏规则表 = (",
+  "[Purify] 身边页行高判定 row=0 缓存=BDNearbyGridCell 命中=0 原高=138.7（缓存空=cellForRow 未跑）",
+  "[Purify] 身边页行高判定 row=1 缓存=(nil) 命中=0 原高=138.7（缓存空=cellForRow 未跑）",
+  "[Purify] 身边页广告区行数清零（numberOfRowsInSection）",
+  "[Purify] 身边页行高判定 row=0 缓存=BDNearbyListTableViewCell 命中=0 原高=80.0（缓存空=cellForRow 未跑）",
+  "[Purify] ◀ removeAllSplashAdViews:4",
+  "[Purify] 身边页广告区高度 146 → 0（p_topHeight 源头归零）"
+ ],
+ "[Purify][Tab补全]": [
+  "[Purify][Tab补全] p_changeItemStateAtIndex:0（当前 items=5 已移除=<NSMutableIndexSet: 0x127f4cbc0>(no indexes)）",
+  "[Purify][Tab补全] 旧宿主遗留视图挂钩 5 项：setDynamicImgView: selectItemAtIndex: selectItemAtIndex:subIndex: p_changeItemStateAtIndex: addSubview:",
+  "[Purify][Tab补全] p_changeItemStateAtIndex:0（当前 items=5 已移除=<NSMutableIndexSet: 0x114371fa0>(no indexes)）",
+  "[Purify][Tab补全] p_changeItemStateAtIndex:0（当前 items=5 已移除=<NSMutableIndexSet: 0x125f70020>(no indexes)）",
+  "[Purify][Tab补全] 底栏新增非 item 子视图：UIView frame={{176, 1}, {88, 48}} hidden=0 alpha=1.00",
+  "[Purify][Tab补全] p_changeItemStateAtIndex:0（当前 items=5 已移除=<NSMutableIndexSet: 0x10b51e560>(no indexes)）",
+  "[Purify][Tab补全] p_changeItemStateAtIndex:0（当前 items=5 已移除=<NSMutableIndexSet: 0x10a4c75a0>(no indexes)）",
+  "[Purify][Tab补全] p_changeItemStateAtIndex:4（当前 items=5 已移除=<NSMutableIndexSet: 0x12539c600>(no indexes)）"
+ ],
+ "[Location]": [
+  "[Location] 改写落库坐标 → 22.566183, 114.111104",
+  "[Location] 分组装载完成"
+ ],
+ "[Gallery]": [
+  "[Gallery] ★ 资料页关联：会话=<len=8,h=123> 用户ID=980140894 昵称=人生处处是考场",
+  "[Gallery] ★ 资料页关联：会话=<len=6,h=583> 用户ID=964463870 昵称=Alex28",
+  "[Gallery] ★ 资料页关联（延迟命中）：会话=<len=8,h=123> 用户ID=980140894 昵称=人生处处是考场（仅昵称刷新）",
+  "[Gallery] ★ 资料页关联：会话=<len=9,h=218> 用户ID=838075752 昵称=那些年的阳光氧气",
+  "[Gallery] ★ 资料页关联（延迟命中）：会话=<len=6,h=583> 用户ID=964463870 昵称=Alex28（仅昵称刷新）",
+  "[Gallery] 分组装载完成（H24 展览馆 / H25 悬浮球）",
+  "[Gallery] ★ 资料页关联：会话=<len=9,h=408> 用户ID=749118802 昵称=湘北上俏",
+  "[Gallery] ★ 资料页关联：会话=<len=9,h=783> 用户ID=225214292 昵称=四十而立（仅昵称刷新）",
+  "[Gallery] ★ 资料页关联：会话=<len=9,h=839> 用户ID=733960223 昵称=奔波尔灞__（仅昵称刷新）",
+  "[Gallery] ★ 资料页关联：会话=<len=7,h=217> 用户ID=454806732 昵称=paul1119",
+  "[Gallery] 会话名有变化 11 条（将重查资料接口确认权威名）",
+  "[Gallery] 归档无变化（指纹一致），跳过启动整理链",
+  "[Gallery] ★ 资料页关联（延迟命中）：会话=<len=9,h=839> 用户ID=733960223 昵称=奔波尔灞__（仅昵称刷新）",
+  "[Gallery] ★ 资料页关联：会话=<len=9,h=561> 用户ID=616150958 昵称=壹馬當先"
+ ],
+ "[NearbyAlbum]": [
+  "[NearbyAlbum] 远端相册 uid=15122657 urls=0 reason=profile-album",
+  "[NearbyAlbum] 相册条装载：setUser:✅ layoutSubviews=✅ prepareForReuse=✅",
+  "[NearbyAlbum] beginUpdates/endUpdates 异常，改走 reloadData 自愈：Invalid batch updates detected: the number of sections and/or rows returned by the data source before and after performing the batch updates are inconsistent with the updates."
+ ],
+ "[License]": [
+  "[License] 授权状态：已激活 · 永久（受限键 14 项）",
+  "[License] 服务器复核通过：已激活 · 永久"
+ ],
+ "[BOOT]": [
+  "[BOOT] 激活状态：已激活 · 永久（受限 14 项：定位与追踪 + 限制解放）",
+  "[BOOT] ========== BluedHush 加载 ==========",
+  "[BOOT] version=5.18 arch=arm64 pid=10798 bid=com.danlan.xiaolan author=Tinycca (@Tinycca)",
+  "[BOOT] build=Oct  7 2026 11:45:29",
+  "[BOOT] 日志等级: 信息（I）",
+  "[BOOT] 日志文件: /var/mobile/Containers/Data/Application/44A6E213-29BD-4000-B117-4F7E169CB09B/Documents/Data/Application/334B9464-8ACC-48C9-B36C-A0E3976B3510/Documents/hooo"
+ ],
+ "[Compat]": [
+  "[Compat] 宿主为非标准版：无「标准版不适用」备注；switch_version_spoof（仅标准版适用，读取侧已判关）",
+  "[Compat] 本版宿主无已知能力缺口",
+  "[Compat] 面板已标注「标准版不适用」：1 项"
+ ],
+ "[Chat][强推]": [
+  "[Chat][强推] 已就绪（静默 25 秒起分级：巡链路→强制重连→重建 socket；级间隔 30 秒、每轮最多 3 级）",
+  "[Chat][强推]（来源=NSTimer）推送已静默 26 秒 → 第 1 级动作",
+  "[Chat][强推] 一级：已巡链路 checkConnectOrHeart ×0（看门狗 A=无 B=无）",
+  "[Chat][强推] 二级：已强制重连 forceConnect ×0",
+  "[Chat][强推] 三级：已重建 socket 链路（p_reconnectSocket）（engine=有）",
+  "[Chat][强推] 复位（推送已恢复）",
+  "[Chat][强推] 复位（心跳不在）",
+  "[Chat][强推]（来源=Êî∂ÂåÖ）推送已静默 10668 秒 → 第 1 级动作",
+  "[Chat][强推]（来源=ÂõûÂâçÂè∞）推送已静默 26 秒 → 第 1 级动作"
+ ],
+ "[Chat][闪文]": [
+  "[Chat][闪文] 分组装载完成（cell 渲染 + setMessages 批量；开关 switch_flash_text）"
+ ],
+ "[Chat][自动选图]": [
+  "[Chat][自动选图] 分组装载完成（选照片 switch_auto_select_photo=关 / 勾闪照 switch_auto_select_burn=关）"
+ ],
+ "[Chat][防撤回]": [
+  "[Chat][防撤回] 定时扫描已启动（每 3 秒增量建快照，不依赖宿主 hook）+ 回前台全量复检已挂"
+ ],
+ "[Chat][后悔药]": [
+  "[Chat][后悔药] 长按消息记录已挂钩（父类）",
+  "[Chat][后悔药] 宿主删消息入口已挂钩",
+  "[Chat][后悔药] 宿主删库入口已挂钩",
+  "[Chat][后悔药] 宿主撤回动作已挂钩",
+  "[Chat][后悔药] 会话删消息已挂钩",
+  "[Chat][后悔药] 聊天页出现补做清理已挂钩",
+  "[Chat][后悔药] reloadData 挂载成功（Blued.BDCustomMenuView）",
+  "[Chat][后悔药] layoutSubviews 挂载：成功",
+  "[Chat][后悔药] 菜单注入成功（Blued.BDCustomMenuView）"
+ ],
+ "[Chat]": [
+  "[Chat] 分组装载完成"
+ ],
+ "[FloatBall]": [
+  "[FloatBall] 已挂载 SceneDelegate 时机",
+  "[FloatBall] 分组装载完成",
+  "[FloatBall] 悬浮球已挂载 {280, 240}",
+  "[FloatBall] 悬浮球已挂载 {320.33333333333331, 189.66666666666669}"
+ ],
+ "[InlineEdit]": [
+  "[InlineEdit] 内联编辑焦点守卫已装载（HPGrowingTextView.becomeFirstResponder）"
+ ],
+ "[MapAvatar]": [
+  "[MapAvatar] E9 分组装载完成（7/8）"
+ ],
+ "[NearbyMark]": [
+  "[NearbyMark] 装载（只抓快照，列表侧零介入）：setUser=✅ prepareForReuse=✅；卡片在「卡片浏览」页自绘"
+ ],
+ "[NearbySig]": [
+  "[NearbySig] 自绘第三行 label 的 layoutSubviews 挂载：成功"
+ ],
+ "[Sensitive]": [
+  "[Sensitive] 遮罩收起 hook 已装载 awake=1 initFrame=1 initCoder=1 layout=1 didMove=1",
+  "[Sensitive] 聊天遮罩 cell hook 已装载 img(setup=1 layout=1 didMove=1) vid(setup=1 layout=1 didMove=1)",
+  "[Sensitive] 敏感确认弹窗拦截已装载（present 层，自动确认）"
+ ],
+ "[Privacy]": [
+  "[Privacy] 分组装载完成",
+  "[Privacy] 资料页检查 uid=27197674：服务端已给真值 10.41km，不追踪"
+ ],
+ "[ProfileIntel]": [
+  "[ProfileIntel] 访客列表徽章已挂（layoutSubviews）",
+  "[ProfileIntel] 列表页返回刷新已挂（BDNearbyBViewController）",
+  "[ProfileIntel] 列表页返回刷新已挂（BDSessionPageController）",
+  "[ProfileIntel] 附近列表 layoutSubviews 已挂（角色/徽章随布局重摆）",
+  "[ProfileIntel] 聊天页资料行已挂（类名=PrivateChatViewController layout=✓ appear=✓）",
+  "[ProfileIntel] 资料信息行已挂 layoutSubviews（类名=Blued.BDPersonInfoTagScrollView）",
+  "[ProfileIntel] 客户端版本采集已挂（BDBaseRequest.responseJSONObject）",
+  "[ProfileIntel] chatLayout 命中第 1 次 vc=PrivateChatViewController on=0"
+ ],
+ "[Gallery][索引]": [
+  "[Gallery][索引] 无可用索引（首次 / 版本不符 / 根变化）⇒ 首次打开走全量扫描，扫完即建"
+ ],
+ "[Purify][标签净化]": [
+  "[Purify][标签净化] setHidden: 已接管（推广红点提示只许隐藏）"
+ ],
+ "[Chat][快捷短语]": [
+  "[Chat][快捷短语] 分组装载完成（入口＝键盘红心/礼物位，switch_quick_phrase）"
+ ],
+ "[Risk]": [
+  "[Risk] 依赖类检查: DLRiskInfo=✓ BDJailbreakChecker=✓ DLJailbreakChecker=✓ DLRiskAppChecker=✓ BDFingerprintManager=✓ DLDeviceFingerprint=✓ LoginData=✓",
+  "[Risk] 开关: 越狱绕过=开 风险设备登录=开 拦截机器码=关 清空返回值=关 伪装指纹=关",
+  "[Risk] 分组装载完成（F1/F2/F3/F4/F5，装载 5 组）",
+  "[Risk] device_safe → 1（风险设备登录）"
+ ],
+ "[RiskDevice]": [
+  "[RiskDevice] 网络出口已挂（dataTaskWithRequest:completionHandler:）",
+  "[RiskDevice] 风控 URL 出口已挂 10/10 个",
+  "[RiskDevice] 🔎 getDeviceId 真实长度=89 → 返回空",
+  "[RiskDevice] ⛔ 已阻断风控上报(URL 入口)：http://fp-it.fengkongcloud.com/v3/cloudconf → http://0.0.0.0/",
+  "[RiskDevice] ⛔ 已阻断风控上报(URL 入口)：http://fp-it.fengkongcloud.com/deviceprofile/v4 → http://0.0.0.0/",
+  "[RiskDevice] ⛔ 已阻断风控上报(URL 入口)：https://castatic.fengkongcloud.com/pr/v1.0.1/index.html → http://0.0.0.0/"
+ ],
+ "[Diag]": [
+  "[Diag] switch_bugly_off=0（1=本次启动不启 Bugly，崩溃落系统标准 .ips；改开关后需重启 App 才生效）"
+ ],
+ "[RiskEnv]": [
+  "[RiskEnv] 风控环境加固已启用（隐藏 21 条风险路径，无开关、恒生效）",
+  "[RiskEnv] 🛡️ 隐藏风险路径存在性: file:/Applications/Cydia.app",
+  "[RiskEnv] 🛡️ 隐藏风险路径存在性: file:/etc/apt",
+  "[RiskEnv] 🛡️ 隐藏风险路径存在性: file:/private/var/lib/cydia",
+  "[RiskEnv] 🛡️ 隐藏风险路径存在性: file:/usr/sbin/frida-server",
+  "[RiskEnv] 🛡️ 隐藏风险路径存在性: file:/Library/MobileSubstrate/DynamicLibraries/fakephonelib.plist",
+  "[RiskEnv] 🛡️ 隐藏风险路径存在性: file:/Library/MobileSubstrate/MobileSubstrate.dylib",
+  "[RiskEnv] 指纹缓存清理完成（删除 0 项）"
+ ],
+ "[SettingsEntry]": [
+  "[SettingsEntry] 分组装载完成（tableHeaderView 方案，不触碰行数据）",
+  "[SettingsEntry] 第 0 段为 1 行空白占位 → 行高归零（消掉入口下方的灰）",
+  "[SettingsEntry] 宿主样式取样：行高 54.0 / 箭头（24×24，右距 36.0，来自contentView·位置待定） / 字体 .SFUI-Regular",
+  "[SettingsEntry] 样式位置未就绪 → 先装待定样式，viewDidAppear 补装真值",
+  "[SettingsEntry] 入口已装入 tableHeaderView：宽 440.0 高 142.0（顶部间距 10 + 行高 54 + 原 header 78）",
+  "[SettingsEntry] viewDidAppear：补装真值样式",
+  "[SettingsEntry] 宿主样式取样：行高 54.0 / 箭头（24×24，右距 10.0，来自contentView） / 字体 .SFUI-Regular",
+  "[SettingsEntry] 归零后触发一次行高重算（仅首次）",
+  "[SettingsEntry] 入口：在窗口=是 / 命中=UIButton / 可点=是 / 行(窗口)={{0, 98}, {440, 54}} / 容器高=142.0 / 表offset=0.0",
+  "[SettingsEntry] 入口触摸：按下",
+  "[SettingsEntry] 点击「高级功能」（行内触摸），打开插件面板",
+  "[SettingsEntry] 取样位置待定 → 沿用上次真值样式（右距 10.0，contentView）",
+  "[SettingsEntry] 入口：在窗口=是 / 命中=UINavigationTransitionView / 可点=否 / 行(窗口)={{0, 98}, {440, 54}} / 容器高=142.0 / 表offset=0.0",
+  "[SettingsEntry] 入口行已不在窗口里（宿主换了 header？）→ 清标记重新安装"
+ ],
+ "[Spy]": [
+  "[Spy] 抓特务（访客频次分析）已装载"
+ ],
+ "[Stalk]": [
+  "[Stalk] 视奸分组装载完成（开关 switch_stalk，默认关闭；头像长按开关 switch_avatar_long_press）"
+ ],
+ "[VisitClear]": [
+  "[VisitClear] 清除访问记录分组装载完成（开关 switch_visit_clear，默认关；关闭后走宿主原路径）"
+ ],
+ "[Swift]": [
+  "[Swift] 构造器开始",
+  "[Swift] 装载完成，成功 9 个",
+  "[Swift] 构造器完成"
+ ],
+ "[TabLP]": [
+  "[TabLP] 底栏长按分组装载完成（「身边」动作 longpress_nearby=menu；身边 tab 长按开关=开；「我的」→ 黑名单 switch_blacklist_jump=关）",
+  "[TabLP] 长按已挂到「身边」（BDTabBarItem bounds={{0, 0}, {146.66666666666666, 49}}，动作=menu）",
+  "[TabLP] 长按「身边」→ 模块菜单（longpress_nearby=menu）"
+ ],
+ "[ToolsEx]": [
+  "[ToolsEx] 分组装载完成（H13/H14/H15 已对齐安卓实现）"
+ ],
+ "[UserAlbum]": [
+  "[UserAlbum] 聊天页相册带已挂（PrivateChatViewController layout=1 disappear=1）"
+ ],
+ "[Vanished]": [
+  "[Vanished] 分组装载完成（H26 已注销用户，装载 4 组；GJIMDBService=有 GJIMSessionService=有 GJIMEngine=有）",
+  "[Vanished] 入口定位：标题=BDNewNavigationTitleViewLabel 右缘=62.3 底=83.7 → 锚点(140.3,57.7) 兜底(142.0,73.0) ⇒ 跟随标题",
+  "[Vanished] 「展览馆」入口已注入会话列表页"
+ ],
+ "[VLocCL]": [
+  "[VLocCL] 已包装 delegate SmGpsDelegate 的 didUpdateLocations",
+  "[VLocCL] 已包装 delegate BMKLocationManager 的 didUpdateLocations",
+  "[VLocCL] 已包装 delegate GTCGbdLService 的 didUpdateLocations",
+  "[VLocCL] 已包装 delegate MKCoreLocationProvider 的 didUpdateLocations"
+ ],
+ "[Track]": [
+  "[Track] 宿主请求头已采集 10 项 @argo.blued.cn（keys: Accept-Encoding,Referer,ua,User-Agent,Authorization,Accept-Language,x-bcsign-signature,Channel,traceparent,x-bcsign-timestamp）",
+  "[Track] 凭证对比：宿主auth=566位/Basic MT LoginData.token=287位/eyJ0eXAi",
+  "[Track] 身边页 VC 已保存（自动刷新可用）",
+  "[Track] 主页模型尚未就绪（info=UserInformation）→ 等下一次模型刷新",
+  "[Track] 关注按钮上下文：parent=UIView frame={{0, 286}, {440, 144}} siblings: UILabel UILabel UIImageView UIImageView UILabel UILabel UIButton UIButton UIButton(关注) UIImageView UIButton UIImageView UIView UIView UIImageView UIView UIView || grandparent=UIView siblings: UIView UIView UIView UIView UIView(parent)",
+  "[Track] ✓ 按钮已同级注入 UIView（关注左侧，frame 方式）",
+  "[Track] ══ 位置追踪（参考公式）开始 uid=<len=8,h=257> 起点(22.566183,114.111104) token=有",
+  "[Track] 探测 stage=east attempt=1 (22.566183,114.212372) dist=7.7900 km sync=bare",
+  "[Track] 探测 stage=north-candidate attempt=1 (22.631079,114.184018) dist=0.0100 km sync=bare",
+  "[Track] ══ 参考公式解算完成 success=1 residual=0.0100 km 目标(22.631079,114.184018) 探测 2 次 用时 1.4s",
+  "[Track] 同步服务端位置 22.566183,114.111104 @argo.blued.cn → code=200",
+  "[Track] 凭证对比：宿主auth=10位/Basic Og LoginData.token=0位/(空)",
+  "[Track] 探测 stage=south-candidate attempt=1 (22.585555,114.114468) dist=0.1400 km sync=bare",
+  "[Track] 探测 stage=refine-east attempt=1 (22.585555,114.115830) dist=0.1500 km sync=bare"
+ ],
+ "[Purify][Tab入口]": [
+  "[Purify][Tab入口] setViewControllers 共 5 项；titles(5)",
+  "[Purify][Tab入口] [0] title=身边 内层=BDNearbyBViewController",
+  "[Purify][Tab入口] [1] title=直播 内层=BDLiveTabController",
+  "[Purify][Tab入口] [2] title=发现 内层=BDNewFindListViewController",
+  "[Purify][Tab入口] [3] title=聊天 内层=BDSessionPageController",
+  "[Purify][Tab入口] [4] title=我的 内层=BDMineViewController3"
+ ],
+ "[Purify][Tab角标]": [
+  "[Purify][Tab角标] setEntryBadgeText 值=(null) 索引 4 → 4"
+ ],
+ "[Purify][ivar]": [
+  "[Purify][ivar] BDNearbyMakeFriendsSubPageController 共 80 个: _loadLive(B) | _isSortTypeChanged(B) | _ADAlreadDismiss(B) | _hasLockedMapGuideTab(B) | _isRefreshUserDataFinished(B) | _hasMore(B) | _networkBroken(B) | _isEmpty(B) | _isFirstLoad(B) | _isFirstLoadData(B) | _isLivePlaying(B) | _isThePopViewForNewUserToVIPHasDisplayed(B) | _isHeaderLoad(B) | _isNeedLoad(B) | _isTwentyKMAway(B) | _in_test_group(B) | _isColdLaunchToRefresh(B) | _isNeedRequestUpstairAfterColdLaunchLoading(B) | _is_take_launch_cost(B) | _isNeedDelayShowLocationAlert(B) | _isFloatLayerAdShowFinished(B) | _isShowUserInfoCompletionAlert(B) | _isColdLaunchLoadingVisible(B) | _coldLaunchLoadingOriginalScrollEnabled(B) | _didRetryShowColdLaunchLoading(B) | _suppressRefreshHeaderCallbackOnce(B) | _from(i) | _audioEnterRequestCount(i) | _dataManager(@\"BDNearbyMakeFriendsSubPageManager\") | _delegate(@\"<BDNearbyMakeFriendsSubPageActionDelegate>\") | _cellStyle(Q) | _sort_type(@\"NSString\") | _contentState(Q) | _pageTitle(@\"NSString\") | _currentCondition(@\"ScreeningConditionMode\") | _selectedPlaceMark(@\"BDNearbyPlaceMark\") | _topView(@\"BDNearbyTopFixView\") | _noLocationTipLabel(@\"UILabel\") | _tableView(@\"UITableView\") | _op_type(Q) | _tableViewHeader(@\"BDRefreshAllScreenHeader\") | _isSplashAdDissmissHandler(@?) | _emptyHeader(@\"BDNearbyHeaderView\") | _netWorkView(@\"BDDefaultMapView\") | _tooMuchConditionView(@\"BDNearbyGuyDefaultView\") | _lessDataTipView(@\"BDNearbyGuyTipView\") | _uidGridStr(@\"NSMutableString\") | _uidListStr(@\"NSMutableString\") | _callUidGridStr(@\"NSMutableString\") | _callUidListStr(@\"NSMutableString\") | _gridJsonArr(@\"NSMutableArray\") | _listJsonArr(@\"NSMutableArray\") | _uidGridToRow(@\"NSIndexPath\") | _uidListToRow(q) | _allListToRow(q) | _dataRefreshCount(q) | _refreshTotalCount(q) | _displayTotalUserCount(q) | _livePlayerManager(@\"BDNearbyLivePlayManager\") | _liveCell(@\"UITableViewCell\") | _upstairModel(@\"BDNearbyUpstairModel\") | _gridShowedArray(@\"NSMutableArray\") | _listShowedArray(@\"NSMutableArray\") | _currentOffset(d) | _scrollViewOffset(d) | _dynamicNewCityView(@\"_TtC5Blued25BDDynamicNewCityAlertView\") | _bubbleNewCityView(@\"_TtC5Blued24BDBubbleNewCityAlertView\") | _releaseNewCityView(@\"_TtC5Blued25BDReleaseNewCityAlertView\") | _mBubbleAlertModel(@\"BDBubbleAlertModel\") | _oldCity(@\"NSString\") | _lastLatitude(@\"NSString\") | _lastLongtitude(@\"NSString\") | _currentLatitude(@\"NSString\") | _currentLongtitude(@\"NSString\") | _userPayGuideModel(@\"_TtC5Blued28BDBubbleNewUserPayGuideModel\") | _didEndDisplayingCellSet(@\"NSMutableSet\") | _enterViewModel(@\"_TtC5Blued32BDAudioLiveCardEntranceViewModel\") | _datingCardView(@\"_TtC5Blued16BDDatingCardView\") | _refreshCount(q) | _coldLaunchLoadingView(@\"BDColdLaunchLoadingView\")"
+ ],
+ "[LocStatus]": [
+  "[LocStatus] 导航标题候选被拒 2 个（不在活动窗口／超出 160pt 导航带／挂在列表里）",
+  "[LocStatus] 状态行已创建",
+  "[LocStatus] 状态行挂载到 UIScrollView（标题右侧 x=140 宽=210）",
+  "[LocStatus] 状态行 enabled=1 lat=22.566183 lng=114.111104 name=<empty> address=<empty> → 虚拟定位开 / 22.5662, 114.1111",
+  "[LocStatus] 反查地址 22.566183,114.111104",
+  "[LocStatus] 地址反查完成：中国广东省深圳市罗湖区梅园路26号",
+  "[LocStatus] 状态行 enabled=1 lat=22.566183 lng=114.111104 name=<empty> address=中国广东省深圳市罗湖区梅园路26号 → 虚拟定位开 / 中国广东省深圳市罗湖区梅园路26号",
+  "[LocStatus] 导航带内找不到标题（页面子树＋窗口层都没有），移除状态行",
+  "[LocStatus] 状态行 enabled=0 lat=22.607032 lng=114.131147 name=<empty> address=<empty> → 虚拟定位关 / 22.6070, 114.1311",
+  "[LocStatus] 地址反查完成：中国广东省深圳市龙岗区龙岗大道38号",
+  "[LocStatus] 状态行 enabled=0 lat=22.607032 lng=114.131147 name=<empty> address=中国广东省深圳市龙岗区龙岗大道38号 → 虚拟定位关 / 中国广东省深圳市龙岗区龙岗大道38号",
+  "[LocStatus] 地址反查完成：中国广东省深圳市龙岗区3号线/龙岗线",
+  "[LocStatus] 状态行 enabled=0 lat=22.606933 lng=114.131022 name=<empty> address=中国广东省深圳市龙岗区3号线/龙岗线 → 虚拟定位关 / 中国广东省深圳市龙岗区3号线/龙岗线",
+  "[LocStatus] 地址反查完成：中国广东省深圳市龙岗区布吉街道龙岗大道1号佳兆业广场(布吉店)L1层L119-A"
+ ],
+ "[FindTarget]": [
+  "[FindTarget] 入口布局 rowW=440 tabEnd=440 rightLimit=356 total=0 startX=196"
+ ],
+ "[NT]": [
+  "[NT] 列表类型切换 sortType=(空) → online",
+  "[NT] 在线列表按距离排序已生效（count=61，前 3 项 own-num=1.41 / own-num=1.61 / own-num=2.22）"
+ ],
+ "[AlbumPics]": [
+  "[AlbumPics] 记录 uid=4339949 照片 5 张"
+ ],
+ "[Chat][历史闪照]": [
+  "[Chat][历史闪照] 自动转换跳过：闪照转照片开关未开"
+ ],
+ "[Watchdog]": [
+  "[Watchdog] 启动 30s 主线程阻塞统计：最大 ≈ 0 ms，≥0.8s 阻塞 0 次",
+  "[Watchdog] 主线程恢复（本次阻塞峰值 ≈ 2131 ms；本启动最大 ≈ 2131 ms，累计 1 次 ≥0.8s 阻塞）",
+  "[Watchdog] ⚠️ 主线程疑似卡住 8225 ms（第 1 次报告）；高频 hook 面包屑：privacy.nearby.distance×5586, main-ack×534, pu.patchTick×266",
+  "[Watchdog] 最近轨迹（旧→新）：privacy.nearby.distance(+178.8s) → privacy.nearby.distance(+178.8s) → privacy.nearby.distance(+178.8s) → privacy.nearby.distance(+178.8s) → privacy.nearby.distance(+178.9s) → privacy.nearby.distance(+178.9s) → main-ack(+179.9s) → main-ack(+182.0s)"
+ ],
+ "[Chat][push]": [
+  "[Chat][push] PushPackage messageType=22 type=0 messageId=127539 sess=<len=1,h=052> from=<len=8,h=172>",
+  "[Chat][push] PushPackage messageType=1 type=0 messageId=20 sess=<len=4,h=017> from=<len=4,h=017> extra{time_limited_status=0}",
+  "[Chat][push] PushPackage messageType=55 type=0 messageId=9 sess=<len=7,h=911> from=<len=7,h=911> extra{is_super_recall=0,status=0}"
+ ],
+ " ChatMessage": [
+  " ChatMessageManager.parseChatgRPCMsgPack PrivateChatReceive msgId=4 from=<len=9,h=839>",
+  " ChatMessageManager.parseSyncgRPCMsgPack SyncMessage msgId=127541 sess=<len=1,h=052>"
+ ],
+ "[Chat][聊天相册]": [
+  "[Chat][聊天相册] 归档图片：uid=<len=9,h=496> msg=7"
+ ],
+ "[Panel]": [
+  "[Panel] 当前页面（BDNearbyDynamicPageViewController）不作样式取样参照，沿用上一次取样/系统默认",
+  "[Panel] 已入宿主导航栈：[BDNearbyBViewController] + 本面板（栈深 2）",
+  "[Panel] 表格留白：sectionHeaderTopPadding setter有（改前 自动）",
+  "[Panel] 宿主导航栏不可见（身边页/聊天页入口）→ 搜索栏落列表顶部",
+  "[Panel] 作者页脚：内缩 16 / 可用宽 408 / 文本高 48.0 / 页脚高 66.0",
+  "[Panel] 进入「入口与手势」（1 个小分类 / 5 项）",
+  "[Panel] float_ball = ON",
+  "[Panel] 进入「净化中心」（4 个小分类 / 35 项）",
+  "[Panel] 进入「聊天增强」（4 个小分类 / 21 项）",
+  "[Panel] 进入「隐私与特权」（4 个小分类 / 26 项）",
+  "[Panel] 进入「自动化与筛选」（3 个小分类 / 10 项）",
+  "[Panel] 进入「定位与追踪」（4 个小分类 / 8 项）",
+  "[Panel] 进入「视奸与访问」（2 个小分类 / 8 项）",
+  "[Panel] 进入「照片与相册」（3 个小分类 / 11 项）"
+ ],
+ " ChatVC.upda": [
+  " ChatVC.updateMessages updateType=4 NSArray(6) [0]=GJIMMessageModel type=1 msgId=4 status=4 recallType=0 sess=<len=9,h=548> fromId=<len=9,h=839> extra{time_limited_status=0}",
+  " ChatVC.updateMessages updateType=4 NSArray(2) [0]=GJIMMessageModel type=282 msgId=0 status=2 recallType=0 sess=<len=8,h=257> fromId=<len=9,h=839>",
+  " ChatVC.updateMessages updateType=7 NSArray(0)"
+ ],
+ " ChatVC.rece": [
+  " ChatVC.receiveNewMessage GJIMMessageModel type=282 msgId=10 status=3 recallType=0 sess=<len=9,h=548> fromId=<len=9,h=839>"
+ ],
+ "[AlbumTag]": [
+  "[AlbumTag] 隐私相册 角标不显示（开关「解锁隐私相册」关着）"
+ ],
+ "[Album]": [
+  "[Album] 相册接口 uid=27197674 islock=0 picNums=6 实收=6"
+ ],
+ "[PreTrack]": [
+  "[PreTrack] 宿主快照 uid=<len=8,h=257> dist=10.4100 loc=无(0.000000,0.000000) hide=0 invis=0 avLoc=0 ip=广东 shadow=无（候选模型 1 个）",
+  "[PreTrack] 进入他人主页 uid=<len=8,h=257> → 触发后台预计算",
+  "[PreTrack] 开始后台预计算 uid=<len=8,h=257> force=0",
+  "[PreTrack] 静默预计算开始（不弹进度框）uid=<len=8,h=257>",
+  "[PreTrack] 按钮文字 → 预计算 1/3",
+  "[PreTrack] 起点距离取自宿主模型 10.4100 km（省一次探测）",
+  "[PreTrack] 候选 northResidual=0.0100 southResidual=-1.0000 → finalResidual=0.0100",
+  "[PreTrack] 缓存写入 uid=<len=8,h=257> success=1 residual=0.0100 msg=📍 纬度: 22.63107851325528 / 📍 经度: 114.1840175900079 / 🎯 残差: 0.01 km /  / 相对起点：东 7495 米，北 7224 米",
+  "[PreTrack] 距离已回填「保密解锁」缓存 uid=<len=8,h=257> 10.41 km（起点 22.56618,114.11110）",
+  "[PreTrack] 预计算完成 success=1 residual=0.0100 km（已写缓存，点按钮查看）",
+  "[PreTrack] 宿主快照 uid=<len=9,h=083> dist=1.5200 loc=无(0.000000,0.000000) hide=0 invis=0 avLoc=0 ip=无 shadow=无（候选模型 1 个）",
+  "[PreTrack] uid=<len=9,h=083> 本页面已触发过，忽略重复上报（宿主多个 header 各报一次）",
+  "[PreTrack] 宿主 avLoc=0（该用户未开地图定位）→ 跳过精确坐标查询（省 1 请求）",
+  "[PreTrack] 候选残差 0.0200 km 已达标（≤0.05 km）→ 跳过精度校准（省 3 探测 ≈2s）"
+ ],
+ "[FanPai]": [
+  "[FanPai] 已记录主页访问 uid=<len=8,h=257>, total=1780"
+ ],
+ "[Purify][设置页]": [
+  "[Purify][设置页] heightForRow：section=0 row=0 未归零 → %orig",
+  "[Purify][设置页] heightForRow 归零命中：section=0 row=0"
+ ],
+ "[HostStyle][取样]": [
+  "[HostStyle][取样] 箭头 contentView 24×24 右距 36.0（cell 440 宽）image 24×24"
+ ],
+ "[LocPicker]": [
+  "[LocPicker] 真实位置来源=宿主坐标（22.607032,114.131147）"
+ ],
+ " DBService.g": [
+  " DBService.gji_updateAllMessageFromId 64764321"
+ ],
+ "[Track][位置卡片]": [
+  "[Track][位置卡片] 半屏呈现：detents=2 个（默认 medium=下半部）",
+  "[Track][位置卡片] 已打开：目标 22.566183,114.111104 残余 0.000 km（地图可缩放）",
+  "[Track][位置卡片] 定位到此 22.566183,114.111104"
+ ],
+ "[VLoc]": [
+  "[VLoc] 观测到「虚拟定位 失效 → 生效」，让宿主按虚拟坐标重新定位",
+  "[VLoc] 开 → 宿主：按 22.566183,114.111104 重新定位并刷新"
+ ]
+}

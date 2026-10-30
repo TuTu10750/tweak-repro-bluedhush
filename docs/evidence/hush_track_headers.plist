@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Accept-Encoding</key>
+	<string>br, gzip, deflate</string>
+	<key>Accept-Language</key>
+	<string>zh-CN</string>
+	<key>Authorization</key>
+	<string>Basic Og==</string>
+	<key>Channel</key>
+	<string>a0001i</string>
+	<key>Referer</key>
+	<string>https://argo.blued.cn/users/tags</string>
+	<key>User-Agent</key>
+	<string>Mozilla/5.0 (iPhone; iOS 16.1.1; Scale/3.00; CPU iPhone OS 16_1_1 like Mac OS X) iOS/160447_6.44.7_6972_0921 (Asia/Shanghai) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 ibb/1.0.0 app/7</string>
+	<key>traceparent</key>
+	<string>00-6825be97d890cc3433aece8766a3fe26-ce68955647cb2c0a-01</string>
+	<key>ua</key>
+	<string>Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148</string>
+	<key>x-bcsign-signature</key>
+	<string>djE6MDQxOTRmZGQ2ZmZkMGRlMTYzYjA1ZGM1ZTY3NmI2Y2RjZTZiYTc2YmI2ODk3MGM3ZTlhNDUxYzUyM2M1MGNiZjozMDA=</string>
+	<key>x-bcsign-timestamp</key>
+	<string>1793374639</string>
+</dict>
+</plist>

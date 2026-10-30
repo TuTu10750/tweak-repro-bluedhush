@@ -1,0 +1,53 @@
+{
+ "album_badge": {
+  "entries": 4092,
+  "key_prefixes": {
+   "hush_album_locked": 1433,
+   "hush_album_declared": 613,
+   "hush_album_actual": 612,
+   "hush_album_locked.hintAt": 1433
+  },
+  "int_values": 2659,
+  "float_values": 1433
+ },
+ "album_pics": {
+  "entries": 300,
+  "value_shapes": {
+   "f|t|u": 214,
+   "t|u": 86
+  },
+  "samples": [
+   {
+    "uid": "82183374",
+    "f": 1793263105.738837,
+    "u": [],
+    "t": 1793263105.738837
+   },
+   {
+    "uid": "119827180",
+    "f": 1793207660.886272,
+    "u": [],
+    "t": 1793107537.292881
+   }
+  ]
+ },
+ "gallery_kv": {
+  "runtime_nt_gallery_show_ids": 7,
+  "runtime_nt_gallery_names": 11969,
+  "runtime_nt_gallery_chat_names": 11966,
+  "runtime_nt_gallery_user_names": 7
+ },
+ "local_store": {
+  "runtime_nt_relation_states": 4123,
+  "runtime_nt_visit_times": 1780
+ },
+ "relation_state_values": [
+  1,
+  2,
+  5
+ ],
+ "visit_time_sample": [
+  1792042312761.6028,
+  1792689951134.7708
+ ]
+}
