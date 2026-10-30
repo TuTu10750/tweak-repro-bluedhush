@@ -5,6 +5,15 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+# ============================================================================
+# 变体说明（v13.0）
+#   release : Makefile 默认 —— Tweak.xm + REAUI.xm，完整功能
+#   m1      : make M1=1      —— 只有 M1Trace.xm，纯观测、不装任何净化锚点
+# 两个变体的 TWEAK_NAME / install_name / plist 完全相同，
+# 因此"换不换观察员"在真机上只表现为同一个 dylib 文件被替换。
+# 两个变体都必须过 ci/gates.py 同一套门禁，没有任何一条免检通道。
+# ============================================================================
+
 jobs:
   build:
     runs-on: macos-14
@@ -21,6 +30,7 @@ jobs:
         run: |
           brew install ldid xz make 2>/dev/null || brew install ldid xz
           clang --version | head -3
+          python3 --version
 
       - name: Fetch Theos + iPhoneOS SDKs
         run: |
@@ -33,119 +43,136 @@ jobs:
           done
           ls "$THEOS/sdks"
 
-      - name: Build tweak
+      # ================= 变体 1：release =================
+      - name: Build release
         run: |
           set -o pipefail
           make clean || true
-          make FINALPACKAGE=1 2>&1 | tee build.log
+          make FINALPACKAGE=1 2>&1 | tee build-release.log
           echo "--- raw outputs ---"
           find .theos/obj -name '*.dylib' 2>/dev/null | sort
-          ls packages 2>/dev/null || true
-
-      # ================= 硬门禁 =================
-      - name: Gate - arch + no substrate + no rootful path
-        run: |
-          DYLIB=$(find .theos/obj -name 'BluedHushREA.dylib' | head -1)
-          echo "dylib=$DYLIB"
-          lipo -info "$DYLIB"
-          echo "== otool -L =="
-          otool -L "$DYLIB" | tee deps.txt
-          echo "== install_name =="
-          otool -D "$DYLIB" || true
-          echo "== LC_RPATH =="
-          otool -l "$DYLIB" | grep -A2 LC_RPATH || echo "(none)"
-
-          if grep -qi 'CydiaSubstrate' deps.txt; then
-            echo "::error::still links CydiaSubstrate -> non-jailbroken / LiveContainer load will fail"
-            exit 1
-          fi
-          if grep -qE '^[[:space:]]*/Library/(MobileSubstrate|Frameworks)/' deps.txt; then
-            echo "::error::rootful absolute dependency path -> cannot resolve outside jailbreak"
-            exit 1
-          fi
-          echo "OK: dependency list is jailbreak-free"
-
-      - name: Gate - no Logos / substrate symbols
-        run: |
-          DYLIB=$(find .theos/obj -name 'BluedHushREA.dylib' | head -1)
-          echo "== undefined MSHook* =="
-          if nm -u "$DYLIB" | grep -i 'MSHook'; then
-            echo "::error::binary still references MSHook*"; exit 1
-          else
-            echo "OK: no MSHook* symbol"
-          fi
-          echo "== Logos symbols =="
-          if nm "$DYLIB" | grep -i 'logos'; then
-            echo "::error::Logos runtime symbols present"; exit 1
-          else
-            echo "OK: no Logos symbols"
-          fi
-          echo "== must-have strings (ASCII) =="
-          strings -a "$DYLIB" | grep -E 'REA-Test|msgId shim|hooks installed ok|premain|ctor-first' | sort -u
-          if strings -a "$DYLIB" | grep -q 'REA-Test'; then echo "OK: REA-Test tag present"; else echo "::error::REA-Test tag missing"; exit 1; fi
-          echo "OK: gates passed"
-
-      # ================= 打包（关键：确保 zip 不为空） =================
-      - name: Stage dist (dylib + plist + notes)
-        if: always()
-        run: |
-          rm -rf dist && mkdir -p dist
+          mkdir -p out/release
           FAT=$(find .theos/obj -maxdepth 3 -name 'BluedHushREA.dylib' | head -1)
           echo "FAT=$FAT"
-          if [ -n "$FAT" ]; then cp "$FAT" dist/BluedHushREA.dylib; fi
+          test -n "$FAT"
+          cp "$FAT" out/release/BluedHushREA.dylib
           for arch in arm64 arm64e; do
             f=".theos/obj/$arch/BluedHushREA.dylib"
-            if [ -f "$f" ]; then mkdir -p "dist/$arch"; cp "$f" "dist/$arch/"; fi
+            if [ -f "$f" ]; then mkdir -p "out/release/$arch"; cp "$f" "out/release/$arch/"; fi
+          done
+          ls -lR out/release
+
+      - name: Gate release (arch + deps + symbols + tag)
+        run: |
+          set -o pipefail
+          python3 ci/gates.py --dylib out/release/BluedHushREA.dylib \
+            --archs arm64,arm64e --tag REA-Test --label release
+          echo "== otool -L (人眼复核) =="
+          otool -L out/release/BluedHushREA.dylib | tee deps-release.txt
+          echo "== install_name =="
+          otool -D out/release/BluedHushREA.dylib || true
+          echo "== LC_RPATH =="
+          otool -l out/release/BluedHushREA.dylib | grep -A2 LC_RPATH || echo "(none)"
+          echo "== 未定义 MSHook* =="
+          nm -u out/release/BluedHushREA.dylib | grep -i 'MSHook' && { echo "::error::release still references MSHook*"; exit 1; } || echo "OK: none"
+          echo "== Logos 符号 =="
+          nm out/release/BluedHushREA.dylib | grep -i 'logos' && { echo "::error::release has Logos symbols"; exit 1; } || echo "OK: none"
+
+      # ================= 变体 2：M-1 取证观测版 =================
+      - name: Build m1 (trace only)
+        run: |
+          set -o pipefail
+          make clean || true
+          make M1=1 FINALPACKAGE=1 2>&1 | tee build-m1.log
+          echo "--- raw outputs (m1) ---"
+          find .theos/obj -name '*.dylib' 2>/dev/null | sort
+          mkdir -p out/m1
+          FAT=$(find .theos/obj -maxdepth 3 -name 'BluedHushREA.dylib' | head -1)
+          echo "FAT=$FAT"
+          test -n "$FAT"
+          cp "$FAT" out/m1/BluedHushREA.dylib
+          # 护栏：M1 变体不许把净化引擎编进去
+          if strings -a out/m1/BluedHushREA.dylib | grep -q 'REAInstallPurify'; then
+            echo "::error::M1 变体里出现了 REAInstallPurify —— Makefile 的 ifeq 没生效，产物不对"
+            exit 1
+          fi
+          if ! strings -a out/m1/BluedHushREA.dylib | grep -q 'M1-TRACE-v1'; then
+            echo "::error::M1 变体里找不到 M1-TRACE-v1 标记"
+            exit 1
+          fi
+          ls -lR out/m1
+
+      - name: Gate m1 (arch + deps + symbols + tag)
+        run: |
+          set -o pipefail
+          python3 ci/gates.py --dylib out/m1/BluedHushREA.dylib \
+            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v1" --label m1
+          otool -L out/m1/BluedHushREA.dylib | tee deps-m1.txt
+          otool -D out/m1/BluedHushREA.dylib || true
+
+      # ================= 打包（两个变体各自独立目录，绝不混装） =================
+      - name: Stage dist
+        if: always()
+        run: |
+          rm -rf dist dist-m1
+
+          # ---- release ----
+          mkdir -p dist
+          if [ -f out/release/BluedHushREA.dylib ]; then cp out/release/BluedHushREA.dylib dist/; fi
+          for arch in arm64 arm64e; do
+            if [ -f "out/release/$arch/BluedHushREA.dylib" ]; then mkdir -p "dist/$arch"; cp "out/release/$arch/BluedHushREA.dylib" "dist/$arch/"; fi
           done
           cp BluedHushREA.plist dist/ || true
           for d in packages/*.deb; do [ -f "$d" ] && cp "$d" dist/; done
           cat > dist/INSTALL.txt <<'EOF'
-          BluedHushREA v10  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
+          BluedHushREA v13.0 release  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
 
-          文件说明
+          文件
             BluedHushREA.dylib        FAT 双切片（arm64 + arm64e），非越狱/自签/LiveContainer 用这个
-            arm64/BluedHushREA.dylib  仅 arm64（老设备 A11 及以前）
-            arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后，绝大多数机器）
-            BluedHushREA.plist        substrate 过滤器（仅越狱环境需要，非越狱可忽略）
+            arm64/BluedHushREA.dylib  仅 arm64（A11 及以前）
+            arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后）
+            BluedHushREA.plist        substrate 过滤器（仅越狱环境需要）
 
-          v10 界面（按原版 19 张截图还原：9 大模块 / 27 个分区 / 105 个开关）
-            窗口立刻挂球：REAUIStart 每 0.5s 重试、最多 40 次，宿主一建好窗口就出现蓝色悬浮球（闪电圆环）
-            · 单击  → present 设置面板（模块列表，每行显示「已开 x/y · 说明」）
-            · 进入模块 → 分区列表，每个开关是真实 UISwitch，分区页脚「已开 x/y · 该分区作用」
-            · 拖动  → 移动位置，松手自动贴边，位置记在 NSUserDefaults 的 rea_ball_center
-            · 长按  → 快捷菜单（打开完整面板 / Hook 报告 / 触发统计 / 隐藏悬浮球）
-            · 面板右上「全部关闭」一键清空所有开关
-            模块划分：净化中心 / 聊天增强 / 隐私与特权 / 定位与追踪 / 自动化与筛选 /
-                      视奸与访问 / 照片与相册 / 入口与手势 / 风控与设备
-            面板里每个开关写的都是 Hook 读取的同一个 key（switch_xxx / purify_xxx），
-            改完立即生效、无需重启；杀进程重启后开关与球的位置都保留（NSUserDefaults）。
-            原版图标全部是 SF Symbols（dylib 内 .bundle/.xib/.nib/Assets.car/imageNamed 均为 0 次），
-            因此本工程不携带任何资源包，产物只有 dylib + plist。
+          日志
+            App 沙盒 Documents/BluedHushREA.log，同时 NSLog 输出，Console/syslog 过滤 "REA-Test"
 
-          v10 Hook 模块（Tweak.xm）与 UI 模块（REAUI.xm）完全解耦
-            Tweak.xm  : 36 条显式 Hook + 12 个反越狱选择子全类扫描，每条 Hook 第一行先读开关，
-                        开关为 OFF 时直接调用原实现 / 返回原值（不产生任何副作用）。
-            REAUI.xm  : 只有 UIKit 与 NSUserDefaults 读写，零 swizzling，通过 5 个桥函数与 Hook 层通信。
-            日志：App 沙盒 Documents/BluedHushREA.log（含 [UI] 前缀的界面事件与 pass/ok/miss 统计）。
-
-          非越狱 + Esign / Sideloadly 注入
-            1. 用 Esign 打开已重签的 Blued IPA -> 「注入/插入动态库」选择 BluedHushREA.dylib
-            2. 注入路径填 @executable_path/Frameworks/BluedHushREA.dylib
-            3. 重新签名（证书 + 描述文件必须与主 App 一致）后安装
-            4. 日志：Console.app 过滤 "REA-Test"，或 LiveContainer 内查看 stdout
-               第一行应为：[REA-Test] Runtime 注入成功!
-               日志文件：App 沙盒 Documents/BluedHushREA.log
-
-          LiveContainer 特别说明
-            LiveContainer 里 App 运行在宿主进程内，dyld 注入方式仍然有效；
-            但 substrate 过滤器不生效（没有 substrate 运行时），所以 plist 只对越狱环境有意义。
-            若在 LiveContainer 里仍然完全没有日志 => dylib 没被 dyld 加载，检查注入路径与签名。
+          注入（Esign / Sideloadly）
+            1. 「注入动态库」选择 BluedHushREA.dylib
+            2. 注入路径 @executable_path/Frameworks/BluedHushREA.dylib
+            3. 与主 App 同证书 + 同描述文件重签后安装
           EOF
-          echo "--- dist tree ---"
-          ls -lR dist
-          test -s dist/BluedHushREA.dylib && echo "dist OK: $(wc -c < dist/BluedHushREA.dylib) bytes"
 
-      - name: Upload dylib artifact
+          # ---- M-1 取证观测版 ----
+          mkdir -p dist-m1
+          if [ -f out/m1/BluedHushREA.dylib ]; then cp out/m1/BluedHushREA.dylib dist-m1/; fi
+          cp BluedHushREA.plist dist-m1/ || true
+          cat > dist-m1/INSTALL-M1.txt <<'EOF'
+          BluedHushREA M-1 取证观测版  (variant: m1, source: M1Trace.xm)
+
+          这个 dylib 和 release 版同名、同注入路径，但内部完全不同：
+            · 不安装任何净化锚点（不 swizzle assembleSplashContainerView / showSplashAd* / PK_VIEW）
+            · 只做四件事：落盘日志、崩溃环形缓冲、主线程阻塞采样、锚点可达性清点
+            · 首次进 App 会把 purify_splash_mode 写成 0（仅当它还不存在）
+            · 开关 rea_m1_off = YES 可一键静音（仍保留崩溃落盘）
+
+                      ⚠ 装法：整份替换，不要和 v12 的 dylib 叠加 ⚠
+
+          注入路径（与 v12 完全相同）
+            @executable_path/Frameworks/BluedHushREA.dylib
+            重签时必须与主 App 同证书 / 同描述文件，否则 dyld 直接拒绝加载
+
+          日志
+            实时：Console.app / syslog 过滤 "REA-Test"，每行以 [REA-Test] 开头
+            落盘：App 沙盒 Documents/REA-M1.log（每次启动追加，首行带 t=0.000）
+            崩溃：App 沙盒 Documents/REA-M1-crash.log（信号/异常 + 最近 160 行环形缓冲）
+          EOF
+
+          echo "--- dist ---";    ls -lR dist    || true
+          echo "--- dist-m1 ---"; ls -lR dist-m1 || true
+          test -s dist/BluedHushREA.dylib   && echo "release OK: $(wc -c < dist/BluedHushREA.dylib) bytes"
+          test -s dist-m1/BluedHushREA.dylib && echo "m1 OK: $(wc -c < dist-m1/BluedHushREA.dylib) bytes"
+
+      - name: Upload release artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -154,12 +181,23 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Upload build log
+      - name: Upload m1 artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BluedHushREA-dylib-m1
+          path: dist-m1/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload build logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: build-log
           path: |
-            build.log
-            deps.txt
+            build-release.log
+            build-m1.log
+            deps-release.txt
+            deps-m1.txt
           if-no-files-found: ignore

@@ -2,6 +2,11 @@ name: build-linux
 
 # 备用构建通道：GitHub 的 macOS 跑者排队过久时使用。
 # 只在手动触发时运行，不干扰 build.yml 的 macOS 队列。
+#
+# ⚠ v13.0 修复：这个工作流以前**一道门禁都没有**
+#   旧版本只有 `file "$DYLIB" || true`（`|| true` 让它在任何情况下都退出 0），
+#   也没有 substrate / MSHook / dist staging 检查 —— 等于一条完全免检的产出通道。
+#   现在它和 build.yml 调用同一个 ci/gates.py，闸门口径不可能再分叉。
 on:
   workflow_dispatch:
 
@@ -23,6 +28,7 @@ jobs:
             https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64
           sudo install -m755 /tmp/ldid /usr/local/bin/ldid
           clang --version | head -2
+          python3 --version
           which ld64 && ld64 --version 2>&1 | head -2 || true
           which ldid && ldid -h 2>&1 | head -2 || true
 
@@ -38,36 +44,93 @@ jobs:
           done
           ls "$THEOS/sdks"
 
-      - name: Build tweak
+      # ================= 变体 1：release =================
+      - name: Build release
         env:
           THEOS: /home/runner/theos
           THEOS_MAKE_PATH: /home/runner/theos/makefiles
         run: |
           set -o pipefail
           make clean || true
-          make FINALPACKAGE=1 DEBUG=0 2>&1 | tee build.log
-          echo "--- artifacts ---"
+          make FINALPACKAGE=1 DEBUG=0 2>&1 | tee build-release.log
           find . \( -name '*.dylib' -o -name '*.deb' \) | sort
+          mkdir -p out/release
+          FAT=$(find . -path ./.theos -prune -o -name 'BluedHushREA.dylib' -print | head -1)
+          [ -n "$FAT" ] || FAT=$(find .theos/obj -maxdepth 3 -name 'BluedHushREA.dylib' | head -1)
+          echo "FAT=$FAT"
+          test -n "$FAT"
+          cp "$FAT" out/release/BluedHushREA.dylib
 
-      - name: Verify dylib arch
+      - name: Gate release (arch + deps + symbols + tag)
         run: |
-          DYLIB=$(find . -name 'BluedHushREA.dylib' | head -1)
-          echo "dylib=$DYLIB"
-          file "$DYLIB" || true
+          set -o pipefail
+          python3 ci/gates.py --dylib out/release/BluedHushREA.dylib \
+            --archs arm64,arm64e --tag REA-Test --label release-linux
+          file out/release/BluedHushREA.dylib
 
-      - name: Upload dylib artifact
+      # ================= 变体 2：M-1 取证观测版 =================
+      - name: Build m1 (trace only)
+        env:
+          THEOS: /home/runner/theos
+          THEOS_MAKE_PATH: /home/runner/theos/makefiles
+        run: |
+          set -o pipefail
+          make clean || true
+          make M1=1 FINALPACKAGE=1 DEBUG=0 2>&1 | tee build-m1.log
+          mkdir -p out/m1
+          FAT=$(find .theos/obj -maxdepth 3 -name 'BluedHushREA.dylib' | head -1)
+          echo "FAT=$FAT"
+          test -n "$FAT"
+          cp "$FAT" out/m1/BluedHushREA.dylib
+
+      - name: Gate m1 (arch + deps + symbols + tag)
+        run: |
+          set -o pipefail
+          python3 ci/gates.py --dylib out/m1/BluedHushREA.dylib \
+            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v1" --label m1-linux
+          file out/m1/BluedHushREA.dylib
+
+      # ================= 打包：与 build.yml 完全同构、同命名 =================
+      - name: Stage dist
+        if: always()
+        run: |
+          rm -rf dist dist-m1
+          mkdir -p dist dist-m1
+          [ -f out/release/BluedHushREA.dylib ] && cp out/release/BluedHushREA.dylib dist/
+          cp BluedHushREA.plist dist/ || true
+          [ -f out/m1/BluedHushREA.dylib ] && cp out/m1/BluedHushREA.dylib dist-m1/
+          cp BluedHushREA.plist dist-m1/ || true
+          echo "① 本通道用 Linux 的 ld64.lld 链接，产物已过与 macOS 通道完全相同的 ci/gates.py 门禁。" > dist/BUILD-CHANNEL.txt
+          echo "② 若与 macOS 通道产物表现不一致，以 macOS 通道为准（Apple 官方链器）。" >> dist/BUILD-CHANNEL.txt
+          cp dist/BUILD-CHANNEL.txt dist-m1/BUILD-CHANNEL.txt
+          ls -lR dist dist-m1 || true
+          test -s dist/BluedHushREA.dylib    && echo "release OK: $(wc -c < dist/BluedHushREA.dylib) bytes"
+          test -s dist-m1/BluedHushREA.dylib && echo "m1 OK: $(wc -c < dist-m1/BluedHushREA.dylib) bytes"
+
+      - name: Upload release artifact (linux channel)
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: BluedHushREA-dylib-linux
-          path: |
-            .theos/obj/**/BluedHushREA.dylib
-            packages/*.deb
-          if-no-files-found: warn
+          path: dist/**
+          if-no-files-found: error
+          retention-days: 14
 
-      - name: Upload build log
+      - name: Upload m1 artifact (linux channel)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: BluedHushREA-dylib-m1-linux
+          path: dist-m1/**
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Upload build logs (linux channel)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: build-log-linux
-          path: build.log
+          path: |
+            build-release.log
+            build-m1.log
           if-no-files-found: ignore
