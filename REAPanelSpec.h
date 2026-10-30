@@ -78,7 +78,7 @@ static const REARowSpec kRowsPurifyEntry[] = {
     {"antenna.radiowaves.left.and.right", "直播 / 服务入口", "立即生效 · 去掉相册 / 直播 / 健康等入口", "purify_live_entry", NULL, 0},
     {"square.grid.2x2.fill", "隐藏发现 Tab", "需重启 App · 从底栏移除「发现」页", "switch_hide_discover_tab", NULL, 0},
     {"video.slash",     "隐藏直播 Tab",      "需重启 App · 从底栏移除「直播」页", "switch_hide_live_tab", NULL, 0},
-    {"paperplane",      "隐藏直播内容",      "立即生效 · 去掉页面内推荐的直播内容", "switch_hide_live_content", NULL, 0},
+    {"paperplane",      "隐藏直播内容",      "立即生效 · 去掉页面内推荐的直播内容", NULL, NULL, 0},
     {"person.crop.circle", "我的页整体净化", "立即生效 · 「我的」页只留核心功能", "switch_purify_mine_page", NULL, 0},
     {"creditcard",      "我的页 VIP 版块",  "立即生效 · 去掉「我的」页顶部的会员卡片", "purify_mine_vip", NULL, 0},
     {"gearshape",       "设置页精简",        "立即生效 · 去掉设置页的认证 / 直播 / 扫一扫等 8 项", "purify_set_items", NULL, 0},
@@ -135,7 +135,7 @@ static const REASectionSpec kSecChat[] = {
 
 /* ---------- 隐私与特权 ---------- */
 static const REARowSpec kRowsPrivInfo[] = {
-    {"doc.text.magnifyingglass", "显示对方属性", "立即生效 · 强制显示对方属性与情报；⚠️ 会放开被藏内容", "switch_profile_intel", NULL, 1},
+    {"doc.text.magnifyingglass", "显示对方属性", "立即生效 · 强制显示对方属性与情报；⚠️ 会放开被藏内容", NULL, NULL, 1},
     {"text.bubble",     "身边列表显示个性签名", "立即生效 · 身边列表第三行显示个性签名", "switch_nearby_signature", NULL, 0},
     {"arrow.left.arrow.right", "伪装客户端版本", "立即生效 · 让服务器按新版下发完整资料（属性 / 个性签名）(仅标准版适用)", "switch_version_spoof", NULL, 0},
     {"photo.on.rectangle", "身边列表显示隐私相册", "立即生效 · 身边列表显示对方隐私相册缩略图；上锁的不显示", "switch_nearby_album", NULL, 0},
@@ -160,7 +160,7 @@ static const REARowSpec kRowsPrivMark[] = {
     {"minus.circle",    "注销用户标记",      "立即生效 · 被删 / 注销的人标红「消失过」(需开「别想玩消失」)", "switch_deleted_mark", NULL, 0},
     {"exclamationmark.triangle", "风险用户标记", "立即生效 · 主页 ⚠️ 标记风险 / 诈骗，列表标红", "switch_risk_user_block", NULL, 0},
     {"chart.pie",       "聊天状态标记",      "立即生效 · 昵称旁显示聊天状态（聊过 / 冇理睬…）", "switch_past_entangle", NULL, 0},
-    {"doc.text.magnifyingglass", "卡片资料情报", "立即生效 · 卡片上显示对方情报小字（黑名单 · 隐身等）", "switch_card_intel_detail", NULL, 0},
+    {"doc.text.magnifyingglass", "卡片资料情报", "立即生效 · 卡片上显示对方情报小字（黑名单 · 隐身等）", "switch_card_intel", NULL, 0},
     {"person.crop.circle.badge.questionmark", "别想玩消失", "立即生效 · 检测谁删了你 / 注销了；顶部「已注销」入口看名单", "switch_vanished", NULL, 0},
     {"exclamationmark.triangle", "查看风险用户名单", "被你标记的用户（左滑可取消）", NULL, "打开", 0},
     {"person.crop.circle.badge.xmark", "查看已注销用户", "已注销用户的名单", NULL, "打开", 0},
@@ -236,7 +236,7 @@ static const REASectionSpec kSecStalk[] = {
 /* ---------- 照片与相册 ---------- */
 static const REARowSpec kRowsAlbum[] = {
     {"photo.on.rectangle.angled", "普通照片入库", "立即生效 · 聊天的普通照片也进相册与展览馆", "switch_chat_gallery", NULL, 0},
-    {"square.grid.2x2", "展览馆入口",        "立即生效 · 开着时聊天页顶部显示「展览馆」入口", "switch_chat_gallery_entry", NULL, 0},
+    {"square.grid.2x2", "展览馆入口",        "立即生效 · 开着时聊天页顶部显示「展览馆」入口", NULL, NULL, 0},
     {"rectangle.stack", "聊天页照片墙球",    "立即生效 · 聊天页右上角 📷 悬浮球，看本会话照片", "switch_chat_gallery_ball", NULL, 0},
     {"arrow.triangle.2.circlepath", "归并未归属照片", "把没记清会话的照片按时间归入对应会话", NULL, "执行", 0},
     {"square.and.arrow.up", "导出相册（迁移用）", "把展览馆照片打包成 zip；到「管理相册备份」长按分享", NULL, "导出", 0},
@@ -249,7 +249,7 @@ static const REARowSpec kRowsAlbumEric[] = {
     {"trash",           "清理 Eric 大佬插件的闪照", "删除旧目录里已导入本版的文件（不可恢复）", NULL, "清理", 0},
 };
 static const REARowSpec kRowsAlbumPost[] = {
-    {"checkmark.circle", "发布时核对已选张数", "立即生效 · 选照片时在日志里核对张数（诊断用）", "switch_publish_count_check", NULL, 0},
+    {"checkmark.circle", "发布时核对已选张数", "立即生效 · 选照片时在日志里核对张数（诊断用）", NULL, NULL, 0},
 };
 static const REASectionSpec kSecAlbum[] = {
     {"保存与归档", "已开 %d/%d · 哪些照片进相册、怎么整理与迁移", 1, kRowsAlbum, 7},
