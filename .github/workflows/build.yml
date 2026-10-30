@@ -100,7 +100,7 @@ jobs:
           cp BluedHushREA.plist dist/ || true
           for d in packages/*.deb; do [ -f "$d" ] && cp "$d" dist/; done
           cat > dist/INSTALL.txt <<'EOF'
-          BluedHushREA v4  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
+          BluedHushREA v9  (pure ObjC Runtime hooks, no CydiaSubstrate, no Logos)
 
           文件说明
             BluedHushREA.dylib        FAT 双切片（arm64 + arm64e），非越狱/自签/LiveContainer 用这个
@@ -108,12 +108,22 @@ jobs:
             arm64e/BluedHushREA.dylib 仅 arm64e（A12 及以后，绝大多数机器）
             BluedHushREA.plist        substrate 过滤器（仅越狱环境需要，非越狱可忽略）
 
+          v9 新功能：悬浮球 + 分类菜单（UI 层复刻，纯代码，无资源包）
+            启动 1.5 秒后屏幕右侧出现蓝色悬浮球（盾牌图标）
+            · 单击  → 打开设置面板（消息防护 / 隐私与相册 / 会员与界面 / 定位 / 调试）
+            · 拖动  → 移动位置，松手自动贴边，位置记在 NSUserDefaults 的 rea_ball_center
+            · 长按  → 快捷菜单（Hook 报告 / 触发统计 / 重装 Hook / 隐藏悬浮球）
+            面板里每个开关就是 Hook 读取的同一个 key（switch_anti_recall 等），改完立即生效，无需重启。
+            原版图标全部是 SF Symbols（dylib 内 .bundle/.xib/.nib/Assets.car/imageNamed 均为 0 次），
+            因此本工程不携带任何资源包，产物只有 dylib + plist。
+
           非越狱 + Esign / Sideloadly 注入
             1. 用 Esign 打开已重签的 Blued IPA -> 「注入/插入动态库」选择 BluedHushREA.dylib
             2. 注入路径填 @executable_path/Frameworks/BluedHushREA.dylib
             3. 重新签名（证书 + 描述文件必须与主 App 一致）后安装
             4. 日志：Console.app 过滤 "REA-Test"，或 LiveContainer 内查看 stdout
                第一行应为：[REA-Test] Runtime 注入成功!
+               日志文件：App 沙盒 Documents/BluedHushREA.log
 
           LiveContainer 特别说明
             LiveContainer 里 App 运行在宿主进程内，dyld 注入方式仍然有效；

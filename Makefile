@@ -6,8 +6,11 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = BluedHushREA
 
-BluedHushREA_FILES = Tweak.xm
-BluedHushREA_CFLAGS = -fobjc-arc -Wno-objc-method-access -Wno-unused-parameter
+# v9：拆成两个编译单元
+#   Tweak.xm  —— Hook 引擎（Runtime 换实现 + 36 个目标 selector + 报告）
+#   REAUI.xm  —— 交互层（悬浮球 / 分类菜单 / 开关面板，复刻原版 HushFloatBall + HushSettingsPanel）
+BluedHushREA_FILES = Tweak.xm REAUI.xm
+BluedHushREA_CFLAGS = -fobjc-arc -Wno-objc-method-access -Wno-unused-parameter -Wno-deprecated-declarations
 BluedHushREA_FRAMEWORKS = Foundation UIKit CoreLocation
 
 # v3 关键链接参数：

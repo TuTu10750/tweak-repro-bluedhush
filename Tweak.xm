@@ -132,6 +132,9 @@
 
 #define REA_TAG @"[REA-Test]"
 
+// REAUI.xm（v9 新加）：悬浮球 + 分类菜单 + 开关面板。定义在另一个编译单元里。
+extern void REAUIStart(void);
+
 // ============================================================================
 #pragma mark - 落盘日志（v6：Documents 优先，多路径同时写，手机上"文件"App 直接能看到）
 // ============================================================================
@@ -390,19 +393,14 @@ static unsigned long long REAUInt(id obj, NSString *key) {
 #pragma mark - 开关中心（等价原版 [[HushConfig shared] isEnabled:]，默认全开）
 // ============================================================================
 
+// v9：去掉永久缓存 —— 原版 HushConfig 有 flagCache，但会在 -setEnabled:forKey: 里主动失效；
+// 我们的 UI 层要"点一下就生效"，直接每次读 NSUserDefaults（CFPreferences 本身有内存缓存，
+// 命中时开销与字典查表同量级），这样面板上的开关改完立刻对 Hook 生效，不必重启 App。
 static BOOL REAFlag(NSString *key) {
-    static NSMutableDictionary<NSString *, NSNumber *> *gCache;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{ gCache = [NSMutableDictionary dictionary]; });
+    if (!key.length) return YES;
     @try {
-        @synchronized (gCache) {
-            NSNumber *cached = gCache[key];
-            if (cached) return cached.boolValue;
-            id v = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-            BOOL on = (v == nil) ? YES : [v boolValue];
-            gCache[key] = @(on);
-            return on;
-        }
+        id v = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+        return (v == nil) ? YES : [v boolValue];
     } @catch (NSException *e) {
         return YES;
     }
@@ -813,6 +811,8 @@ static void rea_needToBuyVip(id self, SEL _cmd) {
 static void rea_setBadge(id self, SEL _cmd, unsigned long long v, NSInteger i) {
     REAHit(REAF_Tabbar);
     @try { REALog(@"badge=%llu at %ld", v, (long)i); } @catch (NSException *e) { }
+    // v9：UI 面板「角标净化」开关 —— 打开就把未读数清零，其它情况原样透传
+    if (REAFlag(@"switch_clean_badge")) v = 0;
     if (p_setBadge) ((REA_V_ULL_Q)p_setBadge)(self, _cmd, v, i);
 }
 
@@ -1126,6 +1126,13 @@ static void REAScheduleInstall(void) {
         REAInstallPass(@"main+2s", YES);
     });
 
+    // ②b main+1.5s：拉起 UI 层（悬浮球 + 分类菜单），见 REAUI.xm。
+    //     必须等启动完成再建窗口：ctor 阶段还没有 UIWindowScene，建窗口必失败。
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)1.5 * NSEC_PER_SEC),
+                   dispatch_get_main_queue(), ^{
+        REAUIStart();
+    });
+
     // ③ main+15s：触发统计（回答"Hook 到底有没有被调用"）；main+45s 再记一次到文件（不再弹窗）
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(15 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
@@ -1170,3 +1177,52 @@ static void rea_ctor(void) {
     REAScheduleInstall();
 }
 @end
+
+// ============================================================================
+#pragma mark - 供 UI 层（REAUI.xm）调用的桥
+//
+// 这五个函数是 REAUI.xm 里 extern 声明的入口。之所以走桥而不是把 UI 直接塞进本文件：
+//   ① 本文件已经有 1,100+ 行、几千个 hook 定义，再混进 600 行 UIKit 会没法审；
+//   ② 桥函数把"UI 想做的事"收敛成 5 个语义动作（读开关 / 日志 / 出报告 / 重装），
+//      UI 层因此完全不依赖本文件内部的 static 符号，编译期各自独立、也不会误碰 hook 引擎。
+// ============================================================================
+
+void REALogBridge(NSString *fmt, ...) {
+    @autoreleasepool {
+        if (!fmt) return;
+        va_list ap;
+        va_start(ap, fmt);
+        NSString *s = [[NSString alloc] initWithFormat:fmt arguments:ap];
+        va_end(ap);
+        REALog(@"%@", s);
+    }
+}
+
+BOOL REAFlagBridge(NSString *key) {
+    return REAFlag(key);
+}
+
+// 手动出报告：清零"已弹过"标记，让用户点一次就出一次
+void REAShowHookReportBridge(void) {
+    @try {
+        gREAReportShown = NO;
+        REAPublishReport(@"manual", gREAOK, gREAMiss);
+    } @catch (NSException *e) {
+        REALog(@"manual hook report failed: %@", e.reason);
+    }
+}
+
+void REAShowHitReportBridge(void) {
+    @try {
+        gREAHitReportShown = NO;
+        REAPublishHitReport();
+    } @catch (NSException *e) {
+        REALog(@"manual hit report failed: %@", e.reason);
+    }
+}
+
+void REAReinstallHooksBridge(void) {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        REAInstallPass(@"manual", NO);
+    });
+}

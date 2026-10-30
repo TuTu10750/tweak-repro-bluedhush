@@ -97,21 +97,66 @@ make package FINALPACKAGE=1
    ```
    > 注意：本插件依赖 Substrate/ellekit 才能完成 `%hook` 的运行时替换。
 
+## v9：交互层复刻（悬浮球 + 分类菜单 + 开关持久化）
+
+原版的 UI 不是资源包，而是**纯代码 UIKit**。这一点在 `BluedHush_5.19.dylib` 里可以硬证：
+
+| 证据 | 结果 |
+|---|---|
+| `.bundle` / `.xib` / `.nib` / `Assets.car` / `imageNamed` | **各 0 次** |
+| `systemImageNamed` | 2 次 → 图标全部是 **SF Symbols** |
+| `HushFloatBall : UIView` | `iconView: UIImageView` + `-initWithFrame:` / `-refreshIcon` / `-onTap` / `-onPan:` |
+| `HushSettingsPanel : UIViewController` | `table` / `modules` / `searchCtl` / `hushTopSearchBar` + `-buildModel` / `-openModule:` / `-showLog` / `-hushCloseModal` + 全套 `UITableViewDataSource` |
+| `HushModuleEntry / HushModuleSection / HushSwitchItem / HushActionItem` | 三层菜单模型（module → section → item），开关项带 `key`，动作项带 `handler` |
+| `HushSwitchCell : UITableViewCell` | `sw: UISwitch` + `onToggle:` block，`-configureTitle:subtitle:icon:effect:on:` |
+| `HushModuleDetailController : UITableViewController` | `-initWithTitle:sections:footer:` |
+| `HushConfig` | `defaults: NSUserDefaults` + `-isEnabled:` / `-isEnabled:default:` / `-setEnabled:forKey:` / `-registerDefaults` / `-resetToDefaults` |
+
+所以本工程按同样的分层重写（`REAUI.xm`，零 Logos、零 substrate）：
+
+| 原版 | 本工程 |
+|---|---|
+| `HushFloatBall` | `REAFloatBallView`（UIView + pan/tap/长按，贴边吸附，位置存 `rea_ball_center`） |
+| `HushWindowHelper` | `REAOverlayWindow`（`UIWindowLevelAlert+1`，`hitTest:` 穿透，不影响 App 交互） |
+| `HushSettingsPanel` | `REAPanelController`（UITableView 列出五个分类） |
+| `HushModuleDetailController` | `READetailController`（每个分类的开关页） |
+| `HushSwitchCell` | `REASwitchCell`（UISwitch + block 回调） |
+| `HushConfig` | `REAUIFlag()` / `REAUISetFlag()`（直接读 `NSUserDefaults`，**改完立即生效**） |
+
+入口路径（复刻原版的操作面）：
+
+- **单击悬浮球** → 设置面板
+- **拖动** → 移动，松手贴边，位置持久化
+- **长按** → 快捷菜单：Hook 报告 / 触发统计 / 重装 Hook / 隐藏悬浮球
+
+分类与开关（key 与 Hook 读取的完全同名）：
+
+| 分类 | 开关 |
+|---|---|
+| 消息防护 | `switch_anti_recall`、`switch_flash_photo`、`switch_flash_text` |
+| 隐私与相册 | `switch_private_photo`、`switch_screenshot`、`switch_watermark` |
+| 会员与界面 | `switch_local_vip`、`switch_clean_badge` |
+| 定位 | `switch_virtual_location`、`switch_altitude` + 「设置坐标」（写 `rea_fake_location`） |
+| 调试 | `rea_show_report` + 查看报告 / 触发统计 / 重装 / 重置 |
+
 ## 验证
 
 启动 Blued 后，Console 过滤 `REA-Test`：
 
 ```
 [REA-Test] 注入成功
-[REA-Test] BluedHushREA loaded, pid=1234
-[REA-Test] hooked-classes alive 14/14: GJIMMessageModel,... 
+[REA-Test] Runtime 注入成功!
+[REA-Test] pass ctor hooked 36
 ```
+
+启动 1.5 秒后屏幕右侧出现悬浮球；单击打开面板，改开关后日志会打印 `[UI] switch_xxx -> 0`。
 
 ## 目录
 
 ```
-Tweak.xm                  # Logos 源码（Hook 复刻）
-Makefile                  # ARCHS = arm64 arm64e
+Tweak.xm                  # Hook 引擎（Runtime 换实现，零 Logos）
+REAUI.xm                  # 交互层（悬浮球 / 分类菜单 / 开关面板）
+Makefile                  # ARCHS = arm64 arm64e，FILES = Tweak.xm REAUI.xm
 control                   # deb 元信息
 BluedHushREA.plist        # Filter: com.danlan.xiaolan
 .github/workflows/build.yml
