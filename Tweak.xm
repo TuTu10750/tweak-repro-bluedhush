@@ -1016,6 +1016,67 @@ static void rea_locSave(id self, SEL _cmd, id a1, id a2) {
     if (p_locSave) ((void (*)(id, SEL, id, id))p_locSave)(self, _cmd, a1, a2);
 }
 
+
+/* ============================================================================
+   [VLocCL] 原版实测（沙盒 hoo 逐字）：
+     [VLocCL] 已包装 delegate SmGpsDelegate / BMKLocationManager / GTCGbdLService /
+              MKCoreLocationProvider 的 didUpdateLocations
+   为什么必须有这一层：宿主自己的 BDLocationService 只喂"业务层"坐标；地图渲染走的是
+   百度/高德/高德 MK 内核的 delegate 回调，不包装它们，地图上那个蓝点仍然停在真实位置。
+   四个类都不一定是 App 自己的类（可能在 Framework / Swift 里），所以一律用
+   objc_getClass + 只在"确实有这个方法"时才换；换不到只记 miss，不影响别的层。
+   ============================================================================ */
+typedef void (*REA_IMP_LOCUPD)(id, SEL, id, id);
+
+static struct { Class cls; REA_IMP_LOCUPD orig; } gLocWraps[8];
+static int gLocWrapCount = 0;
+
+static void rea_delegateDidUpdate(id self, SEL _cmd, id manager, id locations)
+{
+    Class c = object_getClass(self);
+    REA_IMP_LOCUPD orig = NULL;
+    for (int i = 0; i < gLocWrapCount; i++) {
+        if (gLocWraps[i].cls == c) { orig = gLocWraps[i].orig; break; }
+    }
+    @try {
+        if (REAFlag(@"switch_virtual_location")) {
+            static NSUInteger n = 0;
+            n++;
+            if (n <= 3 || (n % 200) == 0) {
+                REALog(@"[VLocCL] %s didUpdateLocations → 换成 %.6f,%.6f（第 %lu 次）",
+                       class_getName(c), REALocLat(), REALocLng(), (unsigned long)n);
+            }
+            locations = REAFakeLocationsArray();
+        }
+    } @catch (NSException *e) { }
+    if (orig) orig(self, _cmd, manager, locations);
+}
+
+static void REAInstallVLocDelegates(void)
+{
+    static const char *kNames[] = {
+        "SmGpsDelegate", "BMKLocationManager", "GTCGbdLService", "MKCoreLocationProvider"
+    };
+    SEL sel = sel_registerName("locationManager:didUpdateLocations:");
+    int ok = 0, total = 0;
+    for (size_t i = 0; i < sizeof(kNames) / sizeof(kNames[0]); i++) {
+        total++;
+        Class c = objc_getClass(kNames[i]);
+        if (c == Nil) { continue; }
+        if (!class_respondsToSelector(c, sel)) { continue; }
+        if (gLocWrapCount >= 8) break;
+        IMP got = REASwap(c, "locationManager:didUpdateLocations:", (IMP)rea_delegateDidUpdate);
+        if (got) {
+            gLocWraps[gLocWrapCount].cls  = c;
+            gLocWraps[gLocWrapCount].orig = (REA_IMP_LOCUPD)got;
+            gLocWrapCount++;
+            ok++;
+        }
+    }
+    REALog(@"[VLocCL] 已包装 delegate %d/%d（SmGpsDelegate / BMKLocationManager / GTCGbdLService / MKCoreLocationProvider）",
+           ok, total);
+}
+
 static void REAInstallLocationHooks(void) {
     @try {
         Class svc = objc_getClass("BDLocationService");
@@ -1036,6 +1097,7 @@ static void REAInstallLocationHooks(void) {
             "uploadShadowLocation:longitude:latitude:isOpen:shadowId:success:failed:",
             (IMP)rea_shadowUpload);
         REALog(@"[Loc] BDSettingShadowRequest uploadShadowLocation hook=%s", p_shadowUpload ? "ok" : "miss");
+        REAInstallVLocDelegates();
     } @catch (NSException *e) {
         REALog(@"[Loc] 安装定位钩子异常：%@", e.reason);
     }
@@ -2486,6 +2548,7 @@ static void rea_premain(void) {
 // 等价 Logos %ctor（同一 __mod_init_func 段按源码顺序执行，幂等由 REAScheduleInstall 保证）
 __attribute__((constructor))
 static void rea_ctor(void) {
+    rea_premain();          // v15：构造期先打原版 BOOT 抬头 + 装启动探针，再排安装
     REAScheduleInstall();
 }
 
@@ -2495,7 +2558,7 @@ static void rea_ctor(void) {
 
 @implementation REAEarlyLoader
 + (void)load {
-    NSLog(@"[REA-Test] Runtime 注入成功! (+load)");
+    NSLog(@"[BLUEDHUSH] [I] Runtime 注入成功! (+load)");
     REAScheduleInstall();
 }
 @end
