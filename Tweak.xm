@@ -2140,12 +2140,13 @@ static void REAScheduleInstall(void) {
 // 最早：dylib 初始化阶段。只 NSLog + 调度（调度内部第一件事就是早期安装）。
 __attribute__((constructor))
 static void rea_premain(void) {
-    /* 纯 ASCII 版本号：CI 的 gates.py 只在 __TEXT,__cstring 里找 tag，
-       含中文的字面量会落到 __ustring，找不到就等于没有版本标记。 */
-    static const char kReaBuildTag[] = "v13.0-P0";
-    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", kReaBuildTag);
+    /* 版本标记必须是 **独立的纯 ASCII C 字符串字面量**，直接当参数传：
+       ① 带中文的 @"..." 会整体落到 __ustring，gates.py 只在 __cstring 里找，找不到；
+       ② 函数内 `static const char x[]` 会被放进 __const 段，同样找不到。
+       两种写法都在 CI 上实测失败过，这里不再折腾。 */
+    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v13.0-P0");
     REALog(@"[REA] build=%s 档0：净化全部缺省关 / 设置页注入缺省关 / 悬浮球挂载已修",
-           kReaBuildTag);
+           "v13.0-P0");
     REAInstallBootProbe();
     REAScheduleInstall();
 }
