@@ -887,6 +887,82 @@ static CLLocation *rea_mgrLocation(id self, SEL _cmd) {
 }
 
 // ============================================================================
+#pragma mark - 6b. 定位落地：把假坐标塞进宿主真正的入口（v13.2）
+// ============================================================================
+/* 前面 6 段只挂了 CLLocationManager / CLLocation，够用但不彻底：
+   宿主自己有 BDLocationService 当 CLLocationManager 的 delegate，它拿到的
+   locations 数组是**真坐标**，很多业务（身边列表、地图、追踪）读的是它。
+   所以真正打中点子的地方有两处：
+     · BDLocationService -locationManager:didUpdateLocations:   （本地定位落地）
+     · BDSettingShadowRequest -uploadShadowLocation:longitude:latitude:isOpen:shadowId:success:failed:
+       （影子位置上传：这是**服务端**位置，传上去之后别人首页看到的就是它） */
+
+extern double REALocLat(void);
+extern double REALocLng(void);
+extern double REALocAlt(void);
+extern void   REAPushFakeLocationToHost(void);
+
+static IMP p_locDidUpdate = NULL;
+static IMP p_shadowUpload = NULL;
+
+static NSArray *REAFakeLocationsArray(void) {
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:REALocLat() longitude:REALocLng()];
+    return loc ? @[ loc ] : @[];
+}
+
+static void rea_locDidUpdate(id self, SEL _cmd, id manager, id locations) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) {
+            NSUInteger old = [locations isKindOfClass:[NSArray class]] ? [locations count] : 0;
+            locations = REAFakeLocationsArray();
+            static NSUInteger n = 0;
+            n++;
+            if (n <= 3 || (n % 100) == 0) {
+                REALog(@"[Loc] BDLocationService didUpdateLocations：%lu 个真坐标 → 换成 %.6f,%.6f（第 %lu 次）",
+                       (unsigned long)old, REALocLat(), REALocLng(), (unsigned long)n);
+            }
+        }
+    } @catch (NSException *e) { }
+    if (p_locDidUpdate) ((void (*)(id, SEL, id, id))p_locDidUpdate)(self, _cmd, manager, locations);
+}
+
+/* 影子位置上传：类型编码 v68@0:8@16d24d32B40q44@?52@?60
+   = (id self, SEL, id a1, double longitude, double latitude, BOOL isOpen,
+      long long shadowId, id success, id failed) */
+static void rea_shadowUpload(id self, SEL _cmd, id a1, double lng, double lat, BOOL isOpen,
+                             long long shadowId, id success, id failed) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) {
+            double ol = lng, oa = lat;
+            lng = REALocLng();
+            lat = REALocLat();
+            REALog(@"[Loc] 影子位置上传：%.6f,%.6f → %.6f,%.6f（服务端位置，别人看到的就是这个）",
+                   ol, oa, lng, lat);
+        }
+    } @catch (NSException *e) { }
+    if (p_shadowUpload) {
+        ((void (*)(id, SEL, id, double, double, BOOL, long long, id, id))p_shadowUpload)
+            (self, _cmd, a1, lng, lat, isOpen, shadowId, success, failed);
+    }
+}
+
+static void REAInstallLocationHooks(void) {
+    @try {
+        Class svc = objc_getClass("BDLocationService");
+        if (svc) p_locDidUpdate = REASwap(svc, "locationManager:didUpdateLocations:", (IMP)rea_locDidUpdate);
+        REALog(@"[Loc] BDLocationService didUpdateLocations hook=%s", p_locDidUpdate ? "ok" : "miss");
+
+        Class req = objc_getClass("BDSettingShadowRequest");
+        if (req) p_shadowUpload = REASwap(req,
+            "uploadShadowLocation:longitude:latitude:isOpen:shadowId:success:failed:",
+            (IMP)rea_shadowUpload);
+        REALog(@"[Loc] BDSettingShadowRequest uploadShadowLocation hook=%s", p_shadowUpload ? "ok" : "miss");
+    } @catch (NSException *e) {
+        REALog(@"[Loc] 安装定位钩子异常：%@", e.reason);
+    }
+}
+
+// ============================================================================
 #pragma mark - 7. 其它埋点
 // ============================================================================
 
@@ -1043,6 +1119,7 @@ static void REAInstallHooks(void) {
 
     // v12 净化引擎：广告位 / 入口 / 提示条 / 打码（净化中心第一批 39 条锚点 + 视图级兜底）
     REAInstallPurify();
+    REAInstallLocationHooks();
 }
 
 // ============================================================================
@@ -2189,7 +2266,7 @@ static void rea_premain(void) {
        ① 带中文的 @"..." 会整体落到 __ustring，gates.py 只在 __cstring 里找，找不到；
        ② 函数内 `static const char x[]` 会被放进 __const 段，同样找不到。
        两种写法都在 CI 上实测失败过，这里不再折腾。 */
-    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v13.1-P1");
+    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v13.2-P1");
 
     /* 脏数据清洗：v12 的"净化总开关"会把 YES 写进每一个 purify_* key，包括
        purify_splash_ad。旧值留在 defaults 里，装上新包照样生效 —— 真机就是这么
@@ -2202,7 +2279,7 @@ static void rea_premain(void) {
     } @catch (NSException *e) { }
 
     REALog(@"[REA] build=%s 开屏走视图隐藏 / 设置页注入缺省关 / 悬浮球挂载已修 / P1 功能接线",
-           "v13.1-P1");
+           "v13.2-P1");
     REAInstallBootProbe();
     REAScheduleInstall();
 }

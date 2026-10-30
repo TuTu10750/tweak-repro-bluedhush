@@ -720,7 +720,17 @@ static void reaActionDefault(REAItem *item)
     REAToast([NSString stringWithFormat:@"「%@」在本复刻版里没有独立实现。", item.title ?: @"该动作"]);
 }
 
+extern void REAShowLocationPicker(void);
+
 static void reaActionSetLocation(REAItem *item)
+{
+    /* v13.2：不再用三个输入框凑合，改成参考实现同款的地图拾取窗口
+       （HushLocationPickerController 的能力：长按取点 / 准星拾取 / 历史 / 地图类型）。 */
+    REAShowLocationPicker();
+    return;
+}
+
+static void reaActionSetLocationLegacy(REAItem *item)
 {
     NSDictionary *cur = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kREAFakeLocationKey];
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"设置虚拟坐标"

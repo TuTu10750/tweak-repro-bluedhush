@@ -17,10 +17,10 @@ TWEAK_NAME = BluedHushREA
 ifeq ($(M1),1)
 BluedHushREA_FILES = M1Trace.xm
 else
-BluedHushREA_FILES = Tweak.xm REAUI.xm
+BluedHushREA_FILES = Tweak.xm REAUI.xm REALoc.xm
 endif
 BluedHushREA_CFLAGS = -fobjc-arc -Wno-objc-method-access -Wno-unused-parameter -Wno-deprecated-declarations
-BluedHushREA_FRAMEWORKS = Foundation UIKit CoreLocation
+BluedHushREA_FRAMEWORKS = Foundation UIKit CoreLocation MapKit
 
 # v3 关键链接参数：
 #   -install_name / @rpath  —— 不再留下 /Library/MobileSubstrate/... 这种 rootful 绝对 install_name
