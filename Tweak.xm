@@ -202,6 +202,69 @@ static void REALog(NSString *fmt, ...) {
 }
 
 // ============================================================================
+#pragma mark - 启动窗口探针（v13.0-P0）
+//
+// 目的：把"卡在启动图"变成一行可判定的日志。
+//   SpringBoard 在 App 提交第一帧之前一直显示启动快照；只要宿主主窗口没有可见，
+//   用户看到的就是"启动图不动，也不闪退"。v12 真机日志里 `[UI] 找不到 keyWindow`
+//   连打 40 次 / 20 秒而无一行窗口现场，等于把最关键的信息扔掉了。
+// 这里按固定采样点打印：窗口数 / 每个窗口的 类名·层级·hidden·alpha·key。
+// 判据：
+//   t>=5s 仍没有 "hid=0 且 alpha>0 且 lvl 接近 0" 的宿主窗口 → H-A1（启动流程没放行）
+//   有宿主窗口但 key 恒为 0                                   → key 漂移（我们或 SDK 抢了）
+//   宿主窗口都在、且 key=1                                    → 卡启动图与窗口无关，转查广告层
+// ============================================================================
+
+static NSString *REABootWindowSnapshot(void) {
+    NSMutableString *s = [NSMutableString string];
+    NSUInteger n = 0, keyCount = 0;
+    @try {
+        NSArray *wins = nil;
+        if (@available(iOS 13.0, *)) {
+            NSMutableArray *all = [NSMutableArray array];
+            for (UIScene *sc in [[UIApplication sharedApplication] connectedScenes]) {
+                if (![sc isKindOfClass:[UIWindowScene class]]) continue;
+                for (UIWindow *w in ((UIWindowScene *)sc).windows) { if (w) [all addObject:w]; }
+            }
+            wins = all;
+        }
+        if (wins.count == 0) wins = [[UIApplication sharedApplication] windows];
+        for (UIWindow *w in wins) {
+            if (w.isKeyWindow) keyCount++;
+            [s appendFormat:@"%@%@(lvl=%.0f,hid=%d,a=%.2f,key=%d)",
+             (n ? @" | " : @""), NSStringFromClass([w class]),
+             w.windowLevel, (int)w.hidden, w.alpha, (int)w.isKeyWindow];
+            n++;
+        }
+        if (n == 0) [s appendString:@"<none>"];
+        [s appendFormat:@"  ::n=%lu,key=%lu", (unsigned long)n, (unsigned long)keyCount];
+    } @catch (NSException *e) {
+        [s appendFormat:@"<exception %@>", e.name];
+    }
+    return s;
+}
+
+static void REABootProbeAt(double t) {
+    @autoreleasepool {
+        NSString *snap = REABootWindowSnapshot();
+        REALog(@"[Boot] t=%.2f %@", t, snap);
+        /* 5 秒之后还看不到任何"可见的普通层级窗口"，就把结论直接写进日志。 */
+        if (t >= 5.0 && [snap rangeOfString:@"lvl=0,hid=0"].location == NSNotFound) {
+            REALog(@"[Boot] STUCK-LAUNCH: t=%.1fs 仍无可见宿主窗口 → 屏幕会停在启动图", t);
+        }
+    }
+}
+
+static void REAInstallBootProbe(void) {
+    static const double kT[] = { 0.05, 0.30, 1.00, 2.00, 5.00, 10.00, 20.00 };
+    for (size_t i = 0; i < sizeof(kT) / sizeof(kT[0]); i++) {
+        double t = kT[i];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{ REABootProbeAt(t); });
+    }
+}
+
+// ============================================================================
 #pragma mark - 自研 Hook 引擎（与 substrate 同语义，零依赖）
 // ============================================================================
 
@@ -1018,7 +1081,7 @@ static REA_V_B         p_settingsWillAppear = NULL;   /* 备用入口：导航�
 
 /* 入口行固定插在**第 0 组末尾**：宿主其它行下标全部不变，
    我们的行永远取 row == 宿主该组原行数，不会和宿主任何一行撞号。 */
-static BOOL gREASettingsEntryOn = YES;
+static BOOL gREASettingsEntryOn = NO;   // v13.0-P0：出厂关（由 rea_settings_entry 决定，见 REAInstallSettingsEntry）
 static NSInteger const kREASettingsEntrySection = 0;
 
 static BOOL REAIsSettingVC(id self)
@@ -1183,9 +1246,27 @@ static void rea_settingsWillAppear(id self, SEL _cmd, BOOL animated)
 // trampoline 通过 PRowFor(self, _cmd) 由「self 的类链 + 选择子」定位到那一行再取 key。
 
 // 每次读 NSUserDefaults（REAFlag 语义），保证面板点一下立刻生效。
+//
+// v13.0-P0：净化组改为 **档 0 出厂** —— key 不存在时返回 NO（旧语义是"缺省全开"）。
+// 依据（v12 真机日志）：`purify_*` 全开时开屏净化只命中 `getSplashAdForColdLaunch`
+// （v16@0:8，void 发起拉取），把启动回调链切断 → 全 App 20 秒内没有窗口成为 key →
+// 屏幕停在启动图。出厂全关之后，面板里每拨一个开关才是"显式 YES"，
+// 才能做到"一次只开一层、坏了立刻知道是哪一层"。
+static BOOL PFlag(const char *key) {
+    if (!key) return NO;
+    @try {
+        NSString *k = [NSString stringWithUTF8String:key];
+        if (!k.length) return NO;
+        id v = [[NSUserDefaults standardUserDefaults] objectForKey:k];
+        return (v == nil) ? NO : [v boolValue];
+    } @catch (NSException *e) {
+        return NO;
+    }
+}
+
 static inline BOOL POn(const char *key) {
     if (!key) return NO;
-    @try { return REAFlag([NSString stringWithUTF8String:key]); } @catch (NSException *e) { return NO; }
+    @try { return PFlag(key); } @catch (NSException *e) { return NO; }
 }
 
 // ---- 安装表 ----
@@ -1705,11 +1786,38 @@ static void REAInstallPurify(void) {
             }
         }
         REALog(@"[Purify] 锚点安装：ok=%d miss=%d（共 %zu 条，含视图净化器）", ok, miss, (size_t)P_ROW_COUNT);
+
+        /* v13.0-P0 档位自报：把"现在到底开着哪几层"打出来，省得靠猜。
+           出厂（key 全缺省）= 档 0：所有 purify_* 都不生效，只装不拦。 */
+        int on = 0;
+        static const char *kL1Keys[] = { "purify_splash_ad" };
+        int l1 = 0;
+        for (size_t i = 0; i < sizeof(kL1Keys) / sizeof(kL1Keys[0]); i++) if (POn(kL1Keys[i])) l1++;
+        for (size_t i = 0; i < P_ROW_COUNT; i++) if (kPInstall[i].key && POn(kPInstall[i].key)) on++;
+        REALog(@"[Purify] 档位：出厂缺省=关；当前生效 key=%d/52，其中 L1(splash_ad)=%s；"
+               @"若卡启动图，先确认这里 L1 是否为 off", on, l1 ? "on" : "off");
     }
 }
 
 static void REAInstallSettingsEntry(void)
 {
+    /* v13.0-P0：设置页注入同样改为 **出厂关**（`rea_settings_entry` 缺省 = NO）。
+       理由（v12 真机日志）：四个 owner 分别是 UITableViewController / UITableViewController
+       / 不存在 / BDSettingViewController —— rows 与 cell 实际换的是 **UIKit 的
+       UITableViewController**，爆炸半径是全 App 每一张表；而 select 那一项永远装不上。
+       新增行与宿主行计数不同步时，宿主自己的 cellForRow 会拿到越界 row 直接崩。
+       这一版先把注入整体关掉，面板入口改由悬浮球承担（P0-C 已修好）；
+       等 §3.2 的原子安装 + 回滚事务落地，再用 `defaults write … rea_settings_entry -bool YES` 打开。 */
+    BOOL wantEntry = NO;
+    @try {
+        id v = [[NSUserDefaults standardUserDefaults] objectForKey:@"rea_settings_entry"];
+        wantEntry = (v == nil) ? NO : [v boolValue];
+    } @catch (NSException *e) { wantEntry = NO; }
+    gREASettingsEntryOn = wantEntry;
+    if (!wantEntry) {
+        REALog(@"[SettingsEntry] 出厂关闭（rea_settings_entry=0）：不注入设置页行，面板入口走悬浮球");
+        return;
+    }
     @try {
         Class vc = objc_getClass("BDSettingViewController");
         if (vc == Nil) {
@@ -2032,7 +2140,13 @@ static void REAScheduleInstall(void) {
 // 最早：dylib 初始化阶段。只 NSLog + 调度（调度内部第一件事就是早期安装）。
 __attribute__((constructor))
 static void rea_premain(void) {
-    NSLog(@"[REA-Test] Runtime 注入成功!");
+    /* 纯 ASCII 版本号：CI 的 gates.py 只在 __TEXT,__cstring 里找 tag，
+       含中文的字面量会落到 __ustring，找不到就等于没有版本标记。 */
+    static const char kReaBuildTag[] = "v13.0-P0";
+    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", kReaBuildTag);
+    REALog(@"[REA] build=%s 档0：净化全部缺省关 / 设置页注入缺省关 / 悬浮球挂载已修",
+           kReaBuildTag);
+    REAInstallBootProbe();
     REAScheduleInstall();
 }
 

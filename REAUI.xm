@@ -554,6 +554,10 @@ static NSArray<REAModule *> *REABuildMenu(void)
 #pragma mark - 总开关分组
 
 // 从菜单数据里现算，不写死列表：以后加减净化细项，总开关自动跟上。
+//
+// v13.0-P0：**排除 purify_splash_ad**。总开关是"一把梭"，而开屏那一层的实现方式
+// （拦 `getSplashAdForColdLaunch`，一个 void 的"发起拉取"入口）会切断启动回调链，
+// 表现就是卡启动图。总开关不能顺手把 App 弄挂 —— 这一项必须单独拨，且拨之前要读提示。
 static NSArray<NSString *> *REAUIMasterGroupKeys(NSString *masterKey)
 {
     NSMutableArray<NSString *> *out = [NSMutableArray array];
@@ -563,6 +567,7 @@ static NSArray<NSString *> *REAUIMasterGroupKeys(NSString *masterKey)
             for (REAItem *it in sec.items) {
                 if (it.isAction || it.key.length == 0) continue;
                 if ([it.key isEqualToString:masterKey]) continue;
+                if ([it.key isEqualToString:@"purify_splash_ad"]) continue;   /* 见上 */
                 if (![it.key hasPrefix:@"purify_"]) continue;
                 [out addObject:it.key];
             }
@@ -586,25 +591,16 @@ static UIImage *REASymbol(NSString *name, UIColor *tint)
     return tint ? [img imageWithTintColor:tint renderingMode:UIImageRenderingModeAlwaysTemplate] : img;
 }
 
-static UIWindow *REAKeyWindow(void)
-{
-    UIWindow *kw = nil;
-    if (@available(iOS 13.0, *)) {
-        for (UIScene *sc in [UIApplication sharedApplication].connectedScenes) {
-            if (![sc isKindOfClass:[UIWindowScene class]]) continue;
-            for (UIWindow *w in ((UIWindowScene *)sc).windows) {
-                if (w.isKeyWindow) { kw = w; break; }
-            }
-            if (kw) break;
-        }
-    }
-    if (kw == nil) kw = [UIApplication sharedApplication].keyWindow;
-    return kw;
-}
+/* v13.0-P0：定义在文件后部（那里才能引用 REAWindow 做排除）。 */
+static NSArray<UIWindow *> *REAAllWindows(void);
+static UIWindow *REAAnyWindow(void);
+static NSString *REAWindowSnapshot(void);
 
 static UIViewController *REATopViewController(void)
 {
-    UIViewController *top = REAKeyWindow().rootViewController;
+    /* v13.0-P0：宿主窗口未必是 key（真机 isKeyWindow 长期为假），顶层 VC 必须从
+       "任一可见宿主窗口"取，不能从 keyWindow 取，否则永远拿到 nil 或自己的覆盖窗口。 */
+    UIViewController *top = REAAnyWindow().rootViewController;
     while (top) {
         UIViewController *p = top.presentedViewController;
         if (p && !p.isBeingDismissed) { top = p; continue; }
@@ -618,8 +614,8 @@ static UIViewController *REATopViewController(void)
 }
 
 /* 统一弹窗落点（实现见文件末尾）。
-   面板现在挂在「覆盖窗口」里（UIWindowLevelAlert + 1）。覆盖窗口比宿主窗口高一层，
-   所以任何弹在宿主窗口上的 Alert 都会被覆盖窗口的 hitTest 吃掉 —— 看得见、点不动。
+   面板现在挂在「覆盖窗口」里（UIWindowLevelNormal + 1，见 start 里的注释）。
+   覆盖窗口比宿主内容高一层；不穿透的区域被它接住，穿透的区域仍归宿主。
    所有弹窗必须走这一个入口：面板开着就弹在面板所在窗口，否则弹在宿主顶层。 */
 extern void REAPresentFromBest(UIViewController *vc);
 extern void REAOverlayPanelClose(void);
@@ -1174,7 +1170,7 @@ static void REAInvokeAction(REAItem *item)
 
 @end
 
-#pragma mark - 覆盖窗口（UIWindowLevelAlert 顶层；球以外区域默认穿透，面板打开时整窗接管）
+#pragma mark - 覆盖窗口（UIWindowLevelNormal + 1；球以外区域默认穿透，面板打开时整窗接管）
 
 @interface REAWindow : UIWindow
 @property (nonatomic, strong) REAFloatBall *ball;
@@ -1185,6 +1181,62 @@ static void REAInvokeAction(REAItem *item)
 @property (nonatomic, strong) UIView *panelMask;
 @property (nonatomic, strong) UIViewController *panelHostVC;
 @end
+
+#pragma mark - 窗口探测（v13.0-P0）
+
+/* 真机实测（BluedHushREA.log，v12）：`[UI] 找不到 keyWindow，UI 延后` 触发 229 次，
+   单次会话连续 40 次 / 20 秒后彻底放弃 —— 悬浮球与面板从未挂上过。
+   根因：把 `isKeyWindow` 当成了"有窗口"的判据。重签 / 套壳 / 多场景下宿主主窗口
+   存在且可见，但 isKeyWindow 长期为假（或被广告 SDK 的窗口占着）。 */
+static NSArray<UIWindow *> *REAAllWindows(void)
+{
+    NSMutableArray<UIWindow *> *out = [NSMutableArray array];
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *sc in [UIApplication sharedApplication].connectedScenes) {
+            if (![sc isKindOfClass:[UIWindowScene class]]) continue;
+            for (UIWindow *w in ((UIWindowScene *)sc).windows) {
+                if (w) [out addObject:w];
+            }
+        }
+    }
+    if (out.count == 0) {
+        NSArray<UIWindow *> *legacy = [UIApplication sharedApplication].windows;
+        if (legacy.count) [out addObjectsFromArray:legacy];
+    }
+    return out;
+}
+
+/* 只要"存在可见的宿主窗口"就足以承载覆盖层；isKeyWindow 只用来挑最上层那个。 */
+static UIWindow *REAAnyWindow(void)
+{
+    UIWindow *fallback = nil;
+    for (UIWindow *w in REAAllWindows()) {
+        if (![w isKindOfClass:[UIWindow class]]) continue;
+        if ([w isKindOfClass:[REAWindow class]]) continue;   /* 自己的覆盖窗口不算宿主 */
+        if (w.hidden) continue;
+        if (w.alpha <= 0.01) continue;
+        if (w.bounds.size.width <= 0 || w.bounds.size.height <= 0) continue;
+        if (w.isKeyWindow) return w;
+        if (fallback == nil) fallback = w;
+    }
+    return fallback;
+}
+
+/* 一行现场快照：窗口数 / 每个窗口的类名、层级、可见性、key 状态。
+   放弃挂载时必须打这一行 —— "放弃"两个字对定位毫无价值。 */
+static NSString *REAWindowSnapshot(void)
+{
+    NSMutableString *s = [NSMutableString string];
+    NSUInteger i = 0;
+    for (UIWindow *w in REAAllWindows()) {
+        [s appendFormat:@"%@%@(lvl=%.0f,hid=%d,alpha=%.2f,key=%d)",
+         (i ? @" | " : @""), NSStringFromClass([w class]),
+         w.windowLevel, (int)w.hidden, w.alpha, (int)w.isKeyWindow];
+        i++;
+    }
+    if (i == 0) [s appendString:@"<none>"];
+    return s;
+}
 
 @implementation REAWindow
 
@@ -1239,8 +1291,8 @@ static void REAInvokeAction(REAItem *item)
     if (self.started) { REAUILog(@"UI 已启动，跳过重复安装"); return; }
     self.started = YES;
 
-    UIWindow *kw = REAKeyWindow();
-    if (kw == nil) { REAUILog(@"找不到 keyWindow，UI 延后"); self.started = NO; return; }
+    UIWindow *kw = REAAnyWindow();
+    if (kw == nil) { REAUILog(@"宿主窗口尚未可见（%@），UI 延后", REAWindowSnapshot()); self.started = NO; return; }
 
     REAWindow *win = nil;
     if (@available(iOS 13.0, *)) {
@@ -1249,11 +1301,19 @@ static void REAInvokeAction(REAItem *item)
         win = [[REAWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     }
     win.frame = [UIScreen mainScreen].bounds;
-    win.windowLevel = UIWindowLevelAlert + 1;
+    /* v13.0-P0：层级从 Alert+1 降到 Normal+1。
+       Alert+1 会盖住宿主自己的弹窗（报告 / 权限 / 广告收尾），且一旦本窗口成为 key，
+       宿主"主窗口是否 key"的判定就会被改写 —— 这正是启动流程卡住的放大器。
+       悬浮球只需要在普通内容之上、系统弹窗与 Alert 之下。 */
+    win.windowLevel = UIWindowLevelNormal + 1;
     win.backgroundColor = [UIColor clearColor];
     win.rootViewController = [[UIViewController alloc] init];
     win.hidden = NO;
     self.window = win;
+    /* 把 key 还给宿主：挂完覆盖窗口可能出现 key 漂移，主动还原一次。 */
+    if (kw.isKeyWindow == NO) { [kw makeKeyWindow]; }
+    REAUILog(@"window attached level=%.0f hostKey=%d snap=%@",
+             win.windowLevel, (int)kw.isKeyWindow, REAWindowSnapshot());
 
     if (!REAUIFlag(kREABallEnabledKey)) {
         REAUILog(@"悬浮球开关关闭（%@=0）", kREABallEnabledKey);
@@ -1407,8 +1467,10 @@ static void REAInvokeAction(REAItem *item)
 
 void REAUIStart(void)
 {
-    /* 极早期入口：ctor / +load 阶段调用一次，若此时还没有 UIWindowScene
-       （keyWindow == nil），按 0.5s 间隔最多重试 40 次，一旦宿主建好窗口立即挂球。
+    /* v13.0-P0：极早期入口，ctor / +load 阶段调用一次。
+       实测教训：不要为了等 keyWindow 连试 40 次（20 秒）。宿主窗口"存在且可见"就够了，
+       isKeyWindow 在重签 / 多场景 / 广告窗口期间长期为假。这里上限收到 6 次（3 秒），
+       失败时把窗口现场一行打出来，方便直接判"宿主还没建窗口"还是"建了但不可见"。
        重试只在主队列，且不会触发任何宿主类 +initialize（只用 class_copyMethodList 一类只 realize 的 API）。 */
     static NSInteger attempts = 0;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1416,13 +1478,14 @@ void REAUIStart(void)
         if (ui.started) return;
         [ui start];
         attempts++;
-        if (!ui.started && attempts < 40) {
+        if (!ui.started && attempts < 6) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
                            dispatch_get_main_queue(), ^{
                 REAUIStart();
             });
-        } else if (attempts >= 40 && !ui.started) {
-            REAUILog(@"UI 启动重试 %ld 次仍无 keyWindow，放弃", (long)attempts);
+        } else if (attempts >= 6 && !ui.started) {
+            REAUILog(@"UI 挂载失败（重试 %ld 次 / %.1fs），snap=%@",
+                     (long)attempts, attempts * 0.5, REAWindowSnapshot());
         }
     });
 }
