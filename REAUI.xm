@@ -1211,13 +1211,18 @@ static void REAInvokeAction(REAItem *item)
 
     REAFloatBall *ball = [[REAFloatBall alloc] initWithFrame:CGRectMake(0, 0, size, size)];
     ball.center = saved;
+    ball.userInteractionEnabled = YES;
     __weak typeof(self) weakSelf = self;
     ball.onTap = ^{
         __strong typeof(weakSelf) self2 = weakSelf;
         [self2 openPanel];
     };
+    win.rootViewController.view.userInteractionEnabled = YES;
     [win.rootViewController.view addSubview:ball];
     self.ball = ball;
+    /* v11 关键修复：必须把球回填到窗口，否则 -[REAWindow hitTest:withEvent:]
+       里 self.ball 恒为 nil → 所有触摸都被判成"球之外的区域"丢弃 → 拖不动也点不动。 */
+    win.ball = ball;
 
     [[NSNotificationCenter defaultCenter] addObserverForName:@"REAFloatBallLongPress"
                                                       object:nil
@@ -1308,5 +1313,13 @@ void REAPromptLocation(void)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         reaActionSetLocation(nil);
+    });
+}
+
+/* 供宿主"设置"页右上角「助手」按钮调用（Tweak.xm 的 REAOpenPanelBridge 转发到这里）。 */
+void REAOpenPanel(void)
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[REAUI shared] openPanel];
     });
 }

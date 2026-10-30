@@ -878,6 +878,8 @@ static void rea_showRecentPhoto(id self, SEL _cmd) {
 }
 
 // ============================================================================
+static void REAInstallSettingsEntry(void);
+
 #pragma mark - Hook 安装表
 // ============================================================================
 
@@ -939,6 +941,108 @@ static void REAInstallHooks(void) {
 
     // 最后做一次全类扫描，处理"类晚注册 / 类在别的镜像里"的情况
     REASweepAntiTamper();
+
+    // 宿主「设置」页右上角注入「助手」按钮（v11）。与上面 36 条功能 Hook 完全独立：
+    // 这一步只加一个 UI 入口，装不上也不影响任何 Hook。
+    REAInstallSettingsEntry();
+}
+
+// ============================================================================
+#pragma mark - 宿主「设置」页入口（v11）
+//
+// 需求："IPA 的设置界面里也要有插件入口"。
+// 宿主实证（_work/find_settings_vc.py 扫 14,839 个类）：
+//   BDPrivacySettingViewController     0x108d1ca70，241 个方法，-viewWillAppear: = v20@0:8B16
+//   BDNewPrivacySettingViewController  0x108d29928，122 个方法，-viewWillAppear: = v20@0:8B16
+// 两者都有**自有** viewWillAppear:，所以能用 REASwap（class_copyMethodList 只 realize、不 initialize）
+// 安全地挂上去：原实现照常执行，之后给 navigationItem 挂一个「助手」按钮，点它打开我们的面板。
+// 不修改任何 tableView 数据源，因此不会破坏宿主设置页的行数与布局。
+// ============================================================================
+
+extern void REAOpenPanel(void);
+
+@interface REAEntryTarget : NSObject
++ (instancetype)shared;
+- (void)tap:(id)sender;
+@end
+
+@implementation REAEntryTarget
+
++ (instancetype)shared {
+    static REAEntryTarget *s = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ s = [REAEntryTarget new]; });
+    return s;
+}
+
+- (void)tap:(id)sender {
+    NSLog(@"[REA-Test] 注入成功");
+    REALog(@"settings entry tapped -> open panel");
+    REAOpenPanel();
+}
+
+@end
+
+static void REAAddSettingsEntry(id self)
+{
+    if (self == nil) return;
+    if (![self isKindOfClass:[UIViewController class]]) return;
+    UIViewController *vc = (UIViewController *)self;
+
+    UIBarButtonItem *cur = vc.navigationItem.rightBarButtonItem;
+    if (cur != nil && [cur.customView isKindOfClass:[UIButton class]]) {
+        NSString *t = [(UIButton *)cur.customView titleForState:UIControlStateNormal];
+        if ([t isEqualToString:@"助手"]) return;   // 已经加过，幂等
+    }
+
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [btn setTitle:@"助手" forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont boldSystemFontOfSize:15.0];
+    btn.contentEdgeInsets = UIEdgeInsetsMake(4, 6, 4, 6);
+    [btn sizeToFit];
+    [btn addTarget:[REAEntryTarget shared]
+            action:@selector(tap:)
+  forControlEvents:UIControlEventTouchUpInside];
+    vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+    REALog(@"settings entry injected on %@", NSStringFromClass([vc class]));
+}
+
+static REA_V_B p_privacySettingsWillAppear = NULL;
+static REA_V_B p_newPrivacySettingsWillAppear = NULL;
+
+static void rea_privacySettingsWillAppear(id self, SEL _cmd, BOOL animated)
+{
+    if (p_privacySettingsWillAppear) p_privacySettingsWillAppear(self, _cmd, animated);
+    @try { REAAddSettingsEntry(self); }
+    @catch (NSException *e) { REALog(@"settings entry exception: %@", e.reason); }
+}
+
+static void rea_newPrivacySettingsWillAppear(id self, SEL _cmd, BOOL animated)
+{
+    if (p_newPrivacySettingsWillAppear) p_newPrivacySettingsWillAppear(self, _cmd, animated);
+    @try { REAAddSettingsEntry(self); }
+    @catch (NSException *e) { REALog(@"settings entry exception: %@", e.reason); }
+}
+
+static void REAInstallSettingsEntry(void)
+{
+    @try {
+        Class c1 = objc_getClass("BDPrivacySettingViewController");
+        if (c1 != Nil && p_privacySettingsWillAppear == NULL) {
+            p_privacySettingsWillAppear = (REA_V_B)REASwap(c1, "viewWillAppear:",
+                                                  (IMP)rea_privacySettingsWillAppear);
+        }
+        Class c2 = objc_getClass("BDNewPrivacySettingViewController");
+        if (c2 != Nil && p_newPrivacySettingsWillAppear == NULL) {
+            p_newPrivacySettingsWillAppear = (REA_V_B)REASwap(c2, "viewWillAppear:",
+                                                     (IMP)rea_newPrivacySettingsWillAppear);
+        }
+        REALog(@"settings entry install: BDPrivacySetting=%@ BDNewPrivacySetting=%@",
+               p_privacySettingsWillAppear ? @"ok" : @"miss",
+               p_newPrivacySettingsWillAppear ? @"ok" : @"miss");
+    } @catch (NSException *e) {
+        REALog(@"settings entry install exception: %@", e.reason);
+    }
 }
 
 // ============================================================================
