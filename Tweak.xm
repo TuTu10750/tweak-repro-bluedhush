@@ -43,9 +43,20 @@
 //     ③ 只用不触发 +initialize 的 API：class_copyMethodList（仅 realize）、
 //        method_getImplementation / method_setImplementation、class_addMethod、
 //        class_respondsToSelector、class_getName、objc_getClass、sel_getName。
-//     ④ Hook 安装整体推迟到 App 启动完成之后（main queue +2s 首轮，后台队列
-//        +4/+8/+15/+25s 补装），此时宿主所有 +initialize 都已自然发生过。
+//     ④ ~~Hook 安装整体推迟到 App 启动完成之后~~ → **v7 已改回 ctor 同步安装**（见下）。
+//        真因是"用错 API"，不是"装得早"：只要不碰 class_getInstanceMethod 就安全。
 //     ⑤ 找不到本类自有实现就记 MISS，不再用 class_addMethod 去继承链上兜底。
+// ============================================================================
+// v7 变更（用户 m01299 三张截图实证：装上 34 条 / MISS 28 / 开关全 1 / 功能全无）
+//   诊断：28 条 MISS 里 26 条是 amIJailBroken/checkDYLD 等**本版本已不存在**的反越狱方法
+//   （纯噪声），真正的功能 Hook 只有 gji_updateMessage:/gji_insertForMessages: 打错类。
+//   所以不是"改名"，是"装晚了"：main+2s 时 App 已把 VIP/私密相册/会话状态按真实值缓存完。
+//   ① 首轮安装改回 **ctor 内同步执行**（等价原版 %ctor 时机），仍只用不触发 +initialize 的 API。
+//   ② 反越狱不再按"猜的类名"逐个 REASwap（26 条 MISS 的来源），统一交给全类扫描，
+//      扫到才改、扫不到不计数。
+//   ③ gji_* 两个选择子改挂 GJIMSessionService（截图证明 GJIMMessageService 上没有）。
+//   ④ 新增 9 个功能域的**调用计数器** + main+30s 第二张 Alert「触发统计」：
+//      全 0 = Hook 从未被调用（入口不对）；非 0 = Hook 在跑，问题在返回值/时机。
 // ============================================================================
 // v4 相对 v3 的变更（用户实测环境：未越狱 / 个人自签 Esign / 主要在 LiveContainer 内运行）
 //   a) 初始化第一行就打印 NSLog(@"[REA-Test] Runtime 注入成功!")，用它判定
@@ -174,6 +185,22 @@ static void REALog(NSString *fmt, ...) {
 // ============================================================================
 
 static int gREAOK = 0, gREAMiss = 0;
+static int gREATotalOK = 0;          // 所有轮次累加装上的条数（v7）
+static int gREAEarlyOK = 0;          // ctor 早期那一轮装上的条数（v7）
+
+// v7：每个功能域的"被调用次数"——用来区分两种失败：
+//   计数全 0 → Hook 根本没被宿主调用（时序/类不对，功能自然全无）
+//   计数非 0 → Hook 已在跑，功能差异在语义层（返回值/时机不对）
+enum { REAF_AntiRecall = 0, REAF_Feed, REAF_Screenshot, REAF_PrivatePhoto, REAF_LocalVip,
+       REAF_Location, REAF_Tabbar, REAF_Keyboard, REAF_Engine, REAF_Count };
+static volatile int gREAHits[REAF_Count];
+static const char *kREAHitNames[REAF_Count] = {
+    "anti_recall", "feed", "screenshot", "private_photo", "local_vip",
+    "location", "tabbar", "keyboard", "engine"
+};
+static inline void REAHit(int idx) {
+    if (idx >= 0 && idx < REAF_Count) __sync_fetch_and_add(&gREAHits[idx], 1);
+}
 
 // 幂等记账：LiveContainer 里 App 主二进制是 dlopen 进来的，某些类可能晚于本 dylib 的
 // 初始化才注册。因此允许"延迟重试安装"：已装过的 (类,选) 直接返回原 IMP，
@@ -401,6 +428,7 @@ static void REAInstallAllShims(void) {
 static IMP p_recallType, p_isSuperRecallTip, p_setRecallType, p_setIsSuperRecallTip;
 
 static int rea_recallType(id self, SEL _cmd) {
+    REAHit(REAF_AntiRecall);
     @try {
         int r = p_recallType ? ((REA_I32_V)p_recallType)(self, _cmd) : 0;
         if (REAFlag(@"switch_anti_recall") && r != 0) {
@@ -413,6 +441,7 @@ static int rea_recallType(id self, SEL _cmd) {
 }
 
 static BOOL rea_isSuperRecallTip(id self, SEL _cmd) {
+    REAHit(REAF_AntiRecall);
     @try {
         if (REAFlag(@"switch_anti_recall")) {
             NSLog(@"[REA-Test] 注入成功");
@@ -446,6 +475,7 @@ static IMP p_deleteMessage, p_gji_updateMessage, p_gji_insertForMessages;
 static IMP p_handleAMessageWithData, p_handleingGRPCPrivatePackage;
 
 static id rea_handlePushPackage(id self, SEL _cmd, id pkg) {
+    REAHit(REAF_Feed);
     @try {
         if (REAFlag(@"switch_anti_recall")) {
             NSLog(@"[REA-Test] 注入成功");
@@ -495,6 +525,7 @@ static void rea_handleGRPCPrivatePackage(id self, SEL _cmd, id pkg) {
 static IMP p_setMessages, p_showDestoryTip, p_screenshotTip, p_screenshotWarning, p_checkSendScreenshotTip;
 
 static void rea_setMessages(id self, SEL _cmd, id msgs) {
+    REAHit(REAF_Feed);
     @try {
         NSLog(@"[REA-Test] 注入成功");
         if (REAFlag(@"switch_flash_text") && [msgs respondsToSelector:@selector(count)]) {
@@ -510,6 +541,7 @@ static void rea_showDestoryTip(id self, SEL _cmd, id tip) {
 }
 
 static void rea_screenshotTip(id self, SEL _cmd) {
+    REAHit(REAF_Screenshot);
     @try {
         if (REAFlag(@"switch_screenshot")) {
             NSLog(@"[REA-Test] 注入成功");
@@ -538,9 +570,12 @@ static void rea_checkSendScreenshotTip(id self, SEL _cmd) {
 
 // 反越狱 / 反模拟器：统一返回 NO（BOOL 统一编码 B16@0:8）
 static BOOL rea_ret_NO(id self, SEL _cmd) { (void)self; (void)_cmd; return NO; }
-static void rea_void_nop(id self, SEL _cmd) { (void)self; (void)_cmd; }
+__attribute__((unused)) static void rea_void_nop(id self, SEL _cmd) { (void)self; (void)_cmd; }
 
 static IMP p_forkCompletion;
+// v7：不再主动挂这个选择子（带 completion block，粗暴置 NO 会让调用方的 block 永远不回调），
+// 保留实现仅作备查，标记 unused 以免编译告警。
+__attribute__((unused))
 static void rea_checkForkWithCompletion(id self, SEL _cmd, void (^done)(BOOL)) {
     @try { if (done) { done(NO); return; } } @catch (NSException *e) { }
     if (p_forkCompletion) ((REA_V_Blk)p_forkCompletion)(self, _cmd, done);
@@ -558,7 +593,6 @@ static const char *kREAAntiTamperSels[] = {
     "checkRestrictedDirectoriesWriteable", "checkSymbolicLinks", "checkURLSchemes",
     "emulatorCheckCompile", "emulatorCheckRuntime", "performChecks", NULL
 };
-
 static void REASweepAntiTamper(void) {
     int total = objc_getClassList(NULL, 0);
     if (total <= 0) return;
@@ -601,6 +635,7 @@ static IMP p_accessPrivatePhotos, p_setAccessPrivatePhotos;
 static IMP p_privacyPhotosLocked, p_setPrivacyPhotosLocked;
 
 static int rea_accessPrivatePhotos(id self, SEL _cmd) {
+    REAHit(REAF_PrivatePhoto);
     @try {
         NSLog(@"[REA-Test] 注入成功");
         if (REAFlag(@"switch_private_photo")) return 1;
@@ -635,6 +670,7 @@ static void rea_setPrivacyPhotosLocked(id self, SEL _cmd, int v) {
 static IMP p_isVip, p_vipStatus, p_vipType, p_vipExpireDays, p_picBanSave;
 
 static id rea_isVip(id self, SEL _cmd) {
+    REAHit(REAF_LocalVip);
     @try {
         NSLog(@"[REA-Test] 注入成功");
         if (REAFlag(@"switch_local_vip")) return @YES;
@@ -689,6 +725,7 @@ static void REALoadFakeLocation(void) {
 static IMP p_coordinate, p_altitude, p_mgrLocation;
 
 static CLLocationCoordinate2D rea_coordinate(id self, SEL _cmd) {
+    REAHit(REAF_Location);
     REALoadFakeLocation();
     if (gREAHasFakeCoord && REAFlag(@"switch_virtual_location")) {
         NSLog(@"[REA-Test] 注入成功");
@@ -704,6 +741,7 @@ static CLLocationDistance rea_altitude(id self, SEL _cmd) {
 }
 
 static CLLocation *rea_mgrLocation(id self, SEL _cmd) {
+    REAHit(REAF_Location);
     REALoadFakeLocation();
     if (gREAHasFakeCoord && REAFlag(@"switch_virtual_location")) {
         NSLog(@"[REA-Test] 注入成功");
@@ -725,6 +763,7 @@ static void rea_needToBuyVip(id self, SEL _cmd) {
 }
 
 static void rea_setBadge(id self, SEL _cmd, unsigned long long v, NSInteger i) {
+    REAHit(REAF_Tabbar);
     @try { REALog(@"badge=%llu at %ld", v, (long)i); } @catch (NSException *e) { }
     if (p_setBadge) ((REA_V_ULL_Q)p_setBadge)(self, _cmd, v, i);
 }
@@ -751,10 +790,11 @@ static void REAInstallHooks(void) {
     REAHOOK("GJIMSessionService", "addMessage:", rea_addMessage, p_addMessage);
     REAHOOK("GJIMSessionService", "addMessages:", rea_addMessages, p_addMessages);
     REAHOOK("GJIMSessionService", "updateMessage:", rea_updateMessage, p_updateMessage);
+    // v7：截图实测 gji_* 不在 GJIMMessageService 上（那边 MISS），补到 GJIMSessionService
+    REAHOOK("GJIMSessionService", "gji_updateMessage:", rea_gji_updateMessage, p_gji_updateMessage);
+    REAHOOK("GJIMSessionService", "gji_insertForMessages:", rea_gji_insertForMessages, p_gji_insertForMessages);
 
     REAHOOK("GJIMMessageService", "deleteMessage:", rea_deleteMessage, p_deleteMessage);
-    REAHOOK("GJIMMessageService", "gji_updateMessage:", rea_gji_updateMessage, p_gji_updateMessage);
-    REAHOOK("GJIMMessageService", "gji_insertForMessages:", rea_gji_insertForMessages, p_gji_insertForMessages);
 
     REAHOOK("GJIMEngine", "p_handleAMessageWithData:", rea_handleAMessageWithData, p_handleAMessageWithData);
     REAHOOK("GJIMEngine", "handleingGRPCPrivatePackage:", rea_handleGRPCPrivatePackage, p_handleingGRPCPrivatePackage);
@@ -765,21 +805,11 @@ static void REAInstallHooks(void) {
     REAHOOK("BDMessageViewController", "p_screenshotWarning", rea_screenshotWarning, p_screenshotWarning);
     REAHOOK("BDMessageViewController", "checkSendScreenshotTip", rea_checkSendScreenshotTip, p_checkSendScreenshotTip);
 
-    // 反越狱 / 反模拟器（主二进制里可能不存在，MISS 属预期，不影响其它 Hook）
-    const char *jbSels[] = {
-        "amIJailBroken", "amIRunInEmulator", "checkDYLD", "checkFork",
-        "checkExistenceOfSuspiciousFiles", "checkSuspiciousFilesCanBeOpened",
-        "checkRestrictedDirectoriesWriteable", "checkSymbolicLinks", "checkURLSchemes",
-        "emulatorCheckCompile", "emulatorCheckRuntime", NULL
-    };
-    const char *hosts[] = { "BDMessageViewController", "DLDeviceFingerprint", NULL };
-    for (int h = 0; hosts[h]; h++) {
-        Class c = objc_getClass(hosts[h]);
-        if (!c) continue;
-        for (int i = 0; jbSels[i]; i++) REASwap(c, jbSels[i], (IMP)rea_ret_NO);
-        REASwap(c, "performChecks", (IMP)rea_void_nop);
-        p_forkCompletion = REASwap(c, "checkForkWithCompletion:", (IMP)rea_checkForkWithCompletion);
-    }
+    // 反越狱 / 反模拟器：
+    // v7 起不再按"猜的类名"逐个 REASwap —— 截图实测 BDMessageViewController 与
+    // DLDeviceFingerprint 上都没有这些选择子（26 条 MISS 全在这里，纯噪声）。
+    // 统一交给 REASweepAntiTamper() 全类扫描：谁真有就改谁，没有就静默跳过、不计 MISS。
+    // （checkForkWithCompletion: 带 completion block，扫到也不能粗暴置 NO，故不纳入扫描）
 
     REAHOOK("BDPersonPrivacyAlbumCollectView", "access_private_photos", rea_accessPrivatePhotos, p_accessPrivatePhotos);
     REAHOOK("BDPersonPrivacyAlbumCollectView", "setAccess_private_photos:", rea_setAccessPrivatePhotos, p_setAccessPrivatePhotos);
@@ -894,17 +924,18 @@ static UIViewController *REATopViewController(void) {
 }
 
 static BOOL gREAReportShown = NO;
+static BOOL gREAHitReportShown = NO;
 
 // 启动早期窗口可能还没建好 → 每 1.5s 重试，最多 8 次；实在没有就只留日志。
-static void REATryShowReport(NSString *title, NSString *body, int attempt) {
-    if (gREAReportShown) return;
+static void REATryShowReport(NSString *title, NSString *body, BOOL *shown, int attempt) {
+    if (*shown) return;
     @try { if (!REAFlag(@"rea_show_report")) return; } @catch (NSException *e) { }
 
     UIViewController *top = REATopViewController();
     if (!top) {
         if (attempt >= 8) { REALog(@"report alert skipped: no top view controller"); return; }
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)),
-                       dispatch_get_main_queue(), ^{ REATryShowReport(title, body, attempt + 1); });
+                       dispatch_get_main_queue(), ^{ REATryShowReport(title, body, shown, attempt + 1); });
         return;
     }
     @try {
@@ -913,13 +944,13 @@ static void REATryShowReport(NSString *title, NSString *body, int attempt) {
                                                             preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil]];
         [top presentViewController:ac animated:YES completion:nil];
-        gREAReportShown = YES;
+        *shown = YES;
         REALog(@"report alert presented on %@", NSStringFromClass([top class]));
     } @catch (NSException *e) {
         REALog(@"report alert exception: %@ / %@", e.name, e.reason);
         if (attempt < 8) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)),
-                           dispatch_get_main_queue(), ^{ REATryShowReport(title, body, attempt + 1); });
+                           dispatch_get_main_queue(), ^{ REATryShowReport(title, body, shown, attempt + 1); });
         }
     }
 }
@@ -929,8 +960,9 @@ static void REAPublishReport(NSString *tag, int passOK, int passMiss) {
     @autoreleasepool {
         NSArray<NSString *> *missAll = [gREAMissAll copy];
         NSMutableString *body = [NSMutableString string];
-        [body appendFormat:@"pass %@\n装上 %d 条 / 本轮 MISS %d / 累计 MISS %lu\n\n",
-                           tag, passOK, passMiss, (unsigned long)missAll.count];
+        [body appendFormat:@"早期(ctor)装上 %d 条 / 累计装上 %d 条\n本轮(%@) %d 条 / 本轮 MISS %d / 累计 MISS %lu\n\n",
+                           gREAEarlyOK, gREATotalOK, tag, passOK, passMiss,
+                           (unsigned long)missAll.count];
         [body appendFormat:@"开关(1=YES): anti_recall=%d private_photo=%d local_vip=%d screenshot=%d\n",
                            (int)REAFlag(@"switch_anti_recall"), (int)REAFlag(@"switch_private_photo"),
                            (int)REAFlag(@"switch_local_vip"), (int)REAFlag(@"switch_screenshot")];
@@ -946,7 +978,30 @@ static void REAPublishReport(NSString *tag, int passOK, int passMiss) {
         }
 
         REALog(@"---- REPORT ----\n%@", body);
-        REATryShowReport(@"[REA-Test] Hook 报告", body, 0);
+        REATryShowReport(@"[REA-Test] Hook 报告", body, &gREAReportShown, 0);
+    }
+}
+
+// v7：触发统计。装上了 ≠ 被宿主调用过 —— 这张表用来判定到底卡在哪一层。
+static void REAPublishHitReport(void) {
+    @autoreleasepool {
+        NSMutableString *body = [NSMutableString string];
+        int total = 0;
+        [body appendString:@"Hook 被调用次数：\n"];
+        for (int i = 0; i < REAF_Count; i++) {
+            int v = gREAHits[i];
+            total += v;
+            [body appendFormat:@"%s=%d  ", kREAHitNames[i], v];
+            if ((i % 3) == 2) [body appendString:@"\n"];
+        }
+        [body appendFormat:@"\n合计=%d\n\n", total];
+        if (total == 0) {
+            [body appendString:@"全 0 → 宿主没走这些方法：要么类被另一份实现替换，要么功能走的是别的入口。\n"];
+        } else {
+            [body appendString:@"非 0 → Hook 已在跑；功能不对属返回值/时机问题，按上面的域定位。\n"];
+        }
+        REALog(@"---- HIT REPORT ----\n%@", body);
+        REATryShowReport(@"[REA-Test] 触发统计", body, &gREAHitReportShown, 0);
     }
 }
 
@@ -958,15 +1013,15 @@ static void REAPublishReport(NSString *tag, int passOK, int passMiss) {
 static void REAInstallPass(NSString *tag, BOOL firstPass) {
     @autoreleasepool {
         @try {
-            int beforeOK = gREAOK;
             gREAOK = 0; gREAMiss = 0;
             [gREAOKList removeAllObjects];
             [gREAMissList removeAllObjects];
             REAInstallAllShims();
             REAInstallHooks();
             int passOK = gREAOK, passMiss = gREAMiss;
-            REALog(@"pass[%@] ok=%d miss=%d (cumulative ok=%d)",
-                   tag, passOK, passMiss, beforeOK + passOK);
+            gREATotalOK += passOK;
+            REALog(@"pass[%@] ok=%d miss=%d (total ok=%d)",
+                   tag, passOK, passMiss, gREATotalOK);
             if (passOK > 0) {
                 NSLog(@"[REA-Test] 注入成功");
                 NSLog(@"[REA-Test] pass %@ hooked %d", tag, passOK);
@@ -994,21 +1049,39 @@ static void REAInstallPass(NSString *tag, BOOL firstPass) {
     }
 }
 
-// 调度：App 启动完成后再装。此前的任何 Runtime 动作都可能把宿主 +initialize 提前引爆，
-// 所以三轮入口（premain / ctor / +load）统一只走到这里。
+// 调度（v7）：首轮**同步在 ctor 里装完**，之后再补装。
+//
+// 为什么改回去：截图实测"装上 34 条 / 开关全 1 / 功能全无"。装上 34 条说明类名与选择子都对，
+// 唯一解释就是**装得太晚** —— App 在 main+2s 之前早把 VIP 状态、私密相册开关、会话列表
+// 按真实值缓存进内存并建好了 UI，之后再改实现也追不回来。原版 dylib 就是在 %ctor 装的。
+//
+// 为什么现在敢早装：闪退的 .ips 帧 (#9 class_getInstanceMethod → #3 CALLING_SOME_+initialize_METHOD)
+// 证明真因只有"用会触发 +initialize 的 API"。v5 起全文件只用 class_copyMethodList /
+// method_setImplementation / class_addMethod / class_respondsToSelector —— 这些只 realize，
+// 不 initialize。所以早装安全，"用错 API"才危险。
 static void REAScheduleInstall(void) {
     static BOOL scheduled = NO;
     if (scheduled) return;
     scheduled = YES;
 
-    // 首轮：main queue +2s —— 此时 UIApplicationMain 已跑，宿主的 +initialize 均已自然发生
+    // ① ctor 内同步装第一轮（静默，不弹窗）：抢在 App 建缓存之前
+    REAInstallPass(@"ctor", NO);
+    gREAEarlyOK = gREAOK;
+
+    // ② main+2s：幂等再跑一轮（补 ctor 时尚未注册的类）+ 出屏幕报告
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
         REAInstallPass(@"main+2s", YES);
     });
 
-    // 补装：LiveContainer 里宿主二进制是 dlopen 进来的，个别类可能更晚才注册。
-    // 每轮都幂等（REASwap 有记账，sweep 会跳过已是自己的 IMP）。
+    // ③ main+30s：触发统计（回答"Hook 到底有没有被调用"）
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        REAPublishHitReport();
+    });
+
+    // ④ 后台补装：LiveContainer 里宿主二进制是 dlopen 进来的，个别类可能更晚才注册。
+    //    每轮都幂等（REASwap 有记账，sweep 会跳过已是自己的 IMP）。
     dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
         static const int waits[4] = { 4, 8, 15, 25 };
         for (int i = 0; i < 4; i++) {
@@ -1018,7 +1091,7 @@ static void REAScheduleInstall(void) {
     });
 }
 
-// 最早：dylib 初始化阶段。**这里只许 NSLog + 调度**，碰任何 Runtime API 都可能复现闪退。
+// 最早：dylib 初始化阶段。只 NSLog + 调度（调度内部第一件事就是早期安装）。
 __attribute__((constructor))
 static void rea_premain(void) {
     NSLog(@"[REA-Test] Runtime 注入成功!");
