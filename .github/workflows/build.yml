@@ -96,8 +96,8 @@ jobs:
             echo "::error::M1 变体里出现了 REAInstallPurify —— Makefile 的 ifeq 没生效，产物不对"
             exit 1
           fi
-          if ! strings -a out/m1/BluedHushREA.dylib | grep -q 'M1-TRACE-v1'; then
-            echo "::error::M1 变体里找不到 M1-TRACE-v1 标记"
+          if ! strings -a out/m1/BluedHushREA.dylib | grep -q 'M1-TRACE-v2'; then
+            echo "::error::M1 变体里找不到 M1-TRACE-v2 标记"
             exit 1
           fi
           ls -lR out/m1
@@ -106,7 +106,7 @@ jobs:
         run: |
           set -o pipefail
           python3 ci/gates.py --dylib out/m1/BluedHushREA.dylib \
-            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v1" --label m1
+            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v2,192.168.1.10:8765" --label m1
           otool -L out/m1/BluedHushREA.dylib | tee deps-m1.txt
           otool -D out/m1/BluedHushREA.dylib || true
 
@@ -165,6 +165,18 @@ jobs:
             实时：Console.app / syslog 过滤 "REA-Test"，每行以 [REA-Test] 开头
             落盘：App 沙盒 Documents/REA-M1.log（每次启动追加，首行带 t=0.000）
             崩溃：App 沙盒 Documents/REA-M1-crash.log（信号/异常 + 最近 160 行环形缓冲）
+
+          局域网直推（v2：地址已硬编码，不做自动发现）
+            目标：192.168.1.10:8765   ← 编进二进制；换 IP 必须改 M1Trace.xm 的 M1_DEFAULT_UPLOAD 重编
+            电脑端：python tools\m1log_server.py
+            启动后看这两行判定连通性：
+              [M1] UPLOAD on(hardcoded) target=192.168.1.10:8765
+              [M1] UPLOAD probe 192.168.1.10:8765 OK（TCP 已连通，日志开始推）
+            probe FAIL 的 errno 含义：
+              61 = 电脑端脚本没跑 / 端口不对
+              60·65 = 不同网段 / 防火墙丢包 / iOS 本地网络权限被拦
+              1 = 本地网络权限被本 App 拒绝
+            defaults 里的 rea_m1_upload 若存在，会覆盖硬编码值（临时换地址不用重编）
           EOF
 
           echo "--- dist ---";    ls -lR dist    || true

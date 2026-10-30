@@ -44,13 +44,17 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <errno.h>
 
 #define M1_TAG      @"[REA-Test]"
 #define M1_LINE     512
 #define M1_RING     160
-#define M1_MARK     "M1-TRACE-v1"
+#define M1_MARK     "M1-TRACE-v2"
 #define M1_LOG_PORT     8765    // 日志输入 TCP 端口（与 tools/m1log_server.py 一致）
-#define M1_DISCOVER_PORT 8766   // UDP 广播发现端口
+// 硬编码日志接收端（v2 改动：不再做 UDP 广播自动发现）
+// 原因：原生自签环境下 iOS 沙盒把局域网广播拦了，且无法便捷修改 App 容器的 defaults，
+// 所以把地址编进二进制。要换 IP 只改这一行、重编。
+#define M1_DEFAULT_UPLOAD "192.168.1.10:8765"
 
 // ============================================================================
 #pragma mark - 时间与落盘
@@ -64,9 +68,8 @@ static volatile int gM1RingIdx = 0;
 static char     gM1Ring[M1_RING][M1_LINE];
 static char     gM1Docs[512] = {0};
 
-// 上传通道（默认关闭；由 defaults key rea_m1_upload = "192.168.1.7:8765" 开启）
+// 上传通道（默认启用：地址编译期硬编码；defaults 里的 rea_m1_upload 若存在则优先覆盖）
 static void M1OutboxAppend(const char *line);
-static void M1UploadDiscover(void);
 static void M1UploadStartTimer(void);
 
 static double M1Abs(void) {
@@ -636,7 +639,7 @@ static void M1PinSplashModeOff(void) {
         } else {
             M1Log("[M1] DEFAULTS purify_splash_mode=%ld (已存在，不改)", (long)[d integerForKey:@"purify_splash_mode"]);
         }
-        [d setObject:@"M1-TRACE-v1" forKey:@"rea_m1_build"];
+        [d setObject:[NSString stringWithUTF8String:M1_MARK] forKey:@"rea_m1_build"];
         BOOL off = [d boolForKey:@"rea_m1_off"];
         gM1On = off ? 0 : 1;
         M1Log("[M1] DEFAULTS rea_m1_off=%d → 观测%s", off ? 1 : 0, off ? "关闭" : "开启");
@@ -762,80 +765,63 @@ static void M1UploadStartTimer(void) {
     dispatch_resume(timer);
 }
 
-// 零配置发现：向局域网广播 M1-DISCOVER，电脑端脚本回 "M1-HERE <port>"，
-// 于是用户在手机上什么都不用设，跑起脚本就能收日志。
-static void M1UploadDiscover(void) {
-    @autoreleasepool {
-        int fd = socket(AF_INET, SOCK_DGRAM, 0);
-        if (fd < 0) { M1Log("[M1] UPLOAD discover socket fail"); return; }
+// 连接探针：启动后立刻试一次 TCP，把成败和 errno 直接打进日志。
+// 这是"一条日志都没到"最快的答案：
+//   errno=61 ECONNREFUSED  电脑端脚本没跑 / 端口不对
+//   errno=60 ETIMEDOUT / 65 EHOSTUNREACH  不同网段、被防火墙丢包、或本地网络权限被拦
+//   errno=1  EPERM          iOS 本地网络权限被本 App 拒绝
+static void M1UploadProbe(void) {
+    if (gM1UpHost == nil || gM1UpPort <= 0) return;
+    NSString *host = gM1UpHost;
+    int port = gM1UpPort;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @autoreleasepool {
+            const char *hc = host.UTF8String;
+            if (hc == NULL) return;
+            int fd = socket(AF_INET, SOCK_STREAM, 0);
+            if (fd < 0) { M1Log("[M1] UPLOAD probe %s:%d FAIL socket errno=%d", hc, port, errno); return; }
 
-        int yes = 1;
-        setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &yes, sizeof(yes));
-        struct timeval tv;
-        tv.tv_sec = 1; tv.tv_usec = 0;
-        setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+            struct timeval tv;
+            tv.tv_sec = 2; tv.tv_usec = 0;
+            setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
 
-        struct sockaddr_in dst;
-        memset(&dst, 0, sizeof(dst));
-        dst.sin_family      = AF_INET;
-        dst.sin_port        = htons(M1_DISCOVER_PORT);
-        dst.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+            struct sockaddr_in addr;
+            memset(&addr, 0, sizeof(addr));
+            addr.sin_family = AF_INET;
+            addr.sin_port   = htons((uint16_t)port);
 
-        NSString *found = nil;
-        int foundPort = 0;
-        for (int attempt = 0; attempt < 3 && found == nil; attempt++) {
-            const char *msg = "M1-DISCOVER";
-            sendto(fd, msg, strlen(msg), 0, (struct sockaddr *)&dst, sizeof(dst));
+            BOOL ok = NO;
+            if (inet_pton(AF_INET, hc, &addr.sin_addr) == 1) {
+                ok = (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0);
+            }
+            int e = errno;
+            close(fd);
 
-            char buf[128];
-            memset(buf, 0, sizeof(buf));
-            struct sockaddr_in from;
-            socklen_t flen = sizeof(from);
-            ssize_t n = recvfrom(fd, buf, sizeof(buf) - 1, 0, (struct sockaddr *)&from, &flen);
-            if (n > 0) {
-                buf[n] = 0;
-                char ip[64];
-                memset(ip, 0, sizeof(ip));
-                if (inet_ntop(AF_INET, &from.sin_addr, ip, sizeof(ip)) != NULL) {
-                    int p = 0;
-                    if (sscanf(buf, "M1-HERE %d", &p) == 1 && p > 0) foundPort = p;
-                    found = [NSString stringWithUTF8String:ip];
-                    M1Log("[M1] UPLOAD discover hit from=%s port=%d payload=%s", ip, foundPort, buf);
-                }
+            if (ok) {
+                M1Log("[M1] UPLOAD probe %s:%d OK（TCP 已连通，日志开始推）", hc, port);
+            } else {
+                M1Log("[M1] UPLOAD probe %s:%d FAIL errno=%d "
+                      "（61=脚本没跑/端口不对　60·65=不同网段·防火墙·本地网络权限　1=权限被拒）",
+                      hc, port, e);
             }
         }
-        close(fd);
-
-        if (found == nil) {
-            M1Log("[M1] UPLOAD discover fail —— 三种可能："
-                  "① 电脑端 tools/m1log_server.py 没在跑 "
-                  "② 手机和电脑不在同一 Wi-Fi "
-                  "③ iOS 本地网络权限被拒（设置→隐私与安全性→本地网络，把本 App 打开）");
-            return;
-        }
-        gM1UpHost = found;
-        gM1UpPort = (foundPort > 0) ? foundPort : M1_LOG_PORT;
-        gM1Outbox = [NSMutableArray array];
-        gM1OutboxLock = [NSLock new];
-        M1Log("[M1] UPLOAD on(discovered) target=%s:%d", gM1UpHost.UTF8String, gM1UpPort);
-        M1UploadStartTimer();
-    }
+    });
 }
 
 static void M1InstallUploader(void) {
     @try {
         NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
-        NSString *target = [d stringForKey:@"rea_m1_upload"];   // 形如 "192.168.1.7:8765"
+        NSString *target = [d stringForKey:@"rea_m1_upload"];
+        NSString *src = @"defaults";
         if (target.length == 0) {
-            // 零配置路线：UDP 广播找电脑端的 tools/m1log_server.py
-            M1Log("[M1] UPLOAD 未设置 rea_m1_upload，改走 UDP 广播自动发现（8766）");
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                M1UploadDiscover();
-            });
-            return;
+            target = @M1_DEFAULT_UPLOAD;    // 编译期硬编码，不依赖任何运行时配置
+            src = @"hardcoded";
         }
         NSArray *parts = [target componentsSeparatedByString:@":"];
-        if (parts.count < 2) { M1Log("[M1] UPLOAD off（rea_m1_upload 格式应为 host:port，实际=%s）", target.UTF8String); return; }
+        if (parts.count < 2) {
+            M1Log("[M1] UPLOAD off（host:port 格式不对，实际=%s）", target.UTF8String);
+            return;
+        }
         gM1UpHost = [parts objectAtIndex:0];
         gM1UpPort = [[parts objectAtIndex:1] intValue];
         if (gM1UpHost.length == 0 || gM1UpPort <= 0) {
@@ -845,8 +831,10 @@ static void M1InstallUploader(void) {
         }
         gM1Outbox = [NSMutableArray array];
         gM1OutboxLock = [NSLock new];
-        M1Log("[M1] UPLOAD on target=%s:%d（每 2s 批量推送，失败只计数）", gM1UpHost.UTF8String, gM1UpPort);
+        M1Log("[M1] UPLOAD on(%s) target=%s:%d（每 2s 批量推送，失败只计数）",
+              src.UTF8String, gM1UpHost.UTF8String, gM1UpPort);
         M1UploadStartTimer();
+        M1UploadProbe();
     } @catch (NSException *e) {
         M1Log("[M1] UPLOAD install exception %s", e.reason.UTF8String);
     }

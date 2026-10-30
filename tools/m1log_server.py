@@ -18,6 +18,7 @@
 # 断了也不影响 App 运行（dylib 侧只计数，不阻塞主线程）。
 # ============================================================================
 
+import threading
 import argparse
 import datetime
 import os
