@@ -946,11 +946,71 @@ static void rea_shadowUpload(id self, SEL _cmd, id a1, double lng, double lat, B
     }
 }
 
+/* 原版 dylib 对 BDLocationService 挂了 6 条（hook_pairs_win8.json 实测，按字符串邻近度）：
+     latitude(@16@0:8) / longitude(@16@0:8) / locationManager:didUpdateLocations:(v32@0:8@16@24)
+     / p_reverseGeocodeLocation:(v24@0:8@16) / p_saveLocationWithLot:lat:(v32@0:8@16@24) / p_startLocation(v16@0:8)
+   这几个都是"宿主自己算出来的位置"的真出口：lat/lng 是给业务层直接取用的，
+   didUpdateLocations 是本地落库的，p_saveLocationWithLot:lat: 是往自己库里落的。
+   只改 didUpdateLocations 不够——业务层很可能根本不过那条路（v13.2 实测：影子位置 0 次命中）。
+   所以我们 1:1 把 6 条全挂上，接口一律"开关关 → 原样透传"。 */
+static IMP p_locLat = NULL, p_locLng = NULL;
+static IMP p_locStart = NULL, p_locReverse = NULL, p_locSave = NULL;
+
+static id rea_locLat(id self, SEL _cmd) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) {
+            REAThrottledLog("BDLocationService -latitude");
+            return @(REALocLat());
+        }
+    } @catch (NSException *e) { }
+    return p_locLat ? ((id (*)(id, SEL))p_locLat)(self, _cmd) : nil;
+}
+
+static id rea_locLng(id self, SEL _cmd) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) {
+            REAThrottledLog("BDLocationService -longitude");
+            return @(REALocLng());
+        }
+    } @catch (NSException *e) { }
+    return p_locLng ? ((id (*)(id, SEL))p_locLng)(self, _cmd) : nil;
+}
+
+static void rea_locStart(id self, SEL _cmd) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) REAThrottledLog("BDLocationService -p_startLocation");
+    } @catch (NSException *e) { }
+    if (p_locStart) ((void (*)(id, SEL))p_locStart)(self, _cmd);
+}
+
+static void rea_locReverse(id self, SEL _cmd, id a1) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) REAThrottledLog("BDLocationService -p_reverseGeocodeLocation:");
+    } @catch (NSException *e) { }
+    if (p_locReverse) ((void (*)(id, SEL, id))p_locReverse)(self, _cmd, a1);
+}
+
+static void rea_locSave(id self, SEL _cmd, id a1, id a2) {
+    @try {
+        if (REAFlag(@"switch_virtual_location")) REAThrottledLog("BDLocationService -p_saveLocationWithLot:lat:");
+    } @catch (NSException *e) { }
+    if (p_locSave) ((void (*)(id, SEL, id, id))p_locSave)(self, _cmd, a1, a2);
+}
+
 static void REAInstallLocationHooks(void) {
     @try {
         Class svc = objc_getClass("BDLocationService");
-        if (svc) p_locDidUpdate = REASwap(svc, "locationManager:didUpdateLocations:", (IMP)rea_locDidUpdate);
-        REALog(@"[Loc] BDLocationService didUpdateLocations hook=%s", p_locDidUpdate ? "ok" : "miss");
+        if (svc) {
+            p_locDidUpdate = REASwap(svc, "locationManager:didUpdateLocations:", (IMP)rea_locDidUpdate);
+            p_locLat       = REASwap(svc, "latitude",  (IMP)rea_locLat);
+            p_locLng       = REASwap(svc, "longitude", (IMP)rea_locLng);
+            p_locStart     = REASwap(svc, "p_startLocation", (IMP)rea_locStart);
+            p_locReverse   = REASwap(svc, "p_reverseGeocodeLocation:", (IMP)rea_locReverse);
+            p_locSave      = REASwap(svc, "p_saveLocationWithLot:lat:", (IMP)rea_locSave);
+        }
+        REALog(@"[Loc] BDLocationService 6 条入口：didUpdate=%s lat=%s lng=%s start=%s reverse=%s save=%s",
+               p_locDidUpdate ? "ok" : "miss", p_locLat ? "ok" : "miss", p_locLng ? "ok" : "miss",
+               p_locStart ? "ok" : "miss", p_locReverse ? "ok" : "miss", p_locSave ? "ok" : "miss");
 
         Class req = objc_getClass("BDSettingShadowRequest");
         if (req) p_shadowUpload = REASwap(req,
@@ -2266,7 +2326,7 @@ static void rea_premain(void) {
        ① 带中文的 @"..." 会整体落到 __ustring，gates.py 只在 __cstring 里找，找不到；
        ② 函数内 `static const char x[]` 会被放进 __const 段，同样找不到。
        两种写法都在 CI 上实测失败过，这里不再折腾。 */
-    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v13.2-P1");
+    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v14.0-LOC");
 
     /* 脏数据清洗：v12 的"净化总开关"会把 YES 写进每一个 purify_* key，包括
        purify_splash_ad。旧值留在 defaults 里，装上新包照样生效 —— 真机就是这么
@@ -2279,7 +2339,7 @@ static void rea_premain(void) {
     } @catch (NSException *e) { }
 
     REALog(@"[REA] build=%s 开屏走视图隐藏 / 设置页注入缺省关 / 悬浮球挂载已修 / P1 功能接线",
-           "v13.2-P1");
+           "v14.0-LOC");
     REAInstallBootProbe();
     REAScheduleInstall();
 }
