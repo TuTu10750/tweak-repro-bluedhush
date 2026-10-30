@@ -17,7 +17,7 @@ TWEAK_NAME = BluedHushREA
 ifeq ($(M1),1)
 BluedHushREA_FILES = M1Trace.xm
 else
-BluedHushREA_FILES = Tweak.xm REAUI.xm REALoc.xm
+BluedHushREA_FILES = Tweak.xm REAUI.xm REALoc.xm REAPanel.xm
 endif
 BluedHushREA_CFLAGS = -fobjc-arc -Wno-objc-method-access -Wno-unused-parameter -Wno-deprecated-declarations
 BluedHushREA_FRAMEWORKS = Foundation UIKit CoreLocation MapKit

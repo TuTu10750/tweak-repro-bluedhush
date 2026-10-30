@@ -827,7 +827,7 @@ static NSInteger rea_picBanSave(id self, SEL _cmd) {
 }
 
 // ============================================================================
-#pragma mark - 6. 虚拟定位  switch_virtual_location / switch_altitude
+#pragma mark - 6. 虚拟定位  switch_virtual_location / switch_altitude_sim
 // ============================================================================
 
 /* 内置默认坐标：北京·天安门一带。改这里或面板里长按"虚拟定位"改点。 */
@@ -891,7 +891,7 @@ static CLLocationCoordinate2D rea_coordinate(id self, SEL _cmd) {
 
 static CLLocationDistance rea_altitude(id self, SEL _cmd) {
     REALoadFakeLocation();
-    if (gREAHasFakeCoord && REAFlag(@"switch_altitude")) return gREAAlt;
+    if (gREAHasFakeCoord && REAFlag(@"switch_altitude_sim")) return gREAAlt;
     return p_altitude ? ((REA_D_V)p_altitude)(self, _cmd) : 0.0;
 }
 
@@ -1119,7 +1119,7 @@ static void rea_setBadge(id self, SEL _cmd, unsigned long long v, NSInteger i) {
     REAHit(REAF_Tabbar);
     @try { REALog(@"badge=%llu at %ld", v, (long)i); } @catch (NSException *e) { }
     // v9：UI 面板「角标净化」开关 —— 打开就把未读数清零，其它情况原样透传
-    if (REAFlag(@"switch_clean_badge")) v = 0;
+    if (REAFlag(@"purify_new_nav_tag")) v = 0;
     if (p_setBadge) ((REA_V_ULL_Q)p_setBadge)(self, _cmd, v, i);
 }
 
@@ -2509,7 +2509,7 @@ static void rea_premain(void) {
        ① 带中文的 @"..." 会整体落到 __ustring，gates.py 只在 __cstring 里找，找不到；
        ② 函数内 `static const char x[]` 会被放进 __const 段，同样找不到。
        两种写法都在 CI 上实测失败过，这里不再折腾。 */
-    NSLog(@"[BLUEDHUSH] [I] Runtime 注入成功! build=%s", "v15.0-EVID");
+    NSLog(@"[BLUEDHUSH] [I] Runtime 注入成功! build=%s", "v16.0-PANEL");
 
     /* 脏数据清洗：v12 的"净化总开关"会把 YES 写进每一个 purify_* key，包括
        purify_splash_ad。旧值留在 defaults 里，装上新包照样生效 —— 真机就是这么
@@ -2517,7 +2517,6 @@ static void rea_premain(void) {
     @try {
         NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
         [d setBool:NO forKey:@"purify_splash_ad"];
-        [d setBool:NO forKey:@"purify_splash_mode"];
         [d synchronize];
     } @catch (NSException *e) { }
 
@@ -2540,7 +2539,7 @@ static void rea_premain(void) {
     } @catch (NSException *e) { }
 
     REALog(@"[REA] build=%s 原版契约批次：日志格式/文件名对齐 · 设置页改 tableHeaderView · 风控出口阻断",
-           "v15.0-EVID");
+           "v16.0-PANEL");
     REAInstallBootProbe();
     REAScheduleInstall();
 }

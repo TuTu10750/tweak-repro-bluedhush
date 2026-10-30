@@ -1,0 +1,512 @@
+[
+ {
+  "key": "float_ball",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "hush.license.activated_at",
+  "type": "float",
+  "value": 1791200316.899088
+ },
+ {
+  "key": "hush.license.code",
+  "type": "str",
+  "value": "010557494E314400006AC4DDB60000000034F964B35E5CDC56"
+ },
+ {
+  "key": "hush.license.local",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "hush_album_legacy_purged_v2",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "hush_auto_burn_mem_v2",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "hush_loc_master_timestamp",
+  "type": "float",
+  "value": 1792753906.9917269
+ },
+ {
+  "key": "hush_loc_saved_coord_key",
+  "type": "str",
+  "value": "22.566183,114.111104"
+ },
+ {
+  "key": "hush_rel_rowpos_v1",
+  "type": "dict",
+  "value": "{'263643|353': [100.0], '7122112|353': [40.0], '117136611|440': [154.0], '117136611|363': [70.0], '63995053|363': [54.0], '4339949|363': [70.0], '115887047|363': [84.0], '89581222|353': [68.0], '4339949|440': [154.0], '118535295|440': [138.0], '115887047|440': [178.0], '2193693|363': [70.0], '14163997|363': [70.0], '107774070|440': [154.0], '107774070|363': [70.0], '67570282|363': [37.0], '42737061|363': [70.0], '109541734|363': [109.0], '42737061|440': [154.0], '113541475|363': [103.0], '109541734|440': [193.0], '32691904|440': [121.0], '94585834|363': [103.0], '216853|440': [187.0], '94585834|440': [187.0], '113541475|440': [187.0], '263643|363': [103.0], '43099847|440': [204.0], '43099847|363': [120.0], '95157364|353': [68.0], '14189585|440': [203.0], '176896|363': [74.0], '108880763|353': [68.0], '67570282|353': [36.0], '9876778|363': [70.0], '3309671|363': [86.0], '12418998|363': [119.0], '80094311|440': [170.0], '15934446|440': [154.0], '115334607|440': [121.0], '60395681|353': [68.0], '100165222|363': [70.0], '40806870|353': [98.0], '30324272|440': [138.0], '5322574|363': [86.0], '30324272|363': [54.0], '7287333|440': [121.0], '82452371|440': [187.0], '3075612|363': [103.0], '35305810|353': [36.0], '104899646|440': [154.0], '12418998|353': [116.0], '113541475|353': [100.0], '11895875|440': [252.0], '2193693|353': [68.0], '34055530|440': [154.0], '855912|440': [129.0], '855912|363': [45.0], '8613199|440': [170.0], '30027447|440': [121.0], '12859627|440': [170.0], '97537126|363': [70.0], '104659980|440': [121.0], '17128749|440': [128.0], '119463852|440': [121.0], '108538580|440': [198.0], '84815101|363': [119.0], '119463852|363': [37.0], '101174244|440': [140.0], '7453762|363': [86.0], '112391660|353': [36.0], '14105515|440': [187.0], '14105515|363': [103.0], '2247004|363': [70.0], '2247004|440': [154.0], '14163997|440': [154.0]}"
+ },
+ {
+  "key": "hush_track_master_timestamp",
+  "type": "float",
+  "value": 1793272398.328219
+ },
+ {
+  "key": "hushgal_dedup_content_done",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "hushgal_legacy_ask_v1",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "hushgal_legacy_src_sig_v1",
+  "type": "str",
+  "value": "951:2281:972118442:1791482194"
+ },
+ {
+  "key": "hushgal_maint_fp_v1",
+  "type": "str",
+  "value": "d1-n1104-8f8b04038206ccf0"
+ },
+ {
+  "key": "hushgal_uid_dirs_migrated_v1",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_banner",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_block_ad_sdk",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_block_call",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_block_voice",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_blur_label",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_call_header",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_chat_emoji",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_feed_ad",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_float_layer",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_follow_card",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_live_entry",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_map_guide",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_master",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_mine_ad",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_mine_vip",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_nearby_ad",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_new_nav_tag",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_passby_tip",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_safe_tip",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_sensitive",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_sensitive_alert",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "purify_session_card",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_set_items",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_splash_ad",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_svg_ad",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_visitor_ad",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "purify_welcome_pop",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "runtime_ball_center",
+  "type": "str",
+  "value": "{320.33333333333331, 189.66666666666669}"
+ },
+ {
+  "key": "runtime_coord_fav",
+  "type": "list",
+  "value": "[{'lng': 114.11871304455178, 'lat': 22.54511992586477, 'time': 1792753906.996829, 'keyword': '中国广东省深圳市罗湖区东门街道东门社区解放路2001号'}, {'lng': 113.2519292655587, 'lat': 23.17159858954635, 'time': 1792674238.3002, 'keyword': '中国广东省广州市白云区三元里大道838号'}, {'lng': 113.32714014086245, 'lat': 23.116549882334446, 'time': 1792579949.175358, 'keyword': '中国广东省广州市天河区兴安路3号'}, {'lng': 114.12168855049171, 'lat': 22.548262831914094, 'time': 1792516390.279429, 'keyword': '中国广东省深圳市罗湖区东门中路2071号'}, {'lng': 114.24814983370466, 'lat': 22.56200784867003, 'time': 1792408018.084615, 'keyword': '未知位置'}, {'lng': 114.12342882603987, 'lat': 22.549230387783815, 'time': 1792251108.432766, 'keyword': '中国广东省深圳市罗湖区兴湖路'}, {'lng': 114.12343579909772, 'lat': 22.549202121471296, 'time': 1792251094.0333939, 'keyword': '中国广东省深圳市罗湖区兴湖路'}, {'lng': 114.12327874147545, 'lat': 22.549097956546696, 'time': 1792168534.758431, 'keyword': '中国广东省深圳市罗湖区东门中路2088号深圳维景酒店正門'}, {'lng': 113.93512742130598, 'lat': 22.507112115147635, 'time': 1791987500.4747128, 'keyword': '中国广东省深圳市南山区华明路1号蔚蓝海岸一期(登良地铁站D口步行460米)'}, {'lng': 113.89282843176878, 'lat': 22.560014092155683, 'time': 1791824197.311053, 'keyword': '中国广东省深圳市宝安区46区创业一路(翻身地铁站C口步行130米)'}, {'lng': 108.77780051765264, 'lat': 34.43361333868875, 'time': 1791804112.1042771, 'keyword': '中国陕西省咸阳市渭城区'}, {'lng': 108.94951602746453, 'lat': 34.196510323015225, 'time': 1791785842.6139622, 'keyword': '中国陕西省西安市雁塔区曲江新区长安南路2899号和雁展路交叉口东南侧'}, {'lng': 108.96346577226134, 'lat': 34.212329645274, 'time': 1791717927.298867, 'keyword': '中国陕西省西安市雁塔区雁南一路15号'}, {'lng': 108.94564325072164, 'lat': 34.25963713707119, 'time': 1791695978.168898, 'keyword': '中国陕西省西安市莲湖区西大街与钟楼盘道交叉口西100米'}, {'lng': 108.94643398580891, 'lat': 34.29079452959046, 'time': 1791637774.193317, 'keyword': '中国陕西省西安市莲湖区未央路32号'}, {'lng': 114.1311021353472, 'lat': 22.606816118050205, 'time': 1791616931.0184011, 'keyword': '中国广东省深圳市龙岗区木棉湾地铁站河背九巷一号'}, {'lng': 114.13354007786835, 'lat': 22.611119183274315, 'time': 1791200683.0881572, 'keyword': '中国广东省深圳市龙岗区龙岗大道2143号'}, {'lng': 114.11503000000017, 'lat': 22.601399000000004, 'time': 1791200650.000139, 'keyword': '手动输入的位置'}, {'lng': 114.11518437242668, 'lat': 22.60204502787278, 'time': 1791200618.8177829, 'keyword': '格塘社区警务室'}, {'lng': 114.12843346464022, 'lat': 22.611439431423968, 'time': 1791200599.129278, 'keyword': '中国广东省深圳市龙岗区3号线/龙岗线'}, {'lng': 114.06837436928348, 'lat': 22.54597595449476, 'time': 1791200412.630986, 'keyword': '中国广东省深圳市福田区福莲花园南区(莲花村地铁站B1口步行240米)'}, {'lng': 114.13098768446191, 'lat': 22.607843108490947, 'time': 1791200396.562741, 'keyword': '中国广东省深圳市龙岗区龙岗大道'}, {'lng': 114.13252038720222, 'lat': 22.609986289232047, 'time': 1791200389.042691, 'keyword': '中国广东省深圳市龙岗区布龙路'}]"
+ },
+ {
+  "key": "runtime_custom_lat",
+  "type": "str",
+  "value": "22.566183"
+ },
+ {
+  "key": "runtime_custom_lng",
+  "type": "str",
+  "value": "114.111104"
+ },
+ {
+  "key": "runtime_gal_ball_center",
+  "type": "str",
+  "value": "{405, 242.66666666666671}"
+ },
+ {
+  "key": "runtime_gallery_kv_migrated_v1",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "runtime_ip_location",
+  "type": "str",
+  "value": "China Shenzhen"
+ },
+ {
+  "key": "runtime_loc_address",
+  "type": "str",
+  "value": ""
+ },
+ {
+  "key": "runtime_loc_name",
+  "type": "str",
+  "value": ""
+ },
+ {
+  "key": "runtime_vloc_applied_lat",
+  "type": "float",
+  "value": 22.566183
+ },
+ {
+  "key": "runtime_vloc_applied_lng",
+  "type": "float",
+  "value": 114.111104
+ },
+ {
+  "key": "switch_anti_recall",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_auto_select_burn",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_avatar_long_press_area",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_blacklist_unlock",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_block_live_request",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_bugly_off",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_bypass_jailbreak",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_chat_album",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_chat_gallery",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_chat_gallery_ball",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_chat_heart_off",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_chat_watermark",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_deleted_mark",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_device_intercept",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_fair_exchange",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_flash_ad_skip",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_flash_photo",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_flash_text",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_hide_calling_ui",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_hide_discover_tab",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_hide_live_entry",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_hide_live_tab",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_hide_purple_card",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_ip_location",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_legacy_auto_import",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_license_bypass",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_local_vip",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_location_sim",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_map_avatar_clear",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_msg_heal",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_nearby_album",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_nearby_signature",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_no_data_collect",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_online_distance_sort",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_past_entangle",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_physical_track",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_privacy_unlock",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_private_photo",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_purify_mine_page",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_read_receipt",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_risk_login_bypass",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_risk_user_block",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_screenshot",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_secret_view_all",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_spoof_lite",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_track",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_virtual_location",
+  "type": "bool",
+  "value": true
+ },
+ {
+  "key": "switch_visitor_unlock",
+  "type": "bool",
+  "value": false
+ },
+ {
+  "key": "switch_watermark",
+  "type": "bool",
+  "value": false
+ }
+]

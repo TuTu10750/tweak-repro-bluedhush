@@ -40,7 +40,7 @@ extern void REALogBridge(NSString *fmt, ...);
 #define HL_KEY_HIST     @"rea_loc_history"       // [{lat,lng,alt,t,name}] 历史，最多 20
 #define HL_KEY_FAV      @"rea_loc_favs"          // [{lat,lng,alt,name}] 收藏
 #define HL_KEY_SWITCH   @"switch_virtual_location"
-#define HL_KEY_ALT_SW   @"switch_altitude"
+#define HL_KEY_ALT_SW   @"switch_altitude_sim"
 #define HL_KEY_MAPTYPE  @"rea_loc_maptype"       // 0 标准 1 卫星 2 混合
 #define HL_HIST_MAX     20
 

@@ -66,7 +66,7 @@ jobs:
         run: |
           set -o pipefail
           python3 ci/gates.py --dylib out/release/BluedHushREA.dylib \
-            --archs arm64,arm64e --tag "BLUEDHUSH,v15.0-EVID" --label release
+            --archs arm64,arm64e --tag "BLUEDHUSH,v16.0-PANEL" --label release
           echo "== otool -L (人眼复核) =="
           otool -L out/release/BluedHushREA.dylib | tee deps-release.txt
           echo "== install_name =="

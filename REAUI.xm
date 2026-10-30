@@ -189,7 +189,7 @@ static NSArray<REAModule *> *REABuildMenu(void)
             [its addObject:[REAItem toggleWithKey:@"purify_match_emoji_bar" title:@"移除大表情发送栏" subtitle:@"去掉聊天输入框上方的大表情条" icon:@"rectangle.slash.fill" defOn:YES]];
             [its addObject:[REAItem toggleWithKey:@"purify_sensitive_alert" title:@"敏感照片免提醒" subtitle:@"自己发的照片不再弹「疑似敏感」提醒" icon:@"person.crop.circle.badge.exclamationmark" defOn:YES]];
             [its addObject:[REAItem toggleWithKey:@"purify_passby_tip" title:@"擦肩而过提示" subtitle:@"去掉消息上方那条「擦肩而过」小标签" icon:@"figure.walk" defOn:YES]];
-            [its addObject:[REAItem toggleWithKey:@"switch_clean_badge" title:@"底栏角标清零" subtitle:@"立即生效 · 清掉底栏红点与数字角标（不影响未读数）" icon:@"app.badge" defOn:NO]];
+            [its addObject:[REAItem toggleWithKey:@"purify_new_nav_tag" title:@"底栏角标清零" subtitle:@"立即生效 · 清掉底栏红点与数字角标（不影响未读数）" icon:@"app.badge" defOn:NO]];
             REASection *sec = [REASection new];
             sec.title = @"界面元素"; sec.icon = @"circle"; sec.subtitle = @"页面上的横幅、提示条、弹窗与打码";
             sec.items = its;
@@ -351,7 +351,7 @@ static NSArray<REAModule *> *REABuildMenu(void)
             [its addObject:[REAItem toggleWithKey:@"switch_virtual_location" title:@"虚拟定位" subtitle:@"首页「交友」右侧入口显隐；点＝开关，长按＝地图选点" icon:@"location.fill" defOn:YES]];
             [its addObject:[REAItem toggleWithKey:@"switch_ip_location" title:@"IP 定位" subtitle:@"按 IP 归属地反查坐标并自动写入" icon:@"globe" defOn:NO]];
             [its addObject:[REAItem toggleWithKey:@"switch_real_location_mask" title:@"真实位置混淆" subtitle:@"给真实坐标加随机偏移" icon:@"shuffle" defOn:NO]];
-            [its addObject:[REAItem toggleWithKey:@"switch_altitude" title:@"海拔一并伪造" subtitle:@"立即生效 · 虚拟定位时同时改写 altitude（配合虚拟坐标使用）" icon:@"arrow.up.and.down.circle" defOn:YES]];
+            [its addObject:[REAItem toggleWithKey:@"switch_altitude_sim" title:@"海拔一并伪造" subtitle:@"立即生效 · 虚拟定位时同时改写 altitude（配合虚拟坐标使用）" icon:@"arrow.up.and.down.circle" defOn:YES]];
             REASection *sec = [REASection new];
             sec.title = @"虚拟定位"; sec.icon = @"circle"; sec.subtitle = @"让 App 以为你在别处";
             sec.items = its;
@@ -1469,11 +1469,16 @@ void REAPromptLocation(void)
     });
 }
 
-/* 供宿主"设置"页入口 / 悬浮球调用（Tweak.xm 的 REAOpenPanelBridge 转发到这里）。 */
+/* 供宿主"设置"页入口 / 悬浮球调用（Tweak.xm 的 REAOpenPanelBridge 转发到这里）。
+
+   v16.0-PANEL：面板换成 REAPanel.xm（按原版 13 张截图 1:1 重画，数据来自
+   REAPanelSpec.h）。旧的 REAUI 内部简陋面板保留代码但不再作为入口。 */
+extern void REAPanelShowRoot(void);
+
 void REAOpenPanel(void)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [[REAUI shared] openPanel];
+        REAPanelShowRoot();
     });
 }
 

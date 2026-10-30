@@ -65,7 +65,7 @@ jobs:
         run: |
           set -o pipefail
           python3 ci/gates.py --dylib out/release/BluedHushREA.dylib \
-            --archs arm64,arm64e --tag REA-Test --label release-linux
+            --archs arm64,arm64e --tag "BLUEDHUSH,v16.0-PANEL" --label release-linux
           file out/release/BluedHushREA.dylib
 
       # ================= 变体 2：M-1 取证观测版 =================
