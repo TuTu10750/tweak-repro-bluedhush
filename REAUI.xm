@@ -47,12 +47,26 @@ static BOOL REAUIFlag(NSString *key)
     return [d boolForKey:key];
 }
 
+// 总开关 -> 本大类细项 key 列表（实现在 REABuildMenu 之后；这里只能前向声明）
+static NSArray<NSString *> *REAUIMasterGroupKeys(NSString *masterKey);
+
 static void REAUISetFlag(NSString *key, BOOL on)
 {
     if (key.length == 0) return;
-    [[NSUserDefaults standardUserDefaults] setBool:on forKey:key];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    REAUILog(@"开关 %@ -> %d", key, (int)on);
+    NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+    [d setBool:on forKey:key];
+
+    // 「净化总开关」不是装饰：拨一下就把它下面 23 个净化细项一起写下去，
+    // 每个细项仍然只认自己的 key，所以总开关关掉后单独再开某一项也照样生效。
+    NSArray<NSString *> *kids = REAUIMasterGroupKeys(key);
+    for (NSString *k in kids) [d setBool:on forKey:k];
+
+    [d synchronize];
+    if (kids.count > 0) {
+        REAUILog(@"总开关 %@ -> %d（连带 %lu 项）", key, (int)on, (unsigned long)kids.count);
+    } else {
+        REAUILog(@"开关 %@ -> %d", key, (int)on);
+    }
 }
 
 #pragma mark - 数据模型
@@ -537,6 +551,26 @@ static NSArray<REAModule *> *REABuildMenu(void)
     return mods;
 }
 
+#pragma mark - 总开关分组
+
+// 从菜单数据里现算，不写死列表：以后加减净化细项，总开关自动跟上。
+static NSArray<NSString *> *REAUIMasterGroupKeys(NSString *masterKey)
+{
+    NSMutableArray<NSString *> *out = [NSMutableArray array];
+    if (![masterKey isEqualToString:@"purify_master"]) return out;
+    for (REAModule *m in REABuildMenu()) {
+        for (REASection *sec in m.sections) {
+            for (REAItem *it in sec.items) {
+                if (it.isAction || it.key.length == 0) continue;
+                if ([it.key isEqualToString:masterKey]) continue;
+                if (![it.key hasPrefix:@"purify_"]) continue;
+                [out addObject:it.key];
+            }
+        }
+    }
+    return out;
+}
+
 #pragma mark - 小工具
 
 static UIImage *REASymbol(NSString *name, UIColor *tint)
@@ -583,17 +617,23 @@ static UIViewController *REATopViewController(void)
     return top;
 }
 
+/* 统一弹窗落点（实现见文件末尾）。
+   面板现在挂在「覆盖窗口」里（UIWindowLevelAlert + 1）。覆盖窗口比宿主窗口高一层，
+   所以任何弹在宿主窗口上的 Alert 都会被覆盖窗口的 hitTest 吃掉 —— 看得见、点不动。
+   所有弹窗必须走这一个入口：面板开着就弹在面板所在窗口，否则弹在宿主顶层。 */
+extern void REAPresentFromBest(UIViewController *vc);
+extern void REAOverlayPanelClose(void);
+extern BOOL REAOverlayPanelVisible(void);
+
 static void REAToast(NSString *text)
 {
     if (text.length == 0) return;
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIViewController *host = REATopViewController();
-        if (host == nil) return;
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"[REA-Test]"
                                                                   message:text
                                                            preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
-        [host presentViewController:ac animated:YES completion:nil];
+        REAPresentFromBest(ac);
     });
 }
 
@@ -686,8 +726,6 @@ static void reaActionDefault(REAItem *item)
 
 static void reaActionSetLocation(REAItem *item)
 {
-    UIViewController *host = REATopViewController();
-    if (host == nil) return;
     NSDictionary *cur = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kREAFakeLocationKey];
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"设置虚拟坐标"
                                                               message:@"纬度 / 经度 / 海拔"
@@ -721,7 +759,7 @@ static void reaActionSetLocation(REAItem *item)
         REAUILog(@"虚拟坐标写入 %.6f,%.6f alt=%.1f", lat, lng, alt);
         REAToast([NSString stringWithFormat:@"已保存：%.6f, %.6f（海拔 %.1f）", lat, lng, alt]);
     }]];
-    [host presentViewController:ac animated:YES completion:nil];
+    REAPresentFromBest(ac);
 }
 
 static void reaActionClearLocation(REAItem *item)
@@ -772,7 +810,7 @@ static void reaActionShowLog(REAItem *item)
                                                               message:tail
                                                        preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
-    [host presentViewController:ac animated:YES completion:nil];
+    REAPresentFromBest(ac);
 }
 
 static void reaActionDeviceCheck(REAItem *item)
@@ -787,7 +825,7 @@ static void reaActionDeviceCheck(REAItem *item)
                                                               message:msg
                                                        preferredStyle:UIAlertControllerStyleAlert];
     [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
-    [host presentViewController:ac animated:YES completion:nil];
+    REAPresentFromBest(ac);
 }
 
 static void reaActionListPlaceholder(NSString *title)
@@ -856,7 +894,8 @@ static void REAInvokeAction(REAItem *item)
 
 - (void)closeSelf
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    /* 面板挂在覆盖窗口里（不是 modal presented），关闭走覆盖窗口自己的拆卸逻辑 */
+    REAOverlayPanelClose();
 }
 
 - (void)reinstall
@@ -966,7 +1005,8 @@ static void REAInvokeAction(REAItem *item)
 
 - (void)closeSelf
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    /* 面板挂在覆盖窗口里（不是 modal presented），关闭走覆盖窗口自己的拆卸逻辑 */
+    REAOverlayPanelClose();
 }
 
 - (void)turnAllOff
@@ -1134,18 +1174,37 @@ static void REAInvokeAction(REAItem *item)
 
 @end
 
-#pragma mark - 覆盖窗口（UIWindowLevelAlert 顶层，其余区域事件穿透）
+#pragma mark - 覆盖窗口（UIWindowLevelAlert 顶层；球以外区域默认穿透，面板打开时整窗接管）
 
 @interface REAWindow : UIWindow
 @property (nonatomic, strong) REAFloatBall *ball;
+/* 面板是否开在本窗口内。为 YES 时 hitTest 不再穿透 —— 这是"面板点不动"的根因修复：
+   面板以前是 present 到宿主窗口上的，而本窗口层级更高、对非球区域返回 nil，
+   于是面板整页收不到触摸。现在面板直接挂在本窗口，扣到面板就整窗响应。 */
+@property (nonatomic, assign) BOOL panelVisible;
+@property (nonatomic, strong) UIView *panelMask;
+@property (nonatomic, strong) UIViewController *panelHostVC;
 @end
 
 @implementation REAWindow
 
+- (BOOL)canBecomeKeyWindow
+{
+    /* 面板里有文本框（虚拟定位、日志等 Alert）时需要键盘，非 key 窗口拿不到键盘。
+       这里允许成为 key，但全程不调用 makeKeyAndVisible，所以不会抢宿主的 key 状态。 */
+    return YES;
+}
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
+    if (self.panelVisible) {
+        /* 面板打开：整窗正常命中（遮罩 / 面板 / 球 都按 UIKit 常规规则） */
+        return [super hitTest:point withEvent:event];
+    }
     UIView *hit = [super hitTest:point withEvent:event];
-    if (hit == self.ball || [hit isDescendantOfView:self.ball]) return hit;
+    if (hit == nil) return nil;
+    if (self.ball != nil && (hit == self.ball || [hit isDescendantOfView:self.ball])) return hit;
+    /* 非球区域：返回 nil ⇒ 触摸继续下发给宿主窗口，宿主照常工作 */
     return nil;
 }
 
@@ -1160,6 +1219,8 @@ static void REAInvokeAction(REAItem *item)
 + (instancetype)shared;
 - (void)start;
 - (void)openPanel;
+- (void)closePanel;
+- (BOOL)panelVisible;
 - (void)showQuickMenu;
 @end
 
@@ -1242,24 +1303,81 @@ static void REAInvokeAction(REAItem *item)
 
 - (void)openPanel
 {
-    UIViewController *host = REATopViewController();
-    if (host == nil) { REAUILog(@"openPanel: 没有可用宿主 VC"); return; }
-    if (host.presentedViewController != nil) {
-        REAUILog(@"openPanel: 已有 presented VC，先关闭");
-        [host dismissViewControllerAnimated:NO completion:nil];
-    }
+    REAWindow *win = self.window;
+    if (win == nil) { REAUILog(@"openPanel: 覆盖窗口尚未建立"); return; }
+    if (win.panelVisible) { REAUILog(@"openPanel: 面板已开"); return; }
+    UIViewController *root = win.rootViewController;
+    if (root == nil) { REAUILog(@"openPanel: 覆盖窗口没有 rootViewController"); return; }
+
+    /* 面板挂进「覆盖窗口」自己 —— 不再 present 到宿主窗口。
+       这样命中链路只有一条：触摸 → REAWindow.hitTest(panelVisible=YES) → 面板视图，
+       不会出现"看得见、点不动"。 */
     REAModuleListController *list = [[REAModuleListController alloc] initWithStyle:UITableViewStyleInsetGrouped];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:list];
-    nav.modalPresentationStyle = UIModalPresentationPageSheet;
-    [host presentViewController:nav animated:YES completion:^{
-        REAUILog(@"panel opened on %@", NSStringFromClass([host class]));
-    }];
+    nav.view.backgroundColor = [UIColor systemBackgroundColor];
+    if (@available(iOS 13.0, *)) {
+        nav.view.layer.cornerRadius = 16.0;
+        nav.view.layer.cornerCurve = kCACornerCurveContinuous;
+    } else {
+        nav.view.layer.cornerRadius = 16.0;
+    }
+    nav.view.layer.masksToBounds = YES;
+
+    CGRect bounds = win.bounds;
+    CGFloat topInset = 0.0;
+    if (@available(iOS 11.0, *)) topInset = win.safeAreaInsets.top;
+    CGFloat panelTop = MAX(topInset + 8.0, bounds.size.height * 0.06);
+    nav.view.frame = CGRectMake(0, panelTop, bounds.size.width, bounds.size.height - panelTop);
+    nav.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+    UIView *mask = [[UIView alloc] initWithFrame:bounds];
+    mask.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.36];
+    mask.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    mask.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                         action:@selector(handleMaskTap:)];
+    [mask addGestureRecognizer:tap];
+
+    [root addChildViewController:nav];
+    [root.view addSubview:mask];
+    [root.view addSubview:nav.view];
+    [nav didMoveToParentViewController:root];
+    [root.view bringSubviewToFront:self.ball];   /* 球永远在最上面 */
+
+    win.panelMask = mask;
+    win.panelHostVC = nav;
+    win.panelVisible = YES;
+    REAUILog(@"面板已挂进覆盖窗口（%.0fx%.0f）", nav.view.frame.size.width, nav.view.frame.size.height);
+}
+
+- (void)handleMaskTap:(UITapGestureRecognizer *)g
+{
+    [self closePanel];
+}
+
+- (void)closePanel
+{
+    REAWindow *win = self.window;
+    if (win == nil) return;
+    UIViewController *nav = win.panelHostVC;
+    UIView *mask = win.panelMask;
+    win.panelVisible = NO;
+    win.panelHostVC = nil;
+    win.panelMask = nil;
+    [nav willMoveToParentViewController:nil];
+    [nav.view removeFromSuperview];
+    [nav removeFromParentViewController];
+    [mask removeFromSuperview];
+    REAUILog(@"面板已关闭");
+}
+
+- (BOOL)panelVisible
+{
+    return self.window != nil ? self.window.panelVisible : NO;
 }
 
 - (void)showQuickMenu
 {
-    UIViewController *host = REATopViewController();
-    if (host == nil) return;
     UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"小蓝助手"
                                                               message:@"快捷入口"
                                                        preferredStyle:UIAlertControllerStyleActionSheet];
@@ -1280,7 +1398,7 @@ static void REAInvokeAction(REAItem *item)
         ac.popoverPresentationController.sourceView = self.ball;
         ac.popoverPresentationController.sourceRect = self.ball.bounds;
     }
-    [host presentViewController:ac animated:YES completion:nil];
+    REAPresentFromBest(ac);
 }
 
 @end
@@ -1316,10 +1434,54 @@ void REAPromptLocation(void)
     });
 }
 
-/* 供宿主"设置"页右上角「助手」按钮调用（Tweak.xm 的 REAOpenPanelBridge 转发到这里）。 */
+/* 供宿主"设置"页入口 / 悬浮球调用（Tweak.xm 的 REAOpenPanelBridge 转发到这里）。 */
 void REAOpenPanel(void)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [[REAUI shared] openPanel];
     });
+}
+
+BOOL REAOverlayPanelVisible(void)
+{
+    return [REAUI shared].panelVisible;
+}
+
+void REAOverlayPanelClose(void)
+{
+    if ([NSThread isMainThread]) {
+        [[REAUI shared] closePanel];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[REAUI shared] closePanel];
+        });
+    }
+}
+
+void REAPresentFromBest(UIViewController *vc)
+{
+    if (vc == nil) return;
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            REAPresentFromBest(vc);
+        });
+        return;
+    }
+    REAUI *ui = [REAUI shared];
+    REAWindow *win = ui.window;
+    UIViewController *presenter = nil;
+    if (win != nil && win.panelVisible && win.panelHostVC != nil) {
+        presenter = win.panelHostVC;
+        if ([presenter isKindOfClass:[UINavigationController class]]) {
+            UIViewController *top = [(UINavigationController *)presenter topViewController];
+            if (top != nil) presenter = top;
+        }
+    }
+    if (presenter == nil) presenter = REATopViewController();
+    if (presenter == nil) {
+        REAUILog(@"弹窗放弃：没有可用的 presenter");
+        return;
+    }
+    while (presenter.presentedViewController != nil) presenter = presenter.presentedViewController;
+    [presenter presentViewController:vc animated:YES completion:nil];
 }

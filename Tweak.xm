@@ -880,6 +880,11 @@ static void rea_showRecentPhoto(id self, SEL _cmd) {
 // ============================================================================
 static void REAInstallSettingsEntry(void);
 
+// v12 净化引擎（定义在「设置页入口」之后；这里先声明，设置页钩子要用它做 purify_set_items）
+static void REAInstallPurify(void);
+static BOOL PShouldTrimSettingCell(id cell, NSIndexPath *ip);
+static BOOL PIsTrimmedRow(NSIndexPath *ip);
+
 #pragma mark - Hook 安装表
 // ============================================================================
 
@@ -945,22 +950,39 @@ static void REAInstallHooks(void) {
     // 宿主「设置」页右上角注入「助手」按钮（v11）。与上面 36 条功能 Hook 完全独立：
     // 这一步只加一个 UI 入口，装不上也不影响任何 Hook。
     REAInstallSettingsEntry();
+
+    // v12 净化引擎：广告位 / 入口 / 提示条 / 打码（净化中心第一批 39 条锚点 + 视图级兜底）
+    REAInstallPurify();
 }
 
 // ============================================================================
-#pragma mark - 宿主「设置」页入口（v11）
+#pragma mark - 宿主「设置」页入口（v12：真·列表 Cell 注入）
 //
-// 需求："IPA 的设置界面里也要有插件入口"。
-// 宿主实证（_work/find_settings_vc.py 扫 14,839 个类）：
-//   BDPrivacySettingViewController     0x108d1ca70，241 个方法，-viewWillAppear: = v20@0:8B16
-//   BDNewPrivacySettingViewController  0x108d29928，122 个方法，-viewWillAppear: = v20@0:8B16
-// 两者都有**自有** viewWillAppear:，所以能用 REASwap（class_copyMethodList 只 realize、不 initialize）
-// 安全地挂上去：原实现照常执行，之后给 navigationItem 挂一个「助手」按钮，点它打开我们的面板。
-// 不修改任何 tableView 数据源，因此不会破坏宿主设置页的行数与布局。
+// 需求（Bug 2）：Blued「我的 → 设置」页的列表里要**长出一行「插件设置」**，点它打开面板。
+//
+// 原版 dylib 实证（_work/analysis/hooks_full.txt 334-340）：
+//   原版对 BDSettingViewController 挂了 6 条 Hook：
+//     viewDidLoad / viewWillAppear: / viewDidAppear: / viewDidDisappear:
+//     tableView:cellForRowAtIndexPath: / tableView:heightForRowAtIndexPath:
+//   其中 cellForRow 会按一串关键词给行加标记（rangeOfString: 命中后调 0x1237C4 改 cell），
+//   heightForRow 同理 —— 说明原版走的是"宿主设置页 + 自己塞行"这条路，
+//   而不是另开一个设置界面。所以本版也照这条路做，但**不依赖宿主内部数据模型**：
+//   行数是数据源层 +1，多出来的那一行由我们自己出 cell / 高度 / 点击。
+//
+// 宿主实证（_work/analysis/host_index.json，14,839 个类全量）：
+//   BDSettingViewController 自有方法里就有 onAuthority:/onSafeAccount:/onPrivate:/
+//   onLiveSetting:/onNormal:/onAboutBlued:/switchAccount:/onLogout:/tableView:heightForRowAtIndexPath:，
+//   确实是「我的 → 设置」这一页；但 numberOfRowsInSection / cellForRow / didSelect
+//   这三个数据源方法**不在它自己的方法表里**（在父类上）。
+//   所以安装时先沿 superclass 链找真正的所有者，再对所有者 REASwap —— 全程只用
+//   class_copyMethodList / class_getSuperclass / method_getName，绝不碰
+//   class_getInstanceMethod（铁律见文件头 v5 事故说明），不会提前引爆宿主 +initialize。
 // ============================================================================
 
 extern void REAOpenPanel(void);
+extern BOOL REAOverlayPanelVisible(void);
 
+/* 备用入口按钮的点击 Target（也是 v11 就有的，这里保留） */
 @interface REAEntryTarget : NSObject
 + (instancetype)shared;
 - (void)tap:(id)sender;
@@ -983,7 +1005,127 @@ extern void REAOpenPanel(void);
 
 @end
 
-static void REAAddSettingsEntry(id self)
+typedef NSInteger (*REA_TV_Rows)(id, SEL, UITableView *, NSInteger);
+typedef UITableViewCell *(*REA_TV_Cell)(id, SEL, UITableView *, NSIndexPath *);
+typedef void (*REA_TV_Select)(id, SEL, UITableView *, NSIndexPath *);
+typedef double (*REA_TV_Height)(id, SEL, UITableView *, NSIndexPath *);
+
+static REA_TV_Rows    p_settingRows    = NULL;
+static REA_TV_Cell    p_settingCell    = NULL;
+static REA_TV_Select  p_settingSelect  = NULL;
+static REA_TV_Height  p_settingHeight  = NULL;
+static REA_V_B         p_settingsWillAppear = NULL;   /* 备用入口：导航栏按钮 */
+
+/* 入口行固定插在**第 0 组末尾**：宿主其它行下标全部不变，
+   我们的行永远取 row == 宿主该组原行数，不会和宿主任何一行撞号。 */
+static BOOL gREASettingsEntryOn = YES;
+static NSInteger const kREASettingsEntrySection = 0;
+
+static BOOL REAIsSettingVC(id self)
+{
+    Class c = objc_getClass("BDSettingViewController");
+    return (c != Nil) && [self isKindOfClass:c];
+}
+
+/* 沿 superclass 链找**真正持有**该 selector 的类（只读方法表，不 initialize）。 */
+static Class REAOwnerClass(Class cls, SEL sel)
+{
+    for (Class c = cls; c != Nil; c = class_getSuperclass(c)) {
+        unsigned int n = 0;
+        Method *ms = class_copyMethodList(c, &n);
+        BOOL found = NO;
+        if (ms != NULL) {
+            for (unsigned int i = 0; i < n; i++) {
+                if (method_getName(ms[i]) == sel) { found = YES; break; }
+            }
+            free(ms);
+        }
+        if (found) return c;
+    }
+    return Nil;
+}
+
+static NSInteger REASettingBaseRows(id self, UITableView *tv)
+{
+    if (p_settingRows == NULL) return 0;
+    return p_settingRows(self, sel_registerName("tableView:numberOfRowsInSection:"),
+                         tv, kREASettingsEntrySection);
+}
+
+static UITableViewCell *REASettingsEntryCell(UITableView *tv)
+{
+    static NSString *rid = @"rea-settings-entry";
+    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:rid];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                      reuseIdentifier:rid];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    cell.textLabel.text = @"插件设置";
+    cell.textLabel.textColor = [UIColor labelColor];
+    if (@available(iOS 13.0, *)) {
+        cell.imageView.image = [UIImage systemImageNamed:@"bolt.horizontal.circle.fill"];
+        cell.imageView.tintColor = [UIColor systemBlueColor];
+    }
+    return cell;
+}
+
+static NSInteger rea_settingsRows(id self, SEL _cmd, UITableView *tv, NSInteger section)
+{
+    NSInteger base = p_settingRows ? p_settingRows(self, _cmd, tv, section) : 0;
+    if (!gREASettingsEntryOn) return base;
+    if (!REAIsSettingVC(self)) return base;
+    if (section != kREASettingsEntrySection) return base;
+    return base + 1;
+}
+
+/* 我们的行是否成立：三个数据源 Hook 必须都在（rows 装不上时宿主根本没多出这一行，
+   绝不能让 row==0 之类的下标被我们抢走）。 */
+static BOOL REAIsOurEntryRow(id self, UITableView *tv, NSIndexPath *ip)
+{
+    if (!gREASettingsEntryOn) return NO;
+    if (p_settingRows == NULL) return NO;
+    if (!REAIsSettingVC(self)) return NO;
+    if (ip.section != kREASettingsEntrySection) return NO;
+    return ip.row == REASettingBaseRows(self, tv);
+}
+
+static UITableViewCell *rea_settingsCell(id self, SEL _cmd, UITableView *tv, NSIndexPath *ip)
+{
+    if (REAIsOurEntryRow(self, tv, ip)) {
+        return REASettingsEntryCell(tv);
+    }
+    if (p_settingCell == NULL) return nil;
+    UITableViewCell *cell = p_settingCell(self, _cmd, tv, ip);
+    @try { PShouldTrimSettingCell(cell, ip); }   // purify_set_items：命中白名单行 → 隐藏
+    @catch (NSException *e) { }
+    return cell;
+}
+
+static double rea_settingsHeight(id self, SEL _cmd, UITableView *tv, NSIndexPath *ip)
+{
+    if (REAIsOurEntryRow(self, tv, ip)) {
+        return 56.0;
+    }
+    if (PIsTrimmedRow(ip)) return 0.0;          // purify_set_items：已判定精简的行
+    if (p_settingHeight == NULL) return 44.0;
+    return p_settingHeight(self, _cmd, tv, ip);
+}
+
+static void rea_settingsSelect(id self, SEL _cmd, UITableView *tv, NSIndexPath *ip)
+{
+    if (REAIsOurEntryRow(self, tv, ip)) {
+        [tv deselectRowAtIndexPath:ip animated:YES];
+        REALog(@"[SettingsEntry] 点击「插件设置」→ 打开面板");
+        REAOpenPanel();
+        return;
+    }
+    if (p_settingSelect) p_settingSelect(self, _cmd, tv, ip);
+}
+
+/* 备用入口（原 v11 方案）：万一某版宿主的设置页不走 BDSettingViewController，
+   至少还有一个导航栏「助手」按钮。视图出现时重新挂一次，防被宿主覆盖。 */
+static void REAAddSettingsNavButton(id self)
 {
     if (self == nil) return;
     if (![self isKindOfClass:[UIViewController class]]) return;
@@ -992,9 +1134,8 @@ static void REAAddSettingsEntry(id self)
     UIBarButtonItem *cur = vc.navigationItem.rightBarButtonItem;
     if (cur != nil && [cur.customView isKindOfClass:[UIButton class]]) {
         NSString *t = [(UIButton *)cur.customView titleForState:UIControlStateNormal];
-        if ([t isEqualToString:@"助手"]) return;   // 已经加过，幂等
+        if ([t isEqualToString:@"助手"]) return;
     }
-
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
     [btn setTitle:@"助手" forState:UIControlStateNormal];
     btn.titleLabel.font = [UIFont boldSystemFontOfSize:15.0];
@@ -1004,44 +1145,621 @@ static void REAAddSettingsEntry(id self)
             action:@selector(tap:)
   forControlEvents:UIControlEventTouchUpInside];
     vc.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
-    REALog(@"settings entry injected on %@", NSStringFromClass([vc class]));
 }
 
-static REA_V_B p_privacySettingsWillAppear = NULL;
-static REA_V_B p_newPrivacySettingsWillAppear = NULL;
-
-static void rea_privacySettingsWillAppear(id self, SEL _cmd, BOOL animated)
+static void rea_settingsWillAppear(id self, SEL _cmd, BOOL animated)
 {
-    if (p_privacySettingsWillAppear) p_privacySettingsWillAppear(self, _cmd, animated);
-    @try { REAAddSettingsEntry(self); }
-    @catch (NSException *e) { REALog(@"settings entry exception: %@", e.reason); }
+    if (p_settingsWillAppear) p_settingsWillAppear(self, _cmd, animated);
+    @try { REAAddSettingsNavButton(self); }
+    @catch (NSException *e) { REALog(@"settings nav button exception: %@", e.reason); }
 }
 
-static void rea_newPrivacySettingsWillAppear(id self, SEL _cmd, BOOL animated)
-{
-    if (p_newPrivacySettingsWillAppear) p_newPrivacySettingsWillAppear(self, _cmd, animated);
-    @try { REAAddSettingsEntry(self); }
-    @catch (NSException *e) { REALog(@"settings entry exception: %@", e.reason); }
+// ============================================================================
+#pragma mark - 净化引擎（v12）：广告位 / 入口 / 提示条的真实拦截
+//
+// 证据链（全部来自对宿主 7.50.3 主二进制的静态还原，不是猜的）：
+//   · 宿主 14,839 个类、264,012 条方法条目已完整解析（_work/analysis/host_index.json），
+//     下面每条锚点的「类 + 选择子 + 类型编码」都从这张表里取，签名与宿主完全一致。
+//   · 开屏：AppDelegateModel(isNeedShowSplashAd / showSplashAd: / getSplashAdForColdLaunch)、
+//     BDIndexPageCoversManager 的 8 个 show*Splash 变体、BDGDTSplashAdManager / BDKSSplashAdManager、
+//     BDADX_Blued_Splash_Image_ViewController、BDADXBaseSplashAdManager，
+//     外加聚合广告层总闸 ABUSplashAd -showInWindow:(Block)。
+//   · 信息流：ABUDrawAdView / ABUNativeAdView 的 -loadAdData / -play，
+//     与快手模板 cell 的 -startLoadWithAdModel:originModel:containVC:isNeedRefresh:。
+//   · 身边 / 我的：BDNearbyDataAdapter 的 -setAdmsArray: / -setOriginUserAdsArray: 直接喂空数组；
+//     BDNearbyBannerCell / BDMineBannerCell 的 -configerBanner: 直接跳过。
+//   · 横幅 / 悬浮层 / 安全条 / 打码：BDGlobalBannerView、BDGlobalBannerMatchView、
+//     BDIndexPageCoversManager 漂浮层两个入口、BDNearbyFloatingLayerModel -images、
+//     BDChatSafeTipCell -setupData、BDMessageSafetyTipView -getSafetyTipViewHeight、
+//     BDBlurredLabel -setBlurRadius:、BDMapBlurBaseView -applyBlurRadius:、
+//     BDPrivacyAlbumCell -showMaskViewOrNot:。
+//   · 剩下的"某类入口 / 浮层"，用**视图级净化器**兜底：hook UIView -didMoveToSuperview，
+//     按真实类名模式（kPViewRules）把命中的视图隐藏，日志里能看到具体类名与 key。
+//
+// 语义：开关关 → 原实现照常（绝不影响宿主）；开关开 → 拦截 / 传空值 / 隐藏，并写日志。
+// ============================================================================
+
+// 选择子 -> 开关 key 的映射在下面的 kPInstall 安装表里（行内自带 key），
+// trampoline 通过 PRowFor(self, _cmd) 由「self 的类链 + 选择子」定位到那一行再取 key。
+
+// 每次读 NSUserDefaults（REAFlag 语义），保证面板点一下立刻生效。
+static inline BOOL POn(const char *key) {
+    if (!key) return NO;
+    @try { return REAFlag([NSString stringWithUTF8String:key]); } @catch (NSException *e) { return NO; }
+}
+
+// ---- 安装表 ----
+typedef struct { const char *cls; const char *sel; const char *kind; const char *key; } PInstall;
+static const PInstall kPInstall[] = {
+    { "AppDelegateModel", "isNeedShowSplashAd", "PK_B0", "purify_splash_ad" },   // purify_splash_ad
+    { "AppDelegateModel", "showSplashAd:", "PK_VB", "purify_splash_ad" },   // purify_splash_ad
+    { "AppDelegateModel", "getSplashAdForColdLaunch", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
+    { "AppDelegateModel", "p_getSplashAdvertisementForColdLaunch", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
+    { "BDGDTSplashAdManager", "showGDTSplash", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
+    { "BDKSSplashAdManager", "showKSSplash", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
+    { "BDADX_Blued_Splash_Image_ViewController", "presentBluedSplashImageViewController", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "showSplashAd:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "showSplashAd_Adx:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "showSplashAd_Normal:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "p_showGDTSplash:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "p_showKSSplash:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "p_showPangleSplash:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "p_showBluedImageSplash:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
+    { "BDIndexPageCoversManager", "p_showBluedVideoSplash:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
+    { "BDADXBaseSplashAdManager", "assembleSplashContainerView:needRemoveHandler:", "PK_O2O", "purify_splash_ad" },   // purify_splash_ad
+    { "ABUSplashAd", "showInWindow:", "PK_B1O", "purify_splash_ad" },   // purify_splash_ad
+    { "ABUSplashAd", "showInWindowWithBlock:", "PK_B1O", "purify_splash_ad" },   // purify_splash_ad
+    { "BDSplashVideoAdViewController", "presentInViewController:", "PK_V1O", "purify_splash_ad" },   // purify_splash_ad
+    { "ABUDrawAdView", "loadAdData", "PK_V0", "purify_feed_ad" },   // purify_feed_ad
+    { "ABUNativeAdView", "loadAdData", "PK_V0", "purify_feed_ad" },   // purify_feed_ad
+    { "ABUNativeAdView", "play", "PK_V0", "purify_feed_ad" },   // purify_feed_ad
+    { "BDKSTemplateExpressFeedAdBaseTableViewCell", "startLoadWithAdModel:originModel:containVC:isNeedRefresh:", "PK_V3OB", "purify_feed_ad" },   // purify_feed_ad
+    { "BDKSSelfExpressNativeAdBaseTableViewCell", "startLoadWithAdModel:originModel:containVC:isNeedRefresh:", "PK_V3OB", "purify_feed_ad" },   // purify_feed_ad
+    { "BDNearbyDataAdapter", "setAdmsArray:", "PK_ARR1O", "purify_nearby_ad" },   // purify_nearby_ad
+    { "BDNearbyDataAdapter", "setOriginUserAdsArray:", "PK_ARR1O", "purify_nearby_ad" },   // purify_nearby_ad
+    { "BDNearbyBannerCell", "configerBanner:", "PK_V1O", "purify_nearby_ad" },   // purify_nearby_ad
+    { "BDGlobalBannerView", "showNsnofyView", "PK_V0", "purify_banner" },   // purify_banner
+    { "BDGlobalBannerMatchView", "setBannerModel:messageModel:", "PK_V2O", "purify_banner" },   // purify_banner
+    { "ABUBannerAd", "loadAdData", "PK_V0", "purify_banner" },   // purify_banner
+    { "BDIndexPageCoversManager", "p_showFloatingLayerAds:image:finished:", "PK_V3O", "purify_float_layer" },   // purify_float_layer
+    { "BDIndexPageCoversManager", "showFloatingLayerAfterNearbyPageShown", "PK_B0", "purify_float_layer" },   // purify_float_layer
+    { "BDNearbyFloatingLayerModel", "images", "PK_O0", "purify_float_layer" },   // purify_float_layer
+    { "BDMineBannerCell", "configerBanner:", "PK_V1O", "purify_mine_ad" },   // purify_mine_ad
+    { "BDChatSafeTipCell", "setupData", "PK_V0", "purify_safe_tip" },   // purify_safe_tip
+    { "BDMessageSafetyTipView", "getSafetyTipViewHeight", "PK_D0", "purify_safe_tip" },   // purify_safe_tip
+    { "BDBlurredLabel", "setBlurRadius:", "PK_VD", "purify_blur_label" },   // purify_blur_label
+    { "BDMapBlurBaseView", "applyBlurRadius:", "PK_VD", "purify_blur_label" },   // purify_blur_label
+    { "BDPrivacyAlbumCell", "showMaskViewOrNot:", "PK_VB", "purify_sensitive" },   // purify_sensitive
+    { "BDMessageViewController", "showChatRiskTip", "PK_V0", "purify_sensitive_alert" },   // purify_sensitive_alert
+    { "BDSessionViewController", "p_ifShowRiskAlert", "PK_V0", "purify_sensitive_alert" },   // purify_sensitive_alert
+    { "PrivateChatViewController", "showRiskUserTips:", "PK_V1O", "purify_sensitive_alert" },   // purify_sensitive_alert
+    { "PrivateChatViewController", "riskTipsRequest", "PK_V0", "purify_sensitive_alert" },   // purify_sensitive_alert
+    { "BDCallWorkFlowManager", "callStateRequest", "PK_O0", "purify_block_call" },   // purify_block_call
+    { "BDCallWorkFlowManager", "callOpenRequest", "PK_O0", "purify_block_call" },   // purify_block_call
+    { "BDCallWorkFlowManager", "callRequesting", "PK_B0", "purify_block_call" },   // purify_block_call
+    { "BDVisitorTopView", "isShowCall", "PK_B0", "purify_block_call" },   // purify_block_call
+    { "BDNearbyCallListView", "showCallAlert", "PK_V0", "purify_block_call" },   // purify_block_call
+    { "BDTavernChatingViewController", "joinVoiceRoom", "PK_V0", "purify_block_voice" },   // purify_block_voice
+    { "BDTavernChatingViewController", "p_showVoiceMatchPopoverView", "PK_V0", "purify_block_voice" },   // purify_block_voice
+    { "BDTavernChatingViewController", "p_startVoiceForwardIfNeeded", "PK_V0", "purify_block_voice" },   // purify_block_voice
+    { "UserVisitorData", "is_ads", "PK_I0", "purify_visitor_ad" },   // purify_visitor_ad
+    { "NSURLSession", "dataTaskWithRequest:completionHandler:", "PK_DTASK2", NULL },   // 网络级：命中 kPHostRules 的 host 才切
+    { "NSURLSession", "dataTaskWithRequest:", "PK_DTASK1", NULL },   // 网络级：命中 kPHostRules 的 host 才切
+    { "NSMutableURLRequest", "setURL:", "PK_SETURL", NULL },   // 网络级：命中 kPHostRules 的 host 才切
+    { "UIView", "didMoveToSuperview", "PK_VIEW", NULL },   // 视图级净化器（兜底）
+};
+
+#define P_ROW_COUNT (sizeof(kPInstall) / sizeof(kPInstall[0]))
+
+// 行 -> 真正被改写的类 + 该类的原 IMP。装的时候填，之后只读。
+// 不直接用 gREAOrig：那张表的键是"REASwap 传入的类名 + 选择子"，
+// 而 trampoline 里拿到的 self 可能是子类实例（例如 UIView 的 -didMoveToSuperview
+// 会收到 UILabel/UIImageView 实例），键对不上就会把原实现整个跳过。
+static Class gPRowClass[P_ROW_COUNT];
+static IMP   gPRowOld  [P_ROW_COUNT];
+
+// 按「self 的继承链（由内向外）+ 选择子」定位安装行。
+// 由内向外保证：同名选择子被父子两个类各挂一条时，命中离 self 最近的那条
+// （例如 loadAdData 同时挂在 ABUDrawAdView 与 ABUNativeAdView）。
+static NSInteger PRowFor(id self, SEL sel) {
+    Class c = object_getClass(self);
+    const char *s = sel_getName(sel);
+
+    static Class gMemoCls; static const char *gMemoSel; static NSInteger gMemoRow;
+    if (gMemoCls == c && gMemoSel == s) return gMemoRow;
+
+    for (Class k = c; k != Nil; k = class_getSuperclass(k)) {
+        for (size_t i = 0; i < P_ROW_COUNT; i++) {
+            if (gPRowClass[i] != k) continue;
+            if (kPInstall[i].sel == NULL || strcmp(kPInstall[i].sel, s) != 0) continue;
+            gMemoCls = c; gMemoSel = s; gMemoRow = (NSInteger)i;
+            return (NSInteger)i;
+        }
+    }
+    return -1;
+}
+
+static const char *PKeyFor(id self, SEL sel) {
+    NSInteger r = PRowFor(self, sel);
+    return (r >= 0) ? kPInstall[r].key : NULL;
+}
+
+// 取原实现
+static IMP POld(id self, SEL sel) {
+    NSInteger r = PRowFor(self, sel);
+    return (r >= 0) ? gPRowOld[r] : NULL;
+}
+
+static void PLogHit(id self, SEL sel, const char *key, const char *what) {
+    REALog(@"[Purify] %s %s -%s → %s", what, class_getName(object_getClass(self)),
+           sel_getName(sel), key ? key : "?");
+}
+
+
+// ---- trampoline：每种签名一个函数，按 _cmd 决定"拦"还是"放" ----
+static void PK_V0(id self, SEL _cmd) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL))o)(self, _cmd);
+}
+
+static void PK_VB(id self, SEL _cmd, BOOL a) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL, BOOL))o)(self, _cmd, a);
+}
+
+static void PK_VQ(id self, SEL _cmd, NSInteger a) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL, NSInteger))o)(self, _cmd, a);
+}
+
+static void PK_VD(id self, SEL _cmd, double a) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL, double))o)(self, _cmd, a);
+}
+
+static void PK_V1O(id self, SEL _cmd, id a) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL, id))o)(self, _cmd, a);
+}
+
+static void PK_V2O(id self, SEL _cmd, id a, id b) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL, id, id))o)(self, _cmd, a, b);
+}
+
+static void PK_V3O(id self, SEL _cmd, id a, id b, id c) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd); if (o) ((void (*)(id, SEL, id, id, id))o)(self, _cmd, a, b, c);
+}
+
+static void PK_V3OB(id self, SEL _cmd, id a, id b, id c, BOOL d) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "拦截"); return; }
+    IMP o = POld(self, _cmd);
+    if (o) ((void (*)(id, SEL, id, id, id, BOOL))o)(self, _cmd, a, b, c, d);
+}
+
+// 开屏状态机：拦掉广告后必须把 finished(YES) 推进，否则开屏流程会卡在 loading
+static void PK_VSPLASH_A(id self, SEL _cmd, id ad, id win, BOOL cold, id finished) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) {
+        PLogHit(self, _cmd, k, "拦截（推进状态机）");
+        if (finished) { void (^blk)(BOOL) = (void (^)(BOOL))finished; @try { blk(YES); } @catch (NSException *e) { } }
+        return;
+    }
+    IMP o = POld(self, _cmd);
+    if (o) ((void (*)(id, SEL, id, id, BOOL, id))o)(self, _cmd, ad, win, cold, finished);
+}
+
+static void PK_VSPLASH_B(id self, SEL _cmd, id ad, BOOL cold, id finished) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) {
+        PLogHit(self, _cmd, k, "拦截（推进状态机）");
+        if (finished) { void (^blk)(BOOL) = (void (^)(BOOL))finished; @try { blk(YES); } @catch (NSException *e) { } }
+        return;
+    }
+    IMP o = POld(self, _cmd);
+    if (o) ((void (*)(id, SEL, id, BOOL, id))o)(self, _cmd, ad, cold, finished);
+}
+
+static BOOL PK_B0(id self, SEL _cmd) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 NO"); return NO; }
+    IMP o = POld(self, _cmd);
+    return o ? ((BOOL (*)(id, SEL))o)(self, _cmd) : NO;
+}
+
+static BOOL PK_B1O(id self, SEL _cmd, id a) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 NO"); return NO; }
+    IMP o = POld(self, _cmd);
+    return o ? ((BOOL (*)(id, SEL, id))o)(self, _cmd, a) : NO;
+}
+
+static BOOL PK_B2O(id self, SEL _cmd, id a, id b) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 NO"); return NO; }
+    IMP o = POld(self, _cmd);
+    return o ? ((BOOL (*)(id, SEL, id, id))o)(self, _cmd, a, b) : NO;
+}
+
+static id PK_O0(id self, SEL _cmd) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 nil"); return nil; }
+    IMP o = POld(self, _cmd);
+    return o ? ((id (*)(id, SEL))o)(self, _cmd) : nil;
+}
+
+static id PK_O1O(id self, SEL _cmd, id a) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 nil"); return nil; }
+    IMP o = POld(self, _cmd);
+    return o ? ((id (*)(id, SEL, id))o)(self, _cmd, a) : nil;
+}
+
+static id PK_O2O(id self, SEL _cmd, id a, id b) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 nil"); return nil; }
+    IMP o = POld(self, _cmd);
+    return o ? ((id (*)(id, SEL, id, id))o)(self, _cmd, a, b) : nil;
+}
+
+static double PK_D0(id self, SEL _cmd) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 0"); return 0.0; }
+    IMP o = POld(self, _cmd);
+    return o ? ((double (*)(id, SEL))o)(self, _cmd) : 0.0;
+}
+
+static int PK_I0(id self, SEL _cmd) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 0"); return 0; }
+    IMP o = POld(self, _cmd);
+    return o ? ((int (*)(id, SEL))o)(self, _cmd) : 0;
+}
+
+static long long PK_Q0(id self, SEL _cmd) {
+    const char *k = PKeyFor(self, _cmd);
+    if (k && POn(k)) { PLogHit(self, _cmd, k, "改判 0"); return 0; }
+    IMP o = POld(self, _cmd);
+    return o ? ((long long (*)(id, SEL))o)(self, _cmd) : 0;
+}
+
+// ---- 网络级拦截：命中黑名单 host 的请求直接换成"死地址"，等于切断该服务器 ----
+// 语音房服务器 voice.blued.cn 就是这么切的（开关 purify_block_voice）。
+// 抓两处：NSURLSession 建任务（覆盖 AFN / 系统会话）与 NSMutableURLRequest 改 URL（覆盖自建请求）。
+typedef struct { const char *key; const char *hostSuffix; } PHostRule;
+static const PHostRule kPHostRules[] = {
+    { "purify_block_voice", "voice.blued.cn" },
+};
+
+static BOOL PShouldBlockHost(NSURL *url) {
+    if (url == nil) return NO;
+    NSString *host = url.host.lowercaseString;
+    if (host.length == 0) return NO;
+    for (size_t i = 0; i < sizeof(kPHostRules) / sizeof(kPHostRules[0]); i++) {
+        if (!POn(kPHostRules[i].key)) continue;
+        if ([host hasSuffix:@(kPHostRules[i].hostSuffix)]) return YES;
+    }
+    return NO;
+}
+
+static NSURLRequest *PDeadRequest(void) {
+    static NSURLRequest *dead = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        // 127.0.0.1:9 是 discard 端口，必然拒连 → 请求立刻失败，服务器收不到任何字节
+        dead = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://127.0.0.1:9/blocked-by-hush"]];
+    });
+    return dead;
+}
+
+static id PK_DTASK2(id self, SEL _cmd, NSURLRequest *req, id handler) {
+    IMP o = POld(self, _cmd);
+    if (PShouldBlockHost(req.URL)) {
+        REALog(@"[Purify] 切断请求 %@%@（key=purify_block_voice）", req.URL.host, req.URL.path);
+        req = PDeadRequest();
+    }
+    return o ? ((id (*)(id, SEL, id, id))o)(self, _cmd, req, handler) : nil;
+}
+
+static id PK_DTASK1(id self, SEL _cmd, NSURLRequest *req) {
+    IMP o = POld(self, _cmd);
+    if (PShouldBlockHost(req.URL)) {
+        REALog(@"[Purify] 切断请求 %@%@（key=purify_block_voice）", req.URL.host, req.URL.path);
+        req = PDeadRequest();
+    }
+    return o ? ((id (*)(id, SEL, id))o)(self, _cmd, req) : nil;
+}
+
+static void PK_SETURL(id self, SEL _cmd, NSURL *url) {
+    IMP o = POld(self, _cmd);
+    if (PShouldBlockHost(url)) {
+        REALog(@"[Purify] 改写 URL %@（key=purify_block_voice）", url.host);
+        NSURLRequest *dr = PDeadRequest();
+        url = dr.URL;
+    }
+    if (o) ((void (*)(id, SEL, id))o)(self, _cmd, url);
+}
+
+// 空数组版：广告模型数组直接喂空，宿主数据源里就再没有广告条目
+static void PK_ARR1O(id self, SEL _cmd, id a) {
+    const char *k = PKeyFor(self, _cmd);
+    IMP o = POld(self, _cmd);
+    if (k && POn(k)) {
+        PLogHit(self, _cmd, k, "喂空数组");
+        if (o) ((void (*)(id, SEL, id))o)(self, _cmd, @[]);
+        return;
+    }
+    if (o) ((void (*)(id, SEL, id))o)(self, _cmd, a);
+}
+
+// ---- 视图级净化器：按类名模式隐藏广告 / 入口视图（兜底所有没被上面点名的实现） ----
+typedef struct { const char *key; const char *needle; } PViewRule;
+static const PViewRule kPViewRules[] = {
+    { "purify_splash_ad", "SplashAd" },
+    { "purify_splash_ad", "SplashImage" },
+    { "purify_splash_ad", "SplashVideo" },
+    { "purify_splash_ad", "SplashContainer" },
+    { "purify_splash_ad", "ADXSplash" },
+    { "purify_banner", "Banner" },
+    { "purify_banner", "Nsnofy" },
+    { "purify_svg_ad", "SVGA" },
+    { "purify_svg_ad", "SvgFloat" },
+    { "purify_float_layer", "FloatingLayer" },
+    { "purify_float_layer", "FloatLayer" },
+    { "purify_float_layer", "FloatAd" },
+    { "purify_mine_vip", "MineVipOperate" },
+    { "purify_mine_vip", "MineVipCard" },
+    { "purify_live_entry", "LiveServiceCollection" },
+    { "purify_live_entry", "LiveEntryView" },
+    { "purify_live_entry", "LiveEntryCell" },
+    { "purify_map_guide", "MapGuide" },
+    { "purify_map_guide", "GuideCard" },
+    { "purify_map_guide", "GuideView" },
+    { "purify_welcome_pop", "WelcomeReward" },
+    { "purify_welcome_pop", "WelcomePop" },
+    { "purify_welcome_pop", "RewardPopView" },
+    { "purify_follow_card", "FollowCard" },
+    { "purify_follow_card", "FollowGuide" },
+    { "purify_follow_card", "FollowTipView" },
+    { "purify_call_header", "CallHeader" },
+    { "purify_call_header", "CallEntry" },
+    { "purify_call_header", "VoiceCallEntry" },
+    { "purify_session_card", "SessionCard" },
+    { "purify_session_card", "SessionTopCard" },
+    { "purify_session_card", "SessionHeaderCard" },
+    { "purify_new_nav_tag", "NewTag" },
+    { "purify_new_nav_tag", "RedDot" },
+    { "purify_new_nav_tag", "RedPoint" },
+    { "purify_new_nav_tag", "HotTag" },
+    { "purify_new_nav_tag", "PromoteTag" },
+    { "purify_passby_tip", "Passby" },
+    { "purify_passby_tip", "PassBy" },
+    { "purify_passby_tip", "MetByChance" },
+    { "purify_chat_emoji", "BigEmoji" },
+    { "purify_chat_emoji", "EmojiAnimation" },
+    { "purify_match_emoji_bar", "MatchEmoji" },
+    { "purify_match_emoji_bar", "EmojiBar" },
+    { "purify_match_emoji_bar", "ExpressionBar" },
+    { "purify_sensitive", "PrivacyAlbumMask" },
+    { "purify_sensitive", "SensitiveMask" },
+};
+
+// 类名 -> 规则下标缓存（不存在 = 未判定；>=0 命中第 i 条；-1 永不命中）
+static NSMutableDictionary<NSString *, NSNumber *> *gPViewCache;
+
+static BOOL PViewShouldHide(Class cls, const char **hitKey) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ gPViewCache = [NSMutableDictionary dictionary]; });
+    NSString *name = @(class_getName(cls));
+    if (!name.length) return NO;
+    if ([name hasPrefix:@"_"]) name = [name substringFromIndex:1];
+
+    NSNumber *cached = nil;
+    @synchronized (gPViewCache) { cached = gPViewCache[name]; }
+    if (cached) {
+        NSInteger idx = cached.integerValue;
+        if (idx < 0) return NO;
+        if (POn(kPViewRules[idx].key)) { if (hitKey) *hitKey = kPViewRules[idx].key; return YES; }
+        return NO;
+    }
+
+    NSString *lower = name.lowercaseString;
+    for (size_t i = 0; i < sizeof(kPViewRules) / sizeof(kPViewRules[0]); i++) {
+        NSString *needle = @(kPViewRules[i].needle).lowercaseString;
+        if ([lower containsString:needle]) {
+            @synchronized (gPViewCache) { gPViewCache[name] = @((NSInteger)i); }
+            if (POn(kPViewRules[i].key)) { if (hitKey) *hitKey = kPViewRules[i].key; return YES; }
+            return NO;
+        }
+    }
+    @synchronized (gPViewCache) { gPViewCache[name] = @((NSInteger)-1); }
+    return NO;
+}
+
+static void rea_viewDidMoveToSuperview(id self, SEL _cmd) {
+    IMP o = POld(self, _cmd);
+    if (o) ((void (*)(id, SEL))o)(self, _cmd);
+
+    @try {
+        if (![self isKindOfClass:[UIView class]]) return;
+        UIView *v = (UIView *)self;
+        const char *key = NULL;
+        if (!PViewShouldHide(object_getClass(self), &key)) return;
+        if (v.hidden && v.alpha == 0.0) return;      // 已处理过，别每次重复干活
+        v.hidden = YES;
+        v.alpha = 0.0;
+        CGRect f = v.frame;
+        if (f.size.height > 0.5) { f.size.height = 0.5; v.frame = f; }
+        REALog(@"[Purify] 视图净化：%@ → key=%s", NSStringFromClass(object_getClass(self)),
+               key ? key : "?");
+    } @catch (NSException *e) { }
+}
+
+// ---- 设置页精简（purify_set_items） ----
+// 宿主设置页的行由它的数据源生成，我们不动数据源（动了下标会错位），
+// 而是在 cellForRow / heightForRow 两处把命中行压成 0 高度并隐藏 —— 视觉上整行消失。
+static NSArray<NSString *> *PWeightlessSettingTitles(void) {
+    static NSArray<NSString *> *arr = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        arr = @[ @"认证", @"实名", @"直播", @"扫一扫", @"青少年", @"青少年模式",
+                 @"账号安全", @"隐私设置", @"帮助与反馈", @"关于", @"清除缓存" ];
+    });
+    return arr;
+}
+
+static NSMutableSet<NSString *> *gPTrimmedRows;   // "section-row" 集合
+
+static BOOL PShouldTrimSettingCell(id cell, NSIndexPath *ip) {
+    if (!POn("purify_set_items")) return NO;
+    @try {
+        if (![cell isKindOfClass:[UITableViewCell class]]) return NO;
+        UITableViewCell *c = (UITableViewCell *)cell;
+        NSString *text = c.textLabel.text;
+        if (!text.length) return NO;
+        for (NSString *needle in PWeightlessSettingTitles()) {
+            if ([text containsString:needle]) {
+                if (!gPTrimmedRows) gPTrimmedRows = [NSMutableSet set];
+                if (ip) [gPTrimmedRows addObject:[NSString stringWithFormat:@"%ld-%ld",
+                                                  (long)ip.section, (long)ip.row]];
+                c.hidden = YES;
+                c.alpha = 0.0;
+                return YES;
+            }
+        }
+    } @catch (NSException *e) { }
+    return NO;
+}
+
+static BOOL PIsTrimmedRow(NSIndexPath *ip) {
+    if (!POn("purify_set_items") || !gPTrimmedRows || !ip) return NO;
+    return [gPTrimmedRows containsObject:[NSString stringWithFormat:@"%ld-%ld",
+                                          (long)ip.section, (long)ip.row]];
+}
+
+static IMP PImpForKind(const char *kind) {
+    if (!kind) return NULL;
+    if (strcmp(kind, "PK_V0") == 0) return (IMP)PK_V0;
+    if (strcmp(kind, "PK_VB") == 0) return (IMP)PK_VB;
+    if (strcmp(kind, "PK_VQ") == 0) return (IMP)PK_VQ;
+    if (strcmp(kind, "PK_VD") == 0) return (IMP)PK_VD;
+    if (strcmp(kind, "PK_V1O") == 0) return (IMP)PK_V1O;
+    if (strcmp(kind, "PK_V2O") == 0) return (IMP)PK_V2O;
+    if (strcmp(kind, "PK_V3O") == 0) return (IMP)PK_V3O;
+    if (strcmp(kind, "PK_V3OB") == 0) return (IMP)PK_V3OB;
+    if (strcmp(kind, "PK_VSPLASH_A") == 0) return (IMP)PK_VSPLASH_A;
+    if (strcmp(kind, "PK_VSPLASH_B") == 0) return (IMP)PK_VSPLASH_B;
+    if (strcmp(kind, "PK_B0") == 0) return (IMP)PK_B0;
+    if (strcmp(kind, "PK_B1O") == 0) return (IMP)PK_B1O;
+    if (strcmp(kind, "PK_B2O") == 0) return (IMP)PK_B2O;
+    if (strcmp(kind, "PK_O0") == 0) return (IMP)PK_O0;
+    if (strcmp(kind, "PK_O1O") == 0) return (IMP)PK_O1O;
+    if (strcmp(kind, "PK_O2O") == 0) return (IMP)PK_O2O;
+    if (strcmp(kind, "PK_D0") == 0) return (IMP)PK_D0;
+    if (strcmp(kind, "PK_I0") == 0) return (IMP)PK_I0;
+    if (strcmp(kind, "PK_Q0") == 0) return (IMP)PK_Q0;
+    if (strcmp(kind, "PK_DTASK2") == 0) return (IMP)PK_DTASK2;
+    if (strcmp(kind, "PK_DTASK1") == 0) return (IMP)PK_DTASK1;
+    if (strcmp(kind, "PK_SETURL") == 0) return (IMP)PK_SETURL;
+    if (strcmp(kind, "PK_ARR1O") == 0) return (IMP)PK_ARR1O;
+    if (strcmp(kind, "PK_VIEW") == 0) return (IMP)rea_viewDidMoveToSuperview;
+    return NULL;
+}
+
+// 安装：先求"真正持有该选择子的类"（可能是父类），再 REASwap，
+// 并把「被改写的类 + 原 IMP」写进行表，供 POld 沿继承链取回。
+static void REAInstallPurify(void) {
+    @autoreleasepool {
+        int ok = 0, miss = 0;
+        for (size_t i = 0; i < P_ROW_COUNT; i++) {
+            const PInstall *p = &kPInstall[i];
+            Class cls = objc_getClass(p->cls);
+            if (cls == Nil) { miss++; REALog(@"[Purify] 宿主无类 %s（跳过）", p->cls); continue; }
+
+            SEL sel = sel_registerName(p->sel);
+            Class owner = REAOwnerClass(cls, sel);
+            if (owner == Nil) {
+                miss++;
+                REALog(@"[Purify] %s 整条继承链都没有 -%s（跳过）", p->cls, p->sel);
+                continue;
+            }
+            IMP imp = PImpForKind(p->kind);
+            if (!imp) { miss++; continue; }
+
+            IMP old = REASwap(owner, p->sel, imp);
+            if (old) {
+                gPRowClass[i] = owner;
+                gPRowOld[i]   = old;
+                ok++;
+            } else {
+                miss++;
+            }
+        }
+        REALog(@"[Purify] 锚点安装：ok=%d miss=%d（共 %zu 条，含视图净化器）", ok, miss, (size_t)P_ROW_COUNT);
+    }
 }
 
 static void REAInstallSettingsEntry(void)
 {
     @try {
+        Class vc = objc_getClass("BDSettingViewController");
+        if (vc == Nil) {
+            REALog(@"[SettingsEntry] 宿主没有 BDSettingViewController，只装导航栏备用入口");
+        } else {
+            SEL sRows   = sel_registerName("tableView:numberOfRowsInSection:");
+            SEL sCell   = sel_registerName("tableView:cellForRowAtIndexPath:");
+            SEL sSelect = sel_registerName("tableView:didSelectRowAtIndexPath:");
+            SEL sHeight = sel_registerName("tableView:heightForRowAtIndexPath:");
+
+            Class cRows   = REAOwnerClass(vc, sRows);
+            Class cCell   = REAOwnerClass(vc, sCell);
+            Class cSelect = REAOwnerClass(vc, sSelect);
+            Class cHeight = REAOwnerClass(vc, sHeight);
+
+            if (cRows != Nil && p_settingRows == NULL) {
+                p_settingRows = (REA_TV_Rows)REASwap(cRows,
+                    "tableView:numberOfRowsInSection:", (IMP)rea_settingsRows);
+            }
+            if (cCell != Nil && p_settingCell == NULL) {
+                p_settingCell = (REA_TV_Cell)REASwap(cCell,
+                    "tableView:cellForRowAtIndexPath:", (IMP)rea_settingsCell);
+            }
+            if (cSelect != Nil && p_settingSelect == NULL) {
+                p_settingSelect = (REA_TV_Select)REASwap(cSelect,
+                    "tableView:didSelectRowAtIndexPath:", (IMP)rea_settingsSelect);
+            }
+            if (cHeight != Nil && p_settingHeight == NULL) {
+                p_settingHeight = (REA_TV_Height)REASwap(cHeight,
+                    "tableView:heightForRowAtIndexPath:", (IMP)rea_settingsHeight);
+            }
+
+            REALog(@"[SettingsEntry] rowsOwner=%s cellOwner=%s selectOwner=%s heightOwner=%s",
+                   cRows ? class_getName(cRows) : "(无)",
+                   cCell ? class_getName(cCell) : "(无)",
+                   cSelect ? class_getName(cSelect) : "(无)",
+                   cHeight ? class_getName(cHeight) : "(无)");
+            REALog(@"[SettingsEntry] 安装结果 rows=%@ cell=%@ select=%@ height=%@",
+                   p_settingRows ? @"ok" : @"miss", p_settingCell ? @"ok" : @"miss",
+                   p_settingSelect ? @"ok" : @"miss", p_settingHeight ? @"ok" : @"miss");
+        }
+
+        /* 备用：原 v11 的两个隐私设置页导航栏按钮（幂等） */
         Class c1 = objc_getClass("BDPrivacySettingViewController");
-        if (c1 != Nil && p_privacySettingsWillAppear == NULL) {
-            p_privacySettingsWillAppear = (REA_V_B)REASwap(c1, "viewWillAppear:",
-                                                  (IMP)rea_privacySettingsWillAppear);
+        if (c1 != Nil && p_settingsWillAppear == NULL) {
+            p_settingsWillAppear = (REA_V_B)REASwap(c1, "viewWillAppear:",
+                                                    (IMP)rea_settingsWillAppear);
         }
-        Class c2 = objc_getClass("BDNewPrivacySettingViewController");
-        if (c2 != Nil && p_newPrivacySettingsWillAppear == NULL) {
-            p_newPrivacySettingsWillAppear = (REA_V_B)REASwap(c2, "viewWillAppear:",
-                                                     (IMP)rea_newPrivacySettingsWillAppear);
-        }
-        REALog(@"settings entry install: BDPrivacySetting=%@ BDNewPrivacySetting=%@",
-               p_privacySettingsWillAppear ? @"ok" : @"miss",
-               p_newPrivacySettingsWillAppear ? @"ok" : @"miss");
     } @catch (NSException *e) {
-        REALog(@"settings entry install exception: %@", e.reason);
+        REALog(@"[SettingsEntry] install exception: %@", e.reason);
     }
 }
 
