@@ -1,6 +1,36 @@
-// BluedHushREA v4 —— 纯 ObjC Runtime Hook 版（零 Logos、零 CydiaSubstrate、面向非越狱自签 + LiveContainer）
+// BluedHushREA v5 —— 纯 ObjC Runtime Hook 版（零 Logos、零 CydiaSubstrate、非越狱自签 + LiveContainer）
 // 目标: com.danlan.xiaolan (Blued 7.50.3) / iOS 14.0+ / arm64 + arm64e
 //
+// ============================================================================
+// v5 修复：真机"打开 App 瞬间闪退"（2026-10-30 09:14:44 崩溃报告实证）
+//
+//   .ips 关键帧（bug_type 309，EXC_BAD_ACCESS/SIGSEGV KERN_INVALID_ADDRESS at 0x20）：
+//       #9  libobjc   class_getInstanceMethod
+//       #10 BluedHushREA.dylib + 0x4fd0
+//       #11 BluedHushREA.dylib + 0x40b4
+//       #12 dyld      load_images        ← 还在 +load 批处理阶段
+//       #3  libobjc   CALLING_SOME_+initialize_METHOD
+//   崩溃现场（宿主 Blued + 0x5b69f1c）：
+//       bl   +0x105af61d8      ; 取某全局对象 → x20
+//       ldr  x8, [x20]         ; x8 = 0   ← 该全局 C++/Swift 对象的构造还没跑
+//       ldr  x8, [x8, #0x20]   ; 读 0x20  ← 崩在这里
+//
+//   机理（CONFIRMED）：`class_getInstanceMethod` 会 **触发目标类的 +initialize**。
+//   v4 在 +load 阶段就用它做全类扫描（REASweepAntiTamper）并给继承方法兜底
+//   （REASwap 的 class_addMethod 分支）→ 提前把 Blued 的 +initialize 拉起来 →
+//   其依赖的全局对象尚未构造（首字为 0）→ 解引用 0x20 立刻 SIGSEGV。
+//   第一次崩溃发生在 +load 里，所以连日志文件都来不及落盘 —— 与"找不到 .log"完全吻合。
+//
+//   v5 铁律（本文件后续所有代码都必须遵守）：
+//     ① +load / 构造函数里**禁止**任何 Runtime 探测；只许 NSLog + 调度。
+//     ② 全文件**禁止**出现 class_getInstanceMethod / class_getClassMethod /
+//        任何会向宿主类 objc_msgSend 的调用（都会引爆 +initialize）。
+//     ③ 只用不触发 +initialize 的 API：class_copyMethodList（仅 realize）、
+//        method_getImplementation / method_setImplementation、class_addMethod、
+//        class_respondsToSelector、class_getName、objc_getClass、sel_getName。
+//     ④ Hook 安装整体推迟到 App 启动完成之后（main queue +2s 首轮，后台队列
+//        +4/+8/+15/+25s 补装），此时宿主所有 +initialize 都已自然发生过。
+//     ⑤ 找不到本类自有实现就记 MISS，不再用 class_addMethod 去继承链上兜底。
 // ============================================================================
 // v4 相对 v3 的变更（用户实测环境：未越狱 / 个人自签 Esign / 主要在 LiveContainer 内运行）
 //   a) 初始化第一行就打印 NSLog(@"[REA-Test] Runtime 注入成功!")，用它判定
@@ -54,6 +84,7 @@
 #import <stdlib.h>
 #import <stdarg.h>
 #import <stdio.h>
+#import <string.h>
 
 #define REA_TAG @"[REA-Test]"
 
@@ -123,10 +154,26 @@ static NSString *REAKey(Class cls, const char *selName) {
     return [NSString stringWithFormat:@"%s|%s", class_getName(cls), selName];
 }
 
-// 语义与 MSHookMessageEx 一致：
-//   · 类自己拥有该方法 → method_setImplementation
-//   · 只有父类实现     → class_addMethod 到本类（只影响本类，orig 指向父类实现）
-// 返回原实现；调用 orig(self, _cmd, ...) 走原逻辑，不会递归。
+// 本类**自有**方法查找：class_copyMethodList 只 realize 类、不触发 +initialize（安全）。
+static Method REAOwnedMethod(Class cls, SEL sel) {
+    if (!cls || !sel) return NULL;
+    Method found = NULL;
+    unsigned int n = 0;
+    Method *list = class_copyMethodList(cls, &n);
+    if (!list) return NULL;
+    for (unsigned int i = 0; i < n; i++) {
+        if (method_getName(list[i]) == sel) { found = list[i]; break; }
+    }
+    free(list);
+    return found;
+}
+
+// 语义对齐 MSHookMessageEx 的"自有方法"分支，但**刻意不做任何会触发 +initialize 的调用**：
+//   · class_copyMethodList → 只 realize，不 initialize
+//   · method_setImplementation / method_getImplementation → 只改方法表，不 initialize
+//   · 绝不调用 class_getInstanceMethod、绝不对宿主类做 objc_msgSend
+// 找不到本类自有实现就记 MISS：宁可少打一个 Hook，也不能把宿主的 +initialize 提前引爆。
+// —— v5 铁律，见文件头 2026-10-30 .ips 事故。
 static IMP REASwap(Class cls, const char *selName, IMP newImp) {
     if (!cls || !selName) { gREAMiss++; return NULL; }
     REARegistryInit();
@@ -137,30 +184,15 @@ static IMP REASwap(Class cls, const char *selName, IMP newImp) {
         id cached = gREAOrig[key];
         if (cached) return (IMP)[cached pointerValue];   // 已装过：返还原 IMP，不重复替换
 
-        Method own = NULL;
-        unsigned int n = 0;
-        Method *list = class_copyMethodList(cls, &n);
-        if (list) {
-            for (unsigned int i = 0; i < n; i++) {
-                if (method_getName(list[i]) == sel) { own = list[i]; break; }
-            }
-            free(list);
+        Method own = REAOwnedMethod(cls, sel);
+        if (!own) {
+            gREAMiss++;
+            REALog(@"hook MISS %s -%s (本类无自有实现，跳过以免触发 +initialize)",
+                   class_getName(cls), selName);
+            return NULL;
         }
-
-        IMP old = NULL;
-        if (own) {
-            old = method_getImplementation(own);
-            method_setImplementation(own, newImp);
-        } else {
-            Method inh = class_getInstanceMethod(cls, sel);
-            if (!inh) {
-                gREAMiss++;
-                REALog(@"hook MISS %s %s (方法不存在)", class_getName(cls), selName);
-                return NULL;
-            }
-            old = method_getImplementation(inh);
-            class_addMethod(cls, sel, newImp, method_getTypeEncoding(inh));
-        }
+        IMP old = method_getImplementation(own);
+        method_setImplementation(own, newImp);
         gREAOK++;
         [gREADone addObject:key];
         gREAOrig[key] = [NSValue valueWithPointer:(void *)old];
@@ -263,10 +295,11 @@ static void REAInstallMsgIdShim(Class cls) {
         SEL g = NSSelectorFromString(@"msgId");
         SEL s = NSSelectorFromString(@"setMsgId:");
         BOOL addedG = NO, addedS = NO;
-        if (!class_getInstanceMethod(cls, g)) {
+        // 判存在只用不会触发 +initialize 的 API（class_respondsToSelector 只走方法表）。
+        if (!class_respondsToSelector(cls, g)) {
             addedG = class_addMethod(cls, g, (IMP)REAMsgIdGetter, "Q16@0:8");
         }
-        if (!class_getInstanceMethod(cls, s)) {
+        if (!class_respondsToSelector(cls, s)) {
             addedS = class_addMethod(cls, s, (IMP)REAMsgIdSetter, "v24@0:8Q16");
         }
         if (addedG || addedS) {
@@ -437,12 +470,15 @@ static void rea_checkForkWithCompletion(id self, SEL _cmd, void (^done)(BOOL)) {
 
 // 全局扫描：这些 selector 在主二进制里查不到（属于 framework 里的同名类），
 // 原版逻辑也只能在类真正注册后再打。这里遍历所有已加载类，命中就打一次，
-// 保证不管它们来自哪个镜像都能被处置；REASwap 幂等，重复扫描无副作用。
+// 保证不管它们来自哪个镜像都能被处置；重复扫描无副作用（已是我们自己的 IMP 就跳过）。
+//
+// v5：**不再用 class_getInstanceMethod 判存在**（它会触发 +initialize，就是首启闪退的元凶）。
+// 改成"每类只复制一次 method list → 与名单字符串比对 → 直接 method_setImplementation"。
 static const char *kREAAntiTamperSels[] = {
     "amIJailBroken", "amIRunInEmulator", "checkDYLD", "checkFork",
     "checkExistenceOfSuspiciousFiles", "checkSuspiciousFilesCanBeOpened",
     "checkRestrictedDirectoriesWriteable", "checkSymbolicLinks", "checkURLSchemes",
-    "emulatorCheckCompile", "emulatorCheckRuntime", NULL
+    "emulatorCheckCompile", "emulatorCheckRuntime", "performChecks", NULL
 };
 
 static void REASweepAntiTamper(void) {
@@ -456,11 +492,24 @@ static void REASweepAntiTamper(void) {
         Class c = classes[i];
         const char *cn = class_getName(c);
         if (!cn || strncmp(cn, "REA", 3) == 0) continue;
-        for (int k = 0; kREAAntiTamperSels[k]; k++) {
-            if (!class_getInstanceMethod(c, sel_registerName(kREAAntiTamperSels[k]))) continue;
-            IMP r = REASwap(c, kREAAntiTamperSels[k], (IMP)rea_ret_NO);
-            if (r) { hits++; REALog(@"anti-tamper swept %s -[%s]", cn, kREAAntiTamperSels[k]); }
+        unsigned int n = 0;
+        Method *list = class_copyMethodList(c, &n);   // 只 realize，不 initialize
+        if (!list) continue;
+        for (unsigned int k = 0; k < n; k++) {
+            const char *mn = sel_getName(method_getName(list[k]));
+            if (!mn) continue;
+            for (int s = 0; kREAAntiTamperSels[s]; s++) {
+                if (strcmp(mn, kREAAntiTamperSels[s]) != 0) continue;
+                if (method_getImplementation(list[k]) != (IMP)rea_ret_NO) {
+                    method_setImplementation(list[k], (IMP)rea_ret_NO);
+                    gREAOK++;
+                    hits++;
+                    REALog(@"anti-tamper swept %s -[%s]", cn, mn);
+                }
+                break;
+            }
         }
+        free(list);
     }
     free(classes);
     REALog(@"anti-tamper sweep done, hits=%d", hits);
@@ -472,7 +521,6 @@ static void REASweepAntiTamper(void) {
 
 static IMP p_accessPrivatePhotos, p_setAccessPrivatePhotos;
 static IMP p_privacyPhotosLocked, p_setPrivacyPhotosLocked;
-static IMP p_albumSetHidden, p_albumSetAlpha;
 
 static int rea_accessPrivatePhotos(id self, SEL _cmd) {
     @try {
@@ -497,27 +545,10 @@ static void rea_setPrivacyPhotosLocked(id self, SEL _cmd, int v) {
     if (p_setPrivacyPhotosLocked) ((REA_V_I)p_setPrivacyPhotosLocked)(self, _cmd, v);
 }
 
-// setHidden:/setAlpha: 继承自 UIView —— 引擎把新 IMP 装到本类、orig 指向 UIView 实现，
-// 这里直接调 orig 即可，既不需要 super 也不会递归。
-static void rea_albumSetHidden(id self, SEL _cmd, BOOL hidden) {
-    @try {
-        if (REAFlag(@"switch_private_photo") && hidden) {
-            if (p_albumSetHidden) ((REA_V_B)p_albumSetHidden)(self, _cmd, NO);
-            return;
-        }
-    } @catch (NSException *e) { }
-    if (p_albumSetHidden) ((REA_V_B)p_albumSetHidden)(self, _cmd, hidden);
-}
-
-static void rea_albumSetAlpha(id self, SEL _cmd, CGFloat alpha) {
-    @try {
-        if (REAFlag(@"switch_private_photo") && alpha < 0.99) {
-            if (p_albumSetAlpha) ((REA_V_D)p_albumSetAlpha)(self, _cmd, 1.0);
-            return;
-        }
-    } @catch (NSException *e) { }
-    if (p_albumSetAlpha) ((REA_V_D)p_albumSetAlpha)(self, _cmd, alpha);
-}
+// v5：setHidden: / setAlpha: 是 UIView 的**继承**方法，本类并未自有实现。
+// 要打它只能走 class_addMethod 兜底，而兜底分支要 class_getInstanceMethod 取编码 —— 那正是
+// 首启闪退的元凶；因此这两个 hook 直接删除。隐私相册解锁靠 access_private_photos /
+// privacy_photos_has_locked 两个本类自有方法即可，视图显隐由 App 自身逻辑决定。
 
 // ============================================================================
 #pragma mark - 5. 本地 VIP  switch_local_vip
@@ -676,8 +707,7 @@ static void REAInstallHooks(void) {
     REAHOOK("BDPersonPrivacyAlbumCollectView", "setAccess_private_photos:", rea_setAccessPrivatePhotos, p_setAccessPrivatePhotos);
     REAHOOK("BDPersonPrivacyAlbumCollectView", "privacy_photos_has_locked", rea_privacyPhotosLocked, p_privacyPhotosLocked);
     REAHOOK("BDPersonPrivacyAlbumCollectView", "setPrivacy_photos_has_locked:", rea_setPrivacyPhotosLocked, p_setPrivacyPhotosLocked);
-    REAHOOK("BDPersonPrivacyAlbumCollectView", "setHidden:", rea_albumSetHidden, p_albumSetHidden);
-    REAHOOK("BDPersonPrivacyAlbumCollectView", "setAlpha:", rea_albumSetAlpha, p_albumSetAlpha);
+    // （setHidden: / setAlpha: 已在 v5 删除，理由见上方注释）
 
     REAHOOK("BDGlobalConfig", "is_vip", rea_isVip, p_isVip);
     REAHOOK("BDGlobalConfig", "vip_status", rea_vipStatus, p_vipStatus);
@@ -702,26 +732,25 @@ static void REAInstallHooks(void) {
 }
 
 // ============================================================================
-#pragma mark - 三层入口（constructor(101) → ctor → +load，全部幂等）
+#pragma mark - 安装轮次 + 三层入口（+load 阶段零 Runtime 探测）
 // ============================================================================
 
-static void REABoot(NSString *stage) {
-    // 幂等：三次入口只真正装一次，否则第二次会把我们自己的 IMP 当成 orig，造成递归
-    static BOOL done = NO;
-    if (done) {
-        REALog(@"stage %@ skipped (already booted)", stage);
-        return;
-    }
-    done = YES;
-    // 第一行日志：只要这一行进控制台，就证明 dylib 已被 dyld 正常加载并跑到了初始化
-    NSLog(@"[REA-Test] Runtime 注入成功!");
+// 一轮完整安装：msgId 垫片 → 各 Hook → 全类反检测扫描。全部只用不触发 +initialize 的 API。
+static void REAInstallPass(NSString *tag) {
     @autoreleasepool {
         @try {
-            REALog(@"---- stage %@ | pid=%d uid=%d ----", stage, getpid(), getuid());
+            int beforeOK = gREAOK;
+            gREAOK = 0; gREAMiss = 0;
             REAInstallAllShims();
             REAInstallHooks();
-            REALog(@"hooks installed ok=%d miss=%d", gREAOK, gREAMiss);
-            REALog(@"trace file: %@", gREATracePath ?: @"(none, NSLog only)");
+            REALog(@"pass[%@] ok=%d miss=%d (cumulative ok=%d)",
+                   tag, gREAOK, gREAMiss, beforeOK + gREAOK);
+            if (gREAOK > 0) {
+                NSLog(@"[REA-Test] 注入成功");
+                NSLog(@"[REA-Test] pass %@ hooked %d", tag, gREAOK);
+            } else {
+                NSLog(@"[REA-Test] pass %@ hooked 0 (classes not ready?)", tag);
+            }
 
             NSArray<NSString *> *probe = @[
                 @"GJIMMessageModel", @"GJIMSessionService", @"GJIMMessageService", @"GJIMEngine",
@@ -732,58 +761,61 @@ static void REABoot(NSString *stage) {
             ];
             NSMutableArray *alive = [NSMutableArray array];
             for (NSString *n in probe) {
-                if (objc_getClass(n.UTF8String)) [alive addObject:n];
+                if (objc_getClass(n.UTF8String)) [alive addObject:n];   // objc_getClass 不触发 +initialize
             }
             REALog(@"classes alive %lu/%lu: %@",
                    (unsigned long)alive.count, (unsigned long)probe.count,
                    [alive componentsJoinedByString:@","]);
-            NSLog(@"[REA-Test] 注入成功");
-
-            // 延迟重试：LiveContainer 里宿主二进制是 dlopen 进来的，个别类可能晚于本 dylib
-            // 的初始化才注册。REASwap 有幂等记账，重装只会补上之前 MISS 的项，不会递归。
-            static const int64_t delays[3] = { 1, 3, 8 };
-            for (int i = 0; i < 3; i++) {
-                int64_t d = delays[i];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, d * NSEC_PER_SEC),
-                               dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
-                    @try {
-                        int beforeOK = gREAOK;
-                        gREAOK = 0; gREAMiss = 0;
-                        REAInstallAllShims();
-                        REAInstallHooks();
-                        REALog(@"retry +%llds: newly hooked=%d miss=%d (total=%d)",
-                               (long long)d, gREAOK, gREAMiss, beforeOK + gREAOK);
-                        if (gREAOK > 0) NSLog(@"[REA-Test] 注入成功");
-                    } @catch (NSException *e) {
-                        REALog(@"retry exception swallowed: %@ / %@", e.name, e.reason);
-                    }
-                });
-            }
         } @catch (NSException *e) {
-            REALog(@"BOOT EXCEPTION swallowed: %@ / %@", e.name, e.reason);
+            REALog(@"pass[%@] EXCEPTION swallowed: %@ / %@", tag, e.name, e.reason);
         }
     }
 }
 
-// 最早：dylib 初始化阶段。这里刻意不用 constructor(priority)（Darwin 上优先级语义不可靠），
-// 而是靠"同一 __mod_init_func 段内按源码顺序执行"来保证 premain 先于 ctor。
+// 调度：App 启动完成后再装。此前的任何 Runtime 动作都可能把宿主 +initialize 提前引爆，
+// 所以三轮入口（premain / ctor / +load）统一只走到这里。
+static void REAScheduleInstall(void) {
+    static BOOL scheduled = NO;
+    if (scheduled) return;
+    scheduled = YES;
+
+    // 首轮：main queue +2s —— 此时 UIApplicationMain 已跑，宿主的 +initialize 均已自然发生
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        REAInstallPass(@"main+2s");
+    });
+
+    // 补装：LiveContainer 里宿主二进制是 dlopen 进来的，个别类可能更晚才注册。
+    // 每轮都幂等（REASwap 有记账，sweep 会跳过已是自己的 IMP）。
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_UTILITY, 0), ^{
+        static const int waits[4] = { 4, 8, 15, 25 };
+        for (int i = 0; i < 4; i++) {
+            sleep((unsigned)waits[i]);
+            REAInstallPass([NSString stringWithFormat:@"bg+%ds", waits[i]]);
+        }
+    });
+}
+
+// 最早：dylib 初始化阶段。**这里只许 NSLog + 调度**，碰任何 Runtime API 都可能复现闪退。
 __attribute__((constructor))
 static void rea_premain(void) {
-    REABoot(@"premain(ctor-first)");
+    NSLog(@"[REA-Test] Runtime 注入成功!");
+    REAScheduleInstall();
 }
 
-// 等价 Logos %ctor
+// 等价 Logos %ctor（同一 __mod_init_func 段按源码顺序执行，幂等由 REAScheduleInstall 保证）
 __attribute__((constructor))
 static void rea_ctor(void) {
-    REABoot(@"ctor(default)");
+    REAScheduleInstall();
 }
 
-// 第三层：ObjC +load（在 mod-init 之后，纯冗余保险，幂等）
+// 第三层：ObjC +load（在 mod-init 之后，纯冗余保险）
 @interface REAEarlyLoader : NSObject
 @end
 
 @implementation REAEarlyLoader
 + (void)load {
-    REABoot(@"+load");
+    NSLog(@"[REA-Test] Runtime 注入成功! (+load)");
+    REAScheduleInstall();
 }
 @end

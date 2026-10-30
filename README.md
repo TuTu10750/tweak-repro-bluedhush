@@ -7,6 +7,19 @@ capstone 全量反汇编）还原出的 Hook 面与开关体系，用 Theos / Lo
 - 目标：`iphone:clang:latest:14.0`，`ARCHS = arm64 arm64e`
 - 注入点：`%ctor`（Theos 自动生成），关键 Hook 输出 `NSLog(@"[REA-Test] 注入成功")`
 
+> **v5 重要变更（2026-10-30 真机首启闪退修复）**
+> 原 v4 在 `+load` 阶段调用 `class_getInstanceMethod` 做全类扫描与继承兜底，而该 API 会
+> **触发目标类的 `+initialize`**。Blued 的 `+initialize` 依赖尚未构造的全局对象
+> （崩溃现场 `ldr x8,[x20]` 得到 0，再 `ldr x8,[x8,#0x20]` → SIGSEGV at `0x20`，
+> 帧序 `load_images → BluedHushREA.dylib+0x40b4/+0x4fd0 → class_getInstanceMethod →
+> CALLING_SOME_+initialize_METHOD`）。v5 起：
+> 1. `+load` / 构造函数里**只做 `NSLog` + 调度**，零 Runtime 探测；
+> 2. 全文件禁用 `class_getInstanceMethod` / `class_getClassMethod`，只用不触发
+>    `+initialize` 的 `class_copyMethodList` / `method_setImplementation` / `class_addMethod`；
+> 3. Hook 安装推迟到 App 启动完成后：main queue **+2s** 首轮，后台队列 **+4/+8/+15/+25s** 补装；
+> 4. `setHidden:` / `setAlpha:` 两个继承方法的 hook 已删除（它们必须走 `class_getInstanceMethod`
+>    取类型编码，代价大于收益）。
+
 ## 逆向依据（原插件实测数据）
 
 | 指标 | 数值 |
