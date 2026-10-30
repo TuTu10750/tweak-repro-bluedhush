@@ -506,7 +506,8 @@ typedef void (^HLPickBlock)(NSDictionary *item);
     _map.translatesAutoresizingMaskIntoConstraints = NO;
     _map.delegate = self;
     _map.showsUserLocation = NO;      // 假定位时不要画用户蓝点，避免自相矛盾
-    _map.pointOfInterestFilter = [MKPointOfInterestFilter filterIncludingAll];
+    // POI 过滤保持宿主默认（MKPointOfInterestFilter 在 ObjC 侧没有 filterIncludingAll 类方法，
+    // 强行构造反而会过滤掉用户想找的地标，这里不动）
     [self.view addSubview:_map];
 
     _centerPin = [[UIImageView alloc] initWithImage:
