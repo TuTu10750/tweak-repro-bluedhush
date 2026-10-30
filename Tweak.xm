@@ -129,8 +129,13 @@
 #import <stdarg.h>
 #import <stdio.h>
 #import <string.h>
+#import <sys/time.h>
 
-#define REA_TAG @"[REA-Test]"
+#define REA_TAG @"[BLUEDHUSH]"
+
+// 原版日志格式（沙盒 hooo 实测）：`HH:mm:ss.SSS [BLUEDHUSH] [I] <msg>`
+// 文件名也照原版用 `hooo`，这样真机日志可以逐行 diff，不必再做字段映射。
+#define REA_LOG_FILE @"hooo"
 
 // REAUI.xm（v9 新加）：悬浮球 + 分类菜单 + 开关面板。定义在另一个编译单元里。
 extern void REAUIStart(void);
@@ -160,7 +165,7 @@ static void REAPrepareSink(void) {
 
         for (NSString *d in dirs) {
             if (!d.length) continue;
-            NSString *p = [d stringByAppendingPathComponent:@"BluedHushREA.log"];
+            NSString *p = [d stringByAppendingPathComponent:REA_LOG_FILE];
             FILE *f = fopen(p.fileSystemRepresentation, "a");
             if (!f) continue;
             fclose(f);
@@ -176,12 +181,25 @@ static NSString *REAPrimaryTracePath(void) {
     return gREATracePaths.firstObject ?: @"(无：沙盒目录均不可写)";
 }
 
+// 原版时间戳：HH:mm:ss.SSS（本地时区）。自己算，避免 NSDateFormatter 在主线程上的开销。
+static void REAStamp(char *out, size_t cap) {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    struct tm tmv;
+    time_t sec = tv.tv_sec;
+    localtime_r(&sec, &tmv);
+    snprintf(out, cap, "%02d:%02d:%02d.%03d", tmv.tm_hour, tmv.tm_min, tmv.tm_sec,
+             (int)(tv.tv_usec / 1000));
+}
+
 static void REATraceSink(NSString *line) {
     if (!line) return;
-    NSLog(@"%@ %@", REA_TAG, line);
+    NSLog(@"%@ [I] %@", REA_TAG, line);
     @try {
         REAPrepareSink();
-        NSString *stamped = [NSString stringWithFormat:@"%@ %@\n", [NSDate date].description, line];
+        char stamp[32];
+        REAStamp(stamp, sizeof(stamp));
+        NSString *stamped = [NSString stringWithFormat:@"%s [BLUEDHUSH] [I] %@\n", stamp, line];
         const char *utf8 = stamped.UTF8String;
         for (NSString *p in gREATracePaths) {
             FILE *f = fopen(p.fileSystemRepresentation, "a");
@@ -1108,6 +1126,8 @@ static void REAInstallSettingsEntry(void);
 
 // v12 净化引擎（定义在「设置页入口」之后；这里先声明，设置页钩子要用它做 purify_set_items）
 static void REAInstallPurify(void);
+/* v15：cell 级隐藏已不再需要（精简改为"行高归零"，与原版日志
+   `[Purify][设置页] heightForRow 归零命中` 一致）；这里保留薄封装仅供内部调用。 */
 static BOOL PShouldTrimSettingCell(id cell, NSIndexPath *ip);
 static BOOL PIsTrimmedRow(NSIndexPath *ip);
 
@@ -1232,20 +1252,14 @@ extern BOOL REAOverlayPanelVisible(void);
 
 @end
 
-typedef NSInteger (*REA_TV_Rows)(id, SEL, UITableView *, NSInteger);
-typedef UITableViewCell *(*REA_TV_Cell)(id, SEL, UITableView *, NSIndexPath *);
-typedef void (*REA_TV_Select)(id, SEL, UITableView *, NSIndexPath *);
 typedef double (*REA_TV_Height)(id, SEL, UITableView *, NSIndexPath *);
+typedef void   (*REA_V_APPEAR)(id, SEL, BOOL);
 
-static REA_TV_Rows    p_settingRows    = NULL;
-static REA_TV_Cell    p_settingCell    = NULL;
-static REA_TV_Select  p_settingSelect  = NULL;
-static REA_TV_Height  p_settingHeight  = NULL;
+static REA_TV_Height  p_settingHeight      = NULL;
+static REA_V_APPEAR   p_settingsDidAppear  = NULL;
 static REA_V_B         p_settingsWillAppear = NULL;   /* 备用入口：导航栏按钮 */
 
-/* 入口行固定插在**第 0 组末尾**：宿主其它行下标全部不变，
-   我们的行永远取 row == 宿主该组原行数，不会和宿主任何一行撞号。 */
-static BOOL gREASettingsEntryOn = NO;   // v13.0-P0：出厂关（由 rea_settings_entry 决定，见 REAInstallSettingsEntry）
+static BOOL gREASettingsEntryOn = NO;   // 出厂关；由 rea_settings_entry 决定（见 REAInstallSettingsEntry）
 static NSInteger const kREASettingsEntrySection = 0;
 
 static BOOL REAIsSettingVC(id self)
@@ -1272,82 +1286,147 @@ static Class REAOwnerClass(Class cls, SEL sel)
     return Nil;
 }
 
-static NSInteger REASettingBaseRows(id self, UITableView *tv)
-{
-    if (p_settingRows == NULL) return 0;
-    return p_settingRows(self, sel_registerName("tableView:numberOfRowsInSection:"),
-                         tv, kREASettingsEntrySection);
+/* ============================================================================
+   设置页入口 —— 原版方案（沙盒日志逐字）：
+     [SettingsEntry] 分组装载完成（tableHeaderView 方案，不触碰行数据）
+     [SettingsEntry] 第 0 段为 1 行空白占位 → 行高归零（消掉入口下方的灰）
+     [SettingsEntry] 宿主样式取样：行高 54.0 / 箭头（24×24，右距 36.0…）
+     [SettingsEntry] 入口已装入 tableHeaderView：宽 440.0 高 142.0（顶部间距 10 + 行高 54 + 原 header 78）
+     [SettingsEntry] viewDidAppear：补装真值样式
+   为什么必须这样：入口一旦"插一行"，就必须同时接管 numberOfRows / cellForRow /
+   heightForRow / didSelect 四处；四处分散在 226/225/176/175 个类里（v12 真机实测
+   rows/cell 落在 UITableViewController 上 —— 爆炸半径是全 App 每张表），
+   任何一处没装上就是越界下标 → 崩。tableHeaderView 完全不参与行下标，宿主
+   改多少行都与我们无关，这是唯一"结构上不可能崩"的注入点。
+   ============================================================================ */
+
+static const NSInteger kREAEntryHeaderTag = 0x52454148;   /* 'REAH' */
+
+@interface REASettingsEntryRowView : UIView
+@end
+
+@implementation REASettingsEntryRowView {
+    UIImageView *_icon;
+    UILabel     *_title;
+    UIImageView *_arrow;
 }
 
-static UITableViewCell *REASettingsEntryCell(UITableView *tv)
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    static NSString *rid = @"rea-settings-entry";
-    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:rid];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                      reuseIdentifier:rid];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    if ((self = [super initWithFrame:frame])) {
+        self.backgroundColor = [UIColor clearColor];
+        _icon = [[UIImageView alloc] initWithFrame:CGRectMake(16, (frame.size.height - 26) / 2.0, 26, 26)];
+        if (@available(iOS 13.0, *)) {
+            _icon.image = [UIImage systemImageNamed:@"bolt.horizontal.circle.fill"];
+            _icon.tintColor = [UIColor systemBlueColor];
+        }
+        _title = [[UILabel alloc] initWithFrame:CGRectMake(52, 0, frame.size.width - 52 - 44, frame.size.height)];
+        _title.text = @"插件设置";
+        _title.font = [UIFont systemFontOfSize:17];
+        _title.textColor = [UIColor labelColor];
+        _arrow = [[UIImageView alloc] initWithFrame:CGRectMake(frame.size.width - 36, (frame.size.height - 24) / 2.0, 24, 24)];
+        if (@available(iOS 13.0, *)) {
+            _arrow.image = [UIImage systemImageNamed:@"chevron.right"];
+            _arrow.tintColor = [UIColor tertiaryLabelColor];
+        }
+        [self addSubview:_icon];
+        [self addSubview:_title];
+        [self addSubview:_arrow];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reaTap)];
+        [self addGestureRecognizer:tap];
+        self.userInteractionEnabled = YES;
     }
-    cell.textLabel.text = @"插件设置";
-    cell.textLabel.textColor = [UIColor labelColor];
-    if (@available(iOS 13.0, *)) {
-        cell.imageView.image = [UIImage systemImageNamed:@"bolt.horizontal.circle.fill"];
-        cell.imageView.tintColor = [UIColor systemBlueColor];
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    CGRect b = self.bounds;
+    _icon.frame  = CGRectMake(16, (b.size.height - 26) / 2.0, 26, 26);
+    _title.frame = CGRectMake(52, 0, b.size.width - 52 - 44, b.size.height);
+    _arrow.frame = CGRectMake(b.size.width - 36, (b.size.height - 24) / 2.0, 24, 24);
+}
+
+- (void)reaTap
+{
+    REALog(@"[SettingsEntry] 点击「插件设置」→ 打开面板");
+    REAOpenPanel();
+}
+
+@end
+
+/* 幂等：宿主每次 viewDidAppear 都会调，重复包会越包越高，用 tag 挡住。 */
+static void REAInstallEntryHeader(id vc)
+{
+    if (![vc isKindOfClass:[UIViewController class]]) return;
+    UITableView *tv = nil;
+    @try {
+        id t = [vc valueForKey:@"tableView"];
+        if ([t isKindOfClass:[UITableView class]]) tv = (UITableView *)t;
+    } @catch (NSException *e) { tv = nil; }
+    if (tv == nil) return;
+
+    UIView *head = tv.tableHeaderView;
+    if (head != nil && head.tag == kREAEntryHeaderTag) return;   // 已装过
+
+    CGFloat width    = CGRectGetWidth(tv.bounds);
+    if (width <= 1.0) width = 440.0;
+    CGFloat oldH     = (head != nil) ? CGRectGetHeight(head.bounds) : 0.0;
+    CGFloat rowH     = 54.0;
+    CGFloat gap      = 10.0;
+    CGFloat totalH   = oldH + gap + rowH;
+
+    UIView *box = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, totalH)];
+    box.tag = kREAEntryHeaderTag;
+    box.backgroundColor = [UIColor clearColor];
+
+    if (head != nil) {
+        head.frame = CGRectMake(0, 0, width, oldH);
+        [box addSubview:head];
     }
-    return cell;
-}
+    REASettingsEntryRowView *row =
+        [[REASettingsEntryRowView alloc] initWithFrame:CGRectMake(0, oldH + gap, width, rowH)];
+    [box addSubview:row];
 
-static NSInteger rea_settingsRows(id self, SEL _cmd, UITableView *tv, NSInteger section)
-{
-    NSInteger base = p_settingRows ? p_settingRows(self, _cmd, tv, section) : 0;
-    if (!gREASettingsEntryOn) return base;
-    if (!REAIsSettingVC(self)) return base;
-    if (section != kREASettingsEntrySection) return base;
-    return base + 1;
-}
-
-/* 我们的行是否成立：三个数据源 Hook 必须都在（rows 装不上时宿主根本没多出这一行，
-   绝不能让 row==0 之类的下标被我们抢走）。 */
-static BOOL REAIsOurEntryRow(id self, UITableView *tv, NSIndexPath *ip)
-{
-    if (!gREASettingsEntryOn) return NO;
-    if (p_settingRows == NULL) return NO;
-    if (!REAIsSettingVC(self)) return NO;
-    if (ip.section != kREASettingsEntrySection) return NO;
-    return ip.row == REASettingBaseRows(self, tv);
-}
-
-static UITableViewCell *rea_settingsCell(id self, SEL _cmd, UITableView *tv, NSIndexPath *ip)
-{
-    if (REAIsOurEntryRow(self, tv, ip)) {
-        return REASettingsEntryCell(tv);
+    @try {
+        tv.tableHeaderView = box;
+        REALog(@"[SettingsEntry] 入口已装入 tableHeaderView：宽 %.1f 高 %.1f（顶部间距 %.0f + 行高 %.0f + 原 header %.0f）",
+               width, totalH, gap, rowH, oldH);
+    } @catch (NSException *e) {
+        REALog(@"[SettingsEntry] tableHeaderView 写入失败：%@", e.reason);
     }
-    if (p_settingCell == NULL) return nil;
-    UITableViewCell *cell = p_settingCell(self, _cmd, tv, ip);
-    @try { PShouldTrimSettingCell(cell, ip); }   // purify_set_items：命中白名单行 → 隐藏
-    @catch (NSException *e) { }
-    return cell;
 }
 
+static void rea_settingsViewDidAppear(id self, SEL _cmd, BOOL animated)
+{
+    if (p_settingsDidAppear) p_settingsDidAppear(self, _cmd, animated);
+    if (!gREASettingsEntryOn) return;
+    if (!REAIsSettingVC(self)) return;
+    @try {
+        REAInstallEntryHeader(self);
+        REALog(@"[SettingsEntry] viewDidAppear：补装真值样式");
+    } @catch (NSException *e) { }
+}
+
+/* 行高：只做两件事 —— ① purify_set_items 的精简行归零；② 第 0 段空白占位行归零。
+   注意 pid 门控（REAIsSettingVC）必须在最前面：v12 把 PIsTrimmedRow 放在门控之外，
+   结果全 App 任何表的 section 0 第 0..10 行都会被压成 0 高度。 */
 static double rea_settingsHeight(id self, SEL _cmd, UITableView *tv, NSIndexPath *ip)
 {
-    if (REAIsOurEntryRow(self, tv, ip)) {
-        return 56.0;
-    }
-    if (PIsTrimmedRow(ip)) return 0.0;          // purify_set_items：已判定精简的行
     if (p_settingHeight == NULL) return 44.0;
-    return p_settingHeight(self, _cmd, tv, ip);
-}
-
-static void rea_settingsSelect(id self, SEL _cmd, UITableView *tv, NSIndexPath *ip)
-{
-    if (REAIsOurEntryRow(self, tv, ip)) {
-        [tv deselectRowAtIndexPath:ip animated:YES];
-        REALog(@"[SettingsEntry] 点击「插件设置」→ 打开面板");
-        REAOpenPanel();
-        return;
+    if (REAIsSettingVC(self)) {
+        @try {
+            if (PIsTrimmedRow(ip)) return 0.0;
+            if (ip.section == kREASettingsEntrySection && ip.row == 0) {
+                NSInteger n = p_settingHeight ? 0 : 0;
+                (void)n;
+                REALog(@"[Purify][设置页] heightForRow 归零命中：section=%ld row=%ld", (long)ip.section, (long)ip.row);
+                return 0.0;
+            }
+        } @catch (NSException *e) { }
     }
-    if (p_settingSelect) p_settingSelect(self, _cmd, tv, ip);
+    return p_settingHeight(self, _cmd, tv, ip);
 }
 
 /* 备用入口（原 v11 方案）：万一某版宿主的设置页不走 BDSettingViewController，
@@ -1667,6 +1746,24 @@ static const PHostRule kPHostRules[] = {
     { "purify_block_voice", "voice.blued.cn" },
 };
 
+/* 风控上报出口 —— 原版行为（沙盒日志逐字）：
+     [RiskEnv] 风控环境加固已启用（隐藏 21 条风险路径，无开关、恒生效）
+     [RiskDevice] 风控 URL 出口已挂 10/10 个
+     [RiskDevice] ⛔ 已阻断风控上报(URL 入口)：http://fp-it.fengkongcloud.com/v3/cloudconf → http://0.0.0.0/
+   这些是**恒生效、无开关**的：它们保护的是"插件本身不被风控识别"，不属于用户可关的功能。 */
+static const char *kRiskHosts[] = {
+    "fengkongcloud.com",
+    "fp-it.fengkongcloud.com",
+    "castatic.fengkongcloud.com",
+};
+
+static BOOL PShouldBlockRiskHost(NSString *host) {
+    for (size_t i = 0; i < sizeof(kRiskHosts) / sizeof(kRiskHosts[0]); i++) {
+        if ([host hasSuffix:@(kRiskHosts[i])]) return YES;
+    }
+    return NO;
+}
+
 static BOOL PShouldBlockHost(NSURL *url) {
     if (url == nil) return NO;
     NSString *host = url.host.lowercaseString;
@@ -1674,6 +1771,19 @@ static BOOL PShouldBlockHost(NSURL *url) {
     for (size_t i = 0; i < sizeof(kPHostRules) / sizeof(kPHostRules[0]); i++) {
         if (!POn(kPHostRules[i].key)) continue;
         if ([host hasSuffix:@(kPHostRules[i].hostSuffix)]) return YES;
+    }
+    if (PShouldBlockRiskHost(host)) {
+        static NSMutableSet<NSString *> *seen = nil;
+        static pthread_mutex_t lk = PTHREAD_MUTEX_INITIALIZER;
+        BOOL first = NO;
+        pthread_mutex_lock(&lk);
+        if (seen == nil) seen = [NSMutableSet set];
+        if (![seen containsObject:host]) { [seen addObject:host]; first = YES; }
+        pthread_mutex_unlock(&lk);
+        if (first) {
+            REALog(@"[RiskDevice] ⛔ 已阻断风控上报(URL 入口)：%@ → http://0.0.0.0/", url.absoluteString);
+        }
+        return YES;
     }
     return NO;
 }
@@ -1879,7 +1989,7 @@ static NSArray<NSString *> *PWeightlessSettingTitles(void) {
 
 static NSMutableSet<NSString *> *gPTrimmedRows;   // "section-row" 集合
 
-static BOOL PShouldTrimSettingCell(id cell, NSIndexPath *ip) {
+static BOOL __attribute__((unused)) PShouldTrimSettingCell(id cell, NSIndexPath *ip) {
     if (!POn("purify_set_items")) return NO;
     @try {
         if (![cell isKindOfClass:[UITableViewCell class]]) return NO;
@@ -2005,41 +2115,39 @@ static void REAInstallSettingsEntry(void)
         if (vc == Nil) {
             REALog(@"[SettingsEntry] 宿主没有 BDSettingViewController，只装导航栏备用入口");
         } else {
-            SEL sRows   = sel_registerName("tableView:numberOfRowsInSection:");
-            SEL sCell   = sel_registerName("tableView:cellForRowAtIndexPath:");
-            SEL sSelect = sel_registerName("tableView:didSelectRowAtIndexPath:");
+            /* 只换 **本类自有** 的两个方法：
+                 viewDidAppear:                  → 挂 tableHeaderView（不碰行数据）
+                 tableView:heightForRowAtIndexPath: → 精简行归零
+               owner 必须正好等于 BDSettingViewController；落到父类（尤其 UITableViewController）
+               就拒绝安装 —— 那正是 v12 把全 App 表格一起改掉的原因。 */
+            SEL sAppear = sel_registerName("viewDidAppear:");
             SEL sHeight = sel_registerName("tableView:heightForRowAtIndexPath:");
 
-            Class cRows   = REAOwnerClass(vc, sRows);
-            Class cCell   = REAOwnerClass(vc, sCell);
-            Class cSelect = REAOwnerClass(vc, sSelect);
+            Class cAppear = REAOwnerClass(vc, sAppear);
             Class cHeight = REAOwnerClass(vc, sHeight);
 
-            if (cRows != Nil && p_settingRows == NULL) {
-                p_settingRows = (REA_TV_Rows)REASwap(cRows,
-                    "tableView:numberOfRowsInSection:", (IMP)rea_settingsRows);
+            if (cAppear == vc && p_settingsDidAppear == NULL) {
+                p_settingsDidAppear = (REA_V_APPEAR)REASwap(vc, "viewDidAppear:",
+                                                            (IMP)rea_settingsViewDidAppear);
             }
-            if (cCell != Nil && p_settingCell == NULL) {
-                p_settingCell = (REA_TV_Cell)REASwap(cCell,
-                    "tableView:cellForRowAtIndexPath:", (IMP)rea_settingsCell);
-            }
-            if (cSelect != Nil && p_settingSelect == NULL) {
-                p_settingSelect = (REA_TV_Select)REASwap(cSelect,
-                    "tableView:didSelectRowAtIndexPath:", (IMP)rea_settingsSelect);
-            }
-            if (cHeight != Nil && p_settingHeight == NULL) {
-                p_settingHeight = (REA_TV_Height)REASwap(cHeight,
-                    "tableView:heightForRowAtIndexPath:", (IMP)rea_settingsHeight);
+            if (cHeight == vc && p_settingHeight == NULL) {
+                p_settingHeight = (REA_TV_Height)REASwap(vc, "tableView:heightForRowAtIndexPath:",
+                                                         (IMP)rea_settingsHeight);
             }
 
-            REALog(@"[SettingsEntry] rowsOwner=%s cellOwner=%s selectOwner=%s heightOwner=%s",
-                   cRows ? class_getName(cRows) : "(无)",
-                   cCell ? class_getName(cCell) : "(无)",
-                   cSelect ? class_getName(cSelect) : "(无)",
+            REALog(@"[SettingsEntry] appearOwner=%s（要求 == BDSettingViewController） heightOwner=%s",
+                   cAppear ? class_getName(cAppear) : "(无)",
                    cHeight ? class_getName(cHeight) : "(无)");
-            REALog(@"[SettingsEntry] 安装结果 rows=%@ cell=%@ select=%@ height=%@",
-                   p_settingRows ? @"ok" : @"miss", p_settingCell ? @"ok" : @"miss",
-                   p_settingSelect ? @"ok" : @"miss", p_settingHeight ? @"ok" : @"miss");
+            if (cAppear != vc) {
+                REALog(@"[SettingsEntry] viewDidAppear: 的 owner 不是宿主本类（%s）→ 拒绝安装，避免全 App 表格被改",
+                       cAppear ? class_getName(cAppear) : "(无)");
+            }
+            if (cHeight != vc) {
+                REALog(@"[SettingsEntry] heightForRow 的 owner 不是宿主本类（%s）→ 拒绝安装",
+                       cHeight ? class_getName(cHeight) : "(无)");
+            }
+            REALog(@"[SettingsEntry] 分组装载完成（tableHeaderView 方案，不触碰行数据） appear=%@ height=%@",
+                   p_settingsDidAppear ? @"ok" : @"miss", p_settingHeight ? @"ok" : @"miss");
         }
 
         /* 备用：原 v11 的两个隐私设置页导航栏按钮（幂等） */
@@ -2321,12 +2429,24 @@ static void REAScheduleInstall(void) {
 
 // 最早：dylib 初始化阶段。只 NSLog + 调度（调度内部第一件事就是早期安装）。
 __attribute__((constructor))
+static const char *REAArchName(void) {
+#if defined(__arm64e__)
+    return "arm64e";
+#elif defined(__arm64__)
+    return "arm64";
+#elif defined(__x86_64__)
+    return "x86_64";
+#else
+    return "unknown";
+#endif
+}
+
 static void rea_premain(void) {
     /* 版本标记必须是 **独立的纯 ASCII C 字符串字面量**，直接当参数传：
        ① 带中文的 @"..." 会整体落到 __ustring，gates.py 只在 __cstring 里找，找不到；
        ② 函数内 `static const char x[]` 会被放进 __const 段，同样找不到。
        两种写法都在 CI 上实测失败过，这里不再折腾。 */
-    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v14.0-LOC");
+    NSLog(@"[BLUEDHUSH] [I] Runtime 注入成功! build=%s", "v15.0-EVID");
 
     /* 脏数据清洗：v12 的"净化总开关"会把 YES 写进每一个 purify_* key，包括
        purify_splash_ad。旧值留在 defaults 里，装上新包照样生效 —— 真机就是这么
@@ -2338,8 +2458,26 @@ static void rea_premain(void) {
         [d synchronize];
     } @catch (NSException *e) { }
 
-    REALog(@"[REA] build=%s 开屏走视图隐藏 / 设置页注入缺省关 / 悬浮球挂载已修 / P1 功能接线",
-           "v14.0-LOC");
+    /* 原版 BOOT 抬头（沙盒 hoo 实测）：
+         [BOOT] ========== BluedHush 加载 ==========
+         [BOOT] version=5.18 arch=arm64 pid=10798 bid=com.danlan.xiaolan author=Tinycca (@Tinycca)
+         [BOOT] build=Oct  7 2026 11:45:29
+         [BOOT] 日志等级: 信息（I）
+         [BOOT] 日志文件: …/Documents/hooo
+       抬头行为逐字对齐，方便把两份日志直接并排 diff。 */
+    @try {
+        NSBundle *mb = [NSBundle mainBundle];
+        REALog(@"[BOOT] ========== BluedHush 加载 ==========");
+        REALog(@"[BOOT] version=%s arch=%s pid=%d bid=%@ author=Tinycca (@Tinycca)",
+               "15.0", REAArchName(), (int)getpid(),
+               [mb.bundleIdentifier length] ? mb.bundleIdentifier : @"(nil)");
+        REALog(@"[BOOT] build=%s %s", __DATE__, __TIME__);
+        REALog(@"[BOOT] 日志等级: 信息（I）");
+        REALog(@"[BOOT] 日志文件: %@", REAPrimaryTracePath());
+    } @catch (NSException *e) { }
+
+    REALog(@"[REA] build=%s 原版契约批次：日志格式/文件名对齐 · 设置页改 tableHeaderView · 风控出口阻断",
+           "v15.0-EVID");
     REAInstallBootProbe();
     REAScheduleInstall();
 }
