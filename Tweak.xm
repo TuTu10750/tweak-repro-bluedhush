@@ -1,6 +1,21 @@
-// BluedHushREA v5 —— 纯 ObjC Runtime Hook 版（零 Logos、零 CydiaSubstrate、非越狱自签 + LiveContainer）
+// BluedHushREA v6 —— 纯 ObjC Runtime Hook 版（零 Logos、零 CydiaSubstrate、非越狱自签 + LiveContainer）
 // 目标: com.danlan.xiaolan (Blued 7.50.3) / iOS 14.0+ / arm64 + arm64e
 //
+// ============================================================================
+// v6 变更（用户 m01177：不闪退了，但"没有任何功能"，且手机里找不到 tmp 日志）
+//   a) 日志：`BluedHushREA.log` 改为**多路径同时写**，第一顺位就是 Documents
+//      （NSDocumentDirectory），其次 Library/Caches、tmp、/var/mobile/Documents。
+//      屏幕报告里会直接显示"实际写入的第一条路径"，一眼能看出到底落在哪。
+//   b) 屏幕报告：启动后首轮安装（main queue +2s）结束后弹原生 UIAlertController，
+//      显示 装上条数 / 本轮 MISS / 累计 MISS / 四个开关的真实读数 / 日志路径，
+//      以及 MISS 明细 —— 每条形如 "类 -选择子 → 候选: xxx, yyy"，候选由
+//      REACandidates() 用 ≥5 字符子串相似度在该类**自有**方法里现算，
+//      相当于把 7.50.3 改名后的新选择子直接摆到屏幕上，比人工猜快得多。
+//      ⚠️ 不在构造函数里弹：+load 阶段既没有 window 也没有 host 类，弹窗必崩；
+//      要拿到 MISS 必须等首轮安装跑完（这正是 v5 铁律①的必然结论）。
+//   c) 现场盘点：`BluedHushREA-methods.log` 把 18 个探针类的**自有**选择子全量落盘
+//      （class_copyMethodList，不触发 +initialize），截图看不清时可离线对齐。
+//   d) 报告可用 `defaults write com.danlan.xiaolan rea_show_report -bool NO` 关掉。
 // ============================================================================
 // v5 修复：真机"打开 App 瞬间闪退"（2026-10-30 09:14:44 崩溃报告实证）
 //
@@ -89,32 +104,58 @@
 #define REA_TAG @"[REA-Test]"
 
 // ============================================================================
-#pragma mark - 落盘日志（手机上 cat 就能定性）
+#pragma mark - 落盘日志（v6：Documents 优先，多路径同时写，手机上"文件"App 直接能看到）
 // ============================================================================
 
-static NSString *gREATracePath = nil;
+// 可写的日志路径（可能多个）：Documents → Library/Caches → tmp → /var/mobile/Documents
+static NSMutableArray<NSString *> *gREATracePaths = nil;
+
+// 只解析目录、不做任何宿主类 Runtime 动作；由 REALog 首次调用时（启动后）才跑。
+static void REAPrepareSink(void) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        gREATracePaths = [NSMutableArray array];
+        NSMutableArray<NSString *> *dirs = [NSMutableArray array];
+        @try {
+            NSString *docs = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+            if (docs.length) [dirs addObject:docs];
+            NSString *caches = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES).firstObject;
+            if (caches.length) [dirs addObject:caches];
+            NSString *tmp = NSTemporaryDirectory();
+            if (tmp.length) [dirs addObject:[tmp stringByStandardizingPath]];
+            [dirs addObject:@"/var/mobile/Documents"];      // 越狱/rootless 环境顺手写一份
+        } @catch (NSException *e) { }
+
+        for (NSString *d in dirs) {
+            if (!d.length) continue;
+            NSString *p = [d stringByAppendingPathComponent:@"BluedHushREA.log"];
+            FILE *f = fopen(p.fileSystemRepresentation, "a");
+            if (!f) continue;
+            fclose(f);
+            BOOL dup = NO;
+            for (NSString *old in gREATracePaths) if ([old isEqualToString:p]) { dup = YES; break; }
+            if (!dup) [gREATracePaths addObject:p];
+        }
+    });
+}
+
+static NSString *REAPrimaryTracePath(void) {
+    REAPrepareSink();
+    return gREATracePaths.firstObject ?: @"(无：沙盒目录均不可写)";
+}
 
 static void REATraceSink(NSString *line) {
     if (!line) return;
     NSLog(@"%@ %@", REA_TAG, line);
     @try {
-        if (!gREATracePath) {
-            NSArray<NSString *> *cands = @[
-                @"/var/mobile/Documents/BluedHushREA.log",
-                [NSTemporaryDirectory() stringByAppendingPathComponent:@"BluedHushREA.log"]
-            ];
-            for (NSString *p in cands) {
-                FILE *f = fopen(p.UTF8String, "a");
-                if (f) { fclose(f); gREATracePath = p; break; }
-            }
-        }
-        if (gREATracePath) {
-            FILE *f = fopen(gREATracePath.UTF8String, "a");
-            if (f) {
-                fputs(line.UTF8String, f);
-                fputc('\n', f);
-                fclose(f);
-            }
+        REAPrepareSink();
+        NSString *stamped = [NSString stringWithFormat:@"%@ %@\n", [NSDate date].description, line];
+        const char *utf8 = stamped.UTF8String;
+        for (NSString *p in gREATracePaths) {
+            FILE *f = fopen(p.fileSystemRepresentation, "a");
+            if (!f) continue;
+            fputs(utf8, f);
+            fclose(f);
         }
     } @catch (NSException *e) { }
 }
@@ -141,12 +182,20 @@ static NSMutableDictionary<NSString *, id> *gREAOrig;   // key -> NSValue(IMP)
 static NSMutableSet<NSString *>           *gREADone;
 static NSObject                           *gREALock;
 
+// 报告用：本轮命中 / 本轮 MISS（字符串形如 "GJIMMessageModel -recallType"）+ 累计 MISS
+static NSMutableArray<NSString *> *gREAOKList;
+static NSMutableArray<NSString *> *gREAMissList;
+static NSMutableArray<NSString *> *gREAMissAll;
+
 static void REARegistryInit(void) {
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         gREAOrig = [NSMutableDictionary dictionary];
         gREADone = [NSMutableSet set];
         gREALock = [[NSObject alloc] init];
+        gREAOKList = [NSMutableArray array];
+        gREAMissList = [NSMutableArray array];
+        gREAMissAll = [NSMutableArray array];
     });
 }
 
@@ -168,6 +217,30 @@ static Method REAOwnedMethod(Class cls, SEL sel) {
     return found;
 }
 
+// 类内"疑似改名候选"：与目标选择子共享 >=5 字符子串的本类自有方法（用于 7.50.3 改名后重新对齐）。
+static NSArray<NSString *> *REACandidates(Class cls, const char *want) {
+    NSMutableArray<NSString *> *out = [NSMutableArray array];
+    if (!cls || !want || strlen(want) < 5) return out;
+    unsigned int n = 0;
+    Method *list = class_copyMethodList(cls, &n);
+    if (!list) return out;
+    NSString *w = [[NSString stringWithUTF8String:want] lowercaseString];
+    for (unsigned int i = 0; i < n && out.count < 4; i++) {
+        const char *mn = sel_getName(method_getName(list[i]));
+        if (!mn) continue;
+        NSString *cand = [NSString stringWithUTF8String:mn];
+        if (!cand.length || [cand isEqualToString:[NSString stringWithUTF8String:want]]) continue;
+        NSString *lc = cand.lowercaseString;
+        BOOL hit = NO;
+        for (NSUInteger k = 0; k + 5 <= w.length && !hit; k++) {
+            if ([lc containsString:[w substringWithRange:NSMakeRange(k, 5)]]) hit = YES;
+        }
+        if (hit) [out addObject:cand];
+    }
+    free(list);
+    return out;
+}
+
 // 语义对齐 MSHookMessageEx 的"自有方法"分支，但**刻意不做任何会触发 +initialize 的调用**：
 //   · class_copyMethodList → 只 realize，不 initialize
 //   · method_setImplementation / method_getImplementation → 只改方法表，不 initialize
@@ -187,14 +260,19 @@ static IMP REASwap(Class cls, const char *selName, IMP newImp) {
         Method own = REAOwnedMethod(cls, sel);
         if (!own) {
             gREAMiss++;
-            REALog(@"hook MISS %s -%s (本类无自有实现，跳过以免触发 +initialize)",
-                   class_getName(cls), selName);
+            NSString *desc = [NSString stringWithFormat:@"%s -%s", class_getName(cls), selName];
+            NSArray<NSString *> *cand = REACandidates(cls, selName);
+            if (cand.count) desc = [desc stringByAppendingFormat:@" → 候选: %@", [cand componentsJoinedByString:@", "]];
+            [gREAMissList addObject:desc];
+            if (![gREAMissAll containsObject:desc]) [gREAMissAll addObject:desc];
+            REALog(@"hook MISS %@ (本类无自有实现，跳过以免触发 +initialize)", desc);
             return NULL;
         }
         IMP old = method_getImplementation(own);
         method_setImplementation(own, newImp);
         gREAOK++;
         [gREADone addObject:key];
+        [gREAOKList addObject:[NSString stringWithFormat:@"%s -%s", class_getName(cls), selName]];
         gREAOrig[key] = [NSValue valueWithPointer:(void *)old];
         return old;
     }
@@ -732,40 +810,184 @@ static void REAInstallHooks(void) {
 }
 
 // ============================================================================
+#pragma mark - 现场报告（屏幕 Alert + 类方法清单落盘）v6
+// ============================================================================
+
+// 需要体检的宿主类（我们自己 hook 的目标 + 关键上下文类）
+static NSArray<NSString *> *REAProbeClassNames(void) {
+    return @[ @"GJIMMessageModel", @"GJIMSessionService", @"GJIMMessageService", @"GJIMEngine",
+              @"BDMessageViewController", @"DLDeviceFingerprint", @"NewKeyBoard",
+              @"NewKeyBoardPhotoView", @"BDPersonPrivacyAlbumCollectView", @"BDGlobalConfig",
+              @"CLLocationManager", @"CLLocation", @"RecentlyVisitorViewController", @"BluedTabBar",
+              @"PushPackage", @"REQPackage", @"GXWatchdog", @"BDChatBasicCell" ];
+}
+
+// 把内容写到每个"可写日志目录"下的同名文件（Documents 那份在"文件"App 里能看到）
+static void REAWriteSideFile(NSString *fileName, NSString *content) {
+    @try {
+        REAPrepareSink();
+        NSMutableSet<NSString *> *dirs = [NSMutableSet set];
+        for (NSString *p in gREATracePaths) [dirs addObject:[p stringByDeletingLastPathComponent]];
+        for (NSString *d in dirs) {
+            NSString *path = [d stringByAppendingPathComponent:fileName];
+            FILE *f = fopen(path.fileSystemRepresentation, "w");
+            if (!f) continue;
+            fputs(content.UTF8String ?: "", f);
+            fclose(f);
+            REALog(@"side file written: %@", path);
+        }
+    } @catch (NSException *e) {
+        REALog(@"side file failed: %@ / %@", e.name, e.reason);
+    }
+}
+
+// dump 目标类的**自有**方法清单（class_copyMethodList，不触发 +initialize），
+// 落盘成 BluedHushREA-methods.log：即便屏幕截图看不清，也能靠它离线对齐被改名的选择子。
+static void READumpMethodInventory(void) {
+    @autoreleasepool {
+        NSMutableString *log = [NSMutableString string];
+        [log appendFormat:@"# BluedHushREA method inventory\n# %@\n", [NSDate date]];
+        [log appendString:@"# 用法：找 '## 类名' 段落里与 MISS 目标名相近的选择子\n"];
+        for (NSString *n in REAProbeClassNames()) {
+            Class c = objc_getClass(n.UTF8String);
+            if (!c) { [log appendFormat:@"\n## %@   (CLASS NOT FOUND)\n", n]; continue; }
+            unsigned int cnt = 0;
+            Method *list = class_copyMethodList(c, &cnt);
+            [log appendFormat:@"\n## %@   own methods=%u\n", n, cnt];
+            for (unsigned int i = 0; i < cnt; i++) {
+                const char *mn = sel_getName(method_getName(list[i]));
+                if (mn) [log appendFormat:@"  -%s\n", mn];
+            }
+            if (list) free(list);
+        }
+        REAWriteSideFile(@"BluedHushREA-methods.log", log);
+        REALog(@"inventory dumped, %lu classes", (unsigned long)REAProbeClassNames().count);
+    }
+}
+
+// 顶层可见 VC（只读属性 + 遍历，不触发宿主类 +initialize）
+static UIViewController *REATopViewController(void) {
+    @try {
+        UIApplication *app = [UIApplication sharedApplication];
+        UIWindow *key = nil;
+        if (@available(iOS 13.0, *)) {
+            for (UIScene *sc in app.connectedScenes) {
+                if (![sc isKindOfClass:[UIWindowScene class]]) continue;
+                for (UIWindow *w in ((UIWindowScene *)sc).windows) {
+                    if (w.isKeyWindow) { key = w; break; }
+                }
+                if (key) break;
+            }
+        }
+        if (!key) {
+            for (UIWindow *w in app.windows) { if (w.isKeyWindow) { key = w; break; } }
+        }
+        if (!key) key = app.windows.firstObject;
+        UIViewController *vc = key.rootViewController;
+        while (vc.presentedViewController) vc = vc.presentedViewController;
+        if ([vc isKindOfClass:[UITabBarController class]]) vc = ((UITabBarController *)vc).selectedViewController;
+        if ([vc isKindOfClass:[UINavigationController class]]) vc = ((UINavigationController *)vc).topViewController;
+        return vc;
+    } @catch (NSException *e) {
+        return nil;
+    }
+}
+
+static BOOL gREAReportShown = NO;
+
+// 启动早期窗口可能还没建好 → 每 1.5s 重试，最多 8 次；实在没有就只留日志。
+static void REATryShowReport(NSString *title, NSString *body, int attempt) {
+    if (gREAReportShown) return;
+    @try { if (!REAFlag(@"rea_show_report")) return; } @catch (NSException *e) { }
+
+    UIViewController *top = REATopViewController();
+    if (!top) {
+        if (attempt >= 8) { REALog(@"report alert skipped: no top view controller"); return; }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{ REATryShowReport(title, body, attempt + 1); });
+        return;
+    }
+    @try {
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title
+                                                                   message:body
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleDefault handler:nil]];
+        [top presentViewController:ac animated:YES completion:nil];
+        gREAReportShown = YES;
+        REALog(@"report alert presented on %@", NSStringFromClass([top class]));
+    } @catch (NSException *e) {
+        REALog(@"report alert exception: %@ / %@", e.name, e.reason);
+        if (attempt < 8) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)),
+                           dispatch_get_main_queue(), ^{ REATryShowReport(title, body, attempt + 1); });
+        }
+    }
+}
+
+// 组装报告：装上多少 / MISS 多少 / 开关实际读数 / 日志路径 / MISS 清单（含类内候选）
+static void REAPublishReport(NSString *tag, int passOK, int passMiss) {
+    @autoreleasepool {
+        NSArray<NSString *> *missAll = [gREAMissAll copy];
+        NSMutableString *body = [NSMutableString string];
+        [body appendFormat:@"pass %@\n装上 %d 条 / 本轮 MISS %d / 累计 MISS %lu\n\n",
+                           tag, passOK, passMiss, (unsigned long)missAll.count];
+        [body appendFormat:@"开关(1=YES): anti_recall=%d private_photo=%d local_vip=%d screenshot=%d\n",
+                           (int)REAFlag(@"switch_anti_recall"), (int)REAFlag(@"switch_private_photo"),
+                           (int)REAFlag(@"switch_local_vip"), (int)REAFlag(@"switch_screenshot")];
+        [body appendFormat:@"\n日志: %@\n清单: BluedHushREA-methods.log\n", REAPrimaryTracePath()];
+
+        if (missAll.count == 0) {
+            [body appendString:@"\n没有 MISS：目标 Hook 全部装上。功能若无效应查开关与语义，不是名字问题。"];
+        } else {
+            [body appendString:@"\nMISS（类 -选择子 → 类内候选）:\n"];
+            NSUInteger cap = MIN(missAll.count, 40);
+            for (NSUInteger i = 0; i < cap; i++) [body appendFormat:@"· %@\n", missAll[i]];
+            if (missAll.count > cap) [body appendFormat:@"…余下 %lu 条见日志\n", (unsigned long)(missAll.count - cap)];
+        }
+
+        REALog(@"---- REPORT ----\n%@", body);
+        REATryShowReport(@"[REA-Test] Hook 报告", body, 0);
+    }
+}
+
+// ============================================================================
 #pragma mark - 安装轮次 + 三层入口（+load 阶段零 Runtime 探测）
 // ============================================================================
 
 // 一轮完整安装：msgId 垫片 → 各 Hook → 全类反检测扫描。全部只用不触发 +initialize 的 API。
-static void REAInstallPass(NSString *tag) {
+static void REAInstallPass(NSString *tag, BOOL firstPass) {
     @autoreleasepool {
         @try {
             int beforeOK = gREAOK;
             gREAOK = 0; gREAMiss = 0;
+            [gREAOKList removeAllObjects];
+            [gREAMissList removeAllObjects];
             REAInstallAllShims();
             REAInstallHooks();
+            int passOK = gREAOK, passMiss = gREAMiss;
             REALog(@"pass[%@] ok=%d miss=%d (cumulative ok=%d)",
-                   tag, gREAOK, gREAMiss, beforeOK + gREAOK);
-            if (gREAOK > 0) {
+                   tag, passOK, passMiss, beforeOK + passOK);
+            if (passOK > 0) {
                 NSLog(@"[REA-Test] 注入成功");
-                NSLog(@"[REA-Test] pass %@ hooked %d", tag, gREAOK);
+                NSLog(@"[REA-Test] pass %@ hooked %d", tag, passOK);
             } else {
                 NSLog(@"[REA-Test] pass %@ hooked 0 (classes not ready?)", tag);
             }
 
-            NSArray<NSString *> *probe = @[
-                @"GJIMMessageModel", @"GJIMSessionService", @"GJIMMessageService", @"GJIMEngine",
-                @"BDMessageViewController", @"DLDeviceFingerprint", @"NewKeyBoard",
-                @"NewKeyBoardPhotoView", @"BDPersonPrivacyAlbumCollectView", @"BDGlobalConfig",
-                @"CLLocationManager", @"CLLocation", @"RecentlyVisitorViewController", @"BluedTabBar",
-                @"PushPackage"
-            ];
             NSMutableArray *alive = [NSMutableArray array];
+            NSArray<NSString *> *probe = REAProbeClassNames();
             for (NSString *n in probe) {
                 if (objc_getClass(n.UTF8String)) [alive addObject:n];   // objc_getClass 不触发 +initialize
             }
             REALog(@"classes alive %lu/%lu: %@",
                    (unsigned long)alive.count, (unsigned long)probe.count,
                    [alive componentsJoinedByString:@","]);
+
+            // 首轮：方法清单落盘 + 屏幕上出报告（截图即可看到 MISS 清单）
+            if (firstPass) {
+                READumpMethodInventory();
+                REAPublishReport(tag, passOK, passMiss);
+            }
         } @catch (NSException *e) {
             REALog(@"pass[%@] EXCEPTION swallowed: %@ / %@", tag, e.name, e.reason);
         }
@@ -782,7 +1004,7 @@ static void REAScheduleInstall(void) {
     // 首轮：main queue +2s —— 此时 UIApplicationMain 已跑，宿主的 +initialize 均已自然发生
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
-        REAInstallPass(@"main+2s");
+        REAInstallPass(@"main+2s", YES);
     });
 
     // 补装：LiveContainer 里宿主二进制是 dlopen 进来的，个别类可能更晚才注册。
@@ -791,7 +1013,7 @@ static void REAScheduleInstall(void) {
         static const int waits[4] = { 4, 8, 15, 25 };
         for (int i = 0; i < 4; i++) {
             sleep((unsigned)waits[i]);
-            REAInstallPass([NSString stringWithFormat:@"bg+%ds", waits[i]]);
+            REAInstallPass([NSString stringWithFormat:@"bg+%ds", waits[i]], NO);
         }
     });
 }
