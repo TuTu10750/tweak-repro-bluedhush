@@ -625,7 +625,7 @@ static void REAToast(NSString *text)
 {
     if (text.length == 0) return;
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"[REA-Test]"
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"[BLUEDHUSH]"
                                                                   message:text
                                                            preferredStyle:UIAlertControllerStyleAlert];
         [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
@@ -764,7 +764,7 @@ static void reaActionResetAll(REAItem *item)
 static void reaActionShowLog(REAItem *item)
 {
     NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    path = [path stringByAppendingPathComponent:@"BluedHushREA.log"];
+    path = [path stringByAppendingPathComponent:@"hooo"];
     NSString *text = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:NULL];
     if (text.length == 0) text = @"（日志为空或尚未写入）";
     NSArray *lines = [text componentsSeparatedByString:@"\n"];
@@ -1004,7 +1004,7 @@ static void REAInvokeAction(REAItem *item)
 
 - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    return @"[REA-Test] 复刻版 · 点任意分类进入开关列表 · 开关即时写入 NSUserDefaults 并立即对 Hook 生效";
+    return @"[BLUEDHUSH] 复刻版 · 点任意分类进入开关列表 · 开关即时写入 NSUserDefaults 并立即对 Hook 生效";
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

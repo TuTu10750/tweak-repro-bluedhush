@@ -77,7 +77,7 @@
 //      全 0 = Hook 从未被调用（入口不对）；非 0 = Hook 在跑，问题在返回值/时机。
 // ============================================================================
 // v4 相对 v3 的变更（用户实测环境：未越狱 / 个人自签 Esign / 主要在 LiveContainer 内运行）
-//   a) 初始化第一行就打印 NSLog(@"[REA-Test] Runtime 注入成功!")，用它判定
+//   a) 初始化第一行就打印 NSLog(@"[BLUEDHUSH] Runtime 注入成功!")，用它判定
 //      "dylib 到底有没有被 dyld 加载"，与"Hook 有没有装上"两件事分开归因。
 //   b) 全文件不实现任何越狱检测 / 反调试 / ptrace 探测；只把 App 自带的反越狱方法
 //      强制返回 NO（纯 bypass，不做环境反查），避免在 LiveContainer 里被自家逻辑判死。
@@ -548,7 +548,7 @@ static int rea_recallType(id self, SEL _cmd) {
     @try {
         int r = p_recallType ? ((REA_I32_V)p_recallType)(self, _cmd) : 0;
         if (REAFlag(@"switch_anti_recall") && r != 0) {
-            NSLog(@"[REA-Test] 注入成功");
+            NSLog(@"[BLUEDHUSH] 注入成功");
             REALog(@"anti-recall recallType %d -> 0", r);
             return 0;
         }
@@ -560,7 +560,7 @@ static BOOL rea_isSuperRecallTip(id self, SEL _cmd) {
     REAHit(REAF_AntiRecall);
     @try {
         if (REAFlag(@"switch_anti_recall")) {
-            NSLog(@"[REA-Test] 注入成功");
+            NSLog(@"[BLUEDHUSH] 注入成功");
             return NO;
         }
         return p_isSuperRecallTip ? ((REA_B_V)p_isSuperRecallTip)(self, _cmd) : NO;
@@ -570,7 +570,7 @@ static BOOL rea_isSuperRecallTip(id self, SEL _cmd) {
 static void rea_setRecallType(id self, SEL _cmd, int type) {
     @try {
         if (REAFlag(@"switch_anti_recall") && type != 0) {
-            NSLog(@"[REA-Test] 注入成功");
+            NSLog(@"[BLUEDHUSH] 注入成功");
             REALog(@"blocked setRecallType:%d", type);
             return;
         }
@@ -594,7 +594,7 @@ static id rea_handlePushPackage(id self, SEL _cmd, id pkg) {
     REAHit(REAF_Feed);
     @try {
         if (REAFlag(@"switch_anti_recall")) {
-            NSLog(@"[REA-Test] 注入成功");
+            NSLog(@"[BLUEDHUSH] 注入成功");
             REALog(@"push package intercepted: cls=%@ messageId=%llu msgId=%llu",
                    pkg ? NSStringFromClass([pkg class]) : @"(nil)",
                    REAUInt(pkg, @"messageId"), REAUInt(pkg, @"msgId"));
@@ -643,7 +643,7 @@ static IMP p_setMessages, p_showDestoryTip, p_screenshotTip, p_screenshotWarning
 static void rea_setMessages(id self, SEL _cmd, id msgs) {
     REAHit(REAF_Feed);
     @try {
-        NSLog(@"[REA-Test] 注入成功");
+        NSLog(@"[BLUEDHUSH] 注入成功");
         if (REAFlag(@"switch_flash_text") && [msgs respondsToSelector:@selector(count)]) {
             REALog(@"setMessages count=%lu", (unsigned long)[(NSArray *)msgs count]);
         }
@@ -660,7 +660,7 @@ static void rea_screenshotTip(id self, SEL _cmd) {
     REAHit(REAF_Screenshot);
     @try {
         if (REAFlag(@"switch_screenshot")) {
-            NSLog(@"[REA-Test] 注入成功");
+            NSLog(@"[BLUEDHUSH] 注入成功");
             REALog(@"p_screenshotTip suppressed");
             return;
         }
@@ -671,7 +671,7 @@ static void rea_screenshotTip(id self, SEL _cmd) {
 static void rea_screenshotWarning(id self, SEL _cmd) {
     @try {
         if (REAFlag(@"switch_screenshot")) {
-            NSLog(@"[REA-Test] 注入成功");
+            NSLog(@"[BLUEDHUSH] 注入成功");
             REALog(@"p_screenshotWarning suppressed");
             return;
         }
@@ -765,7 +765,7 @@ static IMP p_privacyPhotosLocked, p_setPrivacyPhotosLocked;
 static int rea_accessPrivatePhotos(id self, SEL _cmd) {
     REAHit(REAF_PrivatePhoto);
     @try {
-        NSLog(@"[REA-Test] 注入成功");
+        NSLog(@"[BLUEDHUSH] 注入成功");
         if (REAFlag(@"switch_private_photo")) return 1;
     } @catch (NSException *e) { }
     return p_accessPrivatePhotos ? ((REA_I32_V)p_accessPrivatePhotos)(self, _cmd) : 0;
@@ -800,7 +800,7 @@ static IMP p_isVip, p_vipStatus, p_vipType, p_vipExpireDays, p_picBanSave;
 static id rea_isVip(id self, SEL _cmd) {
     REAHit(REAF_LocalVip);
     @try {
-        NSLog(@"[REA-Test] 注入成功");
+        NSLog(@"[BLUEDHUSH] 注入成功");
         if (REAFlag(@"switch_local_vip")) return @YES;
     } @catch (NSException *e) { }
     return p_isVip ? ((REA_I_V)p_isVip)(self, _cmd) : nil;
@@ -1308,7 +1308,7 @@ extern BOOL REAOverlayPanelVisible(void);
 }
 
 - (void)tap:(id)sender {
-    NSLog(@"[REA-Test] 注入成功");
+    NSLog(@"[BLUEDHUSH] 注入成功");
     REALog(@"settings entry tapped -> open panel");
     REAOpenPanel();
 }
@@ -2366,7 +2366,7 @@ static void REAPublishReport(NSString *tag, int passOK, int passMiss) {
                           @"在 7.50.3 全量 14,839 个类里不存在（原版 dylib 挂它们同样落空），不计 MISS。"];
 
         REALog(@"---- REPORT ----\n%@", body);
-        REATryShowReport(@"[REA-Test] Hook 报告", body, &gREAReportShown, 0);
+        REATryShowReport(@"[BLUEDHUSH] Hook 报告", body, &gREAReportShown, 0);
     }
 }
 
@@ -2389,7 +2389,7 @@ static void REAPublishHitReport(void) {
             [body appendString:@"非 0 → Hook 已在跑；功能不对属返回值/时机问题，按上面的域定位。\n"];
         }
         REALog(@"---- HIT REPORT ----\n%@", body);
-        REATryShowReport(@"[REA-Test] 触发统计", body, &gREAHitReportShown, 0);
+        REATryShowReport(@"[BLUEDHUSH] 触发统计", body, &gREAHitReportShown, 0);
     }
 }
 
@@ -2411,10 +2411,10 @@ static void REAInstallPass(NSString *tag, BOOL firstPass) {
             REALog(@"pass[%@] ok=%d miss=%d (total ok=%d)",
                    tag, passOK, passMiss, gREATotalOK);
             if (passOK > 0) {
-                NSLog(@"[REA-Test] 注入成功");
-                NSLog(@"[REA-Test] pass %@ hooked %d", tag, passOK);
+                NSLog(@"[BLUEDHUSH] 注入成功");
+                NSLog(@"[BLUEDHUSH] pass %@ hooked %d", tag, passOK);
             } else {
-                NSLog(@"[REA-Test] pass %@ hooked 0 (classes not ready?)", tag);
+                NSLog(@"[BLUEDHUSH] pass %@ hooked 0 (classes not ready?)", tag);
             }
 
             NSMutableArray *alive = [NSMutableArray array];
