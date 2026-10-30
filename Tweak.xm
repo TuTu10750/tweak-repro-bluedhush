@@ -811,21 +811,48 @@ static NSInteger rea_picBanSave(id self, SEL _cmd) {
 #pragma mark - 6. 虚拟定位  switch_virtual_location / switch_altitude
 // ============================================================================
 
+/* 内置默认坐标：北京·天安门一带。改这里或面板里长按"虚拟定位"改点。 */
+#define REA_DEFAULT_LAT 39.908722
+#define REA_DEFAULT_LNG 116.397499
+
 static BOOL gREAHasFakeCoord = NO;
 static CLLocationDegrees gREALat = 0.0, gREALng = 0.0;
 static CLLocationDistance gREAAlt = 0.0;
+
+/* v13.1：旧版只有"用户手动在地图上选过点"才生效（gREAHasFakeCoord 全看 defaults 里
+   有没有 rea_fake_location）。所以开关打开但没选过点 = 界面看着开着、实际什么也没做。
+   现在改成：没有配置就落一组内置坐标，开关一开立刻可用。 */
+/* -coordinate 是极热路径（每秒可能几十次），全量打日志会把文件刷爆。
+   前 5 次逐条记，之后每 200 次记一条 —— 既能看到"确实在替换"，又不至于淹死。 */
+static void REAThrottledLog(const char *what) {
+    static NSUInteger n = 0;
+    n++;
+    if (n <= 5 || (n % 200) == 0) {
+        REALog(@"[Loc] 坐标已替换 → %.6f,%.6f（%s，第 %lu 次）",
+               gREALat, gREALng, what, (unsigned long)n);
+    }
+}
 
 static void REALoadFakeLocation(void) {
     static dispatch_once_t once;
     dispatch_once(&once, ^{
         @try {
             NSDictionary *d = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"rea_fake_location"];
-            if ([d isKindOfClass:[NSDictionary class]]) {
+            if ([d isKindOfClass:[NSDictionary class]] &&
+                d[@"lat"] && d[@"lng"] &&
+                ([d[@"lat"] doubleValue] != 0.0 || [d[@"lng"] doubleValue] != 0.0)) {
                 gREALat = [d[@"lat"] doubleValue];
                 gREALng = [d[@"lng"] doubleValue];
                 gREAAlt = [d[@"alt"] doubleValue];
                 gREAHasFakeCoord = YES;
-                REALog(@"fake location loaded: %.6f,%.6f alt=%.1f", gREALat, gREALng, gREAAlt);
+                REALog(@"[Loc] 使用自定义坐标 %.6f,%.6f alt=%.1f", gREALat, gREALng, gREAAlt);
+            } else {
+                gREALat = REA_DEFAULT_LAT;
+                gREALng = REA_DEFAULT_LNG;
+                gREAAlt = 0.0;
+                gREAHasFakeCoord = YES;
+                REALog(@"[Loc] 未配置坐标，使用内置默认 %.6f,%.6f（面板 → 虚拟定位 → 长按改点）",
+                       gREALat, gREALng);
             }
         } @catch (NSException *e) { }
     });
@@ -837,7 +864,7 @@ static CLLocationCoordinate2D rea_coordinate(id self, SEL _cmd) {
     REAHit(REAF_Location);
     REALoadFakeLocation();
     if (gREAHasFakeCoord && REAFlag(@"switch_virtual_location")) {
-        NSLog(@"[REA-Test] 注入成功");
+        REAThrottledLog("CLLocation -coordinate");
         return CLLocationCoordinate2DMake(gREALat, gREALng);
     }
     return p_coordinate ? ((REA_Coord_V)p_coordinate)(self, _cmd) : CLLocationCoordinate2DMake(0, 0);
@@ -853,7 +880,7 @@ static CLLocation *rea_mgrLocation(id self, SEL _cmd) {
     REAHit(REAF_Location);
     REALoadFakeLocation();
     if (gREAHasFakeCoord && REAFlag(@"switch_virtual_location")) {
-        NSLog(@"[REA-Test] 注入成功");
+        REAThrottledLog("CLLocationManager -location");
         return [[CLLocation alloc] initWithLatitude:gREALat longitude:gREALng];
     }
     return p_mgrLocation ? ((REA_Loc_V)p_mgrLocation)(self, _cmd) : nil;
@@ -1272,25 +1299,6 @@ static inline BOOL POn(const char *key) {
 // ---- 安装表 ----
 typedef struct { const char *cls; const char *sel; const char *kind; const char *key; } PInstall;
 static const PInstall kPInstall[] = {
-    { "AppDelegateModel", "isNeedShowSplashAd", "PK_B0", "purify_splash_ad" },   // purify_splash_ad
-    { "AppDelegateModel", "showSplashAd:", "PK_VB", "purify_splash_ad" },   // purify_splash_ad
-    { "AppDelegateModel", "getSplashAdForColdLaunch", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
-    { "AppDelegateModel", "p_getSplashAdvertisementForColdLaunch", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
-    { "BDGDTSplashAdManager", "showGDTSplash", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
-    { "BDKSSplashAdManager", "showKSSplash", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
-    { "BDADX_Blued_Splash_Image_ViewController", "presentBluedSplashImageViewController", "PK_V0", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "showSplashAd:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "showSplashAd_Adx:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "showSplashAd_Normal:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "p_showGDTSplash:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "p_showKSSplash:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "p_showPangleSplash:isColdLaunch:finished:", "PK_VSPLASH_B", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "p_showBluedImageSplash:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
-    { "BDIndexPageCoversManager", "p_showBluedVideoSplash:currentWinAdModel:isColdLaunch:finished:", "PK_VSPLASH_A", "purify_splash_ad" },   // purify_splash_ad
-    { "BDADXBaseSplashAdManager", "assembleSplashContainerView:needRemoveHandler:", "PK_O2O", "purify_splash_ad" },   // purify_splash_ad
-    { "ABUSplashAd", "showInWindow:", "PK_B1O", "purify_splash_ad" },   // purify_splash_ad
-    { "ABUSplashAd", "showInWindowWithBlock:", "PK_B1O", "purify_splash_ad" },   // purify_splash_ad
-    { "BDSplashVideoAdViewController", "presentInViewController:", "PK_V1O", "purify_splash_ad" },   // purify_splash_ad
     { "ABUDrawAdView", "loadAdData", "PK_V0", "purify_feed_ad" },   // purify_feed_ad
     { "ABUNativeAdView", "loadAdData", "PK_V0", "purify_feed_ad" },   // purify_feed_ad
     { "ABUNativeAdView", "play", "PK_V0", "purify_feed_ad" },   // purify_feed_ad
@@ -1327,7 +1335,8 @@ static const PInstall kPInstall[] = {
     { "NSURLSession", "dataTaskWithRequest:completionHandler:", "PK_DTASK2", NULL },   // 网络级：命中 kPHostRules 的 host 才切
     { "NSURLSession", "dataTaskWithRequest:", "PK_DTASK1", NULL },   // 网络级：命中 kPHostRules 的 host 才切
     { "NSMutableURLRequest", "setURL:", "PK_SETURL", NULL },   // 网络级：命中 kPHostRules 的 host 才切
-    { "UIView", "didMoveToSuperview", "PK_VIEW", NULL },   // 视图级净化器（兜底）
+    { "UIView", "didMoveToSuperview", "PK_VIEW", NULL },
+    { "UIView", "didMoveToWindow", "PK_VIEWWIN", NULL },   // 视图级净化器（兜底）
 };
 
 #define P_ROW_COUNT (sizeof(kPInstall) / sizeof(kPInstall[0]))
@@ -1585,6 +1594,18 @@ static void PK_ARR1O(id self, SEL _cmd, id a) {
 // ---- 视图级净化器：按类名模式隐藏广告 / 入口视图（兜底所有没被上面点名的实现） ----
 typedef struct { const char *key; const char *needle; } PViewRule;
 static const PViewRule kPViewRules[] = {
+    /* v13.1：开屏只走视图层。
+       数据源闸（拦 getSplashAdForColdLaunch 等 19 条）已整体删除 —— 真机日志证明
+       拦一个 void 的"发起拉取"会切断启动回调链，表现就是永久卡启动图。
+       现在改成"让它照常跑，只隐藏它的界面"。
+       真机见过的两套源：CSJ（CSJSplashView / CSJNativeExpressSplashVideoAdView）、
+       GDT（GDTSplashDLView / UDK_GDTDLRootView / GDTSplashViewController）。 */
+    { "purify_splash_ad", "CSJSplash" },
+    { "purify_splash_ad", "CSJNativeExpressSplash" },
+    { "purify_splash_ad", "GDTSplash" },
+    { "purify_splash_ad", "UDK_GDT" },
+    { "purify_splash_ad", "SplashWebView" },
+    { "purify_splash_ad", "SplashAdView" },
     { "purify_splash_ad", "SplashAd" },
     { "purify_splash_ad", "SplashImage" },
     { "purify_splash_ad", "SplashVideo" },
@@ -1664,6 +1685,27 @@ static BOOL PViewShouldHide(Class cls, const char **hitKey) {
     }
     @synchronized (gPViewCache) { gPViewCache[name] = @((NSInteger)-1); }
     return NO;
+}
+
+/* v13.1 开屏兜底：有些广告 SDK 把开屏放进自己的 UIWindow，view 的 superview 一直是 nil，
+   didMoveToSuperview 根本不会响 —— 真机上就是这么漏的。didMoveToWindow 能抓到。 */
+static void rea_viewDidMoveToWindow(id self, SEL _cmd) {
+    IMP o = POld(self, _cmd);
+    if (o) ((void (*)(id, SEL))o)(self, _cmd);
+    @try {
+        if (![self isKindOfClass:[UIView class]]) return;
+        UIView *v = (UIView *)self;
+        const char *key = NULL;
+        if (!PViewShouldHide(object_getClass(self), &key)) return;
+        if (v.hidden && v.alpha == 0.0) return;
+        v.hidden = YES;
+        v.alpha = 0.0;
+        CGRect f = v.frame;
+        if (f.size.height > 0.5) { f.size.height = 0.5; v.frame = f; }
+        REALog(@"[Purify] 开屏视图已隐藏：%@ → key=%s（window=%@）",
+               NSStringFromClass(object_getClass(self)), key ? key : "?",
+               v.window ? NSStringFromClass(object_getClass(v.window)) : @"nil");
+    } @catch (NSException *e) { }
 }
 
 static void rea_viewDidMoveToSuperview(id self, SEL _cmd) {
@@ -1753,6 +1795,7 @@ static IMP PImpForKind(const char *kind) {
     if (strcmp(kind, "PK_SETURL") == 0) return (IMP)PK_SETURL;
     if (strcmp(kind, "PK_ARR1O") == 0) return (IMP)PK_ARR1O;
     if (strcmp(kind, "PK_VIEW") == 0) return (IMP)rea_viewDidMoveToSuperview;
+    if (strcmp(kind, "PK_VIEWWIN") == 0) return (IMP)rea_viewDidMoveToWindow;
     return NULL;
 }
 
@@ -1789,13 +1832,15 @@ static void REAInstallPurify(void) {
 
         /* v13.0-P0 档位自报：把"现在到底开着哪几层"打出来，省得靠猜。
            出厂（key 全缺省）= 档 0：所有 purify_* 都不生效，只装不拦。 */
-        int on = 0;
-        static const char *kL1Keys[] = { "purify_splash_ad" };
-        int l1 = 0;
-        for (size_t i = 0; i < sizeof(kL1Keys) / sizeof(kL1Keys[0]); i++) if (POn(kL1Keys[i])) l1++;
-        for (size_t i = 0; i < P_ROW_COUNT; i++) if (kPInstall[i].key && POn(kPInstall[i].key)) on++;
-        REALog(@"[Purify] 档位：出厂缺省=关；当前生效 key=%d/52，其中 L1(splash_ad)=%s；"
-               @"若卡启动图，先确认这里 L1 是否为 off", on, l1 ? "on" : "off");
+        int on = 0, bizRows = 0;
+        for (size_t i = 0; i < P_ROW_COUNT; i++) {
+            if (!kPInstall[i].key) continue;
+            bizRows++;
+            if (POn(kPInstall[i].key)) on++;
+        }
+        REALog(@"[Purify] 锚点层：当前生效 key=%d/%d（视图层另有 %zu 条规则，受同一批 key 控制；"
+               @"开屏已改为纯视图隐藏，不再有数据源闸）",
+               on, bizRows, sizeof(kPViewRules) / sizeof(kPViewRules[0]));
     }
 }
 
@@ -2144,9 +2189,20 @@ static void rea_premain(void) {
        ① 带中文的 @"..." 会整体落到 __ustring，gates.py 只在 __cstring 里找，找不到；
        ② 函数内 `static const char x[]` 会被放进 __const 段，同样找不到。
        两种写法都在 CI 上实测失败过，这里不再折腾。 */
-    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v13.0-P0");
-    REALog(@"[REA] build=%s 档0：净化全部缺省关 / 设置页注入缺省关 / 悬浮球挂载已修",
-           "v13.0-P0");
+    NSLog(@"[REA-Test] Runtime 注入成功! build=%s", "v13.1-P1");
+
+    /* 脏数据清洗：v12 的"净化总开关"会把 YES 写进每一个 purify_* key，包括
+       purify_splash_ad。旧值留在 defaults 里，装上新包照样生效 —— 真机就是这么
+       又卡了一次启动图。开屏那一层现在只做视图隐藏，但保险起见一律强制归零。 */
+    @try {
+        NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
+        [d setBool:NO forKey:@"purify_splash_ad"];
+        [d setBool:NO forKey:@"purify_splash_mode"];
+        [d synchronize];
+    } @catch (NSException *e) { }
+
+    REALog(@"[REA] build=%s 开屏走视图隐藏 / 设置页注入缺省关 / 悬浮球挂载已修 / P1 功能接线",
+           "v13.1-P1");
     REAInstallBootProbe();
     REAScheduleInstall();
 }
