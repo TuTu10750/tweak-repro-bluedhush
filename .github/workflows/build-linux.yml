@@ -87,7 +87,8 @@ jobs:
         run: |
           set -o pipefail
           python3 ci/gates.py --dylib out/m1/BluedHushREA.dylib \
-            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v2,192.168.1.10:8765" --label m1-linux
+            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v3,m1.log" \
+            --forbid "192.168.1.10,M1-DISCOVER,m1log_server" --label m1-linux
           file out/m1/BluedHushREA.dylib
 
       # ================= 打包：与 build.yml 完全同构、同命名 =================

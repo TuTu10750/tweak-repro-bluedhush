@@ -189,6 +189,8 @@ def main():
     ap.add_argument("--archs", default="arm64,arm64e")
     ap.add_argument("--tag", default="REA-Test",
                     help="必需字符串，逗号分隔表示全部都要有")
+    ap.add_argument("--forbid", default="",
+                    help="禁止出现的字符串，逗号分隔；命中即失败（用于证明某能力已被移除）")
     ap.add_argument("--label", default="")
     args = ap.parse_args()
 
@@ -254,6 +256,12 @@ def main():
         else:
             fail("tag", "%s__TEXT,__cstring 里找不到 %s —— 说明源码没编进去或产物不对"
                  % (label, tag))
+
+    for bad in [t.strip() for t in (args.forbid or "").split(",") if t.strip()]:
+        if bad.encode() in blob:
+            fail("forbid", "%s产物里仍出现 %s —— 这段能力应该已经被移除" % (label, bad))
+        else:
+            ok("%s已确认不含：%s" % (label, bad))
 
     print("")
     if FAILS:

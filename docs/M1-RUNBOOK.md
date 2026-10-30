@@ -47,66 +47,77 @@
 
 ---
 
-## 2. 让日志实时流到 Windows（核心步骤）
+## 2. 拿日志：纯本地落盘，不联网
 
-非越狱机器上，Windows 抓 iPhone 的 NSLog 很不稳定（`idevicesyslog` 在 iOS 17+ 经常连不上），
-App 沙盒文件也拖不出来（宿主 `Info.plist` 没开 `UIFileSharingEnabled`，我们也不能改它）。
+v3 起彻底不用网络：dylib 里没有 socket、没有 HTTP、不弹窗、不加任何 UI，
+只把日志写进 App 自己的沙盒 Documents。
 
-所以观测版内置一条**局域网直推通道**：裸 TCP（不走 `NSURLSession`，因此不受宿主 App 的 ATS 明文限制），每 2 秒批量推一次。
+```
+Documents/m1.log         主日志（每次启动追加）
+Documents/m1-crash.log   崩溃现场（信号 / 未捕获异常 + 崩溃前 160 行环形缓冲）
+```
 
-> **v2 变更**：不再做 UDP 广播自动发现。原生自签环境下 iOS 沙盒把局域网广播拦了，
-> 且不方便改 App 容器里的 defaults，所以**接收端地址硬编码进二进制**：
-> `M1Trace.xm` 里的 `M1_DEFAULT_UPLOAD` = `192.168.1.10:8765`。换 IP 改这一行重编。
+写入方式（这是刻意设计，不是随手写的）：
 
-### 2.1 电脑端（一次就好）
+| 环节 | 做什么 | 为什么 |
+|---|---|---|
+| 主线程 | 只 `memcpy` 进 32KB 缓冲 | 一行的成本是纳秒级，绝不卡渲染 |
+| 串行后台队列 | `write()` + `fsync()` | 落盘 + 抗 kill -9 |
+| 触发时机 | 攒满 4KB / 每 1s / 进后台 / 退出前 | 最多丢 1 秒，正常杀进程一行不丢 |
 
-在 `cmd` 里，仓库目录下：
+启动日志第一行就是答案：
+
+```
+[REA-Test] t=0.012 [M1] SINK open=12 log=/var/mobile/Containers/Data/Application/XXXX/Documents/m1.log
+```
+
+`log=` 后面就是绝对路径，照它去找文件。`open=` 是负数说明 plist / 沙盒有问题，那条日志会直接告诉你。
+
+### 2.1 怎么把 m1.log 从手机里拿出来（三选一）
+
+**A. 重签时打开文件共享（最省事，推荐）**
+
+dylib 没法在运行期打开这个开关——`UIFileSharingEnabled` 是宿主 App 的 `Info.plist` 里由
+SpringBoard 读的键。所以要在**重签之前**改 IPA。仓库里给了工具：
 
 ```cmd
-python tools\m1log_server.py
+python tools\patch_infoplist.py Blued.ipa Blued-shared.ipa
 ```
 
-正常会打印：
+它会往 `Payload/*.app/Info.plist` 里写两个键：
 
 ```
-M-1 日志接收端已启动
-  监听 TCP : 0.0.0.0:8765
-  落盘     : D:\DeepSeek\hush\_work\m1.log
+UIFileSharingEnabled                 = true
+LSSupportsOpeningDocumentsInPlace    = true
 ```
 
-- 第一次运行 Windows 防火墙会弹窗 → **必须点「允许访问」**，并且勾上"专用网络"。
-- 日志会**追加**写入 `_work\m1.log`，同时实时打在屏幕上。
+改完用你的证书重签、装机，然后：
+**「文件」App → 浏览 → 我的 iPhone → 你的 App → 里面就是 m1.log**
+长按 → 共享 → 存到 iCloud 云盘 / 发微信，Windows 上直接收。
 
-### 2.2 手机端：什么都不用设
+想确认改没改成功（不产出新文件）：
 
-启动后日志里的头两行就能判断通不通：
-
-```
-[M1] UPLOAD on(hardcoded) target=192.168.1.10:8765（每 2s 批量推送，失败只计数）
-[M1] UPLOAD probe 192.168.1.10:8765 OK（TCP 已连通，日志开始推）
+```cmd
+python tools\patch_infoplist.py Blued-shared.ipa --check
 ```
 
-看到 `probe ... OK` 就说明链路通了，之后每 2 秒会有一批日志到电脑上。
+**B. 不装工具、不改 IPA：走备份**
 
-### 2.3 如果 `probe` 是 FAIL
+iTunes / Finder 备份整机 → 用 **iMazing / iBackupBot / 爱思助手「备份管理」** 打开备份 →
+进 `AppDomain-com.danlan.xiaolan/Documents/m1.log` → 导出。
+（备份里包含 App 沙盒，这条路不依赖 `UIFileSharingEnabled`。）
 
-日志里会带 errno，按号码读：
+**C. 重签工具自带的沙盒浏览**
 
-| errno | 含义 | 怎么办 |
-|---|---|---|
-| 61 `ECONNREFUSED` | 电脑端口没人监听 | 脚本没跑 / 跑在另一台机器 / 端口不是 8765 |
-| 60 `ETIMEDOUT` | 包被丢 | 不同网段、防火墙拦、或 iOS 本地网络权限被拦 |
-| 65 `EHOSTUNREACH` | 路由不通 | 手机和电脑不在同一 Wi-Fi |
-| 1 `EPERM` | 权限拒绝 | iOS 本地网络权限被本 App 拒 |
+Esign 一类工具通常有「应用数据 / 沙盒文件」入口，直接进 `Documents` 复制 m1.log。
 
-iOS 本地网络权限：手机「设置 → 隐私与安全性 → 本地网络」里找到本 App，把开关打开。
-**这个权限一旦被拒，观测版不会弹任何提示**，只会写一行带 errno 的 fail。
+### 2.2 自检顺序（拿到文件之前就能判断好坏）
 
-临时换地址不用重编：在 defaults 里把 `rea_m1_upload` 设成 `<IP>:8765`，它优先于硬编码值。
-
-### 2.4 最后的兜底：沙盒文件
-
-同一份日志也会写进 App 沙盒 `Documents/REA-M1.log`。三路都推不出来时再告诉我。
+1. `m1.log` 存在且非空 → 观测层活着
+2. 第一行有 `[M1] SINK open=<正数>` → 文件打开了
+3. 搜 `[M1] phase=early` 与 `[M1] phase=install` → +0.05s / +0.30s 两段都跑到了
+4. 搜 `[M1] ANCHOR` → 锚点清点结果（`ok=… miss=…`）
+5. 搜 `[M1] STALL` / `[M1] STUCK-CANDIDATE` → 卡不卡、卡在哪
 
 ## 3. 拿 `.ips` 崩溃报告（只有真崩了才有）
 

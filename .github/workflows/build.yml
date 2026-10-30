@@ -96,8 +96,8 @@ jobs:
             echo "::error::M1 变体里出现了 REAInstallPurify —— Makefile 的 ifeq 没生效，产物不对"
             exit 1
           fi
-          if ! strings -a out/m1/BluedHushREA.dylib | grep -q 'M1-TRACE-v2'; then
-            echo "::error::M1 变体里找不到 M1-TRACE-v2 标记"
+          if ! strings -a out/m1/BluedHushREA.dylib | grep -q 'M1-TRACE-v3'; then
+            echo "::error::M1 变体里找不到 M1-TRACE-v3 标记"
             exit 1
           fi
           ls -lR out/m1
@@ -106,7 +106,8 @@ jobs:
         run: |
           set -o pipefail
           python3 ci/gates.py --dylib out/m1/BluedHushREA.dylib \
-            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v2,192.168.1.10:8765" --label m1
+            --archs arm64,arm64e --tag "REA-Test,M1-TRACE-v3,m1.log" \
+            --forbid "192.168.1.10,M1-DISCOVER,m1log_server" --label m1
           otool -L out/m1/BluedHushREA.dylib | tee deps-m1.txt
           otool -D out/m1/BluedHushREA.dylib || true
 
@@ -147,13 +148,13 @@ jobs:
           if [ -f out/m1/BluedHushREA.dylib ]; then cp out/m1/BluedHushREA.dylib dist-m1/; fi
           cp BluedHushREA.plist dist-m1/ || true
           cat > dist-m1/INSTALL-M1.txt <<'EOF'
-          BluedHushREA M-1 取证观测版  (variant: m1, source: M1Trace.xm)
+          BluedHushREA M-1 取证观测版  (variant: m1 / M1-TRACE-v3, source: M1Trace.xm)
 
           这个 dylib 和 release 版同名、同注入路径，但内部完全不同：
             · 不安装任何净化锚点（不 swizzle assembleSplashContainerView / showSplashAd* / PK_VIEW）
-            · 只做四件事：落盘日志、崩溃环形缓冲、主线程阻塞采样、锚点可达性清点
+            · 不联网、不建 socket、不弹窗、不加任何 UI
+            · 只做四件事：本地落盘、崩溃环形缓冲、主线程阻塞采样、锚点可达性清点
             · 首次进 App 会把 purify_splash_mode 写成 0（仅当它还不存在）
-            · 开关 rea_m1_off = YES 可一键静音（仍保留崩溃落盘）
 
                       ⚠ 装法：整份替换，不要和 v12 的 dylib 叠加 ⚠
 
@@ -161,22 +162,24 @@ jobs:
             @executable_path/Frameworks/BluedHushREA.dylib
             重签时必须与主 App 同证书 / 同描述文件，否则 dyld 直接拒绝加载
 
-          日志
-            实时：Console.app / syslog 过滤 "REA-Test"，每行以 [REA-Test] 开头
-            落盘：App 沙盒 Documents/REA-M1.log（每次启动追加，首行带 t=0.000）
-            崩溃：App 沙盒 Documents/REA-M1-crash.log（信号/异常 + 最近 160 行环形缓冲）
+          日志（v3：纯本地落盘）
+            主日志：App 沙盒 Documents/m1.log
+            崩溃  ：App 沙盒 Documents/m1-crash.log
+            写法  ：主线程只 memcpy 进 32KB 缓冲，串行后台队列 write()+fsync()；
+                    每 4KB 或每 1s 冲刷一次，进后台 / 退出前各再冲一次
+            首行形如：[REA-Test] t=0.0xx [M1] SINK open=12 log=/var/mobile/.../Documents/m1.log
+                    ↑ 这一行的 log= 就是绝对路径，照它找文件
+            静音  ：defaults 里 rea_m1_off = YES（仍保留崩溃落盘）
 
-          局域网直推（v2：地址已硬编码，不做自动发现）
-            目标：192.168.1.10:8765   ← 编进二进制；换 IP 必须改 M1Trace.xm 的 M1_DEFAULT_UPLOAD 重编
-            电脑端：python tools\m1log_server.py
-            启动后看这两行判定连通性：
-              [M1] UPLOAD on(hardcoded) target=192.168.1.10:8765
-              [M1] UPLOAD probe 192.168.1.10:8765 OK（TCP 已连通，日志开始推）
-            probe FAIL 的 errno 含义：
-              61 = 电脑端脚本没跑 / 端口不对
-              60·65 = 不同网段 / 防火墙丢包 / iOS 本地网络权限被拦
-              1 = 本地网络权限被本 App 拒绝
-            defaults 里的 rea_m1_upload 若存在，会覆盖硬编码值（临时换地址不用重编）
+          怎么把 m1.log 拿出来（三选一）
+            A. 重签时给 Info.plist 加两个键，之后「文件」App 直接可见：
+                 UIFileSharingEnabled = true
+                 LSSupportsOpeningDocumentsInPlace = true
+               仓库里 tools/patch_infoplist.py 能直接打补丁：
+                 python tools\patch_infoplist.py in.ipa out.ipa
+            B. iTunes/Finder 备份 → iMazing / iBackupBot / 爱思「备份管理」→
+               AppDomain-com.danlan.xiaolan/Documents/m1.log
+            C. 重签工具（Esign 等）自带的应用沙盒文件浏览
           EOF
 
           echo "--- dist ---";    ls -lR dist    || true

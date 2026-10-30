@@ -12,7 +12,8 @@
 //
 // 这个编译单元【做】的事：
 //   1. BOOT/ENV 横幅：dylib 构建时间、bundle id、版本、机型、iOS、是否 LiveContainer
-//   2. 双落盘：Documents/REA-M1.log（文件） + NSLog（Windows 端可用 pymodledevice3/爱思实时抓）
+//   2. 主落盘：App 沙盒 Documents/m1.log（异步批量追加写，见 M1Emit / M1FlushNow）
+//      副落盘：NSLog（Console 有就用，没有也不影响取证）
 //   3. 崩溃现场：常驻 crash fd + 环形缓冲 + 信号处理 + 未捕获异常 chained handler
 //   4. 主线程阻塞采样：后台心跳 + CFRunLoopObserver，>200ms 记 STALL
 //   5. 屏幕状态时间线：每 0.25s 采 topVC / 是否还挂着 Splash 类视图
@@ -38,23 +39,17 @@
 #import <signal.h>
 #import <unistd.h>
 #import <fcntl.h>
-// 局域网日志上传：用裸 TCP，不走 NSURLSession，因此不受宿主 App 的 ATS（App Transport
-// Security 禁止明文 HTTP）约束 —— 非越狱机器上这是唯一稳定的实时读日志通道。
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <errno.h>
+#include <pthread.h>
 
 #define M1_TAG      @"[REA-Test]"
 #define M1_LINE     512
 #define M1_RING     160
-#define M1_MARK     "M1-TRACE-v2"
-#define M1_LOG_PORT     8765    // 日志输入 TCP 端口（与 tools/m1log_server.py 一致）
-// 硬编码日志接收端（v2 改动：不再做 UDP 广播自动发现）
-// 原因：原生自签环境下 iOS 沙盒把局域网广播拦了，且无法便捷修改 App 容器的 defaults，
-// 所以把地址编进二进制。要换 IP 只改这一行、重编。
-#define M1_DEFAULT_UPLOAD "192.168.1.10:8765"
+#define M1_MARK     "M1-TRACE-v3"
+// 日志文件名（落在 App 沙盒 Documents 下）
+#define M1_LOG_NAME     "m1.log"
+#define M1_CRASH_NAME   "m1-crash.log"
+// 落盘缓冲：主线程只 memcpy，真正的 write/fsync 在串行后台队列（M1_BUF 32KB 足够撑住爆发）
+#define M1_BUF          32768
 
 // ============================================================================
 #pragma mark - 时间与落盘
@@ -68,9 +63,17 @@ static volatile int gM1RingIdx = 0;
 static char     gM1Ring[M1_RING][M1_LINE];
 static char     gM1Docs[512] = {0};
 
-// 上传通道（默认启用：地址编译期硬编码；defaults 里的 rea_m1_upload 若存在则优先覆盖）
-static void M1OutboxAppend(const char *line);
-static void M1UploadStartTimer(void);
+static char     gM1Buf[M1_BUF];
+static size_t   gM1BufLen = 0;
+static int      gM1FlushQueued = 0;
+static int      gM1Dropped = 0;
+static pthread_mutex_t gM1BufLock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t gM1FlushLock = PTHREAD_MUTEX_INITIALIZER;   // 保证同一时刻只有一条 flush 在用 tmp
+static dispatch_queue_t gM1IOQ = NULL;
+
+// 落盘：这些函数只在内核 IO 队列上跑，主线程永远不等它们
+static void M1FlushNow(void);
+static void M1ScheduleFlush(void);
 
 static double M1Abs(void) {
     static mach_timebase_info_data_t tb;
@@ -114,14 +117,77 @@ static void M1Emit(const char *body) {
     if (n <= 0) return;
     if (n >= (int)sizeof(line)) n = (int)sizeof(line) - 1;
 
+    // 环形缓冲：崩溃时由信号处理器直接 write 出去，不依赖任何锁
     int slot = gM1RingIdx % M1_RING;
     memcpy(gM1Ring[slot], line, (size_t)n + 1);
     gM1RingIdx = gM1RingIdx + 1;
 
-    M1WriteAll(gM1Fd, line, (size_t)n);
-    M1OutboxAppend(line);
+    // 主线程只做这一次 memcpy；写盘在后台队列，绝不阻塞渲染
+    int needFlush = 0;
+    pthread_mutex_lock(&gM1BufLock);
+    if (gM1BufLen + (size_t)n > M1_BUF) {
+        size_t keep = M1_BUF / 2;      // 满了丢最旧一半，既不 OOM 也不卡住当前线程
+        memmove(gM1Buf, gM1Buf + (gM1BufLen - keep), keep);
+        gM1BufLen = keep;
+        gM1Dropped = gM1Dropped + 1;
+    }
+    memcpy(gM1Buf + gM1BufLen, line, (size_t)n);
+    gM1BufLen += (size_t)n;
+    if (gM1BufLen >= 4096 && !gM1FlushQueued) { gM1FlushQueued = 1; needFlush = 1; }
+    pthread_mutex_unlock(&gM1BufLock);
+
+    if (needFlush) M1ScheduleFlush();
 }
 
+// 把缓冲里的内容写到 fd，然后 fsync —— 这样即使下一秒被 kill -9 或崩溃，已冲刷的部分也在磁盘上
+static void M1FlushNowLocked(void) {
+    static char tmp[M1_BUF];
+    size_t n = 0;
+
+    if (gM1Fd < 0) {                 // sink 还没建好：内容留在缓冲里，等下一次 flush
+        pthread_mutex_lock(&gM1BufLock);
+        gM1FlushQueued = 0;
+        pthread_mutex_unlock(&gM1BufLock);
+        return;
+    }
+
+    pthread_mutex_lock(&gM1BufLock);
+    n = gM1BufLen;
+    if (n > 0) { memcpy(tmp, gM1Buf, n); gM1BufLen = 0; }
+    gM1FlushQueued = 0;
+    pthread_mutex_unlock(&gM1BufLock);
+
+    if (n == 0) return;
+    M1WriteAll(gM1Fd, tmp, n);
+    fsync(gM1Fd);
+}
+
+// 所有 flush 入口都走这里加一把锁：串行队列 + 主线程直呼（willTerminate）可能并发
+static void M1FlushNow(void) {
+    pthread_mutex_lock(&gM1FlushLock);
+    M1FlushNowLocked();
+    pthread_mutex_unlock(&gM1FlushLock);
+}
+
+static void M1ScheduleFlush(void) {
+    dispatch_queue_t q = gM1IOQ;
+    if (q == NULL) { M1FlushNow(); return; }
+    dispatch_async(q, ^{ M1FlushNow(); });
+}
+
+// 每 1s 兜底冲一次：保证最多丢 1s 的内容，而不是非要等缓冲攒到 4KB
+static void M1InstallFlushTimer(void) {
+    dispatch_queue_t q = (gM1IOQ != NULL) ? gM1IOQ
+                        : dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, q);
+    if (timer == NULL) return;
+    dispatch_source_set_timer(timer,
+                              dispatch_time(DISPATCH_TIME_NOW, (int64_t)NSEC_PER_SEC),
+                              (uint64_t)NSEC_PER_SEC,
+                              (uint64_t)(200 * NSEC_PER_MSEC));
+    dispatch_source_set_event_handler(timer, ^{ M1FlushNow(); });
+    dispatch_resume(timer);
+}
 
 // 主线程/任意线程都可调；内部无锁，最坏情况丢一行环形快照，不影响正确性
 static void M1Log(const char *fmt, ...) {
@@ -136,7 +202,8 @@ static void M1Log(const char *fmt, ...) {
 }
 
 static void M1OpenSink(void) {
-    if (gM1Fd >= 0) return;
+    if (gM1IOQ == NULL) gM1IOQ = dispatch_queue_create("rea.m1.io", DISPATCH_QUEUE_SERIAL);
+
     @autoreleasepool {
         NSString *docs = nil;
         @try {
@@ -147,12 +214,21 @@ static void M1OpenSink(void) {
 
         snprintf(gM1Docs, sizeof(gM1Docs), "%s", docs.UTF8String ?: "");
 
-        NSString *p1 = [docs stringByAppendingPathComponent:@"REA-M1.log"];
-        gM1Fd = open(p1.fileSystemRepresentation, O_WRONLY | O_CREAT | O_APPEND, 0644);
-
-        NSString *p2 = [docs stringByAppendingPathComponent:@"REA-M1-crash.log"];
-        gM1CrashFd = open(p2.fileSystemRepresentation, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        // 主日志：Documents/m1.log（用户指定的固定文件名，方便他自己找）
+        NSString *p1 = [docs stringByAppendingPathComponent:@M1_LOG_NAME];
+        if (gM1Fd < 0) {
+            gM1Fd = open(p1.fileSystemRepresentation, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        }
+        // 崩溃现场：Documents/m1-crash.log
+        NSString *p2 = [docs stringByAppendingPathComponent:@M1_CRASH_NAME];
+        if (gM1CrashFd < 0) {
+            gM1CrashFd = open(p2.fileSystemRepresentation, O_WRONLY | O_CREAT | O_APPEND, 0644);
+        }
         if (gM1CrashFd < 0) gM1CrashFd = gM1Fd;
+
+        // 把绝对路径写进日志本身：他照着这一行就能用文件 App / 备份工具直达
+        M1Log("[M1] SINK open=%d log=%s crash=%s",
+              gM1Fd, gM1Fd >= 0 ? p1.UTF8String : "(FAIL)", p2.UTF8String);
     }
 }
 
@@ -604,7 +680,15 @@ static void M1NoteWinKey(void)    { M1Log("[M1] EVENT windowBecomeKey t=%.3f", M
 static void M1NoteWinVisible(void){ M1Log("[M1] EVENT windowBecomeVisible t=%.3f", M1T()); }
 static void M1NoteBackground(void) {
     M1Log("[M1] EVENT didEnterBackground t=%.3f", M1T());
+    M1FlushNow();                       // 先进后台就落盘，避免被系统回收时丢尾巴
     M1DumpRingTo(gM1CrashFd, "BACKGROUND");
+}
+
+// 退出前再冲一次：正常退出（用户划掉）不会经过信号处理
+static void M1NoteWillTerminate(void) {
+    M1FlushNow();
+    M1Log("[M1] EVENT willTerminate t=%.3f buffered=%zu dropped=%d", M1T(), gM1BufLen, gM1Dropped);
+    M1FlushNow();
 }
 
 static void M1InstallAppObservers(void) {
@@ -618,7 +702,9 @@ static void M1InstallAppObservers(void) {
                     usingBlock:^(NSNotification *n) { M1NoteWinVisible(); }];
         [nc addObserverForName:UIApplicationDidEnterBackgroundNotification object:nil queue:nil
                     usingBlock:^(NSNotification *n) { M1NoteBackground(); }];
-        M1Log("[M1] HOOK ok NSNotification observers x4");
+        [nc addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil
+                    usingBlock:^(NSNotification *n) { M1NoteWillTerminate(); }];
+        M1Log("[M1] HOOK ok NSNotification observers x5");
     } @catch (NSException *e) {
         M1Log("[M1] HOOK exception observers %s", e.reason.UTF8String);
     }
@@ -648,199 +734,6 @@ static void M1PinSplashModeOff(void) {
 }
 
 // ============================================================================
-#pragma mark - 局域网日志上传（非越狱环境唯一稳定的实时通道）
-// ============================================================================
-// 为什么不用 NSURLSession / NSLog over syslog：
-//   · 非越狱机器上 Windows 抓 NSLog 需要 idevicesyslog + 开发者镜像，iOS 17+ 经常抓不到；
-//     而 App 沙盒里的日志文件在不越狱、宿主 Info.plist 又没开 UIFileSharingEnabled 时
-//     无法从 iTunes/爱思助手直接拖出来。
-//   · NSURLSession 发明文 http:// 到裸 IP 会被宿主 App 的 ATS（Info.plist 的
-//     NSAppTransportSecurity）拒绝，而我们不能改宿主 Info.plist。
-//   → 所以走裸 BSD socket（ATS 只管 NSURLSession/NSURLConnection，不管 socket）。
-//   · 每次 flush 新建连接、写完即关，不做复用：M-1 只要可靠，不要优雅。
-//   · flush 全程在后台队列，失败只计数不阻塞主线程；outbox 上限 600 行。
-
-static NSString       *gM1UpHost    = nil;
-static int             gM1UpPort    = 0;
-static NSMutableArray *gM1Outbox    = nil;
-static NSLock         *gM1OutboxLock = nil;
-static volatile int    gM1UpSent    = 0;
-static volatile int    gM1UpFails   = 0;
-static volatile int    gM1UpDrops   = 0;
-
-static void M1OutboxAppend(const char *line) {
-    if (gM1Outbox == nil || gM1UpHost == nil || line == NULL || line[0] == 0) return;
-    if (!gM1On) return;
-    NSString *s = [NSString stringWithUTF8String:line];
-    if (s == nil) return;
-    [gM1OutboxLock lock];
-    [gM1Outbox addObject:s];
-    if ([gM1Outbox count] > 600) {
-        [gM1Outbox removeObjectsInRange:NSMakeRange(0, 200)];
-        gM1UpDrops = gM1UpDrops + 200;
-    }
-    [gM1OutboxLock unlock];
-}
-
-static void M1UploadFlush(void) {
-    if (gM1Outbox == nil || gM1UpHost == nil || gM1UpPort <= 0) return;
-
-    NSMutableString *batch = [NSMutableString string];
-    [gM1OutboxLock lock];
-    for (NSString *l in gM1Outbox) { [batch appendString:l]; [batch appendString:@"\n"]; }
-    [gM1Outbox removeAllObjects];
-    [gM1OutboxLock unlock];
-
-    if (batch.length == 0) return;
-
-    NSString *host = gM1UpHost;
-    int port = gM1UpPort;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @autoreleasepool {
-            const char *hostC = host.UTF8String;
-            if (hostC == NULL) { gM1UpFails = gM1UpFails + 1; return; }
-
-            int fd = socket(AF_INET, SOCK_STREAM, 0);
-            if (fd < 0) { gM1UpFails = gM1UpFails + 1; return; }
-
-            struct timeval tv;
-            tv.tv_sec = 2; tv.tv_usec = 0;
-            setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-            setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-
-            struct sockaddr_in addr;
-            memset(&addr, 0, sizeof(addr));
-            addr.sin_family = AF_INET;
-            addr.sin_port   = htons((uint16_t)port);
-
-            BOOL connected = NO;
-            if (inet_pton(AF_INET, hostC, &addr.sin_addr) == 1) {
-                connected = (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0);
-            } else {
-                // 允许写主机名（mDNS 名也行）
-                struct addrinfo hints, *res = NULL;
-                memset(&hints, 0, sizeof(hints));
-                hints.ai_family = AF_INET;
-                hints.ai_socktype = SOCK_STREAM;
-                if (getaddrinfo(hostC, NULL, &hints, &res) == 0 && res != NULL) {
-                    struct sockaddr_in *sin = (struct sockaddr_in *)res->ai_addr;
-                    addr.sin_addr = sin->sin_addr;
-                    connected = (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0);
-                    freeaddrinfo(res);
-                }
-            }
-
-            if (!connected) { close(fd); gM1UpFails = gM1UpFails + 1; return; }
-
-            const char *p = batch.UTF8String;
-            size_t left = (p == NULL) ? 0 : strlen(p);
-            BOOL okwrite = YES;
-            while (left > 0) {
-                ssize_t n = write(fd, p, left);
-                if (n <= 0) { okwrite = NO; break; }
-                p += n; left -= (size_t)n;
-            }
-            close(fd);
-            if (okwrite) gM1UpSent = gM1UpSent + 1;
-            else         gM1UpFails = gM1UpFails + 1;
-        }
-    });
-}
-
-static void M1UploadStartTimer(void) {
-    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,
-                                                     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
-    if (timer == NULL) return;
-    dispatch_source_set_timer(timer, dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)),
-                              (uint64_t)(2.0 * NSEC_PER_SEC), (uint64_t)(0.5 * NSEC_PER_SEC));
-    dispatch_source_set_event_handler(timer, ^{
-        M1UploadFlush();
-        static int tick = 0;
-        tick = tick + 1;
-        if (tick % 15 == 0) {
-            M1Log("[M1] UPLOAD stats sent=%d fails=%d drops=%d pending=%lu",
-                  gM1UpSent, gM1UpFails, gM1UpDrops, (unsigned long)[gM1Outbox count]);
-        }
-    });
-    dispatch_resume(timer);
-}
-
-// 连接探针：启动后立刻试一次 TCP，把成败和 errno 直接打进日志。
-// 这是"一条日志都没到"最快的答案：
-//   errno=61 ECONNREFUSED  电脑端脚本没跑 / 端口不对
-//   errno=60 ETIMEDOUT / 65 EHOSTUNREACH  不同网段、被防火墙丢包、或本地网络权限被拦
-//   errno=1  EPERM          iOS 本地网络权限被本 App 拒绝
-static void M1UploadProbe(void) {
-    if (gM1UpHost == nil || gM1UpPort <= 0) return;
-    NSString *host = gM1UpHost;
-    int port = gM1UpPort;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @autoreleasepool {
-            const char *hc = host.UTF8String;
-            if (hc == NULL) return;
-            int fd = socket(AF_INET, SOCK_STREAM, 0);
-            if (fd < 0) { M1Log("[M1] UPLOAD probe %s:%d FAIL socket errno=%d", hc, port, errno); return; }
-
-            struct timeval tv;
-            tv.tv_sec = 2; tv.tv_usec = 0;
-            setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-
-            struct sockaddr_in addr;
-            memset(&addr, 0, sizeof(addr));
-            addr.sin_family = AF_INET;
-            addr.sin_port   = htons((uint16_t)port);
-
-            BOOL ok = NO;
-            if (inet_pton(AF_INET, hc, &addr.sin_addr) == 1) {
-                ok = (connect(fd, (struct sockaddr *)&addr, sizeof(addr)) == 0);
-            }
-            int e = errno;
-            close(fd);
-
-            if (ok) {
-                M1Log("[M1] UPLOAD probe %s:%d OK（TCP 已连通，日志开始推）", hc, port);
-            } else {
-                M1Log("[M1] UPLOAD probe %s:%d FAIL errno=%d "
-                      "（61=脚本没跑/端口不对　60·65=不同网段·防火墙·本地网络权限　1=权限被拒）",
-                      hc, port, e);
-            }
-        }
-    });
-}
-
-static void M1InstallUploader(void) {
-    @try {
-        NSUserDefaults *d = [NSUserDefaults standardUserDefaults];
-        NSString *target = [d stringForKey:@"rea_m1_upload"];
-        NSString *src = @"defaults";
-        if (target.length == 0) {
-            target = @M1_DEFAULT_UPLOAD;    // 编译期硬编码，不依赖任何运行时配置
-            src = @"hardcoded";
-        }
-        NSArray *parts = [target componentsSeparatedByString:@":"];
-        if (parts.count < 2) {
-            M1Log("[M1] UPLOAD off（host:port 格式不对，实际=%s）", target.UTF8String);
-            return;
-        }
-        gM1UpHost = [parts objectAtIndex:0];
-        gM1UpPort = [[parts objectAtIndex:1] intValue];
-        if (gM1UpHost.length == 0 || gM1UpPort <= 0) {
-            gM1UpHost = nil; gM1UpPort = 0;
-            M1Log("[M1] UPLOAD off（host/port 解析失败：%s）", target.UTF8String);
-            return;
-        }
-        gM1Outbox = [NSMutableArray array];
-        gM1OutboxLock = [NSLock new];
-        M1Log("[M1] UPLOAD on(%s) target=%s:%d（每 2s 批量推送，失败只计数）",
-              src.UTF8String, gM1UpHost.UTF8String, gM1UpPort);
-        M1UploadStartTimer();
-        M1UploadProbe();
-    } @catch (NSException *e) {
-        M1Log("[M1] UPLOAD install exception %s", e.reason.UTF8String);
-    }
-}
-
-// ============================================================================
 #pragma mark - 入口
 // ============================================================================
 
@@ -854,6 +747,7 @@ static void M1Ctor(void) {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.05 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
         M1OpenSink();
+        M1InstallFlushTimer();
         M1ReadMachine();
         M1InstallCrashHooks();
         M1PinSplashModeOff();
@@ -869,7 +763,6 @@ static void M1Ctor(void) {
         M1Log("[M1] phase=install t=%.3f", M1T());
         M1InstallViewHooks();
         M1InstallAppObservers();
-        M1InstallUploader();
     });
 
     // +0.80s：环境横幅（要读 UIDevice / 文件系统，晚一点更稳）
