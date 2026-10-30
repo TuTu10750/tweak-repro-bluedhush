@@ -289,11 +289,13 @@ typedef void (^HLPickBlock)(NSDictionary *item);
     [ac addAction:[UIAlertAction actionWithTitle:(_isFav ? @"确认清空" : @"确认清除")
                                           style:UIAlertActionStyleDestructive
                                         handler:^(UIAlertAction *a) {
+        __strong typeof(ws) self = ws;
+        if (!self) return;
         NSUserDefaults *u = [NSUserDefaults standardUserDefaults];
-        [u removeObjectForKey:[ws hl_key]];
+        [u removeObjectForKey:[self hl_key]];
         [u synchronize];
-        [ws hl_reload];
-        HL(@"[LocPicker] %@已清空", [ws hl_title]);
+        [self hl_reload];
+        HL(@"[LocPicker] %@已清空", [self hl_title]);
     }]];
     [self presentViewController:ac animated:YES completion:nil];
 }
@@ -351,13 +353,14 @@ typedef void (^HLPickBlock)(NSDictionary *item);
         contextualActionWithStyle:UIContextualActionStyleDestructive
                             title:@"删除"
                           handler:^(UIContextualAction *a, UIView *v, void (^done)(BOOL)) {
-        if (ws->_rows.count <= (NSUInteger)ip.row) { done(NO); return; }
-        [ws->_rows removeObjectAtIndex:ip.row];
+        __strong typeof(ws) self = ws;
+        if (!self || self->_rows.count <= (NSUInteger)ip.row) { done(NO); return; }
+        [self->_rows removeObjectAtIndex:ip.row];
         NSUserDefaults *u = [NSUserDefaults standardUserDefaults];
-        [u setObject:ws->_rows forKey:[ws hl_key]];
+        [u setObject:self->_rows forKey:[self hl_key]];
         [u synchronize];
         [tv deleteRowsAtIndexPaths:@[ip] withRowAnimation:UITableViewRowAnimationAutomatic];
-        HL(@"[LocPicker] 历史已删除 1 条（余 %lu）", (unsigned long)ws->_rows.count);
+        HL(@"[LocPicker] 历史已删除 1 条（余 %lu）", (unsigned long)self->_rows.count);
         done(YES);
     }];
     return [UISwipeActionsConfiguration configurationWithActions:@[del]];
@@ -503,7 +506,7 @@ typedef void (^HLPickBlock)(NSDictionary *item);
     _map.translatesAutoresizingMaskIntoConstraints = NO;
     _map.delegate = self;
     _map.showsUserLocation = NO;      // 假定位时不要画用户蓝点，避免自相矛盾
-    _map.pointOfInterestFilter = MKPointOfInterestFilterIncludingAll;
+    _map.pointOfInterestFilter = [MKPointOfInterestFilter filterIncludingAll];
     [self.view addSubview:_map];
 
     _centerPin = [[UIImageView alloc] initWithImage:
