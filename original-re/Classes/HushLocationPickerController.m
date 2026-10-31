@@ -6718,7 +6718,7 @@ L_a0110:;
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
     /* [UNRESOLVED] [(id)self hushLocAdoptTarget:self->_nameHint name:0]; */
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
-    (void)[(id)self moveTo:1 spanMeters:0 animated:1500];
+    (void)[(id)self moveTo:CLLocationCoordinate2DMake(0, 0) spanMeters:0 animated:1500];
     (void)[(id)self refreshCenter:1];
 
 L_a0848:;
