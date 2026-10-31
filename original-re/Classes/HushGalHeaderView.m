@@ -331,7 +331,7 @@
     if (self == 0) goto L_7c688;
 
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
-    objc_release(self->_name);
+    /* [UNRESOLVED] objc_release(self->_name); */
     (void)[(id)[UIFont class] boldSystemFontOfSize:12];
     /* [UNRESOLVED] [(id)self->_name setFont:ret]; */
     objc_release(ret);
@@ -343,9 +343,9 @@
     /* [UNRESOLVED] [(id)self->_name setTextColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_name setAutoresizingMask:0x12]; */
-    (void)[(id)self addSubview:self->_name];
+    /* [UNRESOLVED] [(id)self addSubview:self->_name]; */
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
-    objc_release(self->_count);
+    /* [UNRESOLVED] objc_release(self->_count); */
     (void)[(id)[UIFont class] systemFontOfSize:12];
     /* [UNRESOLVED] [(id)self->_count setFont:ret]; */
     objc_release(ret);
@@ -355,9 +355,9 @@
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_count setTextAlignment:2]; */
     /* [UNRESOLVED] [(id)self->_count setAutoresizingMask:0x11]; */
-    (void)[(id)self addSubview:self->_count];
+    /* [UNRESOLVED] [(id)self addSubview:self->_count]; */
     (void)[(id)[UIButton class] buttonWithType:1];
-    objc_release(self->_home);
+    /* [UNRESOLVED] objc_release(self->_home); */
     /* [UNRESOLVED] [(id)self->_home setFrame:-0x3faf000000000000]; */
     /* [UNRESOLVED] [(id)self->_home setTitle:@"主页" forState:0]; */
     (void)[(id)[UIFont class] systemFontOfSize:14];
@@ -369,7 +369,7 @@
     /* [UNRESOLVED] [(id)self->_home setTitleColor:ret forState:0]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_home setAutoresizingMask:0x11]; */
-    (void)[(id)self addSubview:self->_home];
+    /* [UNRESOLVED] [(id)self addSubview:self->_home]; */
 
 L_7c688:;
     return nil;  /* [UNRESOLVED] self */

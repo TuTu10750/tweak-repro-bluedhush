@@ -530,7 +530,7 @@
     /* [UNRESOLVED] [super unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[@0x2456c0 alloc] unknownSelector]; */
-    objc_release(self->_hushAvatar);
+    /* [UNRESOLVED] objc_release(self->_hushAvatar); */
     /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
@@ -543,7 +543,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
-    objc_release(self->_hushName);
+    /* [UNRESOLVED] objc_release(self->_hushName); */
     /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
     objc_release(ret);
@@ -555,7 +555,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UIView alloc] unknownSelector]; */
-    objc_release(self->_hushSelfBadge);
+    /* [UNRESOLVED] objc_release(self->_hushSelfBadge); */
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
     objc_release(ret);
@@ -567,7 +567,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
-    objc_release(self->_hushLine2);
+    /* [UNRESOLVED] objc_release(self->_hushLine2); */
     /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushLine2 unknownSelector]; */
     objc_release(ret);
@@ -578,7 +578,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
-    objc_release(self->_hushLine3);
+    /* [UNRESOLVED] objc_release(self->_hushLine3); */
     /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushLine3 unknownSelector]; */
     objc_release(ret);
@@ -589,7 +589,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
-    objc_release(self->_hushCapsule);
+    /* [UNRESOLVED] objc_release(self->_hushCapsule); */
     /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     objc_release(ret);
@@ -855,7 +855,7 @@ L_141938:;
     /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
     /* [UNRESOLVED] CGRectGetMaxX(); */
     /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
-    if (((ret >> 0) & 1) != 0) goto L_141b18;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_141b18; */
 
     /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
@@ -867,7 +867,7 @@ L_141b18:;
     /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
     /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
-    if (((ret >> 0) & 1) != 0) goto L_141bec;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_141bec; */
 
     /* [UNRESOLVED] CGRectGetMaxX(); */
     /* [UNRESOLVED] CGRectGetMidY(); */

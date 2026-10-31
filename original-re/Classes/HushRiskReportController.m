@@ -111,7 +111,7 @@
     (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setEstimatedRowHeight:0x4050000000000000]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000]; */
+    /* [UNRESOLVED] [objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000]; */
     /* [UNRESOLVED] [(id)self setRefreshControl:objc_alloc_init]; */
     (void)[(id)self hushRefresh];
     /* [UNRESOLVED] objc_release(objc_alloc_init); */
@@ -456,7 +456,7 @@ L_1351ac:;
     if ((([(id)0 section] >> 63) & 1) != 0) goto L_13539c;
 
     (void)[(id)0 section];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_13539c; */
 
     (void)[(id)0 section];
@@ -474,7 +474,7 @@ L_1351ac:;
     if ((([(id)0 row] >> 63) & 1) != 0) goto L_1353b0;
 
     (void)[(id)0 row];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_1353b0; */
 
     (void)[(id)0 row];
@@ -582,7 +582,7 @@ L_1353c0:;
     id ret = nil;
 
     /* [UNRESOLVED] HushRiskReportSections(_cmd, a0, a1, a2, a3); */
-    objc_release(self->_sections);
+    /* [UNRESOLVED] objc_release(self->_sections); */
     (void)[(id)self tableView];
     (void)[(id)ret reloadData];
     objc_release(ret);
@@ -663,7 +663,7 @@ L_1354d4:;
     if (ret == 0) goto L_135578;
 
     (void)[(id)ret viewControllers];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lo * /) goto L_135578; */
 
@@ -804,7 +804,7 @@ L_13558c:;
     (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_1356c0;
 
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     goto L_1356c0;
 
 L_1356ac:;
@@ -1331,7 +1331,7 @@ L_135874:;
     /* [UNRESOLVED] sub_1351b0(a1); */
     if (ret == 0) goto L_135b5c;
 
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] defaultContentConfiguration]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] defaultContentConfiguration]; */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x20d778]; */
     (void)[(id)ret setText:ret];
     objc_release(ret);
@@ -1351,48 +1351,48 @@ L_135874:;
     (void)[(id)ret setColor:ret];
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setContentConfiguration:ret]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setContentConfiguration:ret]; */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x225538]; */
     (void)[(id)ret boolValue];
     objc_release(ret);
     if ((([(id)ret boolValue] >> 0) & 1) == 0) goto L_135b88;
 
-    /* [UNRESOLVED] [(id)objc_alloc_init setText:0x225cf8]; */
+    /* [UNRESOLVED] [objc_alloc_init setText:0x225cf8]; */
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init setFont:ret]; */
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
     (void)[(id)self view];
     (void)[(id)ret tintColor];
-    /* [UNRESOLVED] [(id)objc_alloc_init setTextColor:ret]; */
+    /* [UNRESOLVED] [objc_alloc_init setTextColor:ret]; */
     objc_release(ret);
     goto L_135c48;
 
 L_135b5c:;
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setContentConfiguration:0]; */
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryView:0]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setContentConfiguration:0]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryView:0]; */
     goto L_135cac;
 
 L_135b88:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x21dff8]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init setFont:ret]; */
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
-    if (((ret >> 0) & 1) == 0) goto L_135c18;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) == 0) goto L_135c18; */
 
     goto L_135c18;
 
 L_135c18:;
     (void)[(id)[UIColor class] secondaryLabelColor];
-    /* [UNRESOLVED] [(id)objc_alloc_init setTextColor:ret]; */
+    /* [UNRESOLVED] [objc_alloc_init setTextColor:ret]; */
 
 L_135c48:;
     objc_release(ret);
-    /* [UNRESOLVED] [(id)objc_alloc_init sizeToFit]; */
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryView:objc_alloc_init]; */
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setSelectionStyle:0]; */
-    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryType:[(id)ret boolValue]]; */
+    /* [UNRESOLVED] [objc_alloc_init sizeToFit]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryView:objc_alloc_init]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setSelectionStyle:0]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryType:[(id)ret boolValue]]; */
     /* [UNRESOLVED] objc_release(objc_alloc_init); */
     objc_release(ret);
 

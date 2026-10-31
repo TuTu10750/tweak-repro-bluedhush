@@ -458,15 +458,15 @@
     objc_retain(ret);
     objc_retain(ret);
     /* [UNRESOLVED] objc_retain(a0); */
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_203cc;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_203cc; */
 
     /* [UNRESOLVED] sub_222dc(); */
     if (ret == 0) goto L_203c4;
 
     /* [UNRESOLVED] HushRiskUserSource(); */
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_1ff84;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_1ff84; */
 
     objc_retain(ret);
     goto L_1ffb0;
@@ -476,8 +476,8 @@ L_1ff84:;
 
 L_1ffb0:;
     (void)[(id)[NSMutableString class] stringWithFormat:@"UID %@"];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_2000c;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_2000c; */
 
     (void)[(id)ret appendFormat:@" · 已标记：%@"];
 
@@ -493,8 +493,8 @@ L_2000c:;
     (void)[(id)[UIAlertAction class] actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_20208;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_20208; */
 
     objc_retain(ret);
     (void)[(id)[UIAlertAction class] actionWithTitle:@"取消标记" style:0 handler:0];

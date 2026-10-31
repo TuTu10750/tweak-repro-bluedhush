@@ -264,7 +264,7 @@
     (void)[(id)self setClipsToBounds:1];
     (void)[(id)self setUserInteractionEnabled:0];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
-    objc_release(self->_capText);
+    /* [UNRESOLVED] objc_release(self->_capText); */
     /* [UNRESOLVED] [(id)self->_capText setText:@"隐私相册"]; */
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:10 weight:0x200180]; */
     /* [UNRESOLVED] [(id)self->_capText setFont:ret]; */
@@ -272,7 +272,7 @@
     (void)[(id)[UIColor class] whiteColor];
     /* [UNRESOLVED] [(id)self->_capText setTextColor:ret]; */
     objc_release(ret);
-    (void)[(id)self addSubview:self->_capText];
+    /* [UNRESOLVED] [(id)self addSubview:self->_capText]; */
     (void)[(id)[UIImageSymbolConfiguration class] configurationWithPointSize:6 weight:0];
     (void)[(id)[UIImage class] systemImageNamed:@"lock.open.fill" withConfiguration:ret];
     objc_release(ret);
@@ -281,9 +281,9 @@
     objc_release(ret);
     objc_release(ret);
     (void)[[UIImageView alloc] initWithImage:ret];
-    objc_release(self->_capIcon);
+    /* [UNRESOLVED] objc_release(self->_capIcon); */
     /* [UNRESOLVED] [(id)self->_capIcon setContentMode:1]; */
-    (void)[(id)self addSubview:self->_capIcon];
+    /* [UNRESOLVED] [(id)self addSubview:self->_capIcon]; */
     objc_retain(self);
     objc_release(ret);
 

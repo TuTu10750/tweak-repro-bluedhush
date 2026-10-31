@@ -427,7 +427,7 @@
     (void)[(id)self contentView];
     (void)[(id)ret bounds];
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
-    objc_release(self->_thumb);
+    /* [UNRESOLVED] objc_release(self->_thumb); */
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_thumb setAutoresizingMask:0x12]; */
     /* [UNRESOLVED] [(id)self->_thumb setContentMode:2]; */
@@ -437,10 +437,10 @@
     /* [UNRESOLVED] [(id)self->_thumb setBackgroundColor:ret]; */
     objc_release(ret);
     (void)[(id)self contentView];
-    (void)[(id)ret addSubview:self->_thumb];
+    /* [UNRESOLVED] [(id)ret addSubview:self->_thumb]; */
     objc_release(ret);
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
-    objc_release(self->_playBadge);
+    /* [UNRESOLVED] objc_release(self->_playBadge); */
     (void)[(id)[UIImage class] systemImageNamed:@"play.circle.fill"];
     /* [UNRESOLVED] [(id)self->_playBadge setImage:ret]; */
     objc_release(ret);
@@ -458,9 +458,9 @@
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_playBadge setAutoresizingMask:0x2d]; */
     (void)[(id)self contentView];
-    (void)[(id)ret addSubview:self->_playBadge];
+    /* [UNRESOLVED] [(id)ret addSubview:self->_playBadge]; */
     objc_release(ret);
-    objc_release(self->_flashTag);
+    /* [UNRESOLVED] objc_release(self->_flashTag); */
     /* [UNRESOLVED] [(id)self->_flashTag setText:@"闪照"]; */
     (void)[(id)[UIFont class] systemFontOfSize:10];
     /* [UNRESOLVED] [(id)self->_flashTag setFont:ret]; */
@@ -483,7 +483,7 @@
     /* [UNRESOLVED] [(id)self->_flashTag setFrame:4]; */
     /* [UNRESOLVED] [(id)self->_flashTag setAutoresizingMask:0x24]; */
     (void)[(id)self contentView];
-    (void)[(id)ret addSubview:self->_flashTag];
+    /* [UNRESOLVED] [(id)ret addSubview:self->_flashTag]; */
     objc_release(ret);
 
 L_7c1a0:;

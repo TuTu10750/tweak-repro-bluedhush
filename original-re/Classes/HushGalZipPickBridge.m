@@ -391,15 +391,15 @@
     if (ret == 0) goto L_87c8c;
 
     (void)[(id)ret path];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_879dc;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_879dc; */
 
     /* [UNRESOLVED] NSTemporaryDirectory(); */
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_879c0;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_879c0; */
 
     (void)[(id)ret hasPrefix:ret];
-    if (((ret >> 0) & 1) == 0) goto L_879c0;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) == 0) goto L_879c0; */
 
     (void)[(id)[NSDate class] date];
     (void)[(id)ret timeIntervalSince1970];
@@ -437,8 +437,8 @@ L_87a80:;
     /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_87a8c:;
-    (void)[(id)0 length];
-    if ([(id)0 length] == 0) goto L_87c84;
+    /* [UNRESOLVED] [(id)0 length]; */
+    /* [UNRESOLVED] if ([(id)0 length] == 0) goto L_87c84; */
 
     objc_retain(0);
     (void)[(id)ret lastPathComponent];
@@ -457,14 +457,14 @@ L_87a8c:;
     goto L_87bd0;
 
 L_87b84:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector]; */
-    /* [UNRESOLVED] if ([(id)[(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector] == 0) goto L_87c50; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector]; */
+    /* [UNRESOLVED] if ([[(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector] == 0) goto L_87c50; */
 
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"]; */
     goto L_87c58;
 
 L_87bc0:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"] noteFiltered:3]; */
 
 L_87bd0:;
     /* [UNRESOLVED] dispatch_time(0x17d7); */
@@ -476,7 +476,7 @@ L_87bd0:;
     goto L_87c6c;
 
 L_87c50:;
-    (void)[(id)objc_release noteFiltered:1];
+    /* [UNRESOLVED] [objc_release noteFiltered:1]; */
 
 L_87c58:;
     /* [UNRESOLVED] sub_8b39c(); */

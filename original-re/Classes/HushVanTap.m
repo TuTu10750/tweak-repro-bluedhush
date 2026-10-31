@@ -83,10 +83,10 @@
     /* [UNRESOLVED] HushTopViewController(0x208e78, a0, a1, a2, a3); */
     /* [UNRESOLVED] [(id)[@0x245be8 class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    if (((ret >> 0) & 1) != 0) goto L_18dc10;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_18dc10; */
 
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] sub_18af04(); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] objc_release(objc_alloc_init); */

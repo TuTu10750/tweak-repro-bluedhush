@@ -424,7 +424,7 @@ L_15d064:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    if (((ret >> 0) & 1) == 0) goto L_15d0cc;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) == 0) goto L_15d0cc; */
 
     /* [UNRESOLVED] [(id)0x229df8 unknownSelector]; */
     goto L_15d108;

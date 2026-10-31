@@ -61,7 +61,7 @@
     goto L_8d0b0;
 
 L_8d09c:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Track] 用户取消追踪"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Track] 用户取消追踪"] noteFiltered:3]; */
 
 L_8d0b0:;
     /* [UNRESOLVED] if (0x2579e8 == 0) goto L_8d0d8; */
@@ -237,13 +237,15 @@ L_8d204:;
     /* [UNRESOLVED] if (0x257a08 == 0) goto L_8d2f8; */
 
     /* [UNRESOLVED] [(id)0x257a08 description]; */
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_8d304; */
 
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_8d310; */
 
 L_8d28c:;
     (void)[(id)ret characterAtIndex:0];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_8d28c; */
 
 L_8d2dc:;
@@ -381,7 +383,8 @@ L_8d2dc:;
     /* [UNRESOLVED] if ([(id)a0 state] == 0) goto L_8e4cc; */
 
     /* [UNRESOLVED] objc_retain(0x257a08); */
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_8e5a4; */
 
     /* [UNRESOLVED] sub_8e5c4(); */
 

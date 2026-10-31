@@ -501,9 +501,9 @@ L_962d8:;
     (void)[(id)ret reloadData];
     objc_release(ret);
     (void)[(id)self hushItems];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
-    if ([(id)ret count] == 0) goto L_966a8;
+    /* [UNRESOLVED] if ([(id)ret count] == 0) goto L_966a8; */
 
     (void)[(id)self tableView];
     (void)[(id)ret setBackgroundView:0];
@@ -512,14 +512,14 @@ L_962d8:;
 L_966a8:;
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     (void)[(id)self hushIsFavorites];
-    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setText:0]; */
-    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setNumberOfLines:0]; */
-    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTextAlignment:1]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setText:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setNumberOfLines:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTextAlignment:1]; */
     /* [UNRESOLVED] [(id)[UIFont class] preferredFontForTextStyle:0x200638/ *+0x0* /]; */
-    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] secondaryLabelColor];
-    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:ret]; */
     objc_release(ret);
     (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setBackgroundView:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
@@ -558,7 +558,7 @@ L_967d4:;
     id ret = nil;
 
     (void)[(id)self hushItems];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
@@ -901,16 +901,16 @@ L_968b8:;
     /* [UNRESOLVED] if ((([(id)a1 row] >> 63) & 1) != 0) goto L_96bf8; */
 
     /* [UNRESOLVED] [(id)a1 row]; */
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_96bf8; */
 
     /* [UNRESOLVED] [(id)a1 row]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a1 row]]; */
-    (void)[(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"] defaultContentConfiguration];
+    (void)[[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"] defaultContentConfiguration];
     (void)[(id)ret objectForKeyedSubscript:@"keyword"];
     (void)[(id)ret description];
     objc_release(ret);
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     (void)[(id)ret setText:0];
     (void)[(id)ret objectForKeyedSubscript:@"lat"];
     (void)[(id)ret doubleValue];
@@ -922,15 +922,15 @@ L_968b8:;
     (void)[(id)ret objectForKeyedSubscript:@"note"];
     (void)[(id)ret description];
     objc_release(ret);
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_96b0c;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_96b0c; */
 
     (void)[(id)ret stringByAppendingFormat:@"\n备注: %@"];
     objc_release(ret);
 
 L_96b0c:;
     (void)[(id)ret setSecondaryText:ret];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     (void)[(id)ret secondaryTextProperties];
     (void)[(id)ret setNumberOfLines:ret];
     objc_release(ret);
@@ -939,7 +939,7 @@ L_96b0c:;
     (void)[(id)ret setColor:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"] setContentConfiguration:ret];
+    (void)[[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"] setContentConfiguration:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1172,7 +1172,7 @@ L_96bf8:;
     /* [UNRESOLVED] if ((([(id)a1 row] >> 63) & 1) != 0) goto L_96eb0; */
 
     /* [UNRESOLVED] [(id)a1 row]; */
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_96eb0; */
 
     /* [UNRESOLVED] [(id)a1 row]; */
@@ -1420,7 +1420,7 @@ L_96eb0:;
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"删除" handler:0]; */
-    (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
+    /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:0 count:1]; */
     (void)[(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
@@ -1438,16 +1438,16 @@ L_97024:;
     /* [UNRESOLVED] if ((([(id)stack_chk_fail/ *+0x28* / row] >> 63) & 1) != 0) goto L_97174; */
 
     /* [UNRESOLVED] [(id)stack_chk_fail/ *+0x28* / row]; */
-    (void)[(id)[(id)ret mutableCopy] count];
+    /* [UNRESOLVED] [[(id)ret mutableCopy] count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_97174; */
 
     /* [UNRESOLVED] [(id)stack_chk_fail/ *+0x28* / row]; */
-    /* [UNRESOLVED] [(id)[(id)ret mutableCopy] removeObjectAtIndex:[(id)stack_chk_fail/ *+0x28* / row]]; */
+    /* [UNRESOLVED] [[(id)ret mutableCopy] removeObjectAtIndex:[(id)stack_chk_fail/ *+0x28* / row]]; */
     /* [UNRESOLVED] [(id)stack_chk_fail/ *+0x20* / hushSaveItems:[(id)ret mutableCopy]]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if ([(id)ret mutableCopy] == 0) goto L_9715c;
 
-    (void)[(id)[(id)ret mutableCopy] count];
+    /* [UNRESOLVED] [[(id)ret mutableCopy] count]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[LocPicker] 历史已删除 1 条（余 %lu）"]; */
     goto L_97174;
 
@@ -1605,7 +1605,7 @@ L_97174:;
     (void)[(id)[UIColor class] systemBlueColor];
     (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
-    (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
+    /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:0 count:1]; */
     (void)[(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
@@ -1789,7 +1789,7 @@ L_97318:;
     (void)[(id)self hushItems];
     /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_9756c; */
 
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * le * /) goto L_9756c; */
 
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */

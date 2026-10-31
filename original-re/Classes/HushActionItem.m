@@ -170,13 +170,13 @@
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a3); */
 }
 
@@ -277,15 +277,15 @@
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a3); */
-    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a4); */
 }
 

@@ -218,7 +218,7 @@ L_3bc14:;
     goto L_3bc70;
 
 L_3bc68:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"] noteFiltered:3]; */
 
 L_3bc70:;
     objc_release(ret);

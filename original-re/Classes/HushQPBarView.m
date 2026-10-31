@@ -539,33 +539,33 @@
     (void)[(id)self setAutoresizingMask:2];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     (void)[(id)[UIColor class] separatorColor];
-    /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setTranslatesAutoresizingMaskIntoConstraints:0]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] setTranslatesAutoresizingMaskIntoConstraints:0]; */
     /* [UNRESOLVED] [(id)self addSubview:[[UIView alloc] initWithFrame:0 / * unk * /]]; */
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
-    objc_release(self->_scroll);
+    /* [UNRESOLVED] objc_release(self->_scroll); */
     /* [UNRESOLVED] [(id)self->_scroll setShowsHorizontalScrollIndicator:0]; */
     /* [UNRESOLVED] [(id)self->_scroll setAlwaysBounceHorizontal:1]; */
     /* [UNRESOLVED] [(id)self->_scroll setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    (void)[(id)self addSubview:self->_scroll];
+    /* [UNRESOLVED] [(id)self addSubview:self->_scroll]; */
     /* [UNRESOLVED] [[UIStackView alloc] initWithFrame:0 / * unk * /]; */
-    objc_release(self->_stack);
+    /* [UNRESOLVED] objc_release(self->_stack); */
     /* [UNRESOLVED] [(id)self->_stack setAxis:0]; */
     /* [UNRESOLVED] [(id)self->_stack setSpacing:8]; */
     /* [UNRESOLVED] [(id)self->_stack setAlignment:3]; */
     /* [UNRESOLVED] [(id)self->_stack setTranslatesAutoresizingMaskIntoConstraints:0]; */
     /* [UNRESOLVED] [(id)self->_scroll addSubview:self->_stack]; */
-    /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] leadingAnchor]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] leadingAnchor]; */
     (void)[(id)self leadingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] trailingAnchor]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] trailingAnchor]; */
     (void)[(id)self trailingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] topAnchor]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] topAnchor]; */
     (void)[(id)self topAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] heightAnchor]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] heightAnchor]; */
     (void)[(id)ret constraintEqualToConstant:0.5];
     /* [UNRESOLVED] [(id)self->_scroll leadingAnchor]; */
     (void)[(id)self leadingAnchor];
@@ -599,7 +599,7 @@
     /* [UNRESOLVED] [(id)self->_scroll frameLayoutGuide]; */
     (void)[(id)ret heightAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)[NSArray class] arrayWithObjects:-0xe8 count:0xd];
+    /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:-0xe8 count:0xd]; */
     (void)[(id)[NSLayoutConstraint class] activateConstraints:ret];
     objc_release(ret);
     objc_release(ret);

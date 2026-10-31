@@ -185,21 +185,21 @@
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (0 == 0) goto L_85e64;
 
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_85e90;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_85e90; */
 
     if (ret == 0) goto L_85ea0;
 
     (void)[(id)ret description];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_85eac;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_85eac; */
 
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_85ec4;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_85ec4; */
 
 L_85e20:;
     (void)[(id)ret characterAtIndex:0];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_85e20; */
 
     goto L_85ec4;

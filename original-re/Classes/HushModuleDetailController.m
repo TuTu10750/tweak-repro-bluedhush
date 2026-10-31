@@ -1505,7 +1505,7 @@ L_19a5a8:;
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
 
 L_19a754:;
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -1648,7 +1648,7 @@ L_19aeb4:;
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / isEqualToString:0 / * unk * /]; */
     if (objc_destroyWeak == 0) goto L_19af9c;
 
-    /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     goto L_19b09c;
 
 L_19af84:;
@@ -1666,14 +1666,14 @@ L_19af9c:;
     goto L_19b048;
 
 L_19b034:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] unknownSelector] unknownSelector]; */
 
 L_19b048:;
-    /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / isEqualToString:0 / * unk * /]; */
     if (objc_loadWeakRetained == 0) goto L_19b09c;
 
-    /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
 
@@ -2438,27 +2438,27 @@ L_19b7a4:;
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] [(id)a1 unknownSelector]; */
     if (ret == 0) goto L_19b8d8;
 
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     goto L_19b908;
 
 L_19b8d8:;
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     objc_release(ret);
 
 L_19b908:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] [(id)a1 unknownSelector]; */
     if (ret == 0) goto L_19b9c8;
 
@@ -2469,23 +2469,23 @@ L_19b9c8:;
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
 
 L_19ba7c:;
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] CGRectGetHeight(); */
-    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] CGRectGetHeight(); */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector]); */
     /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] objc_release(a1); */

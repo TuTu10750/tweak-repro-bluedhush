@@ -47,7 +47,7 @@
     /* [UNRESOLVED] [(id)a0 length]; */
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_19164; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     goto L_19164;
 
 L_19164:;
@@ -109,7 +109,7 @@ L_19164:;
 
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_191ec; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_191ec;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
@@ -308,7 +308,7 @@ L_191ec:;
 
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_1942c; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_1931c;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
@@ -549,7 +549,7 @@ L_1942c:;
 
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_19700; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_195f0;
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
@@ -956,12 +956,12 @@ L_19700:;
 
     /* [UNRESOLVED] if ([(id)a1 count] == 0) goto L_19a24; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_199b0;
 
     /* [UNRESOLVED] objc_retain(a1); */
-    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_19874;
+    /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_19874; */
 
 L_19810:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_19828; */
@@ -1259,12 +1259,12 @@ L_19c0c:;
     id ret = nil;
 
     (void)[(id)self records];
-    (void)[(id)ret count];
-    if ([(id)ret count] == 0) goto L_19d78;
+    /* [UNRESOLVED] [(id)ret count]; */
+    /* [UNRESOLVED] if ([(id)ret count] == 0) goto L_19d78; */
 
     objc_retain(ret);
-    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_19da8;
+    /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_19da8; */
 
 L_19ce0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_19d00; */
@@ -1277,13 +1277,13 @@ L_19d00:;
     goto L_19d3c;
 
 L_19d30:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[PATCH] %@"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[PATCH] %@"] noteFiltered:3]; */
 
 L_19d3c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19ce0; */
 
-    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_19ce0;
+    /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_19ce0; */
 
     goto L_19da8;
 
@@ -1303,7 +1303,7 @@ L_19df0:;
     goto L_19e0c;
 
 L_19e04:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"] noteFiltered:3]; */
 
 L_19e0c:;
     objc_release(ret);
@@ -1492,7 +1492,7 @@ L_19e0c:;
 
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_1a058; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_19fa4;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
@@ -1607,7 +1607,7 @@ L_1a058:;
 
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_1a140; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_1a140;
 
     /* [UNRESOLVED] if (a2 == 0) goto L_1a130; */

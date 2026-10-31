@@ -227,19 +227,19 @@
     (void)[(id)ret bounds];
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setContentMode:1];
+    (void)[[[UIImageView alloc] initWithFrame:CGRectZero] setContentMode:1];
     (void)[(id)[UIColor class] clearColor];
-    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
+    (void)[[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAccessibilityIdentifier:@"hushgal_preview_image"];
+    (void)[[[UIImageView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
+    (void)[[[UIImageView alloc] initWithFrame:CGRectZero] setAccessibilityIdentifier:@"hushgal_preview_image"];
     (void)[(id)self view];
     (void)[(id)ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero]);
     (void)[(id)self path];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_7a924;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_7a924; */
 
     /* [UNRESOLVED] dispatch_get_global_queue(0); */
     objc_retain(ret);

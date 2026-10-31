@@ -565,10 +565,10 @@ L_20da8:;
     (void)[[UIControl alloc] initWithFrame:CGRectZero];
     objc_release(ret);
     (void)[(id)[UIColor class] colorWithWhite:0 alpha:0.45];
-    (void)[(id)[[UIControl alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
+    (void)[[[UIControl alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    (void)[(id)[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    (void)[(id)[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    (void)[[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
+    (void)[[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
     (void)[(id)self view];
     (void)[(id)ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -597,11 +597,11 @@ L_20da8:;
     objc_release(ret);
     objc_release(ret);
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
-    (void)[(id)[[UILabel alloc] initWithFrame:CGRectZero] setText:@"风险用户名单"];
+    (void)[[[UILabel alloc] initWithFrame:CGRectZero] setText:@"风险用户名单"];
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:17 weight:0x200180]; */
-    (void)[(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
+    (void)[[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
-    (void)[(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
+    (void)[[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     (void)[(id)self cardView];
     (void)[(id)ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -828,7 +828,7 @@ L_21748:;
     objc_release([(id)ret mutableCopy]);
     objc_release(ret);
     (void)[(id)self items];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     (void)[(id)[NSString class] stringWithFormat:@"共 %lu 人 · 左滑可取消标记"];
     (void)[(id)self countLabel];
     (void)[(id)ret setText:ret];
@@ -879,7 +879,7 @@ L_21748:;
     id ret = nil;
 
     (void)[(id)self items];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
@@ -1299,8 +1299,8 @@ L_21748:;
     (void)[(id)ret objectForKeyedSubscript:@"name"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
-    (void)[(id)ret length];
-    if ([(id)ret length] != 0) goto L_21a34;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] != 0) goto L_21a34; */
 
     (void)[(id)[NSString class] stringWithFormat:@"用户 %@"];
 
@@ -1308,7 +1308,7 @@ L_21a34:;
     /* [UNRESOLVED] [(id)ret name]; */
     (void)[(id)ret setText:ret];
     objc_release(ret);
-    if ([(id)ret length] != 0) goto L_21a7c;
+    /* [UNRESOLVED] if ([(id)ret length] != 0) goto L_21a7c; */
 
     objc_release(ret);
 
@@ -1339,9 +1339,9 @@ L_21a7c:;
     (void)[(id)ret objectForKeyedSubscript:@"time"];
     (void)[(id)ret doubleValue];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)objc_alloc_init setDateFormat:@"MM-dd HH:mm"]; */
+    /* [UNRESOLVED] [objc_alloc_init setDateFormat:@"MM-dd HH:mm"]; */
     (void)[(id)[NSDate class] dateWithTimeIntervalSince1970:0];
-    /* [UNRESOLVED] [(id)objc_alloc_init stringFromDate:ret]; */
+    /* [UNRESOLVED] [objc_alloc_init stringFromDate:ret]; */
     (void)[(id)[NSString class] stringWithFormat:@"UID %@ · %@ 标记"];
     (void)[(id)ret time];
     (void)[(id)ret setText:ret];
@@ -1641,7 +1641,7 @@ L_21a7c:;
     (void)[(id)[UIColor class] systemRedColor];
     (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
-    (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
+    /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:0 count:1]; */
     (void)[(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
@@ -1659,20 +1659,20 @@ L_21f60:;
     objc_retain(0);
     if (objc_loadWeakRetained == 0) goto L_2208c;
 
-    (void)[(id)objc_loadWeakRetained items];
+    /* [UNRESOLVED] [objc_loadWeakRetained items]; */
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / row]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)Unwind_Resume/ *+0x20* / row]]; */
     objc_release(ret);
     (void)[(id)ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_22050;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_22050; */
 
     /* [UNRESOLVED] HushRiskUserUnmark(); */
 
 L_22050:;
-    (void)[(id)objc_loadWeakRetained reload];
+    /* [UNRESOLVED] [objc_loadWeakRetained reload]; */
     objc_release(ret);
     objc_release(ret);
     goto L_2208c;

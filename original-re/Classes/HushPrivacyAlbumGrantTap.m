@@ -565,18 +565,18 @@ L_f8bf8:;
     objc_release(ret);
 
 L_f8c40:;
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f8cd0;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f8cd0; */
 
     objc_retain(ret);
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f8cdc;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f8cdc; */
 
     /* [UNRESOLVED] HushChatDBPath(); */
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f8cc4;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f8cc4; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] sqlite3_open_v2(); */
     /* [UNRESOLVED] if (sqlite3_open_v2 == 0) goto L_f8ce4; */
 
@@ -609,8 +609,8 @@ L_f8ce4:;
     /* [UNRESOLVED] if (sqlite3_column_text == 0) goto L_f8da4; */
 
     (void)[(id)[NSString class] stringWithUTF8String:sqlite3_column_text];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f8db0;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f8db0; */
 
     objc_retain(ret);
     goto L_f8db0;
@@ -636,7 +636,7 @@ L_f8dd8:;
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     objc_retain(sel_registerName("length"));
     (void)[(id)[NSString class] stringWithFormat:@"一键开放相册给 %@"];
     (void)[(id)[NSString class] stringWithFormat:@"一键关闭相册给 %@"];
@@ -685,15 +685,15 @@ L_f8dd8:;
     if (ret == 0) goto L_f92a8;
 
     (void)[(id)ret description];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f92b8;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f92b8; */
 
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f92d4;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f92d4; */
 
 L_f9244:;
     (void)[(id)ret characterAtIndex:0];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_f9244; */
 
     goto L_f92d4;
@@ -709,7 +709,7 @@ L_f92b8:;
     goto L_f930c;
 
 L_f92d4:;
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     (void)[(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_f930c:;

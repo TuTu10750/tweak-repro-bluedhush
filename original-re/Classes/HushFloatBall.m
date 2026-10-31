@@ -265,13 +265,13 @@
     (void)[(id)self setUserInteractionEnabled:1];
     (void)[(id)self bounds];
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
-    objc_release(self->_iconView);
+    /* [UNRESOLVED] objc_release(self->_iconView); */
     /* [UNRESOLVED] [(id)self->_iconView setContentMode:1]; */
     /* [UNRESOLVED] [(id)self->_iconView setUserInteractionEnabled:0]; */
     (void)[(id)[UIColor class] blackColor];
-    /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     /* [UNRESOLVED] [(id)self->_iconView layer]; */
-    /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
+    /* [UNRESOLVED] [(id)ret setShadowColor:[objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_iconView layer]; */
@@ -283,7 +283,7 @@
     /* [UNRESOLVED] [(id)self->_iconView layer]; */
     (void)[(id)ret setShadowOffset:CGSizeZero];
     objc_release(ret);
-    (void)[(id)self addSubview:self->_iconView];
+    /* [UNRESOLVED] [(id)self addSubview:self->_iconView]; */
     (void)[(id)self refreshIcon];
     (void)[(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */

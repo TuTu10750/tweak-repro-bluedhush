@@ -255,7 +255,7 @@ L_95ca0:;
     goto L_95d84;
 
 L_95d70:;
-    (void)[(id)objc_release noteFiltered:3];
+    /* [UNRESOLVED] [objc_release noteFiltered:3]; */
 
 L_95d84:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
@@ -265,7 +265,7 @@ L_95d84:;
     goto L_95ddc;
 
 L_95dd8:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[LocStatus] 单击切换虚拟定位 → %@"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[LocStatus] 单击切换虚拟定位 → %@"] noteFiltered:3]; */
 
 L_95ddc:;
     /* [UNRESOLVED] sub_b3490(); */
@@ -546,7 +546,7 @@ L_96084:;
     goto L_9609c;
 
 L_96098:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[LocStatus] 状态行展开（显示完整地址）"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[LocStatus] 状态行展开（显示完整地址）"] noteFiltered:3]; */
 
 L_9609c:;
     /* [UNRESOLVED] sub_b38ac(); */
@@ -569,8 +569,8 @@ L_960f4:;
 
 L_96128:;
     objc_release(ret);
-    (void)[(id)0 length];
-    if ([(id)0 length] != 0) goto L_961a4;
+    /* [UNRESOLVED] [(id)0 length]; */
+    /* [UNRESOLVED] if ([(id)0 length] != 0) goto L_961a4; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     (void)[(id)ret customLat];

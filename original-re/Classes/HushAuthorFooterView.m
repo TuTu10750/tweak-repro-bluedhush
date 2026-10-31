@@ -706,7 +706,7 @@ L_19d548:;
     goto L_19d674;
 
 L_19d660:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] unknownSelector] unknownSelector]; */
 
 L_19d674:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */

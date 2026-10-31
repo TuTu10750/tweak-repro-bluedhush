@@ -391,8 +391,8 @@ L_e3f8:;
     (void)[(id)self setPrefsSnapshot:ret];
     objc_release(self);
     /* [UNRESOLVED] objc_retain(0x2565c8); */
-    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_e66c;
+    /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_e66c; */
 
 L_e5a8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e5c8; */
@@ -1358,8 +1358,8 @@ L_efb4:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f098;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f098; */
 
     (void)[(id)self defaults];
     /* [UNRESOLVED] if (a0 == 0) goto L_f05c; */
@@ -1573,7 +1573,7 @@ L_f098:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_custom_lat"];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     objc_release(ret);
     return 0;
 }
@@ -1621,8 +1621,8 @@ L_f098:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_custom_lat"];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f4ac;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f4ac; */
 
     (void)[(id)ret doubleValue];
     goto L_f4ac;
@@ -1675,8 +1675,8 @@ L_f4ac:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_custom_lng"];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f528;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f528; */
 
     (void)[(id)ret doubleValue];
     goto L_f528;
@@ -1802,8 +1802,8 @@ L_f528:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_custom_altitude"];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f678;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f678; */
 
     (void)[(id)ret doubleValue];
     goto L_f678;
@@ -1890,7 +1890,7 @@ L_f678:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_auth_token"];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     objc_release(ret);
     return nil;
 }
@@ -1941,7 +1941,7 @@ L_f678:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_user_agent"];
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     objc_release(ret);
     return nil;
 }
@@ -2044,8 +2044,8 @@ L_f678:;
     id ret = nil;
 
     (void)[(id)self stringForKey:@"runtime_backup_dir"];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_f844;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_f844; */
 
     objc_retain(ret);
     goto L_f8d0;

@@ -247,7 +247,7 @@ L_166a0:;
     /* [UNRESOLVED] [(id)ret stringForKey:0 / * func * /]; */
     objc_release(ret);
     objc_retain(ret);
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_167c0; */
 
     (void)[(id)ret characterAtIndex:0];
@@ -258,8 +258,8 @@ L_166a0:;
 
 L_167c0:;
     objc_release(ret);
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_16834;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_16834; */
 
     (void)[(id)self setLevel:3];
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:2]; */
@@ -627,13 +627,13 @@ L_16b4c:;
     /* [UNRESOLVED] pthread_getspecific(); */
     if (ret != 0) goto L_16bac;
 
-    /* [UNRESOLVED] [(id)objc_alloc_init setDateFormat:@"HH:mm:ss.SSS"]; */
+    /* [UNRESOLVED] [objc_alloc_init setDateFormat:@"HH:mm:ss.SSS"]; */
     /* [UNRESOLVED] objc_retain(objc_alloc_init); */
     /* [UNRESOLVED] pthread_setspecific(objc_alloc_init); */
 
 L_16bac:;
     (void)[(id)[NSDate class] date];
-    /* [UNRESOLVED] [(id)objc_alloc_init stringFromDate:ret]; */
+    /* [UNRESOLVED] [objc_alloc_init stringFromDate:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] objc_release(objc_alloc_init); */
     (void)[(id)[NSString class] stringWithFormat:@"%@ %@ [%@] %@\n"];
@@ -719,8 +719,8 @@ L_16c68:;
     /* [UNRESOLVED] if (((0x243e24 >> 31) & 1) == 0) goto L_16d50; */
 
     (void)[(id)self logFilePath];
-    /* [UNRESOLVED] [(id)objc_retainAutorelease fileSystemRepresentation]; */
-    /* [UNRESOLVED] if ([(id)objc_retainAutorelease fileSystemRepresentation] == 0) goto L_16d3c; */
+    /* [UNRESOLVED] [objc_retainAutorelease fileSystemRepresentation]; */
+    /* [UNRESOLVED] if ([objc_retainAutorelease fileSystemRepresentation] == 0) goto L_16d3c; */
 
     /* [UNRESOLVED] stat(); */
     /* [UNRESOLVED] open(0x209); */
@@ -964,8 +964,8 @@ L_170d4:;
     (void)[(id)self openFdIfNeeded];
     /* [UNRESOLVED] if (((0x243e24 >> 31) & 1) != 0) goto L_17244; */
 
-    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
-    /* [UNRESOLVED] if ([(id)objc_retainAutorelease UTF8String] == 0) goto L_17244; */
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] if ([objc_retainAutorelease UTF8String] == 0) goto L_17244; */
 
     /* [UNRESOLVED] strlen(); */
     /* [UNRESOLVED] if (strlen == 0) goto L_17244; */
@@ -976,7 +976,7 @@ L_170d4:;
     /* [UNRESOLVED] objc_release(0x256710); */
 
 L_17194:;
-    /* [UNRESOLVED] [(id)0x256710 appendBytes:[(id)objc_retainAutorelease UTF8String] length:strlen]; */
+    /* [UNRESOLVED] [(id)0x256710 appendBytes:[objc_retainAutorelease UTF8String] length:strlen]; */
     /* [UNRESOLVED] [(id)0x256710 length]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_171cc; */
 
@@ -1184,17 +1184,18 @@ L_17344:;
     /* [UNRESOLVED] if (((a1 >> 0) & 1) != 0) goto L_1743c; */
 
     (void)[(id)ret hasSuffix:@"\n"];
+    /* [UNRESOLVED] if (((ret >> 0) & 1) == 0) goto L_174b8; */
 
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     (void)[(id)ret substringToIndex:-1];
     goto L_17424;
 
 L_173b8:;
     /* [UNRESOLVED] os_unfair_lock_unlock(); */
     (void)[(id)ret hasSuffix:@"\n"];
-    if (((ret >> 0) & 1) == 0) goto L_17410;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) == 0) goto L_17410; */
 
-    (void)[(id)ret length];
+    /* [UNRESOLVED] [(id)ret length]; */
     (void)[(id)ret substringToIndex:-1];
     goto L_17424;
 
@@ -1314,7 +1315,7 @@ L_174a0:;
     /* [UNRESOLVED] if (a1 == 0) goto L_17608; */
 
     /* [UNRESOLVED] [(id)self isEnabledForLevel:a0]; */
-    if (((self >> 0) & 1) == 0) goto L_17600;
+    /* [UNRESOLVED] if (((self >> 0) & 1) == 0) goto L_17600; */
 
     /* [UNRESOLVED] [[NSString alloc] initWithFormat:a1 arguments:0x10]; */
 
@@ -1677,14 +1678,14 @@ L_177d0:;
     (void)[(id)self flush];
     (void)[(id)self logFilePath];
     (void)[(id)[NSData class] dataWithContentsOfFile:ret];
-    (void)[(id)ret length];
-    if ([(id)ret length] == 0) goto L_17b18;
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_17b18; */
 
     (void)[[NSString alloc] initWithData:ret encoding:4];
     if ([[NSString alloc] initWithData:ret encoding:4] != 0) goto L_17a74;
 
-    (void)[(id)ret length];
-    /* [UNRESOLVED] [(id)objc_retainAutorelease bytes]; */
+    /* [UNRESOLVED] [(id)ret length]; */
+    /* [UNRESOLVED] [objc_retainAutorelease bytes]; */
     if ([[NSString alloc] initWithData:ret encoding:4] == 0) goto L_17a40;
 
 L_179fc:;
@@ -1701,11 +1702,11 @@ L_17a40:;
     objc_release([[NSString alloc] initWithData:ret encoding:5]);
 
 L_17a74:;
-    (void)[(id)[[NSString alloc] initWithData:ret encoding:0x9400] componentsSeparatedByString:@"\n"];
-    (void)[(id)ret count];
+    (void)[[[NSString alloc] initWithData:ret encoding:0x9400] componentsSeparatedByString:@"\n"];
+    /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * ls * /) goto L_17afc; */
 
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)ret count]; */
     (void)[(id)ret subarrayWithRange:0];
     (void)[(id)ret componentsJoinedByString:@"\n"];
     objc_release(ret);

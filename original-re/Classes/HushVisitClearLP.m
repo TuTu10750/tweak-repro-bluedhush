@@ -331,7 +331,7 @@ L_13f7e8:;
 
 L_13f808:;
     /* [UNRESOLVED] [[UIImpactFeedbackGenerator alloc] unknownSelector]; */
-    /* [UNRESOLVED] [(id)[[UIImpactFeedbackGenerator alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
     if (ret == 0) goto L_13f8a4;
 
@@ -341,7 +341,7 @@ L_13f808:;
     goto L_13f8ac;
 
 L_13f88c:;
-    /* [UNRESOLVED] [(id)[[UIImpactFeedbackGenerator alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector] unknownSelector]; */
     goto L_13f960;
 
 L_13f8a4:;

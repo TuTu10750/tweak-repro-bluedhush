@@ -33,8 +33,8 @@
     // 0007a5a8  ret
     id ret = nil;
 
-    (void)[(id)self files];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)self files]; */
+    /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
@@ -117,12 +117,12 @@
 
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_7a690; */
 
-    (void)[(id)self files];
-    (void)[(id)ret count];
+    /* [UNRESOLVED] [(id)self files]; */
+    /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_7a690; */
 
-    (void)[(id)self files];
+    /* [UNRESOLVED] [(id)self files]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a1]; */
     (void)[(id)[NSURL class] fileURLWithPath:ret];
     objc_release(ret);

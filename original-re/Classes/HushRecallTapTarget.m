@@ -649,13 +649,13 @@ L_3c308:;
     goto L_3c3fc;
 
 L_3c364:;
-    (void)[(id)[(id)ret unsignedIntValue] noteFiltered:3];
+    (void)[[(id)ret unsignedIntValue] noteFiltered:3];
 
 L_3c36c:;
     goto L_3cd4c;
 
 L_3c37c:;
-    (void)[(id)[(id)[(id)ret unsignedIntValue] noteFiltered:3] noteFiltered:3];
+    (void)[[[(id)ret unsignedIntValue] noteFiltered:3] noteFiltered:3];
 
 L_3c384:;
     objc_release(ret);
@@ -686,7 +686,7 @@ L_3c480:;
 
 L_3c4c0:;
     (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
-    if (((ret >> 0) & 1) != 0) goto L_3c4f8;
+    /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_3c4f8; */
 
     objc_release(ret);
     /* [UNRESOLVED] HushKeyValue(@"sessionId"); */
@@ -756,7 +756,7 @@ L_3c6b8:;
     goto L_3c718;
 
 L_3c708:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"] noteFiltered:3]; */
 
 L_3c718:;
     /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
@@ -783,7 +783,7 @@ L_3c814:;
     (void)[(id)[NSNumber class] numberWithUnsignedInt:0];
     (void)[(id)[NSNumber class] numberWithDouble:0];
     /* [UNRESOLVED] [(id)[NSNumber class] numberWithUnsignedLongLong:0x257561]; */
-    (void)[(id)[NSDictionary class] dictionaryWithObjects:-0xb8 forKeys:-0xf0 count:7];
+    /* [UNRESOLVED] [(id)[NSDictionary class] dictionaryWithObjects:-0xb8 forKeys:-0xf0 count:7]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -802,7 +802,7 @@ L_3c814:;
     goto L_3ca5c;
 
 L_3ca44:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 已预约撤回 msgId=%llu sid=%llu（%.0f 秒后执行，= 发送后 %ld 秒的窗口末端）"] noteFiltered:3]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 已预约撤回 msgId=%llu sid=%llu（%.0f 秒后执行，= 发送后 %ld 秒的窗口末端）"] noteFiltered:3]; */
 
 L_3ca5c:;
     /* [UNRESOLVED] dispatch_time(); */
@@ -893,8 +893,8 @@ L_3cd44:;
 L_3cd4c:;
     /* [UNRESOLVED] sub_505e8(); */
     (void)[(id)ret visibleCells];
-    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_3ce10;
+    /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_3ce10; */
 
 L_3cdbc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_3cdd8; */
@@ -905,8 +905,8 @@ L_3cdd8:;
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cdbc; */
 
-    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_3cdbc;
+    /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_3cdbc; */
 
 L_3ce10:;
     objc_release(ret);
@@ -993,10 +993,10 @@ L_3d10c:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
-    (void)[(id)objc_loadWeakRetained respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [objc_loadWeakRetained respondsToSelector:NSSelectorFromString]; */
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
-    /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:4] == 0) goto L_3d180; */
 
@@ -1004,7 +1004,7 @@ L_3d10c:;
     goto L_3d184;
 
 L_3d180:;
-    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:4 format:@"[Chat][后悔药] 已调聊天页 menuHide 收尾"] noteFiltered:4]; */
+    /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:4 format:@"[Chat][后悔药] 已调聊天页 menuHide 收尾"] noteFiltered:4]; */
 
 L_3d184:;
     /* [UNRESOLVED] sub_50abc(); */
