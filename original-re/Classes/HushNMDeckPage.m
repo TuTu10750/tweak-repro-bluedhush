@@ -1359,7 +1359,7 @@ L_d3b3c:;
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"job"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"reltxt"]; */
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (ret == 0) goto L_d3c98;
 
     (void)[(id)ret componentsJoinedByString:@","];
@@ -1376,7 +1376,7 @@ L_d3c98:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    if ([(id)ret isKindOfClass:[(id)[NSArray class] class]] == 0) goto L_d3d68;
+    /* [UNRESOLVED] if ([(id)ret isKindOfClass:[(id)[NSArray class] class]] == 0) goto L_d3d68; */
 
     /* [UNRESOLVED] objc_release(0x209f58); */
 
@@ -1387,7 +1387,7 @@ L_d3d68:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"tagmap"]; */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_d3e00;
 
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"tagmap"]; */
@@ -1395,7 +1395,7 @@ L_d3d68:;
 
 L_d3e00:;
     objc_release(ret);
-    (void)[(id)0 allKeys];
+    /* [UNRESOLVED] [(id)0 allKeys]; */
     (void)[(id)ret sortedArrayUsingSelector:sel_registerName("compare:")];
     objc_release(ret);
     (void)[(id)[NSMutableArray class] array];
@@ -2275,7 +2275,7 @@ L_d5594:;
     goto L_d560c;
 
 L_d55d8:;
-    (void)[(id)0x3e8 noteFiltered:3];
+    /* [UNRESOLVED] [(id)0x3e8 noteFiltered:3]; */
     goto L_d5670;
 
 L_d55e8:;
@@ -3324,15 +3324,15 @@ L_d5c48:;
 
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_d5dd0; */
 
     objc_release(ret);
 
 L_d5dd0:;
-    (void)[(id)0 objectForKeyedSubscript:@"last_operate"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"last_operate"]; */
     (void)[(id)[NSNumber class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSNumber class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSNumber class] class]]; */
     if (ret == 0) goto L_d5e44;
 
     (void)[(id)ret doubleValue];
@@ -3444,7 +3444,7 @@ L_d6348:;
     (void)[(id)self snap];
     (void)[(id)ret objectForKeyedSubscript:@"tagmap"];
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_d6450;
 
     (void)[(id)self snap];
@@ -3459,18 +3459,18 @@ L_d6450:;
     objc_release(ret);
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_d64b4; */
 
     objc_release(ret);
 
 L_d64b4:;
-    (void)[(id)0 objectForKeyedSubscript:@"tags"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"tags"]; */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_d6520;
 
-    (void)[(id)0 objectForKeyedSubscript:@"tags"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"tags"]; */
     objc_retain(ret);
     objc_release(ret);
     goto L_d6520;
@@ -3505,7 +3505,7 @@ L_d6634:;
 
     /* [UNRESOLVED] if ([(id)ret length] != 0) goto L_d66c4; */
 
-    (void)[(id)0 objectForKeyedSubscript:@"astro"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"astro"]; */
     /* [UNRESOLVED] sub_d9a74(); */
     objc_release(ret);
     objc_release(ret);
@@ -3584,7 +3584,7 @@ L_d6a58:;
 L_d6abc:;
     if (0 == 0) goto L_d6d70;
 
-    (void)[(id)0 objectForKeyedSubscript:@"hometown"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"hometown"]; */
     /* [UNRESOLVED] HushRoleRegionText(); */
     if (ret == 0) goto L_d6b18;
 
@@ -3615,7 +3615,7 @@ L_d6b88:;
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] != 0) goto L_d6c54; */
 
-    (void)[(id)0 objectForKeyedSubscript:@"city_settled"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"city_settled"]; */
     /* [UNRESOLVED] HushRoleRegionText(); */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret length]; */
@@ -3634,7 +3634,7 @@ L_d6c54:;
     (void)[(id)ret setObject:ret forKeyedSubscript:@"定居"];
 
 L_d6c84:;
-    (void)[(id)0 objectForKeyedSubscript:@"ip_location"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"ip_location"]; */
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret length]; */
@@ -3643,7 +3643,7 @@ L_d6c84:;
     (void)[(id)ret setObject:ret forKeyedSubscript:@"IP"];
 
 L_d6ce4:;
-    (void)[(id)0 objectForKeyedSubscript:@"self_tags"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"self_tags"]; */
     /* [UNRESOLVED] sub_d9c40(); */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret length]; */
@@ -3815,7 +3815,7 @@ L_d757c:;
 L_d759c:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
     (void)[(id)[NSString class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] class]]; */
     if (ret == 0) goto L_d78e8;
 
     (void)[(id)ret rangeOfString:@" · "];
@@ -3826,14 +3826,14 @@ L_d759c:;
     (void)[(id)ret isEqualToString:@"星座"];
     if (ret == 0) goto L_d7818;
 
-    (void)[(id)0 objectForKeyedSubscript:@"astro"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"astro"]; */
     if (ret == 0) goto L_d789c;
 
     /* [UNRESOLVED] [(id)ret length]; */
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_d789c; */
 
-    (void)[(id)0 objectForKeyedSubscript:@"astro"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"astro"]; */
     (void)[(id)ret description];
     objc_retain(ret);
     objc_retain(ret);
@@ -3924,7 +3924,7 @@ L_d79f4:;
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_d7a98; */
 
-    (void)[(id)[NSCharacterSet class] isEqualToString:@"0123456789_. -"];
+    /* [UNRESOLVED] [(id)[NSCharacterSet class] isEqualToString:@"0123456789_. -"]; */
     (void)[(id)ret invertedSet];
     (void)[(id)ret rangeOfCharacterFromSet:ret];
     objc_release(ret);
@@ -4088,7 +4088,7 @@ L_d826c:;
     (void)[(id)ret objectForKeyedSubscript:ret];
     objc_release(ret);
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_d8348;
 
     (void)[(id)ret objectForKeyedSubscript:@"s"];
@@ -4255,8 +4255,8 @@ L_d8944:;
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_d8f08; */
 
-    (void)[(id)0 objectForKeyedSubscript:@"black_count"];
-    (void)[(id)0 objectForKeyedSubscript:@"is_invisible_all"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"black_count"]; */
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"is_invisible_all"]; */
     if (ret == 0) goto L_d89cc;
 
     /* [UNRESOLVED] sub_d971c(); */
@@ -4271,7 +4271,7 @@ L_d89cc:;
 
 L_d8a18:;
     objc_release(ret);
-    (void)[(id)0 objectForKeyedSubscript:@"is_invisible_half"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"is_invisible_half"]; */
     if (ret == 0) goto L_d8a58;
 
     /* [UNRESOLVED] sub_d971c(); */
@@ -4286,7 +4286,7 @@ L_d8a58:;
 
 L_d8aa0:;
     objc_release(ret);
-    (void)[(id)0 objectForKeyedSubscript:@"is_traceless_access"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"is_traceless_access"]; */
     if (ret == 0) goto L_d8ae0;
 
     /* [UNRESOLVED] sub_d971c(); */
@@ -4301,7 +4301,7 @@ L_d8ae0:;
 
 L_d8b2c:;
     objc_release(ret);
-    (void)[(id)0 objectForKeyedSubscript:@"is_global_view_secretly"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"is_global_view_secretly"]; */
     /* [UNRESOLVED] sub_d971c(); */
     objc_release(ret);
     (void)[(id)[NSMutableArray class] array];
@@ -4495,10 +4495,10 @@ L_d9704:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d979c; */
 
-    (void)[(id)0 respondsToSelector:sel_registerName("boolValue")];
+    /* [UNRESOLVED] [(id)0 respondsToSelector:sel_registerName("boolValue")]; */
     if (0 == 0) goto L_d979c;
 
-    (void)[(id)0 boolValue];
+    /* [UNRESOLVED] [(id)0 boolValue]; */
     goto L_d979c;
 
 L_d979c:;
@@ -4643,13 +4643,13 @@ L_d979c:;
     goto L_da188;
 
 L_da114:;
-    (void)[(id)0 isEqualToString:@"accent"];
+    /* [UNRESOLVED] [(id)0 isEqualToString:@"accent"]; */
     if (0 == 0) goto L_da154;
 
     goto L_da188;
 
 L_da154:;
-    (void)[(id)0 isEqualToString:@"lock"];
+    /* [UNRESOLVED] [(id)0 isEqualToString:@"lock"]; */
     if (0 == 0) goto L_da1cc;
 
 L_da188:;
@@ -5242,7 +5242,7 @@ L_da4e8:;
 L_da504:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
     (void)[(id)[NSString class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] class]]; */
     if (ret == 0) goto L_da54c;
 
     (void)[(id)ret addObject:ret];
@@ -5986,7 +5986,7 @@ L_db064:;
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_db188;
 
     (void)[(id)ret objectForKeyedSubscript:@"ip_location"];
@@ -6085,7 +6085,7 @@ L_db544:;
     (void)[(id)ret objectForKeyedSubscript:@"tags"];
     objc_release(ret);
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (ret == 0) goto L_db718;
 
     objc_retain(ret);
@@ -6138,12 +6138,12 @@ L_db7f4:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if ([? class] == 0) goto L_db8a8;
 
-    (void)[(id)[? class] respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [(id)[? class] respondsToSelector:NSSelectorFromString]; */
     if ([? class] == 0) goto L_db8a8;
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
     (void)[(id)[UIImage class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIImage class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIImage class] class]]; */
     objc_retain(sel_registerName("class"));
     objc_release(ret);
     goto L_db8a8;
@@ -6746,7 +6746,7 @@ L_dc07c:;
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_dc350; */
 
     (void)[(id)[NSString class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] class]]; */
 
     (void)[(id)ret isEqualToString:@"gallery"];
 

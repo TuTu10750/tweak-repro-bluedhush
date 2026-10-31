@@ -1287,7 +1287,7 @@ L_13c11c:;
     /* [UNRESOLVED] [(id)0x2592a0 objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     /* [UNRESOLVED] HushKeyValue(0x226278); */
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (ret == 0) goto L_13c654;
 
     /* [UNRESOLVED] [(id)ret count]; */

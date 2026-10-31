@@ -447,40 +447,40 @@ L_1351ac:;
     objc_retain(ret);
     objc_retain(0);
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (0 == 0) goto L_1353c0;
 
     if (ret == 0) goto L_1353c0;
 
-    (void)[(id)0 section];
-    if ((([(id)0 section] >> 63) & 1) != 0) goto L_13539c;
+    /* [UNRESOLVED] [(id)0 section]; */
+    /* [UNRESOLVED] if ((([(id)0 section] >> 63) & 1) != 0) goto L_13539c; */
 
-    (void)[(id)0 section];
+    /* [UNRESOLVED] [(id)0 section]; */
     /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_13539c; */
 
-    (void)[(id)0 section];
-    (void)[(id)ret objectAtIndexedSubscript:[(id)0 section]];
+    /* [UNRESOLVED] [(id)0 section]; */
+    /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)0 section]]; */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_1353a4;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2256f8]; */
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (ret == 0) goto L_1353b0;
 
-    (void)[(id)0 row];
-    if ((([(id)0 row] >> 63) & 1) != 0) goto L_1353b0;
+    /* [UNRESOLVED] [(id)0 row]; */
+    /* [UNRESOLVED] if ((([(id)0 row] >> 63) & 1) != 0) goto L_1353b0; */
 
-    (void)[(id)0 row];
+    /* [UNRESOLVED] [(id)0 row]; */
     /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * hs * /) goto L_1353b0; */
 
-    (void)[(id)0 row];
-    (void)[(id)ret objectAtIndexedSubscript:[(id)0 row]];
+    /* [UNRESOLVED] [(id)0 row]; */
+    /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)0 row]]; */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     objc_retain(sel_registerName("count"));
     objc_release(ret);
     goto L_1353b0;
@@ -796,12 +796,12 @@ L_13558c:;
 
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_1356b4;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2256f8]; */
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (ret == 0) goto L_1356c0;
 
     /* [UNRESOLVED] [(id)ret count]; */
@@ -913,7 +913,7 @@ L_1356d0:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2141b8]; */
     objc_release(ret);
     (void)[(id)[NSString class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] class]]; */
     objc_retain(ret);
     objc_release(ret);
     goto L_1357c8;

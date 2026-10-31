@@ -1130,9 +1130,9 @@ L_7e1b4:;
     /* [UNRESOLVED] [(id)a0 userInfo]; */
     objc_retain(0);
     objc_release(ret);
-    (void)[(id)0 objectForKeyedSubscript:@"phase"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"phase"]; */
     (void)[(id)[NSString class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] class]]; */
     if (ret == 0) goto L_7e2ec;
 
     /* [UNRESOLVED] [(id)ret length]; */
@@ -1142,10 +1142,10 @@ L_7e2ec:;
     objc_release(ret);
 
 L_7e308:;
-    (void)[(id)0 objectForKeyedSubscript:@"cur"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"cur"]; */
     (void)[(id)ret unsignedIntegerValue];
     objc_release(ret);
-    (void)[(id)0 objectForKeyedSubscript:@"total"];
+    /* [UNRESOLVED] [(id)0 objectForKeyedSubscript:@"total"]; */
     (void)[(id)ret unsignedIntegerValue];
     objc_release(ret);
     objc_retain(@"处理");
@@ -1264,10 +1264,10 @@ L_7e308:;
     (void)[(id)self progressActive];
     /* [UNRESOLVED] if (((self >> 0) & 1) != 0) goto L_7e670; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
-    (void)[(id)self totalFiles];
+    /* [UNRESOLVED] [(id)self totalFiles]; */
     if (0 == 0) goto L_7e61c;
 
     (void)[(id)[NSString class] stringWithFormat:@"共 %lu 个用户 · %lu 张照片"];
@@ -1943,7 +1943,7 @@ L_7ec28:;
 
 L_7ec54:;
     objc_release(ret);
-    (void)[[(id)ret containsObject:ret] setShown:ret];
+    /* [UNRESOLVED] [[(id)ret containsObject:ret] setShown:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
     (void)[(id)ret timeIntervalSince1970];
@@ -1957,7 +1957,7 @@ L_7ecd8:;
     if (ret == 0) goto L_7ed3c;
 
     /* [UNRESOLVED] [(id)ret count]; */
-    (void)[[(id)ret containsObject:ret] totalFiles];
+    /* [UNRESOLVED] [[(id)ret containsObject:ret] totalFiles]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery][耗时] 扫描 %.0f ms｜过滤 %.0f ms（%lu 段 / %lu 文件）"]; */
     goto L_7ed4c;
 
@@ -1965,19 +1965,19 @@ L_7ed3c:;
     /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_7ed4c:;
-    (void)[[(id)ret containsObject:ret] onlySid];
+    /* [UNRESOLVED] [[(id)ret containsObject:ret] onlySid]; */
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_7eee0; */
 
-    (void)[[(id)ret containsObject:ret] titleInfoLabel];
+    /* [UNRESOLVED] [[(id)ret containsObject:ret] titleInfoLabel]; */
     objc_release(ret);
     objc_release(ret);
     if (ret == 0) goto L_7eee4;
 
-    (void)[[(id)ret containsObject:ret] onlySid];
+    /* [UNRESOLVED] [[(id)ret containsObject:ret] onlySid]; */
     /* [UNRESOLVED] HushGalNameForSid(); */
     objc_release(ret);
-    (void)[[(id)ret containsObject:ret] onlySid];
+    /* [UNRESOLVED] [[(id)ret containsObject:ret] onlySid]; */
     /* [UNRESOLVED] HushGalShowIdForSid(); */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret length]; */
@@ -1999,7 +1999,7 @@ L_7eee4:;
     /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if ([(id)ret count] == 0) goto L_7ef58; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     goto L_7ef58;
 
@@ -2012,7 +2012,7 @@ L_7ef58:;
     objc_release(ret);
 
 L_7ef98:;
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     (void)[(id)self emptyLabel];
     (void)[(id)ret setHidden:ret];
@@ -2029,9 +2029,9 @@ L_7ef98:;
     (void)[(id)self onlySid];
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] [(id)ret count]; */
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
-    (void)[(id)self totalFiles];
+    /* [UNRESOLVED] [(id)self totalFiles]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery] 数据就绪 onlySid=%@ sections=%lu shown=%lu files=%lu"]; */
     objc_release(ret);
     objc_release(ret);
@@ -2151,7 +2151,7 @@ L_7f14c:;
     // 0007f464  ret
     id ret = nil;
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
     /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_7f428; */
 
@@ -3214,13 +3214,13 @@ L_80268:;
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_80584; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret count] == 0) goto L_80414; */
 
 L_802e4:;
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret sid]; */
@@ -3245,7 +3245,7 @@ L_803b0:;
 L_803b8:;
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lo * /) goto L_802e4; */
@@ -3351,7 +3351,7 @@ L_8063c:;
     // 000806c4  ret
     id ret = nil;
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     return 0;  /* [UNRESOLVED] [(id)ret count] */
@@ -3439,12 +3439,12 @@ L_8063c:;
 
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_807b4; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_807b4; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a1]; */
     /* [UNRESOLVED] [(id)ret files]; */
     /* [UNRESOLVED] [(id)ret count]; */
@@ -4049,12 +4049,12 @@ L_809d0:;
     /* [UNRESOLVED] if ((([(id)a2 section] >> 63) & 1) != 0) goto L_80970; */
 
     /* [UNRESOLVED] [(id)a2 section]; */
-    (void)[(id)ret shown];
+    /* [UNRESOLVED] [(id)ret shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_80970; */
 
-    (void)[(id)ret shown];
+    /* [UNRESOLVED] [(id)ret shown]; */
     /* [UNRESOLVED] [(id)a2 section]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a2 section]]; */
     objc_release(ret);
@@ -4646,12 +4646,12 @@ L_80efc:;
     /* [UNRESOLVED] if ((([(id)a1 section] >> 63) & 1) != 0) goto L_81214; */
 
     /* [UNRESOLVED] [(id)a1 section]; */
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_81214; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)a1 section]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a1 section]]; */
     objc_release(ret);
@@ -4668,10 +4668,10 @@ L_80efc:;
     /* [UNRESOLVED] [(id)a1 item]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a1 item]]; */
     objc_release(ret);
-    (void)[(id)ret thumb];
+    /* [UNRESOLVED] [(id)ret thumb]; */
     (void)[(id)ret setAccessibilityIdentifier:ret];
     objc_release(ret);
-    (void)[(id)ret thumb];
+    /* [UNRESOLVED] [(id)ret thumb]; */
     (void)[(id)ret bounds];
     objc_retain(ret);
     objc_retain(ret);
@@ -4719,7 +4719,7 @@ L_812e0:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] HushIsVideoPath(); */
-    (void)[(id)ret playBadge];
+    /* [UNRESOLVED] [(id)ret playBadge]; */
     (void)[(id)ret setHidden:0];
     objc_release(ret);
     /* [UNRESOLVED] HushGalSourceOfFile(); */
@@ -4729,7 +4729,7 @@ L_812e0:;
     goto L_81378;
 
 L_81378:;
-    (void)[(id)ret flashTag];
+    /* [UNRESOLVED] [(id)ret flashTag]; */
     (void)[(id)ret setHidden:1];
     objc_release(ret);
     (void)[(id)ret gestureRecognizers];
@@ -5130,12 +5130,12 @@ L_81588:;
     /* [UNRESOLVED] if ((([(id)a1 section] >> 63) & 1) != 0) goto L_819b8; */
 
     /* [UNRESOLVED] [(id)a1 section]; */
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_819b8; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)a1 section]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a1 section]]; */
     objc_release(ret);
@@ -5545,12 +5545,12 @@ L_819b8:;
     /* [UNRESOLVED] if ((([(id)a0 tag] >> 63) & 1) != 0) goto L_81df4; */
 
     /* [UNRESOLVED] [(id)a0 tag]; */
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_81df4; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)a0 tag]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a0 tag]]; */
     objc_release(ret);
@@ -5605,7 +5605,7 @@ L_81ce4:;
     goto L_81d6c;
 
 L_81d38:;
-    (void)[(id)0x3e8 noteFiltered:3];
+    /* [UNRESOLVED] [(id)0x3e8 noteFiltered:3]; */
     goto L_81dd4;
 
 L_81d48:;
@@ -6651,12 +6651,12 @@ L_834b8:;
     objc_release(ret);
     if ((([(id)ret tag] >> 63) & 1) != 0) goto L_83634;
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_83634; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     (void)[(id)ret objectAtIndexedSubscript:[(id)ret tag]];
     /* [UNRESOLVED] [(id)ret sid]; */
     objc_release(ret);
@@ -6695,7 +6695,7 @@ L_8375c:;
 
 L_837a0:;
     objc_retain(ret);
-    (void)[(id)0 actionWithTitle:@"复制昵称" image:ret identifier:0 handler:-0x90];
+    /* [UNRESOLVED] [(id)0 actionWithTitle:@"复制昵称" image:ret identifier:0 handler:-0x90]; */
     (void)[(id)ret addObject:ret];
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_83824; */
@@ -7058,12 +7058,12 @@ L_83ce0:;
 
     /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_840dc; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_840dc; */
 
-    (void)[(id)self shown];
+    /* [UNRESOLVED] [(id)self shown]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret sid]; */

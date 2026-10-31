@@ -427,7 +427,7 @@ L_879dc:;
     if (ret == 0) goto L_87a80;
 
     (void)[(id)ret lastPathComponent];
-    (void)[(id)0 lastPathComponent];
+    /* [UNRESOLVED] [(id)0 lastPathComponent]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选择完成：%@ → %@"]; */
     objc_release(ret);
     objc_release(ret);

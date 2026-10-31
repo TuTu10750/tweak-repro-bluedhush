@@ -7594,7 +7594,7 @@ L_a1524:;
 L_a15a0:;
     (void)[(id)ret objectAtIndexedSubscript:-2];
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_a1734;
 
     (void)[(id)ret objectForKeyedSubscript:@"lat"];
@@ -8322,7 +8322,7 @@ L_a1e94:;
 L_a1f28:;
     (void)[(id)ret objectAtIndexedSubscript:-2];
     (void)[(id)[NSDictionary class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSDictionary class] class]]; */
     if (ret == 0) goto L_a20a8;
 
     (void)[(id)ret objectForKeyedSubscript:@"lat"];

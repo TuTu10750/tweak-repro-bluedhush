@@ -1615,7 +1615,7 @@ L_97174:;
 
 L_97318:;
     /* [UNRESOLVED] stack_chk_fail(); */
-    (void)[(id)0 row];
+    /* [UNRESOLVED] [(id)0 row]; */
 }
 
 // @0x97368  types=v24@0:8q16

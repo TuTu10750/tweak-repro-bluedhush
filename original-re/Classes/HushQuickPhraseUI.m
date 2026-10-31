@@ -317,7 +317,7 @@ L_127fe0:;
     objc_release(ret);
     /* [UNRESOLVED] HushKeyValue(0x223f58); */
     (void)[(id)[UIView class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIView class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIView class] class]]; */
     if (ret == 0) goto L_128060;
 
     (void)[(id)ret isHidden];
@@ -1171,7 +1171,7 @@ L_12892c:;
     /* [UNRESOLVED] HushKeyValue(0x224018); */
     objc_release(objc_loadWeakRetained);
     (void)[(id)[UITableView class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UITableView class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UITableView class] class]]; */
     objc_release(ret);
     return nil;  /* [UNRESOLVED] objc_loadWeakRetained */
 }
@@ -1901,7 +1901,7 @@ L_1292a0:;
     /* [UNRESOLVED] HushKeyValue(0x224058); */
     objc_release(objc_loadWeakRetained);
     (void)[(id)[UIButton class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIButton class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIButton class] class]]; */
     if (ret == 0) goto L_129344;
 
     (void)[(id)self adoptGiftButton:ret keyboard:objc_loadWeakRetained];
@@ -1920,7 +1920,7 @@ L_129344:;
     /* [UNRESOLVED] CGRectGetMinY(); */
     /* [UNRESOLVED] HushKeyValue(0x224078); */
     (void)[(id)[UIView class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIView class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIView class] class]]; */
     if (ret == 0) goto L_12946c;
 
     (void)[(id)ret superview];
@@ -3353,7 +3353,7 @@ L_12a0b4:;
 L_12a0c4:;
     /* [UNRESOLVED] HushKeyValue(0x2240f8); */
     (void)[(id)[UIViewController class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIViewController class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIViewController class] class]]; */
     if (ret == 0) goto L_12a110;
 
     objc_retain(ret);
@@ -3362,7 +3362,7 @@ L_12a0c4:;
 L_12a110:;
     /* [UNRESOLVED] HushKeyValue(0x2240f8); */
     (void)[(id)[UIViewController class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIViewController class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIViewController class] class]]; */
     if (ret == 0) goto L_12a15c;
 
     objc_retain(ret);
@@ -3378,7 +3378,7 @@ L_12a15c:;
 
 L_12a1a8:;
     (void)[(id)[UIViewController class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIViewController class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIViewController class] class]]; */
     /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_12a1ec; */
 
     (void)[(id)ret nextResponder];
@@ -3429,7 +3429,7 @@ L_12a33c:;
     goto L_12a360;
 
 L_12a350:;
-    (void)[(id)ret noteFiltered:3];
+    /* [UNRESOLVED] [(id)ret noteFiltered:3]; */
 
 L_12a360:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */

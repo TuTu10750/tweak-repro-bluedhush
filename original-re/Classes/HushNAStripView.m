@@ -728,7 +728,7 @@ L_c56e0:;
     /* [UNRESOLVED] if ([(id)0 count] == 0) goto L_c5cbc; */
 
 L_c59d8:;
-    (void)[(id)0 objectAtIndexedSubscript:0];
+    /* [UNRESOLVED] [(id)0 objectAtIndexedSubscript:0]; */
     (void)[(id)[NSURL class] URLWithString:ret];
     if (ret == 0) goto L_c5c80;
 
@@ -1021,7 +1021,7 @@ L_c62e4:;
     (void)[(id)self urls];
     objc_retain(ret);
     (void)[(id)[NSArray class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSArray class] class]]; */
     if (ret == 0) goto L_c63c4;
 
     /* [UNRESOLVED] [(id)ret count]; */

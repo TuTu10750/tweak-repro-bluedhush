@@ -1454,7 +1454,7 @@ L_c7490:;
     (void)[(id)ret viewWithTag:0];
     objc_release(ret);
     (void)[(id)[UIScrollView class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIScrollView class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIScrollView class] class]]; */
     /* [UNRESOLVED] objc_retain(a0); */
     objc_release(ret);
     goto L_c76d8;
@@ -1826,7 +1826,7 @@ L_c77d8:;
     objc_release(ret);
     objc_retain(ret);
     (void)[(id)[NSString class] class];
-    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] class]]; */
 
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_c7aec; */

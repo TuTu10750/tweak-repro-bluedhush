@@ -983,7 +983,7 @@ L_cf128:;
 L_cf15c:;
     /* [UNRESOLVED] objc_release(self->_photos); */
     /* [UNRESOLVED] [(id)self->_photos removeAllObjects]; */
-    (void)[(id)0 copy];
+    /* [UNRESOLVED] [(id)0 copy]; */
     /* [UNRESOLVED] objc_release(self->_builtPhotos); */
     /* [UNRESOLVED] [(id)0 unknownSelector]; */
     /* [UNRESOLVED] if ([(id)0 unknownSelector] == 0) goto L_cf3e0; */
@@ -1006,7 +1006,7 @@ L_cf278:;
     /* [UNRESOLVED] [(id)self addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     /* [UNRESOLVED] [(id)self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     /* [UNRESOLVED] [(id)self->_photos addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
-    (void)[(id)0 objectAtIndexedSubscript:0];
+    /* [UNRESOLVED] [(id)0 objectAtIndexedSubscript:0]; */
     /* [UNRESOLVED] sub_cf42c(ret); */
     objc_release(ret);
     /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /]); */
@@ -2357,7 +2357,7 @@ L_d00f4:;
 
     if (0x3e8 == 0) goto L_d01f8;
 
-    (void)[(id)0x3e8 description];
+    /* [UNRESOLVED] [(id)0x3e8 description]; */
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_d0204; */
 
@@ -2376,7 +2376,7 @@ L_d01c8:;
     goto L_d029c;
 
 L_d01e0:;
-    (void)[(id)ret noteFiltered:3];
+    /* [UNRESOLVED] [(id)ret noteFiltered:3]; */
     goto L_d0370;
 
 L_d01f8:;
@@ -2432,7 +2432,7 @@ L_d03cc:;
 
 L_d03fc:;
     (void)[(id)[UITableView class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UITableView class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UITableView class] class]]; */
     /* [UNRESOLVED] if (((ret >> 0) & 1) != 0) goto L_d0444; */
 
     (void)[(id)ret superview];
@@ -2441,7 +2441,7 @@ L_d03fc:;
 
 L_d0444:;
     (void)[(id)[UITableView class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UITableView class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UITableView class] class]]; */
     if (ret == 0) goto L_d05e8;
 
     (void)[(id)ret visibleCells];

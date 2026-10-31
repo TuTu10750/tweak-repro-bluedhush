@@ -556,7 +556,7 @@ L_3bf58:;
     if (0 == 0) goto L_3c05c;
 
 L_3bfe0:;
-    (void)[(id)0 class];
+    /* [UNRESOLVED] [(id)0 class]; */
     /* [UNRESOLVED] NSStringFromClass(); */
     (void)[(id)ret lowercaseString];
     (void)[(id)ret hasSuffix:@"bdcustommenuview"];
@@ -564,7 +564,7 @@ L_3bfe0:;
     objc_release(ret);
     if ((([(id)ret hasSuffix:@"bdcustommenuview"] >> 0) & 1) != 0) goto L_3c05c;
 
-    (void)[(id)0 superview];
+    /* [UNRESOLVED] [(id)0 superview]; */
     objc_release(0);
     if (ret != 0) goto L_3bfe0;
 
@@ -649,13 +649,13 @@ L_3c308:;
     goto L_3c3fc;
 
 L_3c364:;
-    (void)[[(id)ret unsignedIntValue] noteFiltered:3];
+    /* [UNRESOLVED] [[(id)ret unsignedIntValue] noteFiltered:3]; */
 
 L_3c36c:;
     goto L_3cd4c;
 
 L_3c37c:;
-    (void)[[[(id)ret unsignedIntValue] noteFiltered:3] noteFiltered:3];
+    /* [UNRESOLVED] [[[(id)ret unsignedIntValue] noteFiltered:3] noteFiltered:3]; */
 
 L_3c384:;
     objc_release(ret);
@@ -944,7 +944,7 @@ L_3cee4:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_3d01c;
 
-    (void)[(id)0 item];
+    /* [UNRESOLVED] [(id)0 item]; */
     (void)[(id)ret numberOfItemsInSection:0];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 收尾交给宿主 delegate（didSelect item=%ld/%ld）"]; */
     goto L_3d030;
@@ -984,7 +984,7 @@ L_3d090:;
     objc_release(0);
     objc_release(0);
     objc_release(ret);
-    (void)[(id)0 respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [(id)0 respondsToSelector:NSSelectorFromString]; */
     if (0 == 0) goto L_3d10c;
 
     /* [UNRESOLVED] [(id)0 unknownSelector]; */

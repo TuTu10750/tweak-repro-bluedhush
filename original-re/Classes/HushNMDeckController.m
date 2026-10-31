@@ -1030,7 +1030,7 @@ L_df594:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if (0 == 0) goto L_df5f8;
 
-    (void)[(id)0 respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [(id)0 respondsToSelector:NSSelectorFromString]; */
     if (0 == 0) goto L_df5f8;
 
     /* [UNRESOLVED] [(id)0 unknownSelector]; */
@@ -1722,7 +1722,7 @@ L_e17f4:;
     /* [UNRESOLVED] class_getInstanceVariable([objc_retainAutorelease UTF8String]); */
     /* [UNRESOLVED] if (class_getInstanceVariable != 0) goto L_e18f4; */
 
-    (void)[(id)0 hasPrefix:@"_"];
+    /* [UNRESOLVED] [(id)0 hasPrefix:@"_"]; */
     if (((0 >> 0) & 1) == 0) goto L_e18b8;
 
     goto L_e18b8;
@@ -3314,7 +3314,7 @@ L_e2990:;
     if (ret == 0) goto L_e2a2c;
 
     (void)[(id)[UIButton class] class];
-    (void)[(id)ret isKindOfClass:[(id)[UIButton class] class]];
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIButton class] class]]; */
     if (ret == 0) goto L_e2a2c;
 
     (void)[(id)ret setSelected:0];
@@ -5092,7 +5092,7 @@ L_e3e3c:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if (0 == 0) goto L_e3f00;
 
-    (void)[(id)0 respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [(id)0 respondsToSelector:NSSelectorFromString]; */
     if (0 == 0) goto L_e3f00;
 
     /* [UNRESOLVED] [(id)0 unknownSelector]; */
