@@ -1353,7 +1353,7 @@ L_c7384:;
     /* [UNRESOLVED] [(id)ret count]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * local * / pagingScrollView]; */
-    (void)[(id)ret setContentOffset:0];
+    (void)[(id)ret setContentOffset:CGPointZero];
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * local * / bdh_updatePage]; */
 
@@ -2877,7 +2877,7 @@ L_c87b8:;
 L_c883c:;
     /* [UNRESOLVED] CGAffineTransformMakeTranslation(); */
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    (void)[(id)ret setTransform:0];
+    /* [UNRESOLVED] [(id)ret setTransform:0]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)self unknownSelector]; */
     (void)[(id)ret setAlpha:0];

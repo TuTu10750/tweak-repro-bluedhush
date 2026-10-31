@@ -557,7 +557,7 @@
 L_ded64:;
     (void)[(id)[UIButton class] buttonWithType:0];
     (void)[(id)ret setTag:0x2332];
-    (void)[(id)ret setTitle:0 forState:0];
+    (void)[(id)ret setTitle:nil forState:0];
     /* [UNRESOLVED] sub_d34c8(0); */
     (void)[(id)self embedded];
     (void)[(id)ret setHidden:0];
@@ -1728,7 +1728,7 @@ L_e17f4:;
     goto L_e18b8;
 
 L_e18b8:;
-    (void)[(id)@"_" stringByAppendingString:0];
+    (void)[(id)@"_" stringByAppendingString:nil];
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] class_getInstanceVariable([objc_retainAutorelease UTF8String]); */
     objc_release(ret);
@@ -5147,7 +5147,7 @@ L_e4034:;
     (void)[(id)ret contentOffset];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_e4140; */
 
-    (void)[(id)ret setContentOffset:0 animated:0];
+    (void)[(id)ret setContentOffset:CGPointZero animated:0];
 
 L_e4140:;
     objc_release(ret);

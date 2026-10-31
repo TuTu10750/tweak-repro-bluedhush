@@ -177,7 +177,7 @@ L_962d8:;
 
     (void)[super viewDidLoad];
     (void)[(id)self hushIsFavorites];
-    (void)[(id)self setTitle:0];
+    (void)[(id)self setTitle:nil];
     (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setRowHeight:0x4051000000000000]; */
     objc_release(ret);
@@ -911,7 +911,7 @@ L_968b8:;
     (void)[(id)ret description];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret length]; */
-    (void)[(id)ret setText:0];
+    (void)[(id)ret setText:nil];
     (void)[(id)ret objectForKeyedSubscript:@"lat"];
     (void)[(id)ret doubleValue];
     (void)[(id)ret objectForKeyedSubscript:@"lng"];
@@ -1930,7 +1930,7 @@ L_9756c:;
     id ret = nil;
 
     (void)[(id)self hushIsFavorites];
-    (void)[(id)[UIAlertController class] alertControllerWithTitle:0 message:0 preferredStyle:1];
+    (void)[(id)[UIAlertController class] alertControllerWithTitle:nil message:nil preferredStyle:1];
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:-32 style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);

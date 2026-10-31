@@ -607,7 +607,7 @@ L_7c8d8:;
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
     (void)[(id)self onlySid];
     /* [UNRESOLVED] [(id)ret length]; */
-    (void)[[[UILabel alloc] initWithFrame:CGRectZero] setText:0];
+    (void)[[[UILabel alloc] initWithFrame:CGRectZero] setText:nil];
     objc_release(ret);
     (void)[(id)[UIFont class] boldSystemFontOfSize:17];
     (void)[[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
@@ -2662,7 +2662,7 @@ L_7f508:;
     (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)[UIAlertController class] alertControllerWithTitle:@"过滤" message:0 preferredStyle:0];
+    (void)[(id)[UIAlertController class] alertControllerWithTitle:@"过滤" message:nil preferredStyle:0];
     objc_retain(ret);
     /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
     /* [UNRESOLVED] if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_7facc; */
@@ -5999,7 +5999,7 @@ L_8310c:;
 
     /* [UNRESOLVED] HushIsVideoPath(); */
     (void)[(id)[NSString class] stringWithFormat:@"确定永久删除这个%@吗？"];
-    (void)[(id)[UIAlertController class] alertControllerWithTitle:0 message:ret preferredStyle:1];
+    (void)[(id)[UIAlertController class] alertControllerWithTitle:nil message:ret preferredStyle:1];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
@@ -7082,7 +7082,7 @@ L_83e94:;
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[NSString class] stringWithFormat:@"确定将 %@ %@不想看用户名单吗？"];
-    (void)[(id)[UIAlertController class] alertControllerWithTitle:0 message:ret preferredStyle:1];
+    (void)[(id)[UIAlertController class] alertControllerWithTitle:nil message:ret preferredStyle:1];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];

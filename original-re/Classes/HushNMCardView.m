@@ -2396,7 +2396,7 @@ L_d0268:;
     objc_release(ret);
 
 L_d0288:;
-    (void)[(id)sel_registerName("objectAtIndexedSubscript:") logLevel:3 format:@"[NearbyMark] uid=%@ 取消评价"];
+    /* [UNRESOLVED] [(id)sel_registerName("objectAtIndexedSubscript:") logLevel:3 format:@"[NearbyMark] uid=%@ 取消评价"]; */
     objc_release(ret);
 
 L_d029c:;
@@ -2415,7 +2415,7 @@ L_d0304:;
 
 L_d031c:;
     /* [UNRESOLVED] [(id)sel_registerName("characterAtIndex:") objectAtIndexedSubscript:a0]; */
-    (void)[(id)ret logLevel:3 format:@"[NearbyMark] uid=%@ 评价「%@」"];
+    /* [UNRESOLVED] [(id)ret logLevel:3 format:@"[NearbyMark] uid=%@ 评价「%@」"]; */
     objc_release(ret);
     objc_release(ret);
 
@@ -2461,7 +2461,7 @@ L_d04f8:;
     if (ret == 0) goto L_d05a0;
 
     (void)[(id)ret uid];
-    (void)[(id)ret isEqualToString:0x3e8];
+    (void)[(id)ret isEqualToString:nil];
     objc_release(ret);
     if ([(id)ret isEqualToString:0x3e8] == 0) goto L_d05a0;
 

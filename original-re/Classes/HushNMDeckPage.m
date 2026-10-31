@@ -3744,7 +3744,7 @@ L_d71e8:;
 
 L_d7218:;
     /* [UNRESOLVED] [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1]; */
-    (void)[(id)sel_registerName("length") addObject:ret];
+    /* [UNRESOLVED] [(id)sel_registerName("length") addObject:ret]; */
     goto L_d7388;
 
 L_d724c:;
@@ -5367,7 +5367,7 @@ L_daa04:;
     /* [UNRESOLVED] [(id)[UIButton class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     (void)[(id)ret objectForKeyedSubscript:@"actTitle"];
-    (void)[(id)ret setTitle:0 forState:0];
+    (void)[(id)ret setTitle:nil forState:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:12.5 weight:0x200180]; */
     (void)[(id)ret titleLabel];
@@ -7339,7 +7339,7 @@ L_dcc20:;
 L_dcc5c:;
     objc_retain(0);
     /* [UNRESOLVED] [(id)self->_badge text]; */
-    (void)[(id)ret isEqualToString:0];
+    (void)[(id)ret isEqualToString:nil];
     objc_release(ret);
     if ((([(id)ret isEqualToString:0] >> 0) & 1) != 0) goto L_dccb8;
 

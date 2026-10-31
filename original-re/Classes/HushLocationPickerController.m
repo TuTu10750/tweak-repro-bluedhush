@@ -3992,7 +3992,7 @@ L_9d900:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret placemark]; */
     /* [UNRESOLVED] sub_9c224(); */
-    (void)[(id)ret setSecondaryText:0];
+    (void)[(id)ret setSecondaryText:nil];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] preferredFontForTextStyle:0x2006b0/ *+0x0* /]; */

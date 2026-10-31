@@ -2177,7 +2177,7 @@ L_e64b0:;
 
     /* [UNRESOLVED] CGAffineTransformMakeTranslation(); */
     (void)[(id)self view];
-    (void)[(id)ret setTransform:0];
+    /* [UNRESOLVED] [(id)ret setTransform:0]; */
     objc_release(ret);
     goto L_e670c;
 
@@ -2192,7 +2192,7 @@ L_e6650:;
     /* [UNRESOLVED] if (cond / * le * /) goto L_e6704; */
 
     (void)[(id)ret view];
-    (void)[(id)ret setTransform:0];
+    /* [UNRESOLVED] [(id)ret setTransform:0]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret dismissViewControllerAnimated:1 completion:0]; */
     goto L_e670c;
