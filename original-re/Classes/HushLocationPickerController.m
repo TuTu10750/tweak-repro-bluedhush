@@ -595,10 +595,10 @@
     (void)[(id)@"📍" sizeWithAttributes:ret];
     (void)[(id)[UIGraphicsImageRendererFormat class] defaultFormat];
     (void)[(id)ret setOpaque:0];
-    (void)[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12];
+    (void)[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:12];
     objc_retain(ret);
-    (void)[[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12] imageWithActions:0];
-    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]);
+    /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12] imageWithActions:0]; */
+    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:12]);
     /* [UNRESOLVED] [objc_retainAutorelease CGImage]; */
     /* [UNRESOLVED] if ([objc_retainAutorelease CGImage] == 0) goto L_983b8; */
 
@@ -2354,9 +2354,9 @@ L_9b9f4:;
     /* [UNRESOLVED] [[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; */
     (void)[(id)[UIGraphicsImageRendererFormat class] defaultFormat];
     (void)[(id)ret setOpaque:0];
-    (void)[[UIGraphicsImageRenderer alloc] initWithSize:ret format:20];
+    (void)[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:20];
     /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:20] imageWithActions:0x1a7e18]; */
-    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:20]);
+    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:20]);
     objc_release(ret);
     /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"] setImage:ret]; */
     objc_release(ret);

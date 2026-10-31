@@ -1707,7 +1707,7 @@ L_17a74:;
     /* [UNRESOLVED] if (cond / * ls * /) goto L_17afc; */
 
     /* [UNRESOLVED] [(id)ret count]; */
-    (void)[(id)ret subarrayWithRange:0];
+    (void)[(id)ret subarrayWithRange:NSMakeRange(0, 0)];
     (void)[(id)ret componentsJoinedByString:@"\n"];
     objc_release(ret);
     goto L_17b08;
