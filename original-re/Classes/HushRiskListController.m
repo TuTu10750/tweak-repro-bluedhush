@@ -1657,7 +1657,7 @@ L_21f40:;
 L_21f60:;
     /* [UNRESOLVED] Unwind_Resume(); */
     objc_retain(0);
-    if (objc_loadWeakRetained == 0) goto L_2208c;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_2208c; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained items]; */
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / row]; */
@@ -1678,7 +1678,7 @@ L_22050:;
     goto L_2208c;
 
 L_2208c:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 
     /* [UNRESOLVED] objc_retain(0/ *+0x20* /); */
 }

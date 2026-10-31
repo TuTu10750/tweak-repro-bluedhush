@@ -3428,7 +3428,7 @@ L_13df80:;
 L_13dfa0:;
     /* [UNRESOLVED] Unwind_Resume(); */
     objc_retain(0);
-    if (objc_loadWeakRetained == 0) goto L_13e188;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_13e188; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / unknownSelector]; */
@@ -3492,7 +3492,7 @@ L_13e23c:;
     objc_release([NSString class]);
 
 L_13e264:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 }
 
 // @0x13e28c  types=@16@0:8

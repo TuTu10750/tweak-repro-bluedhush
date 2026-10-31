@@ -283,7 +283,7 @@
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] if (a0 == 0) goto L_1280ac; */
 
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_127e24; */
 
     /* [UNRESOLVED] objc_release(self->/ *+0x30* /); */
@@ -1068,7 +1068,7 @@ L_1286c8:;
     // 00128964  ret
     id ret = nil;
 
-    if (objc_loadWeakRetained == 0) goto L_12892c;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_12892c; */
 
     /* [UNRESOLVED] if (self->/ *+0x28* / == 0) goto L_12892c; */
 
@@ -1114,7 +1114,7 @@ L_128924:;
     /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:0x223ff8] noteFiltered:3]; */
 
 L_12892c:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_128968; */
 
     return;
@@ -1169,7 +1169,7 @@ L_12892c:;
     id ret = nil;
 
     /* [UNRESOLVED] HushKeyValue(0x224018); */
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     (void)[(id)[UITableView class] class];
     /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UITableView class] class]]; */
     objc_release(ret);
@@ -1536,7 +1536,7 @@ L_1290a8:;
     /* [UNRESOLVED] HushInlineEditSetActive(); */
     /* [UNRESOLVED] if (cond / * le * /) goto L_129150; */
 
-    if (objc_loadWeakRetained != 0) goto L_129118;
+    /* [UNRESOLVED] if (objc_loadWeakRetained != 0) goto L_129118; */
 
     (void)[(id)self currentTable];
     if (ret == 0) goto L_129150;
@@ -1874,7 +1874,7 @@ L_129150:;
     objc_release(ret);
     /* [UNRESOLVED] if ((([(id)ret isEnabled:0 / * unk * /] >> 0) & 1) == 0) goto L_129254; */
 
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_129224; */
 
     (void)[(id)self hideBar];
@@ -1894,18 +1894,18 @@ L_129254:;
     goto L_1294c8;
 
 L_129298:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 
 L_1292a0:;
     objc_release(ret);
     /* [UNRESOLVED] HushKeyValue(0x224058); */
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     (void)[(id)[UIButton class] class];
     /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIButton class] class]]; */
     if (ret == 0) goto L_129344;
 
-    (void)[(id)self adoptGiftButton:ret keyboard:objc_loadWeakRetained];
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] [(id)self adoptGiftButton:ret keyboard:objc_loadWeakRetained]; */
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 
 L_129344:;
     /* [UNRESOLVED] [(id)a0 view]; */
@@ -2125,11 +2125,11 @@ L_12964c:;
     /* [UNRESOLVED] [(id)0 / * adrp * / keyboardFrame:objc_loadWeakRetained duration:0 inVC:0 / * unk * /]; */
     /* [UNRESOLVED] if (a1 != 0) goto L_129670; */
 
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 
 L_129670:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
-    if (objc_loadWeakRetained == 0) goto L_1296d4;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_1296d4; */
 
     /* [UNRESOLVED] sub_128df4(); */
     /* [UNRESOLVED] [(id)ret count]; */
@@ -3332,19 +3332,19 @@ L_129fe4:;
 L_12a018:;
     objc_release(ret);
     objc_retain(ret);
-    objc_retain(objc_loadWeakRetained);
-    objc_retain(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_retain(objc_loadWeakRetained); */
+    /* [UNRESOLVED] objc_retain(objc_loadWeakRetained); */
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_12a370; */
 
-    objc_retain(objc_loadWeakRetained);
-    if (objc_loadWeakRetained == 0) goto L_12a0b4;
+    /* [UNRESOLVED] objc_retain(objc_loadWeakRetained); */
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_12a0b4; */
 
     (void)[(id)[UIViewController class] class];
     /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[(id)[UIViewController class] class]]; */
-    if (objc_loadWeakRetained == 0) goto L_12a0c4;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_12a0c4; */
 
-    objc_retain(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_retain(objc_loadWeakRetained); */
     goto L_12a208;
 
 L_12a0b4:;
@@ -3371,7 +3371,7 @@ L_12a110:;
 L_12a15c:;
     (void)[(id)[UIResponder class] class];
     /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[(id)[UIResponder class] class]]; */
-    if (objc_loadWeakRetained == 0) goto L_12a1f8;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_12a1f8; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained nextResponder]; */
     if (ret == 0) goto L_12a1ec;
@@ -3395,7 +3395,7 @@ L_12a200:;
     objc_release(ret);
 
 L_12a208:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     objc_retain(ret);
     objc_release(0);
     /* [UNRESOLVED] NSSelectorFromString(); */
@@ -3438,11 +3438,11 @@ L_12a368:;
     objc_release(ret);
 
 L_12a370:;
-    objc_release(objc_loadWeakRetained);
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     objc_release(ret);
-    objc_release(objc_loadWeakRetained);
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     objc_release(ret);
 
 L_12a3e4:;
@@ -3664,7 +3664,7 @@ L_12a4f4:;
     // 0012a760  b       #0x1a72d8   ; _objc_msgSend
 
     /* [UNRESOLVED] [objc_loadWeakRetained resignFirstResponder]; */
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] HushInlineEditSetActive(); */
 }
 
@@ -4476,7 +4476,7 @@ L_12ad50:;
     (void)[(id)ret stringByTrimmingCharactersInSet:ret];
     objc_release(ret);
     objc_release(ret);
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] sub_128df4(); */
     (void)[(id)ret mutableCopy];
     objc_release(ret);

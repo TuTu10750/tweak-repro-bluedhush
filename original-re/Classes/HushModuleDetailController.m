@@ -1637,16 +1637,16 @@ L_19ae40:;
 
 L_19aeb4:;
     /* [UNRESOLVED] Unwind_Resume(); */
-    if (objc_loadWeakRetained == 0) goto L_19b0a4;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_19b0a4; */
 
     /* [UNRESOLVED] objc_retain(Unwind_Resume/ *+0x20* /); */
     /* [UNRESOLVED] HushActivationInterceptToggle(); */
-    if (((objc_destroyWeak >> 0) & 1) == 0) goto L_19af84;
+    /* [UNRESOLVED] if (((objc_destroyWeak >> 0) & 1) == 0) goto L_19af84; */
 
     if (0 == 0) goto L_19af9c;
 
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / isEqualToString:0 / * unk * /]; */
-    if (objc_destroyWeak == 0) goto L_19af9c;
+    /* [UNRESOLVED] if (objc_destroyWeak == 0) goto L_19af9c; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     goto L_19b09c;
@@ -1671,7 +1671,7 @@ L_19b034:;
 L_19b048:;
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / isEqualToString:0 / * unk * /]; */
-    if (objc_loadWeakRetained == 0) goto L_19b09c;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_19b09c; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -1681,7 +1681,7 @@ L_19b09c:;
     objc_release(ret);
 
 L_19b0a4:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     return nil;
 }
 

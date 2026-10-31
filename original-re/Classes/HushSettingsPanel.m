@@ -5583,7 +5583,7 @@ L_1a6724:;
 
 L_1a674c:;
     /* [UNRESOLVED] Unwind_Resume(); */
-    if (objc_loadWeakRetained == 0) goto L_1a691c;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_1a691c; */
 
     /* [UNRESOLVED] [(id)Unwind_Resume/ *+0x20* / unknownSelector]; */
     /* [UNRESOLVED] if ([(id)Unwind_Resume/ *+0x20* / unknownSelector] == 0) goto L_1a67dc; */
@@ -5594,7 +5594,7 @@ L_1a674c:;
 L_1a67dc:;
     /* [UNRESOLVED] objc_retain(Unwind_Resume/ *+0x30* /); */
     /* [UNRESOLVED] HushActivationInterceptToggle(); */
-    if (((objc_destroyWeak >> 0) & 1) == 0) goto L_1a68ac;
+    /* [UNRESOLVED] if (((objc_destroyWeak >> 0) & 1) == 0) goto L_1a68ac; */
 
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
@@ -5624,7 +5624,7 @@ L_1a6914:;
     objc_release(ret);
 
 L_1a691c:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     return nil;
 }
 

@@ -2651,10 +2651,10 @@ L_145704:;
     objc_retain(0);
     /* [UNRESOLVED] sub_144d00(0); */
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 
     objc_retain(0);
-    if (objc_loadWeakRetained == 0) goto L_1457c4;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_1457c4; */
 
     /* [UNRESOLVED] if (0/ *+0x10* / == 0) goto L_1457d8; */
 
@@ -2667,7 +2667,7 @@ L_1457d8:;
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
 
 L_1457f0:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
 }
 
 // @0x145808  types=v24@0:8@16

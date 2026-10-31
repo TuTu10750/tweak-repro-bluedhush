@@ -570,11 +570,11 @@ L_3bfe0:;
 
 L_3c05c:;
     objc_retain(0);
-    if (objc_loadWeakRetained == 0) goto L_3c0d8;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3c0d8; */
 
     /* [UNRESOLVED] HushKeyValue(@"msgId"); */
     (void)[(id)ret respondsToSelector:sel_registerName("unsignedLongLongValue")];
-    if (objc_loadWeakRetained == 0) goto L_3c0cc;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3c0cc; */
 
     (void)[(id)ret unsignedLongLongValue];
     objc_release(ret);
@@ -584,14 +584,14 @@ L_3c0cc:;
     objc_release(ret);
 
 L_3c0d8:;
-    objc_release(objc_loadWeakRetained);
-    if (objc_loadWeakRetained == 0) goto L_3c108;
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3c108; */
 
     /* [UNRESOLVED] sub_513ac(); */
     goto L_3c108;
 
 L_3c108:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] NSSelectorFromString(); */
     if (0 == 0) goto L_3c2cc;
 
@@ -639,7 +639,7 @@ L_3c2cc:;
     goto L_3c36c;
 
 L_3c308:;
-    if (objc_loadWeakRetained == 0) goto L_3c3e8;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3c3e8; */
 
     /* [UNRESOLVED] HushKeyValue(@"toId"); */
     (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
@@ -680,7 +680,7 @@ L_3c448:;
     if (0 != 0) goto L_3c594;
 
 L_3c480:;
-    if (objc_loadWeakRetained == 0) goto L_3c51c;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3c51c; */
 
     /* [UNRESOLVED] HushKeyValue(@"targetUid"); */
 
@@ -715,7 +715,7 @@ L_3c570:;
     objc_release(ret);
 
 L_3c57c:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] if (0 / * local * / == 0) goto L_3c62c; */
 
 L_3c594:;
@@ -991,10 +991,10 @@ L_3d090:;
 
 L_3d10c:;
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if (objc_loadWeakRetained == 0) goto L_3d184;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3d184; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained respondsToSelector:NSSelectorFromString]; */
-    if (objc_loadWeakRetained == 0) goto L_3d184;
+    /* [UNRESOLVED] if (objc_loadWeakRetained == 0) goto L_3d184; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
@@ -1010,7 +1010,7 @@ L_3d184:;
     /* [UNRESOLVED] sub_50abc(); */
 
 L_3d18c:;
-    objc_release(objc_loadWeakRetained);
+    /* [UNRESOLVED] objc_release(objc_loadWeakRetained); */
     /* [UNRESOLVED] sub_50abc(); */
     objc_release(0);
     objc_release(ret);
