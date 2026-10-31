@@ -929,7 +929,7 @@ L_3ce88:;
 
     if (1 == 0) goto L_3cee4;
 
-    (void)[(id)ret numberOfItemsInSection:0];
+    /* [UNRESOLVED] [(id)ret numberOfItemsInSection:0]; */
     /* [UNRESOLVED] if (cond / * lt * /) goto L_3cee4; */
 
     (void)[(id)[NSIndexPath class] indexPathForItem:0 inSection:0];
@@ -946,7 +946,7 @@ L_3cee4:;
     if (ret == 0) goto L_3d01c;
 
     /* [UNRESOLVED] [(id)0 item]; */
-    (void)[(id)ret numberOfItemsInSection:0];
+    /* [UNRESOLVED] [(id)ret numberOfItemsInSection:0]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 收尾交给宿主 delegate（didSelect item=%ld/%ld）"]; */
     goto L_3d030;
 
