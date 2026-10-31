@@ -216,3 +216,71 @@ jobs:
             deps-release.txt
             deps-m1.txt
           if-no-files-found: ignore
+
+  # ==========================================================================
+  # original-re : BluedHush_5.19.dylib 的还原工程（76 类 / 1015 方法 / 309 hooks）
+  # 与上面两个变体完全独立：不同 Makefile、不同 TWEAK_NAME、不同产物。
+  # ==========================================================================
+  build-original-re:
+    runs-on: macos-14
+
+    env:
+      THEOS: /Users/runner/theos
+      THEOS_MAKE_PATH: /Users/runner/theos/makefiles
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          brew install ldid xz make 2>/dev/null || brew install ldid xz
+          clang --version | head -3
+
+      - name: Fetch Theos + iPhoneOS SDKs
+        run: |
+          git clone --recursive --depth 1 https://github.com/theos/theos.git "$THEOS"
+          mkdir -p "$THEOS/sdks"
+          curl -fsSL https://github.com/theos/sdks/archive/master.tar.gz -o /tmp/sdks.tar.gz
+          tar xzf /tmp/sdks.tar.gz -C /tmp
+          for d in /tmp/sdks-master/iPhoneOS*.sdk; do
+            cp -R "$d" "$THEOS/sdks/" 2>/dev/null || true
+          done
+          ls "$THEOS/sdks"
+
+      - name: Sanity (tree shape)
+        run: |
+          echo "headers: $(ls original-re/Headers/*.h | wc -l)"
+          echo "impls  : $(ls original-re/Classes/*.m | wc -l)"
+          echo "hooks  : $(grep -c '^%hook' original-re/Hooks/Hooks.generated.xm)"
+          test "$(ls original-re/Headers/*.h | wc -l)" = "76"
+          test "$(ls original-re/Classes/*.m | wc -l)" = "76"
+
+      - name: Build original-re
+        run: |
+          set -o pipefail
+          make -C original-re clean || true
+          make -C original-re FINALPACKAGE=1 2>&1 | tee build-original-re.log
+          echo "--- outputs ---"
+          find original-re/.theos/obj -name '*.dylib' | sort
+
+      - name: Report (does not fail the job)
+        if: always()
+        run: |
+          echo "== error summary =="
+          grep -E "error:" build-original-re.log | sed 's/^.*original-re\///' | sort | uniq -c | sort -rn | head -40 || true
+          echo "== distinct failing files =="
+          grep -E "error:" build-original-re.log | sed -E 's/^([^:]+):.*/\1/' | sort -u | head -40 || true
+          echo "== total errors =="
+          grep -c "error:" build-original-re.log || true
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-re-build
+          path: |
+            build-original-re.log
+            original-re/.theos/obj/**/*.dylib
+          if-no-files-found: warn
+          retention-days: 14
