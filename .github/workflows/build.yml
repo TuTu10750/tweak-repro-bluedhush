@@ -330,25 +330,22 @@ jobs:
           test "$(ls original-re/Headers/*.h | wc -l)" = "76"
           test "$(ls original-re/Classes/*.m | wc -l)" = "76"
 
-      - name: Toolchain shim (ld64 darwin flavor)
+      - name: Toolchain shim (Apple-ld -> lld darwin translator)
         run: |
-          sudo apt-get install -y lld || true
-          ls -l /usr/bin/lld* 2>/dev/null || true
+          sudo apt-get install -y lld python3 || true
+          ls -l /usr/bin/lld /usr/bin/ld64.lld 2>/dev/null || true
           mkdir -p "$THEOS/toolchain/linux/iphone/bin" /tmp/ldbin
           ln -sf "$(command -v clang)"   "$THEOS/toolchain/linux/iphone/bin/clang"
           ln -sf "$(command -v clang++)" "$THEOS/toolchain/linux/iphone/bin/clang++" || true
-          # ld64 entry point: force darwin flavor explicitly (argv[0] sniffing is unreliable when renamed)
           cat > /tmp/ldbin/ld <<'SH'
           #!/bin/sh
-          if command -v lld >/dev/null 2>&1; then exec lld -flavor darwin "$@"; fi
-          if [ -x /usr/bin/ld64.lld ]; then exec /usr/bin/ld64.lld "$@"; fi
-          echo "no darwin linker available" >&2; exit 127
+          exec python3 "$GITHUB_WORKSPACE/ci/ld64wrap.py" "$@"
           SH
           chmod +x /tmp/ldbin/ld
           cp /tmp/ldbin/ld "$THEOS/toolchain/linux/iphone/bin/ld"
           chmod +x "$THEOS/toolchain/linux/iphone/bin/ld"
-          echo "=== probe ==="
-          /tmp/ldbin/ld -v </dev/null 2>&1 | head -3 || true
+          echo "=== translate self-test ==="
+          python3 ci/ld64wrap.py -arch arm64 -dylib -iphoneos_version_min 14.0 -m llvm -o /tmp/x.dylib /dev/null 2>&1 | head -4 || true
 
       - name: Syntax check (clang per-file, the real signal)
         run: |
