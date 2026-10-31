@@ -229,7 +229,7 @@ L_12e20:;
     objc_release(ret);
     /* [UNRESOLVED] if ((([ret isEqualToString:0x256650]; >> 0) & 1) == 0) goto L_12ed8; */
 
-    [NSURLCredential credentialForTrust:[ret serverTrust];];
+    [NSURLCredential credentialForTrust:[ret serverTrust]];
     objc_release(ret);
     goto L_12ed8;
 

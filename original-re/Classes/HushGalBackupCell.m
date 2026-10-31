@@ -269,8 +269,8 @@
     if (self == 0) goto L_88b18;
 
     [[UILabel alloc] initWithFrame:16];
-    [self setName:[[UILabel alloc] initWithFrame:16];];
-    objc_release([[UILabel alloc] initWithFrame:16];);
+    [self setName:[[UILabel alloc] initWithFrame:16]];
+    objc_release([[UILabel alloc] initWithFrame:16]);
     /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
     [self name];
     [ret setFont:ret];
@@ -287,8 +287,8 @@
     objc_release(ret);
     objc_release(ret);
     [[UILabel alloc] initWithFrame:16];
-    [self setMeta:[[UILabel alloc] initWithFrame:16];];
-    objc_release([[UILabel alloc] initWithFrame:16];);
+    [self setMeta:[[UILabel alloc] initWithFrame:16]];
+    objc_release([[UILabel alloc] initWithFrame:16]);
     [UIFont systemFontOfSize:12];
     [self meta];
     [ret setFont:ret];

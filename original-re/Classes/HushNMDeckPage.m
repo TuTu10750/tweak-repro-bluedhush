@@ -581,8 +581,8 @@
     [self->_badgeBox addSubview:self->_badge];
     [self->_badgeBox setUserInteractionEnabled:1];
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")];
-    [self->_badgeBox addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")];];
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")];);
+    [self->_badgeBox addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]];
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]);
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipBox);
     /* [UNRESOLVED] sub_d34c8(0); */
@@ -684,8 +684,8 @@
     objc_release(ret);
     objc_release(ret);
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")];
-    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")];];
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")];);
+    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]];
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]);
     objc_retain(self);
 
 L_d32f8:;
@@ -1358,7 +1358,7 @@ L_d3b3c:;
     /* [UNRESOLVED] [a0 objectForKeyedSubscript:@"job"]; */
     /* [UNRESOLVED] [a0 objectForKeyedSubscript:@"reltxt"]; */
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (ret == 0) goto L_d3c98;
 
     [ret componentsJoinedByString:@","];
@@ -1386,7 +1386,7 @@ L_d3d68:;
     objc_release(ret);
     /* [UNRESOLVED] [a0 objectForKeyedSubscript:@"tagmap"]; */
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_d3e00;
 
     /* [UNRESOLVED] [a0 objectForKeyedSubscript:@"tagmap"]; */
@@ -3323,7 +3323,7 @@ L_d5c48:;
 
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (((ret >> 0) & 1) != 0) goto L_d5dd0;
 
     objc_release(ret);
@@ -3331,7 +3331,7 @@ L_d5c48:;
 L_d5dd0:;
     [0 objectForKeyedSubscript:@"last_operate"];
     [NSNumber class];
-    [ret isKindOfClass:[NSNumber class];];
+    [ret isKindOfClass:[NSNumber class]];
     if (ret == 0) goto L_d5e44;
 
     [ret doubleValue];
@@ -3443,7 +3443,7 @@ L_d6348:;
     [self snap];
     [ret objectForKeyedSubscript:@"tagmap"];
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_d6450;
 
     [self snap];
@@ -3458,7 +3458,7 @@ L_d6450:;
     objc_release(ret);
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (((ret >> 0) & 1) != 0) goto L_d64b4;
 
     objc_release(ret);
@@ -3466,7 +3466,7 @@ L_d6450:;
 L_d64b4:;
     [0 objectForKeyedSubscript:@"tags"];
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_d6520;
 
     [0 objectForKeyedSubscript:@"tags"];
@@ -3677,7 +3677,7 @@ L_d6e40:;
     [ret substringFromIndex:0];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
-    [ret substringToIndex:[ret rangeOfString:@"Ta的特点有"];];
+    [ret substringToIndex:[ret rangeOfString:@"Ta的特点有"]];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
@@ -3814,13 +3814,13 @@ L_d757c:;
 L_d759c:;
     /* [UNRESOLVED] [0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
     if (ret == 0) goto L_d78e8;
 
     [ret rangeOfString:@" · "];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d78e8; */
 
-    [ret substringToIndex:[ret rangeOfString:@" · "];];
+    [ret substringToIndex:[ret rangeOfString:@" · "]];
     [ret substringFromIndex:0];
     [ret isEqualToString:@"星座"];
     if (ret == 0) goto L_d7818;
@@ -3948,7 +3948,7 @@ L_d7abc:;
     if ([[ret copy]countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_d79d4;
 
 L_d7ae8:;
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     [NSMutableArray array];
     [NSMutableArray array];
     [NSArray arrayWithObjects:0 count:4];
@@ -4087,7 +4087,7 @@ L_d826c:;
     [ret objectForKeyedSubscript:ret];
     objc_release(ret);
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_d8348;
 
     [ret objectForKeyedSubscript:@"s"];
@@ -4180,11 +4180,11 @@ L_d85ec:;
     /* [UNRESOLVED] [0x258030 addObject:ret]; */
     [ret copy];
     /* [UNRESOLVED] dispatch_get_global_queue(0); */
-    objc_retain([ret copy];);
+    objc_retain([ret copy]);
     /* [UNRESOLVED] dispatch_async(-0x100); */
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0/ *+0x-e0* /); */
-    objc_release([ret copy];);
+    objc_release([ret copy]);
 
 L_d8684:;
     objc_release(ret);
@@ -4391,11 +4391,11 @@ L_d908c:;
     /* [UNRESOLVED] [0x258038 addObject:ret]; */
     [ret copy];
     /* [UNRESOLVED] dispatch_get_global_queue(0); */
-    objc_retain([ret copy];);
+    objc_retain([ret copy]);
     /* [UNRESOLVED] dispatch_async(-0x100); */
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0/ *+0x-e0* /); */
-    objc_release([ret copy];);
+    objc_release([ret copy]);
 
 L_d9124:;
     objc_release(ret);
@@ -5241,7 +5241,7 @@ L_da4e8:;
 L_da504:;
     /* [UNRESOLVED] [0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
     if (ret == 0) goto L_da54c;
 
     [ret addObject:ret];
@@ -5985,7 +5985,7 @@ L_db064:;
     objc_release(ret);
     objc_release(ret);
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_db188;
 
     [ret objectForKeyedSubscript:@"ip_location"];
@@ -6084,7 +6084,7 @@ L_db544:;
     [ret objectForKeyedSubscript:@"tags"];
     objc_release(ret);
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (ret == 0) goto L_db718;
 
     objc_retain(ret);
@@ -6142,7 +6142,7 @@ L_db7f4:;
 
     /* [UNRESOLVED] [? unknownSelector]; */
     [UIImage class];
-    [ret isKindOfClass:[UIImage class];];
+    [ret isKindOfClass:[UIImage class]];
     objc_retain(sel_registerName("class"));
     objc_release(ret);
     goto L_db8a8;
@@ -6161,7 +6161,7 @@ L_db8a8:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * unk * /); */
-    objc_release([ret integerValue];);
+    objc_release([ret integerValue]);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_db978; */
 
@@ -6744,7 +6744,7 @@ L_dc07c:;
     [ret length];
 
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
 
     [ret isEqualToString:@"gallery"];
 

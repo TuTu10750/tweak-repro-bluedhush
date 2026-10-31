@@ -641,9 +641,9 @@ L_c6544:;
     [[[UIScrollView alloc] initWithFrame:CGRectZero]; setShowsVerticalScrollIndicator:0];
     [[[UIScrollView alloc] initWithFrame:CGRectZero]; setDelegate:self];
     [self view];
-    [ret addSubview:[[UIScrollView alloc] initWithFrame:CGRectZero];];
+    [ret addSubview:[[UIScrollView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    [self setPagingScrollView:[[UIScrollView alloc] initWithFrame:CGRectZero];];
+    [self setPagingScrollView:[[UIScrollView alloc] initWithFrame:CGRectZero]];
     [UIButton buttonWithType:1];
     [self view];
     [ret bounds];
@@ -696,22 +696,22 @@ L_c6544:;
     objc_release(ret);
     [[[UILabel alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
     [self view];
-    [ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero];];
+    [ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    [self setPageLabel:[[UILabel alloc] initWithFrame:CGRectZero];];
+    [self setPageLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     [self bdh_buildPages];
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];
     [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; setMaximumNumberOfTouches:1];
     [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; setCancelsTouchesInView:0];
     [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; setDelegate:self];
     [self view];
-    [ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];];
+    [ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
     objc_release(ret);
-    [self setDismissPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];];
-    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];);
-    objc_release([[UILabel alloc] initWithFrame:CGRectZero];);
+    [self setDismissPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
+    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]);
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
-    objc_release([[UIScrollView alloc] initWithFrame:CGRectZero];);
+    objc_release([[UIScrollView alloc] initWithFrame:CGRectZero]);
     return;
 }
 
@@ -1330,10 +1330,10 @@ L_c6fb0:;
     /* [UNRESOLVED] [0 / * local * / pagingScrollView]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    objc_release([[UIImageView alloc] initWithFrame:CGRectZero];);
-    objc_release([[UIImageView alloc] initWithFrame:CGRectZero];);
-    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
-    objc_release([[UIScrollView alloc] initWithFrame:CGRectZero];);
+    objc_release([[UIImageView alloc] initWithFrame:CGRectZero]);
+    objc_release([[UIImageView alloc] initWithFrame:CGRectZero]);
+    objc_release([[UIView alloc] initWithFrame:CGRectZero]);
+    objc_release([[UIScrollView alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
     /* [UNRESOLVED] [0 / * local * / unknownSelector]; */
     [ret count];
@@ -1453,7 +1453,7 @@ L_c7490:;
     [ret viewWithTag:0];
     objc_release(ret);
     [UIScrollView class];
-    [ret isKindOfClass:[UIScrollView class];];
+    [ret isKindOfClass:[UIScrollView class]];
     /* [UNRESOLVED] objc_retain(a0); */
     objc_release(ret);
     goto L_c76d8;
@@ -1825,7 +1825,7 @@ L_c77d8:;
     objc_release(ret);
     objc_retain(ret);
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
 
     [ret length];
 

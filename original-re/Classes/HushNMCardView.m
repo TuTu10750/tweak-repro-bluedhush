@@ -578,7 +578,7 @@
     /* [UNRESOLVED] sub_cef28(ret); */
     [objc_retainAutorelease CGColor];
     [self->_chipBox layer];
-    [ret setBorderColor:[objc_retainAutorelease CGColor];];
+    [ret setBorderColor:[objc_retainAutorelease CGColor]];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -626,7 +626,7 @@
     /* [UNRESOLVED] sub_cef28(ret); */
     [objc_retainAutorelease CGColor];
     [self->_bar layer];
-    [ret setBorderColor:[objc_retainAutorelease CGColor];];
+    [ret setBorderColor:[objc_retainAutorelease CGColor]];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -2431,7 +2431,7 @@ L_d03cc:;
 
 L_d03fc:;
     [UITableView class];
-    [ret isKindOfClass:[UITableView class];];
+    [ret isKindOfClass:[UITableView class]];
     if (((ret >> 0) & 1) != 0) goto L_d0444;
 
     [ret superview];
@@ -2440,7 +2440,7 @@ L_d03fc:;
 
 L_d0444:;
     [UITableView class];
-    [ret isKindOfClass:[UITableView class];];
+    [ret isKindOfClass:[UITableView class]];
     if (ret == 0) goto L_d05e8;
 
     [ret visibleCells];

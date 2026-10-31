@@ -183,10 +183,10 @@
     /* [UNRESOLVED] [super viewWillAppear:a0]; */
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
     [self navigationItem];
-    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];];
+    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]];
     objc_release(ret);
     [self hushRefresh];
-    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];);
+    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]);
     return;
 }
 
@@ -446,7 +446,7 @@ L_1351ac:;
     objc_retain(ret);
     objc_retain(0);
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (0 == 0) goto L_1353c0;
 
     if (ret == 0) goto L_1353c0;
@@ -459,14 +459,14 @@ L_1351ac:;
     /* [UNRESOLVED] if (cond / * hs * /) goto L_13539c; */
 
     [0 section];
-    [ret objectAtIndexedSubscript:[0 section];];
+    [ret objectAtIndexedSubscript:[0 section]];
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_1353a4;
 
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2256f8]; */
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (ret == 0) goto L_1353b0;
 
     [0 row];
@@ -477,9 +477,9 @@ L_1351ac:;
     /* [UNRESOLVED] if (cond / * hs * /) goto L_1353b0; */
 
     [0 row];
-    [ret objectAtIndexedSubscript:[0 row];];
+    [ret objectAtIndexedSubscript:[0 row]];
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     objc_retain(sel_registerName("count"));
     objc_release(ret);
     goto L_1353b0;
@@ -795,12 +795,12 @@ L_13558c:;
 
     /* [UNRESOLVED] [self->_sections objectAtIndexedSubscript:a1]; */
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_1356b4;
 
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2256f8]; */
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (ret == 0) goto L_1356c0;
 
     [ret count];
@@ -912,7 +912,7 @@ L_1356d0:;
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2141b8]; */
     objc_release(ret);
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
     objc_retain(ret);
     objc_release(ret);
     goto L_1357c8;

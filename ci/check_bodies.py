@@ -32,6 +32,8 @@ def scan_line(code, nargs):
     m = re.search(r'if\s*\((.*)\)\s*goto', code)
     if m and ';' in m.group(1):
         problems.append('semicolon-in-cond')
+    if re.search(r';\s*[\]\)]', code):
+        problems.append('semicolon-before-close')
     if code.count('(') != code.count(')'):
         problems.append('paren-imbalance')
     if code.count('[') != code.count(']'):

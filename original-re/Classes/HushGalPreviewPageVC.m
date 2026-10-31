@@ -233,9 +233,9 @@
     [[[UIImageView alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
     [[[UIImageView alloc] initWithFrame:CGRectZero]; setAccessibilityIdentifier:@"hushgal_preview_image"];
     [self view];
-    [ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero];];
+    [ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero];);
+    objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero]);
     [self path];
     [ret length];
     if ([ret length]== 0) goto L_7a924;
@@ -248,7 +248,7 @@
 
 L_7a924:;
     objc_release(ret);
-    objc_release([[UIImageView alloc] initWithFrame:CGRectZero];);
+    objc_release([[UIImageView alloc] initWithFrame:CGRectZero]);
     return;
 }
 

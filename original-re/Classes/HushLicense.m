@@ -255,7 +255,7 @@ L_136c4:;
 
     [ret objectForKeyedSubscript:@"duration"];
     [ret unsignedIntValue];
-    [self _withinUsageDuration:[ret unsignedIntValue];];
+    [self _withinUsageDuration:[ret unsignedIntValue]];
     goto L_13804;
 
 L_137a8:;
@@ -1032,7 +1032,7 @@ L_14064:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_140bc; */
 
 L_140ac:;
-    objc_release([[NSString alloc] initWithBytes:2 length:0 encoding:4];);
+    objc_release([[NSString alloc] initWithBytes:2 length:0 encoding:4]);
     /* [UNRESOLVED] objc_release(0 / * unk * /); */
     goto L_14064;
 

@@ -755,12 +755,12 @@ L_c59d8:;
     objc_retain(ret);
     /* [UNRESOLVED] dispatch_time(); */
     objc_retain(ret);
-    objc_retain([ret copy];);
+    objc_retain([ret copy]);
     /* [UNRESOLVED] dispatch_after(0x200010); */
     /* [UNRESOLVED] objc_release(0 / * local * /); */
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     objc_release(ret);
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     goto L_c5c70;
 
 L_c5c68:;
@@ -1020,7 +1020,7 @@ L_c62e4:;
     [self urls];
     objc_retain(ret);
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (ret == 0) goto L_c63c4;
 
     [ret count];

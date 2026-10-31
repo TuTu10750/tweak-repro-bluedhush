@@ -1696,8 +1696,8 @@ L_179fc:;
 
 L_17a40:;
     [[NSString alloc] initWithData:ret encoding:5];
-    objc_retain([[NSString alloc] initWithData:ret encoding:0x9400];);
-    objc_release([[NSString alloc] initWithData:ret encoding:5];);
+    objc_retain([[NSString alloc] initWithData:ret encoding:0x9400]);
+    objc_release([[NSString alloc] initWithData:ret encoding:5]);
 
 L_17a74:;
     [[[NSString alloc] initWithData:ret encoding:0x9400]; componentsSeparatedByString:@"\n"];
@@ -1711,11 +1711,11 @@ L_17a74:;
     goto L_17b08;
 
 L_17afc:;
-    objc_retain([[NSString alloc] initWithData:ret encoding:0x9400];);
+    objc_retain([[NSString alloc] initWithData:ret encoding:0x9400]);
 
 L_17b08:;
     objc_release(ret);
-    objc_release([[NSString alloc] initWithData:ret encoding:0x9400];);
+    objc_release([[NSString alloc] initWithData:ret encoding:0x9400]);
 
 L_17b18:;
     objc_release(ret);

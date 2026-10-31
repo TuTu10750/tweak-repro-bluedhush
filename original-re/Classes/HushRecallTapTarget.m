@@ -778,7 +778,7 @@ L_3c814:;
     [NSNumber numberWithUnsignedLongLong:0];
     [NSNumber numberWithUnsignedLongLong:0];
     [NSNumber numberWithUnsignedLongLong:0];
-    [NSNumber numberWithUnsignedInt:[ret unsignedIntValue];];
+    [NSNumber numberWithUnsignedInt:[ret unsignedIntValue]];
     [NSNumber numberWithUnsignedInt:0];
     [NSNumber numberWithDouble:0];
     /* [UNRESOLVED] [NSNumber numberWithUnsignedLongLong:0x257561]; */

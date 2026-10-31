@@ -182,9 +182,9 @@ L_962d8:;
     objc_release(ret);
     [[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")];
     [self navigationItem];
-    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")];];
+    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]];
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")];);
+    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]);
     [self hushReload];
     return;
 }
@@ -1454,7 +1454,7 @@ L_9715c:;
     /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
 
 L_97174:;
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
 }
 
 // @0x97194  types=@32@0:8@16@24

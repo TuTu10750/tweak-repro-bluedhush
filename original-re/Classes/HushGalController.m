@@ -561,11 +561,11 @@ L_7c8d8:;
     [[[UIControl alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
     [[[UIControl alloc] initWithFrame:CGRectZero]; addTarget:self action:sel_registerName("closeSelf") forControlEvents:0x40];
     [self view];
-    [ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero];];
+    [ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UIView alloc] initWithFrame:CGRectZero];
-    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero];];
-    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
+    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero]];
+    objc_release([[UIView alloc] initWithFrame:CGRectZero]);
     [self cardView];
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
@@ -667,15 +667,15 @@ L_7d0b8:;
     /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:-0x3f97000000000000]; setUserInteractionEnabled:1]; */
     [[UIContextMenuInteraction alloc] initWithDelegate:self];
     /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:-0x3f97000000000000]; addInteraction:[[UIContextMenuInteraction alloc] initWithDelegate:self];]; */
-    objc_release([[UIContextMenuInteraction alloc] initWithDelegate:self];);
+    objc_release([[UIContextMenuInteraction alloc] initWithDelegate:self]);
     if ([ret length]== 0) goto L_7d278;
 
     goto L_7d714;
 
 L_7d278:;
     [[UITextField alloc] initWithFrame:18];
-    [self setSearchField:[[UITextField alloc] initWithFrame:18];];
-    objc_release([[UITextField alloc] initWithFrame:18];);
+    [self setSearchField:[[UITextField alloc] initWithFrame:18]];
+    objc_release([[UITextField alloc] initWithFrame:18]);
     [self searchField];
     [ret setPlaceholder:@"输入ID或昵称"];
     objc_release(ret);
@@ -745,8 +745,8 @@ L_7d714:;
     [objc_alloc_init setSectionInset:0];
     /* [UNRESOLVED] [objc_alloc_init setHeaderReferenceSize:0 / * unk * /]; */
     [[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0];
-    [self setGrid:[[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0];];
-    objc_release([[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0];);
+    [self setGrid:[[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]];
+    objc_release([[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]);
     [self grid];
     [ret setDataSource:self];
     objc_release(ret);
@@ -778,8 +778,8 @@ L_7d714:;
     objc_release(ret);
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
-    [self setEmptyLabel:[[UILabel alloc] initWithFrame:CGRectZero];];
-    objc_release([[UILabel alloc] initWithFrame:CGRectZero];);
+    [self setEmptyLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [self emptyLabel];
     [ret setText:@"暂无图片"];
     objc_release(ret);
@@ -814,8 +814,8 @@ L_7d714:;
 
 L_7dc60:;
     [[UILabel alloc] initWithFrame:18];
-    [self setProgressLabel:[[UILabel alloc] initWithFrame:18];];
-    objc_release([[UILabel alloc] initWithFrame:18];);
+    [self setProgressLabel:[[UILabel alloc] initWithFrame:18]];
+    objc_release([[UILabel alloc] initWithFrame:18]);
     [UIFont systemFontOfSize:12];
     [self progressLabel];
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -877,9 +877,9 @@ L_7de50:;
     objc_release(ret);
     objc_release(objc_alloc_init);
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:-0x3f97000000000000];); */
-    objc_release([[UILabel alloc] initWithFrame:29];);
-    objc_release([[UILabel alloc] initWithFrame:18];);
-    objc_release([[UIControl alloc] initWithFrame:CGRectZero];);
+    objc_release([[UILabel alloc] initWithFrame:29]);
+    objc_release([[UILabel alloc] initWithFrame:18]);
+    objc_release([[UIControl alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
     return;
 }
@@ -1131,7 +1131,7 @@ L_7e1b4:;
     objc_release(ret);
     [0 objectForKeyedSubscript:@"phase"];
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
     if (ret == 0) goto L_7e2ec;
 
     [ret length];
@@ -3296,7 +3296,7 @@ L_80590:;
 
 L_805a0:;
     /* [UNRESOLVED] [0 / * local * // *+0x0* / grid]; */
-    [NSIndexPath indexPathForItem:0 inSection:[ret countByEnumeratingWithState:0 objects:0 count:0x10];];
+    [NSIndexPath indexPathForItem:0 inSection:[ret countByEnumeratingWithState:0 objects:0 count:0x10]];
     [ret scrollToItemAtIndexPath:ret atScrollPosition:1 animated:1];
     objc_release(ret);
     objc_release(ret);
@@ -4122,8 +4122,8 @@ L_80b90:;
 
     /* [UNRESOLVED] [0 / * unk * / name]; */
     [[UIContextMenuInteraction alloc] initWithDelegate:ret];
-    [ret addInteraction:[[UIContextMenuInteraction alloc] initWithDelegate:ret];];
-    objc_release([[UIContextMenuInteraction alloc] initWithDelegate:ret];);
+    [ret addInteraction:[[UIContextMenuInteraction alloc] initWithDelegate:ret]];
+    objc_release([[UIContextMenuInteraction alloc] initWithDelegate:ret]);
     objc_release(ret);
 
 L_80efc:;
@@ -4747,13 +4747,13 @@ L_81440:;
     if ([[ret copy]countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_81424;
 
 L_81474:;
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     [ret setTag:0];
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")];
     [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]; setMinimumPressDuration:0.5];
-    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")];];
+    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]];
     objc_retain(ret);
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")];);
+    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]);
     objc_release(ret);
     objc_release(ret);
 
@@ -6655,7 +6655,7 @@ L_834b8:;
     /* [UNRESOLVED] if (cond / * ge * /) goto L_83634; */
 
     [self shown];
-    [ret objectAtIndexedSubscript:[ret tag];];
+    [ret objectAtIndexedSubscript:[ret tag]];
     [ret sid];
     objc_release(ret);
     objc_release(ret);

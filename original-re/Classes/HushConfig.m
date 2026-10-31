@@ -973,7 +973,7 @@ L_ebf0:;
 
 L_ebfc:;
     objc_retain(self);
-    [NSNumber numberWithBool:[ret boolValue];];
+    [NSNumber numberWithBool:[ret boolValue]];
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
@@ -1256,7 +1256,7 @@ L_eec4:;
     /* [UNRESOLVED] [ret objectForKey:a0]; */
     objc_release(ret);
     [NSString class];
-    [ret isKindOfClass:[NSString class];];
+    [ret isKindOfClass:[NSString class]];
     if (ret == 0) goto L_ef80;
 
     objc_retain(ret);

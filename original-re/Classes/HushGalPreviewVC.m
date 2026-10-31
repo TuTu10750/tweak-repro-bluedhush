@@ -596,7 +596,7 @@ L_7ac04:;
     [[[UIView alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
     [[[UIView alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x2d];
     [self view];
-    [ret addSubview:[[UIView alloc] initWithFrame:CGRectZero];];
+    [ret addSubview:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UIPageViewController alloc] initWithTransitionStyle:1 navigationOrientation:0 options:0];
     objc_release(self->_pager);
@@ -632,7 +632,7 @@ L_7b0c8:;
 
 L_7b0d4:;
     [self index];
-    [self pageAtIndex:[self index];];
+    [self pageAtIndex:[self index]];
     if (ret == 0) goto L_7b174;
 
     [NSArray arrayWithObjects:0 count:1];
@@ -674,7 +674,7 @@ L_7b174:;
     [self refreshSavedAtLabel];
     objc_release(ret);
     objc_release(ret);
-    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
+    objc_release([[UIView alloc] initWithFrame:CGRectZero]);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_7b460; */
 
     return;
@@ -1049,7 +1049,7 @@ L_7b6e4:;
     if (ret == 0) goto L_7b828;
 
     [ret index];
-    [self setIndex:[ret index];];
+    [self setIndex:[ret index]];
     [self refreshSavedAtLabel];
 
 L_7b828:;
@@ -1356,7 +1356,7 @@ L_7b82c:;
 
     [self files];
     [self index];
-    [ret objectAtIndexedSubscript:[self index];];
+    [ret objectAtIndexedSubscript:[self index]];
     objc_release(ret);
     goto L_7b904;
 

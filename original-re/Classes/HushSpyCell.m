@@ -536,8 +536,8 @@
     [self setBackgroundColor:ret];
     objc_release(ret);
     [[UIImageView alloc] initWithFrame:16];
-    [self setAvatar:[[UIImageView alloc] initWithFrame:16];];
-    objc_release([[UIImageView alloc] initWithFrame:16];);
+    [self setAvatar:[[UIImageView alloc] initWithFrame:16]];
+    objc_release([[UIImageView alloc] initWithFrame:16]);
     [self avatar];
     [ret layer];
     [ret setCornerRadius:22];

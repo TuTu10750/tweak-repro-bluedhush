@@ -316,7 +316,7 @@ L_127fe0:;
     objc_release(ret);
     /* [UNRESOLVED] HushKeyValue(0x223f58); */
     [UIView class];
-    [ret isKindOfClass:[UIView class];];
+    [ret isKindOfClass:[UIView class]];
     if (ret == 0) goto L_128060;
 
     [ret isHidden];
@@ -1170,7 +1170,7 @@ L_12892c:;
     /* [UNRESOLVED] HushKeyValue(0x224018); */
     objc_release(objc_loadWeakRetained);
     [UITableView class];
-    [ret isKindOfClass:[UITableView class];];
+    [ret isKindOfClass:[UITableView class]];
     objc_release(ret);
     return (id)objc_loadWeakRetained;
 }
@@ -1900,7 +1900,7 @@ L_1292a0:;
     /* [UNRESOLVED] HushKeyValue(0x224058); */
     objc_release(objc_loadWeakRetained);
     [UIButton class];
-    [ret isKindOfClass:[UIButton class];];
+    [ret isKindOfClass:[UIButton class]];
     if (ret == 0) goto L_129344;
 
     [self adoptGiftButton:ret keyboard:objc_loadWeakRetained];
@@ -1919,7 +1919,7 @@ L_129344:;
     /* [UNRESOLVED] CGRectGetMinY(); */
     /* [UNRESOLVED] HushKeyValue(0x224078); */
     [UIView class];
-    [ret isKindOfClass:[UIView class];];
+    [ret isKindOfClass:[UIView class]];
     if (ret == 0) goto L_12946c;
 
     [ret superview];
@@ -2697,8 +2697,8 @@ L_1299c8:;
     [ret addTarget:self action:sel_registerName("chipTapped:") forControlEvents:0x40];
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];
     /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]; setMinimumPressDuration:0 / * unk * /]; */
-    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];];
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];);
+    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]];
+    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]);
 }
 
 // @0x129cbc  types=@16@0:8
@@ -3340,7 +3340,7 @@ L_12a018:;
     if (objc_loadWeakRetained == 0) goto L_12a0b4;
 
     [UIViewController class];
-    [objc_loadWeakRetained isKindOfClass:[UIViewController class];];
+    [objc_loadWeakRetained isKindOfClass:[UIViewController class]];
     if (objc_loadWeakRetained == 0) goto L_12a0c4;
 
     objc_retain(objc_loadWeakRetained);
@@ -3352,7 +3352,7 @@ L_12a0b4:;
 L_12a0c4:;
     /* [UNRESOLVED] HushKeyValue(0x2240f8); */
     [UIViewController class];
-    [ret isKindOfClass:[UIViewController class];];
+    [ret isKindOfClass:[UIViewController class]];
     if (ret == 0) goto L_12a110;
 
     objc_retain(ret);
@@ -3361,7 +3361,7 @@ L_12a0c4:;
 L_12a110:;
     /* [UNRESOLVED] HushKeyValue(0x2240f8); */
     [UIViewController class];
-    [ret isKindOfClass:[UIViewController class];];
+    [ret isKindOfClass:[UIViewController class]];
     if (ret == 0) goto L_12a15c;
 
     objc_retain(ret);
@@ -3369,7 +3369,7 @@ L_12a110:;
 
 L_12a15c:;
     [UIResponder class];
-    [objc_loadWeakRetained isKindOfClass:[UIResponder class];];
+    [objc_loadWeakRetained isKindOfClass:[UIResponder class]];
     if (objc_loadWeakRetained == 0) goto L_12a1f8;
 
     [objc_loadWeakRetained nextResponder];
@@ -3377,7 +3377,7 @@ L_12a15c:;
 
 L_12a1a8:;
     [UIViewController class];
-    [ret isKindOfClass:[UIViewController class];];
+    [ret isKindOfClass:[UIViewController class]];
     if (((ret >> 0) & 1) != 0) goto L_12a1ec;
 
     [ret nextResponder];
@@ -4500,10 +4500,10 @@ L_12af14:;
     [[ret mutableCopy]; removeObjectAtIndex:0];
 
 L_12af1c:;
-    objc_retain([ret mutableCopy];);
+    objc_retain([ret mutableCopy]);
     /* [UNRESOLVED] HushSharedDefaults(); */
     /* [UNRESOLVED] [ret setObject:0 forKey:0x223f38]; */
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_12b008;
@@ -4518,7 +4518,7 @@ L_12b008:;
 
 L_12b018:;
     [self exitInlineEdit];
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
 }
 
 // @0x12b044  types=v24@0:8@16
@@ -4662,10 +4662,10 @@ L_12b018:;
 
     /* [UNRESOLVED] [[ret mutableCopy]; objectAtIndexedSubscript:self->/ *+0x88* /]; */
     /* [UNRESOLVED] [[ret mutableCopy]; removeObjectAtIndex:self->/ *+0x88* /]; */
-    objc_retain([ret mutableCopy];);
+    objc_retain([ret mutableCopy]);
     /* [UNRESOLVED] HushSharedDefaults(); */
     /* [UNRESOLVED] [ret setObject:0 forKey:0x223f38]; */
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_12b19c;
@@ -4773,7 +4773,7 @@ L_12b1b4:;
     [ret count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_12b294; */
 
-    [self beginInlineEdit:[ret tag];];
+    [self beginInlineEdit:[ret tag]];
 
 L_12b294:;
     objc_release(ret);

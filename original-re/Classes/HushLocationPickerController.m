@@ -541,14 +541,14 @@
     objc_release(ret);
     [[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")];
     [self navigationItem];
-    [ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")];];
+    [ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]];
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")];);
+    objc_release([[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]);
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")];
     [self navigationItem];
-    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")];];
+    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]];
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")];);
+    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]);
     /* [UNRESOLVED] [[UISearchBar alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_searchBar);
     [self->_searchBar setDelegate:self];
@@ -587,7 +587,7 @@
     objc_release(ret);
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")];
     [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]; setMinimumPressDuration:0.5];
-    [self->_map addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")];];
+    [self->_map addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]];
     [UIFont systemFontOfSize:30];
     [NSDictionary dictionaryWithObjects:-0xa8 forKeys:-0xb0 count:1];
     objc_release(ret);
@@ -597,7 +597,7 @@
     [[UIGraphicsImageRenderer alloc] initWithSize:ret format:12];
     objc_retain(ret);
     [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]; imageWithActions:0];
-    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:12];);
+    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]);
     [objc_retainAutorelease CGImage];
     if ([objc_retainAutorelease CGImage]== 0) goto L_983b8;
 
@@ -707,7 +707,7 @@ L_98664:;
     [UIColor blackColor];
     [objc_retainAutorelease CGColor];
     [self->_infoCard layer];
-    [ret setShadowColor:[objc_retainAutorelease CGColor];];
+    [ret setShadowColor:[objc_retainAutorelease CGColor]];
     objc_release(ret);
     objc_release(ret);
     [self->_infoCard layer];
@@ -743,8 +743,8 @@ L_98664:;
     [self->_altitudeLabel setUserInteractionEnabled:1];
     [self->_altitudeLabel setTranslatesAutoresizingMaskIntoConstraints:0];
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")];
-    [self->_altitudeLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")];];
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")];);
+    [self->_altitudeLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")]];
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")]);
     [self->_altitudeLabel setAccessibilityIdentifier:@"hush_loc_altitude"];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_addrLabel);
@@ -760,15 +760,15 @@ L_98664:;
     [self->_addrLabel setUserInteractionEnabled:1];
     [self->_addrLabel setTranslatesAutoresizingMaskIntoConstraints:0];
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")];
-    [self->_addrLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")];];
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")];);
+    [self->_addrLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")]];
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")]);
     [NSArray arrayWithObjects:-0xe8 count:3];
     [[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setAxis:1];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:4];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self->_infoCard addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret];];
+    [self->_infoCard addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; leadingAnchor];
     [self->_infoCard leadingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
@@ -870,7 +870,7 @@ L_991d4:;
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:8];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret];];
+    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     objc_release(self->_locationSwitch);
     /* [UNRESOLVED] [@0x244888 shared]; */
@@ -899,7 +899,7 @@ L_991d4:;
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:24];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret];];
+    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] [UIFont preferredFontForTextStyle:0x200640/ *+0x0* /]; */
@@ -1191,12 +1191,12 @@ L_991d4:;
     [self refreshCenter:0];
     objc_release(ret);
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0 / * unk * /];); */
-    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret];);
+    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
     objc_release(ret);
     objc_release(ret);
-    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret];);
-    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret];);
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")];);
+    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
+    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
+    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9ad94; */
 
     return;
@@ -2355,7 +2355,7 @@ L_9b9f4:;
     [ret setOpaque:0];
     [[UIGraphicsImageRenderer alloc] initWithSize:ret format:20];
     /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:20]; imageWithActions:0x1a7e18]; */
-    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:20];);
+    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:20]);
     objc_release(ret);
     /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; setImage:ret]; */
     objc_release(ret);
@@ -3554,7 +3554,7 @@ L_9cff4:;
     [self->_map region];
     [objc_alloc_init setRegion:0];
     [[MKLocalSearch alloc] initWithRequest:objc_alloc_init];
-    objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init];, [[MKLocalSearch alloc] initWithRequest:objc_alloc_init];);
+    objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init];, [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9d1a8; */
 
@@ -3565,12 +3565,12 @@ L_9d1a8:;
     /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 搜索地名：%@"]; noteFiltered:3]; */
 
 L_9d1f8:;
-    objc_retain([[MKLocalSearch alloc] initWithRequest:objc_alloc_init];);
+    objc_retain([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     objc_retain(ret);
     [[[MKLocalSearch alloc] initWithRequest:objc_alloc_init]; startWithCompletionHandler:0];
     objc_release(ret);
-    objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init];);
-    objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init];);
+    objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
+    objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     objc_release(objc_alloc_init);
 
 L_9d254:;
@@ -4022,7 +4022,7 @@ L_9d900:;
 L_9dbc8:;
     /* [UNRESOLVED] objc_release(a1); */
 
-    objc_retain([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"];);
+    objc_retain([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]);
     [ret name];
     [ret length];
     objc_release(ret);
@@ -4033,7 +4033,7 @@ L_9dbc8:;
 
 L_9dc6c:;
     [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; placemark];
-    objc_release([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"];);
+    objc_release([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]);
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     [ret length];
@@ -5566,8 +5566,8 @@ L_9f450:;
     objc_release(ret);
     objc_release(ret);
     [[[UIImageView alloc] initWithImage:ret]; setContentHuggingPriority:0 forAxis:0];
-    [ret addObject:[[UIImageView alloc] initWithImage:ret];];
-    objc_release([[UIImageView alloc] initWithImage:ret];);
+    [ret addObject:[[UIImageView alloc] initWithImage:ret]];
+    objc_release([[UIImageView alloc] initWithImage:ret]);
 
 L_9f84c:;
     objc_release(ret);
@@ -6346,7 +6346,7 @@ L_9fe70:;
 L_9ffa0:;
     [ret objectAtIndexedSubscript:0];
     [ret integerValue];
-    [self->_map setMapType:[ret integerValue];];
+    [self->_map setMapType:[ret integerValue]];
     objc_release(ret);
     objc_retain(ret);
     [ret length];
@@ -7565,7 +7565,7 @@ L_a08a8:;
     [ret mutableCopy];
     if ([ret mutableCopy]== 0) goto L_a1498;
 
-    objc_retain([ret mutableCopy];);
+    objc_retain([ret mutableCopy]);
     goto L_a14ac;
 
 L_a1440:;
@@ -7593,7 +7593,7 @@ L_a1524:;
 L_a15a0:;
     [ret objectAtIndexedSubscript:-2];
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_a1734;
 
     [ret objectForKeyedSubscript:@"lat"];
@@ -7674,7 +7674,7 @@ L_a197c:;
 
 L_a199c:;
     [self->_addrLabel setText:@"已加入坐标收藏夹 ⭐"];
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
     objc_release(0);
     objc_release(ret);
     objc_release(ret);
@@ -8306,14 +8306,14 @@ L_a1e00:;
     [ret mutableCopy];
     if ([ret mutableCopy]== 0) goto L_a1e74;
 
-    objc_retain([ret mutableCopy];);
+    objc_retain([ret mutableCopy]);
     goto L_a1e94;
 
 L_a1e74:;
     [NSMutableArray array];
 
 L_a1e94:;
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
     objc_release(ret);
     [ret count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_a20f8; */
@@ -8321,7 +8321,7 @@ L_a1e94:;
 L_a1f28:;
     [ret objectAtIndexedSubscript:-2];
     [NSDictionary class];
-    [ret isKindOfClass:[NSDictionary class];];
+    [ret isKindOfClass:[NSDictionary class]];
     if (ret == 0) goto L_a20a8;
 
     [ret objectForKeyedSubscript:@"lat"];
@@ -8425,7 +8425,7 @@ L_a2380:;
 
 L_a23cc:;
     /* [UNRESOLVED] [0 / * unk * / dismissViewControllerAnimated:1 completion:0]; */
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
     objc_release(0);
     /* [UNRESOLVED] objc_release(0 / * adrp * /); */
     objc_release(ret);

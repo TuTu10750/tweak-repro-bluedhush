@@ -539,7 +539,7 @@
     [ret setBackgroundColor:ret];
     objc_release(ret);
     [NSArray class];
-    [self->_urls isKindOfClass:[NSArray class];];
+    [self->_urls isKindOfClass:[NSArray class]];
     if (((self->_urls >> 0) & 1) != 0) goto L_e4b44;
 
     /* [UNRESOLVED] objc_storeStrong((id *)&[self->_urls isKindOfClass:[NSArray class];];, 0x200130/ *+0x0* /); */
@@ -628,8 +628,8 @@ L_e50c8:;
 
 L_e5200:;
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")];
-    [self->_pager addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")];];
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")];);
+    [self->_pager addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")]];
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")]);
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_strip);
     [self->_strip setShowsHorizontalScrollIndicator:0];
@@ -672,9 +672,9 @@ L_e5508:;
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];
     [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]; setDelegate:self];
     [self view];
-    [ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];];
+    [ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]];
     objc_release(ret);
-    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];);
+    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e559c; */
 
@@ -1577,7 +1577,7 @@ L_e5990:;
     [self->_strip bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_thumbBoxes count];
-    [NSMutableArray arrayWithCapacity:[self->_thumbBoxes count];];
+    [NSMutableArray arrayWithCapacity:[self->_thumbBoxes count]];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_e5bb0; */
 
 L_e5b2c:;

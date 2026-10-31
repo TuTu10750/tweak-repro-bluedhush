@@ -3313,7 +3313,7 @@ L_e2990:;
     if (ret == 0) goto L_e2a2c;
 
     [UIButton class];
-    [ret isKindOfClass:[UIButton class];];
+    [ret isKindOfClass:[UIButton class]];
     if (ret == 0) goto L_e2a2c;
 
     [ret setSelected:0];
@@ -4541,7 +4541,7 @@ L_e3954:;
     if ([[ret copy]countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_e3910;
 
 L_e397c:;
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     /* [UNRESOLVED] if (cond / * gt * /) goto L_e3b2c; */
 
     /* [UNRESOLVED] if (cond / * lt * /) goto L_e3b2c; */

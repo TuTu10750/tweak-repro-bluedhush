@@ -604,7 +604,7 @@
     [[[UIVisualEffectView alloc] initWithEffect:ret]; setClipsToBounds:1];
     [[[UIVisualEffectView alloc] initWithEffect:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret];];
+    [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     objc_release(self->_chipLabel);
     /* [UNRESOLVED] [UIFont systemFontOfSize:12 weight:0x200378]; */
@@ -633,7 +633,7 @@
     [[[UIVisualEffectView alloc] initWithEffect:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
     [[[UIVisualEffectView alloc] initWithEffect:ret]; setAccessibilityIdentifier:@"hush_track_card_coord"];
     [self view];
-    [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret];];
+    [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     /* [UNRESOLVED] [UIFont monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
     [objc_alloc_init setFont:ret];
@@ -664,7 +664,7 @@
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:8];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret];];
+    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     [self view];
     [ret safeAreaLayoutGuide];
@@ -895,13 +895,13 @@
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret];);
+    objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
     objc_release(objc_alloc_init);
-    objc_release([[UIVisualEffectView alloc] initWithEffect:ret];);
-    objc_release([[UIVisualEffectView alloc] initWithEffect:ret];);
+    objc_release([[UIVisualEffectView alloc] initWithEffect:ret]);
+    objc_release([[UIVisualEffectView alloc] initWithEffect:ret]);
     objc_release(ret);
     objc_release(objc_alloc_init);
     objc_release(objc_alloc_init);
@@ -1828,7 +1828,7 @@ L_92f58:;
     [UIColor blackColor];
     [objc_retainAutorelease CGColor];
     [objc_alloc_init layer];
-    [ret setShadowColor:[objc_retainAutorelease CGColor];];
+    [ret setShadowColor:[objc_retainAutorelease CGColor]];
     objc_release(ret);
     objc_release(ret);
     [objc_alloc_init layer];

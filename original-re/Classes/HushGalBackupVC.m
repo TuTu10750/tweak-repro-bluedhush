@@ -525,21 +525,21 @@
     objc_release(ret);
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];
     [self navigationItem];
-    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];];
+    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]];
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];);
+    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]);
     [[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];
     [UIColor systemRedColor];
     [[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]; setTintColor:ret];
     objc_release(ret);
     [self navigationItem];
-    [ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];];
+    [ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]];
     objc_release(ret);
     [self view];
     [ret bounds];
     [[UITableView alloc] initWithFrame:2 style:0];
-    [self setTable:[[UITableView alloc] initWithFrame:2 style:0];];
-    objc_release([[UITableView alloc] initWithFrame:2 style:0];);
+    [self setTable:[[UITableView alloc] initWithFrame:2 style:0]];
+    objc_release([[UITableView alloc] initWithFrame:2 style:0]);
     objc_release(ret);
     [self table];
     [ret setAutoresizingMask:0x12];
@@ -565,7 +565,7 @@
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];
     [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]; setMinimumPressDuration:0.4];
     [self table];
-    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];];
+    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]];
     objc_release(ret);
     [self view];
     [ret bounds];
@@ -584,20 +584,20 @@
     [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
     objc_release(ret);
     [[[UILabel alloc] initWithFrame:CGRectZero]; setTextAlignment:1];
-    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:[[UILabel alloc] initWithFrame:CGRectZero];];
+    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     [self table];
-    [ret setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero];];
+    [ret setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     /* [UNRESOLVED] sub_882b8(); */
     [ret mutableCopy];
-    [self setItems:[ret mutableCopy];];
-    objc_release([ret mutableCopy];);
+    [self setItems:[ret mutableCopy]];
+    objc_release([ret mutableCopy]);
     objc_release(ret);
     [self refreshTable];
-    objc_release([[UILabel alloc] initWithFrame:CGRectZero];);
-    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];);
-    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];);
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
+    objc_release([[UIView alloc] initWithFrame:CGRectZero]);
+    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]);
+    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]);
     return;
 }
 
@@ -872,7 +872,7 @@ L_8948c:;
     [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
     objc_release(ret);
     [self table];
-    [ret setBackgroundView:[[UILabel alloc] initWithFrame:CGRectZero];];
+    [ret setBackgroundView:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
 
 L_895c0:;
@@ -921,8 +921,8 @@ L_895c0:;
 
     /* [UNRESOLVED] sub_882b8(_cmd, a0, a1, a2, a3); */
     [ret mutableCopy];
-    [self setItems:[ret mutableCopy];];
-    objc_release([ret mutableCopy];);
+    [self setItems:[ret mutableCopy]];
+    objc_release([ret mutableCopy]);
     objc_release(ret);
 }
 
@@ -1991,7 +1991,7 @@ L_89d70:;
     if (ret == 0) goto L_8a23c;
 
     [ret row];
-    [self itemAtRow:[ret row];];
+    [self itemAtRow:[ret row]];
     if (ret == 0) goto L_8a234;
 
     [ret objectForKeyedSubscript:@"path"];
@@ -2040,7 +2040,7 @@ L_8a1bc:;
     objc_release(ret);
     [self presentViewController:[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]; animated:1 completion:0];
     objc_release(ret);
-    objc_release([[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0];);
+    objc_release([[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]);
 
 L_8a22c:;
     objc_release(ret);
@@ -2667,12 +2667,12 @@ L_8a6f4:;
     [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
     [ret addAction:ret];
     objc_release(ret);
-    objc_retain([ret copy];);
+    objc_retain([ret copy]);
     [UIAlertAction actionWithTitle:@"全部删除" style:2 handler:0];
     [ret addAction:ret];
     objc_release(ret);
     [self presentViewController:ret animated:1 completion:0];
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     objc_release(ret);
     goto L_8ae14;
 
@@ -2680,7 +2680,7 @@ L_8ae0c:;
     /* [UNRESOLVED] HushToast(); */
 
 L_8ae14:;
-    objc_release([ret copy];);
+    objc_release([ret copy]);
     return;
 }
 

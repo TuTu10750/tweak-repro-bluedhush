@@ -270,7 +270,7 @@
     [UIColor blackColor];
     [objc_retainAutorelease CGColor];
     [self->_iconView layer];
-    [ret setShadowColor:[objc_retainAutorelease CGColor];];
+    [ret setShadowColor:[objc_retainAutorelease CGColor]];
     objc_release(ret);
     objc_release(ret);
     [self->_iconView layer];
@@ -288,11 +288,11 @@
     /* [UNRESOLVED] [ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
-    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];];
+    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];
-    [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];];
-    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];);
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];);
+    [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]];
+    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]);
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]);
 
 L_67678:;
     return (id)self;

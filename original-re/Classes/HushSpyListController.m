@@ -564,11 +564,11 @@ L_13b0c0:;
     [[[UIControl alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
     [[[UIControl alloc] initWithFrame:CGRectZero]; addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
     [self view];
-    [ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero];];
+    [ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UIView alloc] initWithFrame:CGRectZero];
-    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero];];
-    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
+    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero]];
+    objc_release([[UIView alloc] initWithFrame:CGRectZero]);
     [self cardView];
     [ret setBackgroundColor:ret];
     objc_release(ret);
@@ -596,7 +596,7 @@ L_13b0c0:;
     [ret setCornerRadius:1.5];
     objc_release(ret);
     [self cardView];
-    [ret addSubview:[[UIView alloc] initWithFrame:18];];
+    [ret addSubview:[[UIView alloc] initWithFrame:18]];
     objc_release(ret);
     [[UILabel alloc] initWithFrame:29];
     /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:29]; setText:0x2262f8]; */
@@ -605,11 +605,11 @@ L_13b0c0:;
     objc_release(ret);
     [[[UILabel alloc] initWithFrame:29]; setTextColor:ret];
     [self cardView];
-    [ret addSubview:[[UILabel alloc] initWithFrame:29];];
+    [ret addSubview:[[UILabel alloc] initWithFrame:29]];
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
-    [self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero];];
-    objc_release([[UILabel alloc] initWithFrame:CGRectZero];);
+    [self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [UIFont systemFontOfSize:13];
     [self countLabel];
     [ret setFont:ret];
@@ -636,7 +636,7 @@ L_13b0c0:;
     [[[UILabel alloc] initWithFrame:18]; setTextColor:ret];
     objc_release(ret);
     [self cardView];
-    [ret addSubview:[[UILabel alloc] initWithFrame:18];];
+    [ret addSubview:[[UILabel alloc] initWithFrame:18]];
     objc_release(ret);
     /* [UNRESOLVED] [[UITableView alloc] initWithFrame:0 style:0x4056000000000000]; */
     /* [UNRESOLVED] [self setTable:[[UITableView alloc] initWithFrame:0 style:0x4056000000000000];]; */
@@ -668,8 +668,8 @@ L_13b0c0:;
     objc_release(ret);
     objc_release(ret);
     [[UILabel alloc] initWithFrame:18];
-    [self setEmptyLabel:[[UILabel alloc] initWithFrame:18];];
-    objc_release([[UILabel alloc] initWithFrame:18];);
+    [self setEmptyLabel:[[UILabel alloc] initWithFrame:18]];
+    objc_release([[UILabel alloc] initWithFrame:18]);
     [self emptyLabel];
     [ret setNumberOfLines:0];
     objc_release(ret);
@@ -734,10 +734,10 @@ L_13b0c0:;
     objc_release(ret);
     objc_release(ret);
     objc_release(sel_registerName("setFrame:"));
-    objc_release([[UILabel alloc] initWithFrame:18];);
-    objc_release([[UILabel alloc] initWithFrame:29];);
-    objc_release([[UIView alloc] initWithFrame:18];);
-    objc_release([[UIControl alloc] initWithFrame:CGRectZero];);
+    objc_release([[UILabel alloc] initWithFrame:18]);
+    objc_release([[UILabel alloc] initWithFrame:29]);
+    objc_release([[UIView alloc] initWithFrame:18]);
+    objc_release([[UIControl alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1286,7 +1286,7 @@ L_13c11c:;
     /* [UNRESOLVED] [0x2592a0 objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     /* [UNRESOLVED] HushKeyValue(0x226278); */
     [NSArray class];
-    [ret isKindOfClass:[NSArray class];];
+    [ret isKindOfClass:[NSArray class]];
     if (ret == 0) goto L_13c654;
 
     [ret count];
@@ -1342,7 +1342,7 @@ L_13c34c:;
 
 L_13c3a8:;
     [ret count];
-    [NSNumber numberWithUnsignedInteger:[ret count];];
+    [NSNumber numberWithUnsignedInteger:[ret count]];
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     [NSNumber numberWithDouble:0];
@@ -1404,7 +1404,7 @@ L_13c694:;
     [ret mutableCopy];
     if ([ret mutableCopy]== 0) goto L_13c6fc;
 
-    [self setItems:[ret mutableCopy];];
+    [self setItems:[ret mutableCopy]];
     goto L_13c730;
 
 L_13c6fc:;
@@ -1413,7 +1413,7 @@ L_13c6fc:;
     objc_release(ret);
 
 L_13c730:;
-    objc_release([ret mutableCopy];);
+    objc_release([ret mutableCopy]);
     objc_release(ret);
     [self items];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
