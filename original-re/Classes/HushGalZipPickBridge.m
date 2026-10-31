@@ -383,10 +383,10 @@
     // 00087cac  ret
     id ret = nil;
 
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_release(0x2579b8); */
-    [a1 firstObject];
-    objc_release(a1);
+    /* [UNRESOLVED] [a1 firstObject]; */
+    /* [UNRESOLVED] objc_release(a1); */
     if (ret == 0) goto L_87c8c;
 
     [ret path];

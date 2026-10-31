@@ -569,24 +569,24 @@
     objc_release(ret);
     [self view];
     [ret bounds];
-    [[UIView alloc] initWithFrame:0];
+    [[UIView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    [[[UIView alloc] initWithFrame:0]; bounds];
+    [[[UIView alloc] initWithFrame:CGRectZero]; bounds];
     /* [UNRESOLVED] CGRectInset(); */
-    [[UILabel alloc] initWithFrame:0];
-    [[[UILabel alloc] initWithFrame:0]; setAutoresizingMask:2];
-    [[[UILabel alloc] initWithFrame:0]; setText:@"点击导入 · 长按分享 · 左滑删除；从「文件」App 也能导入备份。只删备份文件，相册照片不受影响。"];
-    [[[UILabel alloc] initWithFrame:0]; setNumberOfLines:0];
+    [[UILabel alloc] initWithFrame:CGRectZero];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setAutoresizingMask:2];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setText:@"点击导入 · 长按分享 · 左滑删除；从「文件」App 也能导入备份。只删备份文件，相册照片不受影响。"];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setNumberOfLines:0];
     [UIFont systemFontOfSize:12];
-    [[[UILabel alloc] initWithFrame:0]; setFont:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
     objc_release(ret);
     [UIColor secondaryLabelColor];
-    [[[UILabel alloc] initWithFrame:0]; setTextColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:0]; setTextAlignment:1];
-    [[[UIView alloc] initWithFrame:0]; addSubview:[[UILabel alloc] initWithFrame:0];];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextAlignment:1];
+    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:[[UILabel alloc] initWithFrame:CGRectZero];];
     [self table];
-    [ret setTableFooterView:[[UIView alloc] initWithFrame:0];];
+    [ret setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero];];
     objc_release(ret);
     /* [UNRESOLVED] sub_882b8(); */
     [ret mutableCopy];
@@ -594,8 +594,8 @@
     objc_release([ret mutableCopy];);
     objc_release(ret);
     [self refreshTable];
-    objc_release([[UILabel alloc] initWithFrame:0];);
-    objc_release([[UIView alloc] initWithFrame:0];);
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero];);
+    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
     objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];);
     objc_release([[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];);
     return;
@@ -860,19 +860,19 @@ L_893c8:;
 L_8948c:;
     [self table];
     [ret bounds];
-    [[UILabel alloc] initWithFrame:0];
+    [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:0]; setText:@"没有本地备份文件\n可从上面的「从「文件」App 选择备份…」导入"];
-    [[[UILabel alloc] initWithFrame:0]; setNumberOfLines:0];
-    [[[UILabel alloc] initWithFrame:0]; setTextAlignment:1];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setText:@"没有本地备份文件\n可从上面的「从「文件」App 选择备份…」导入"];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setNumberOfLines:0];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextAlignment:1];
     [UIColor secondaryLabelColor];
-    [[[UILabel alloc] initWithFrame:0]; setTextColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
     objc_release(ret);
     [UIFont systemFontOfSize:14];
-    [[[UILabel alloc] initWithFrame:0]; setFont:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
     objc_release(ret);
     [self table];
-    [ret setBackgroundView:[[UILabel alloc] initWithFrame:0];];
+    [ret setBackgroundView:[[UILabel alloc] initWithFrame:CGRectZero];];
     objc_release(ret);
 
 L_895c0:;
@@ -1306,15 +1306,15 @@ L_895c0:;
     // 00089ab4  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a1);
-    objc_retain(a0);
-    [a1 row];
-    if ([a1 row]; == 0) goto L_898ec;
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] if ([a1 row]; == 0) goto L_898ec; */
 
-    [a0 dequeueReusableCellWithIdentifier:@"hushGalBackup" forIndexPath:a1];
-    objc_release(a0);
-    [a1 row];
-    [self itemAtRow:[a1 row];];
+    /* [UNRESOLVED] [a0 dequeueReusableCellWithIdentifier:@"hushGalBackup" forIndexPath:a1]; */
+    /* [UNRESOLVED] objc_release(a0); */
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] [self itemAtRow:[a1 row];]; */
     if (ret == 0) goto L_89a20;
 
     [ret objectForKeyedSubscript:@"name"];
@@ -1369,7 +1369,7 @@ L_89a80:;
     objc_release(ret);
 
 L_89a90:;
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a1); */
 }
 
 // @0x89ab8  types=v32@0:8@16@24
@@ -1602,14 +1602,14 @@ L_89a90:;
     // 00089d98  ret
     id ret = nil;
 
-    objc_retain(a0);
-    objc_retain(a1);
-    [a0 deselectRowAtIndexPath:a1 animated:1];
-    [a1 row];
-    if ([a1 row]; == 0) goto L_89d54;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a0 deselectRowAtIndexPath:a1 animated:1]; */
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] if ([a1 row]; == 0) goto L_89d54; */
 
-    [a1 row];
-    [self itemAtRow:[a1 row];];
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] [self itemAtRow:[a1 row];]; */
     if (ret == 0) goto L_89d44;
 
     [ret objectForKeyedSubscript:@"name"];
@@ -1639,8 +1639,8 @@ L_89d54:;
     /* [UNRESOLVED] dispatch_after(0x200010, 0x2066e0); */
 
 L_89d70:;
-    objc_release(a1);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] objc_release(a0); */
     return;
 }
 
@@ -1978,12 +1978,12 @@ L_89d70:;
     // 0008a284  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 state];
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_8a244; */
 
     [self table];
-    [a0 locationInView:ret];
+    /* [UNRESOLVED] [a0 locationInView:ret]; */
     objc_release(ret);
     [self table];
     [ret indexPathForRowAtPoint:0];
@@ -2031,7 +2031,7 @@ L_8a054:;
     goto L_8a1bc;
 
 L_8a1a0:;
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
 
 L_8a1bc:;
     [[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]; popoverPresentationController];
@@ -2052,7 +2052,7 @@ L_8a23c:;
     objc_release(ret);
 
 L_8a244:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_8a288; */
 
     return;
@@ -2228,23 +2228,23 @@ L_8a244:;
     // 0008a4b0  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a0);
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] objc_retain(a1); */
     [ret row];
     if ([ret row]; == 0) goto L_8a3f0;
 
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a1); */
     [UIContextualAction contextualActionWithStyle:1 title:@"删除" handler:0];
     [NSArray arrayWithObjects:0 count:1];
     [UISwipeActionsConfiguration configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a1); */
     goto L_8a3f0;
 
 L_8a3f0:;
-    objc_release(a1);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_8a430; */
 
 L_8a430:;
@@ -2253,8 +2253,8 @@ L_8a430:;
 
 L_8a450:;
     /* [UNRESOLVED] Unwind_Resume(); */
-    [Unwind_Resume/*+0x20*/ row];
-    [objc_loadWeakRetained confirmDeleteRow:[Unwind_Resume/*+0x20*/ row];];
+    /* [UNRESOLVED] [Unwind_Resume/ *+0x20* / row]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained confirmDeleteRow:[Unwind_Resume/ *+0x20* / row];]; */
 }
 
 // @0x8a4b4  types=v24@0:8q16
@@ -2448,7 +2448,7 @@ L_8a450:;
     // 0008a714  ret
     id ret = nil;
 
-    [self itemAtRow:a0];
+    /* [UNRESOLVED] [self itemAtRow:a0]; */
     if (ret == 0) goto L_8a6f4;
 
     [ret objectForKeyedSubscript:@"name"];

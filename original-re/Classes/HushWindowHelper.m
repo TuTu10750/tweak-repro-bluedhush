@@ -209,7 +209,7 @@ L_8d0d8:;
     id ret = nil;
 
     /* [UNRESOLVED] [@0x244888 shared]; */
-    [ret isEnabled:0 /* func */];
+    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     if (0 == 0) goto L_8d190;
 
     objc_release(ret);
@@ -217,7 +217,7 @@ L_8d0d8:;
 
 L_8d190:;
     /* [UNRESOLVED] [@0x244888 shared]; */
-    [ret isEnabled:0 /* func */];
+    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; == 0) goto L_8d2dc; */
@@ -373,11 +373,11 @@ L_8d2dc:;
     // 0008e4cc  ret
     id ret = nil;
 
-    [a0 state];
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_8e4cc; */
 
     /* [UNRESOLVED] sub_8d3b0(); */
-    if ([a0 state]; == 0) goto L_8e4cc;
+    /* [UNRESOLVED] if ([a0 state]; == 0) goto L_8e4cc; */
 
     /* [UNRESOLVED] objc_retain(0x257a08); */
     [ret length];

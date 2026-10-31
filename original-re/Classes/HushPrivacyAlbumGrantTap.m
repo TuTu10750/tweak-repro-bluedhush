@@ -529,16 +529,16 @@
     // 000f90e0  bl      #0x1a72d8   ; _objc_msgSend
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 state];
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f93bc; */
 
     /* [UNRESOLVED] [@0x244888 shared]; */
-    [ret isEnabled:0 /* func */];
+    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; == 0) goto L_f93bc; */
 
-    [a0 view];
+    /* [UNRESOLVED] [a0 view]; */
     if (ret == 0) goto L_f8bf4;
 
 L_f8b84:;
@@ -738,7 +738,7 @@ L_f93a4:;
     objc_release(ret);
 
 L_f93bc:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return;
 }
 

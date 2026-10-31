@@ -420,12 +420,12 @@
     // 0007c1a0  ret
     id ret = nil;
 
-    [super initWithFrame:a0];
+    /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_7c1a0;
 
     [self contentView];
     [ret bounds];
-    [[UIImageView alloc] initWithFrame:0];
+    [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_thumb);
     objc_release(ret);
     [self->_thumb setAutoresizingMask:0x12];
@@ -438,7 +438,7 @@
     [self contentView];
     [ret addSubview:self->_thumb];
     objc_release(ret);
-    [[UIImageView alloc] initWithFrame:0];
+    [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_playBadge);
     [UIImage systemImageNamed:@"play.circle.fill"];
     [self->_playBadge setImage:ret];
@@ -452,7 +452,7 @@
     [self contentView];
     [ret bounds];
     /* [UNRESOLVED] CGRectGetMidY(); */
-    [self->_playBadge setCenter:0];
+    [self->_playBadge setCenter:CGPointZero];
     objc_release(ret);
     objc_release(ret);
     [self->_playBadge setAutoresizingMask:0x2d];

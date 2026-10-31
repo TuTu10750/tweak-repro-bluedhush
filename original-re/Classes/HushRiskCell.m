@@ -379,7 +379,7 @@
     // 000208a0  ret
     id ret = nil;
 
-    [super initWithStyle:a0 reuseIdentifier:a1];
+    /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_208a0;
 
     [UIColor clearColor];
@@ -619,7 +619,7 @@ L_208a0:;
     [ret frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
     [self source];
-    [ret setFrame:0];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     objc_release(ret);
     [self time];

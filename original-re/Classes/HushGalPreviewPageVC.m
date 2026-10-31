@@ -224,18 +224,18 @@
     objc_release(ret);
     [self view];
     [ret bounds];
-    [[UIImageView alloc] initWithFrame:0];
+    [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    [[[UIImageView alloc] initWithFrame:0]; setContentMode:1];
+    [[[UIImageView alloc] initWithFrame:CGRectZero]; setContentMode:1];
     [UIColor clearColor];
-    [[[UIImageView alloc] initWithFrame:0]; setBackgroundColor:ret];
+    [[[UIImageView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIImageView alloc] initWithFrame:0]; setAutoresizingMask:0x12];
-    [[[UIImageView alloc] initWithFrame:0]; setAccessibilityIdentifier:@"hushgal_preview_image"];
+    [[[UIImageView alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
+    [[[UIImageView alloc] initWithFrame:CGRectZero]; setAccessibilityIdentifier:@"hushgal_preview_image"];
     [self view];
-    [ret addSubview:[[UIImageView alloc] initWithFrame:0];];
+    [ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero];];
     objc_release(ret);
-    objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:0];);
+    objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero];);
     [self path];
     [ret length];
     if ([ret length]; == 0) goto L_7a924;
@@ -248,7 +248,7 @@
 
 L_7a924:;
     objc_release(ret);
-    objc_release([[UIImageView alloc] initWithFrame:0];);
+    objc_release([[UIImageView alloc] initWithFrame:CGRectZero];);
     return;
 }
 

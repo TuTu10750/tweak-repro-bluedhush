@@ -265,7 +265,7 @@
     // 00088b18  ret
     id ret = nil;
 
-    [super initWithStyle:a0 reuseIdentifier:a1];
+    /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_88b18;
 
     [[UILabel alloc] initWithFrame:16];

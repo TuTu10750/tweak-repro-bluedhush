@@ -105,7 +105,7 @@
     [super viewDidLoad];
     /* [UNRESOLVED] [self setTitle:0x225c98]; */
     [self tableView];
-    [ret setRowHeight:0 /* unk *//*+0x0*/];
+    /* [UNRESOLVED] [ret setRowHeight:0 / * unk * // *+0x0* /]; */
     objc_release(ret);
     [self tableView];
     /* [UNRESOLVED] [ret setEstimatedRowHeight:0x4050000000000000]; */
@@ -180,7 +180,7 @@
     // 001350e0  ret
     id ret = nil;
 
-    [super viewWillAppear:a0];
+    /* [UNRESOLVED] [super viewWillAppear:a0]; */
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
     [self navigationItem];
     [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];];
@@ -430,10 +430,10 @@
     // 001353e8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a1);
-    [a0 deselectRowAtIndexPath:a1 animated:1];
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a0 deselectRowAtIndexPath:a1 animated:1]; */
     /* [UNRESOLVED] sub_1351b0(a1); */
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225538]; */
     [ret boolValue];
     objc_release(ret);
@@ -787,13 +787,13 @@ L_13558c:;
     // 001356e8  ret
     id ret = nil;
 
-    objc_retain(a0);
-    if (((a1 >> 63) & 1) != 0) goto L_1356ac;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_1356ac; */
 
     [self->_sections count];
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1356ac; */
 
-    [self->_sections objectAtIndexedSubscript:a1];
+    /* [UNRESOLVED] [self->_sections objectAtIndexedSubscript:a1]; */
     [NSDictionary class];
     [ret isKindOfClass:[NSDictionary class];];
     if (ret == 0) goto L_1356b4;
@@ -819,7 +819,7 @@ L_1356c8:;
     objc_release(ret);
 
 L_1356d0:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return 0;
 }
 
@@ -902,13 +902,13 @@ L_1356d0:;
     // 001357dc  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a0);
-    if (((a1 >> 63) & 1) != 0) goto L_1357c8;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_1357c8; */
 
     [self->_sections count];
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1357c8; */
 
-    [self->_sections objectAtIndexedSubscript:a1];
+    /* [UNRESOLVED] [self->_sections objectAtIndexedSubscript:a1]; */
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2141b8]; */
     objc_release(ret);
     [NSString class];
@@ -918,7 +918,7 @@ L_1356d0:;
     goto L_1357c8;
 
 L_1357c8:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
 }
 
 // @0x1357e0  types=@32@0:8@16@24
@@ -1320,7 +1320,7 @@ L_1357c8:;
     // 00135cd8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [a0 dequeueReusableCellWithIdentifier:0x225cb8]; */
     if (ret != 0) goto L_135874;
 
@@ -1345,7 +1345,7 @@ L_135874:;
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225cd8]; */
     [ret boolValue];
     objc_release(ret);
-    [UIColor unknownSelector];
+    /* [UNRESOLVED] [UIColor unknownSelector]; */
     [ret textProperties];
     [ret setColor:ret];
     objc_release(ret);
@@ -1357,7 +1357,7 @@ L_135874:;
     if ((([ret boolValue]; >> 0) & 1) == 0) goto L_135b88;
 
     /* [UNRESOLVED] [objc_alloc_init setText:0x225cf8]; */
-    [UIFont monospacedSystemFontOfSize:15 weight:0 /* unk *//*+0x0*/];
+    /* [UNRESOLVED] [UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
     [objc_alloc_init setFont:ret];
     objc_release(ret);
     [self view];
@@ -1373,9 +1373,9 @@ L_135b5c:;
 
 L_135b88:;
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x21dff8]; */
-    [objc_alloc_init unknownSelector];
+    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     objc_release(ret);
-    [UIFont monospacedSystemFontOfSize:15 weight:0 /* unk *//*+0x0*/];
+    /* [UNRESOLVED] [UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
     [objc_alloc_init setFont:ret];
     objc_release(ret);
     if (((ret >> 0) & 1) == 0) goto L_135c18;
@@ -1397,7 +1397,7 @@ L_135c48:;
 
 L_135cac:;
     objc_release(ret);
-    objc_release(0 /* local */);
+    /* [UNRESOLVED] objc_release(0 / * local * /); */
 }
 
 @end

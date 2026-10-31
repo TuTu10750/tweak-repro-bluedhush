@@ -177,11 +177,11 @@
     // 0003bcb8  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 view];
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 view]; */
     if (ret == 0) goto L_3bc8c;
 
-    [a0 locationInView:ret];
+    /* [UNRESOLVED] [a0 locationInView:ret]; */
     [ret hitTest:0 withEvent:0];
     objc_retain(ret);
     [NSMutableString string];
@@ -226,7 +226,7 @@ L_3bc70:;
 
 L_3bc8c:;
     objc_release(ret);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return 0;
 }
 

@@ -113,7 +113,7 @@
     // 000c54fc  ret
     id ret = nil;
 
-    [super initWithFrame:a0];
+    /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_c54e4;
 
     [UIColor clearColor];
@@ -121,7 +121,7 @@
     objc_release(ret);
     [self setClipsToBounds:1];
     [self bounds];
-    [[UIScrollView alloc] initWithFrame:0];
+    [[UIScrollView alloc] initWithFrame:CGRectZero];
     objc_release(self->_scrollView);
     [self->_scrollView setAutoresizingMask:0x12];
     [self->_scrollView setShowsHorizontalScrollIndicator:0];
@@ -661,9 +661,9 @@ L_c54e4:;
     // 000c5b3c  mov     x0, x22
     id ret = nil;
 
-    objc_retain(a0);
+    /* [UNRESOLVED] objc_retain(a0); */
     [NSArray class];
-    [a0 isKindOfClass:[NSArray class];];
+    /* [UNRESOLVED] [a0 isKindOfClass:[NSArray class];]; */
     objc_retain(0);
     [self urls];
     [ret count];
@@ -731,24 +731,24 @@ L_c59d8:;
     [NSURL URLWithString:ret];
     if (ret == 0) goto L_c5c80;
 
-    [[UIImageView alloc] unknownSelector];
-    [[[UIImageView alloc] unknownSelector]; setContentMode:2];
-    [[[UIImageView alloc] unknownSelector]; unknownSelector];
-    [[[UIImageView alloc] unknownSelector]; layer];
-    [ret unknownSelector];
+    /* [UNRESOLVED] [[UIImageView alloc] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setContentMode:2]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; layer]; */
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    [[[UIImageView alloc] unknownSelector]; setUserInteractionEnabled:1];
-    [[[UIImageView alloc] unknownSelector]; unknownSelector];
-    [UIColor colorWithWhite:0.5 alpha:0 /* unk */];
-    [[[UIImageView alloc] unknownSelector]; setBackgroundColor:ret];
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setUserInteractionEnabled:1]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [UIColor colorWithWhite:0.5 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setBackgroundColor:ret]; */
     objc_release(ret);
-    [[UITapGestureRecognizer alloc] unknownSelector];
-    [[[UIImageView alloc] unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; unknownSelector]; */
     [self scrollView];
-    [ret addSubview:[[UIImageView alloc] unknownSelector];];
+    /* [UNRESOLVED] [ret addSubview:[[UIImageView alloc] unknownSelector];]; */
     objc_release(ret);
     /* [UNRESOLVED] CGAffineTransformMakeScale(); */
-    [[[UIImageView alloc] unknownSelector]; setTransform:0];
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setTransform:0]; */
     /* [UNRESOLVED] if (cond / * ls * /) goto L_c5c68; */
 
     [ret copy];
@@ -757,7 +757,7 @@ L_c59d8:;
     objc_retain(ret);
     objc_retain([ret copy];);
     /* [UNRESOLVED] dispatch_after(0x200010); */
-    objc_release(0 /* local */);
+    /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release([ret copy];);
     objc_release(ret);
     objc_release([ret copy];);
@@ -767,8 +767,8 @@ L_c5c68:;
     /* [UNRESOLVED] sub_c5e08(ret, ret); */
 
 L_c5c70:;
-    objc_release([[UITapGestureRecognizer alloc] unknownSelector];);
-    objc_release([[UIImageView alloc] unknownSelector];);
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[UIImageView alloc] unknownSelector];); */
 
 L_c5c80:;
     objc_release(ret);
@@ -778,7 +778,7 @@ L_c5c80:;
 
 L_c5cbc:;
     [self scrollView];
-    [ret setContentOffset:0 /* unk */];
+    /* [UNRESOLVED] [ret setContentOffset:0 / * unk * /]; */
     objc_release(ret);
     [0 count];
     if ([0 count]; == 0) goto L_c5d30;
@@ -798,7 +798,7 @@ L_c5d30:;
 
 L_c5db8:;
     objc_release(0);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return;
 }
 
@@ -990,11 +990,11 @@ L_c5db8:;
     // 000c63f0  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 state];
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c63d4; */
 
-    [a0 view];
+    /* [UNRESOLVED] [a0 view]; */
     [ret tag];
     objc_release(ret);
     if ((([ret tag]; >> 63) & 1) != 0) goto L_c63d4;
@@ -1044,7 +1044,7 @@ L_c63c4:;
     objc_release(ret);
 
 L_c63d4:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return;
 }
 

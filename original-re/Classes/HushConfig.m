@@ -85,13 +85,13 @@
     // 0000e3f8  ret
     id ret = nil;
 
-    [super init];
+    self = [super init];
     if (self == 0) goto L_e3f8;
 
     [NSUserDefaults standardUserDefaults];
-    objc_release(self->/*+0x8*/);
+    /* [UNRESOLVED] objc_release(self->/ *+0x8* /); */
     [NSMutableDictionary dictionary];
-    objc_release(self->/*+0x10*/);
+    /* [UNRESOLVED] objc_release(self->/ *+0x10* /); */
     [self registerDefaults];
     [NSNotificationCenter defaultCenter];
     /* [UNRESOLVED] [ret addObserver:self selector:sel_registerName("hush_clearFlagCache") name:0x2001c8/ *+0x0* / object:0]; */
@@ -402,12 +402,12 @@ L_e5c8:;
 
     /* [UNRESOLVED] [0x2565c8 objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     [ret boolValue];
-    [self isEnabled:0 /* local *//*+0x0*/ default:[ret boolValue];];
+    /* [UNRESOLVED] [self isEnabled:0 / * local * // *+0x0* / default:[ret boolValue];]; */
     objc_release(ret);
     goto L_e638;
 
 L_e630:;
-    [self isEnabled:0 /* local *//*+0x0*/ default:0];
+    /* [UNRESOLVED] [self isEnabled:0 / * local * // *+0x0* / default:0]; */
 
 L_e638:;
     objc_release(ret);
@@ -553,9 +553,9 @@ L_e7f8:;
     // 0000e8c8  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if ([a0 length]; == 0) goto L_e888;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_e888; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e8cc; */
 
@@ -569,12 +569,12 @@ L_e888:;
     goto L_e8b4;
 
 L_e8a0:;
-    [0 isEnabled:a0 default:0];
+    /* [UNRESOLVED] [0 isEnabled:a0 default:0]; */
     objc_release(ret);
 
 L_e8b4:;
-    objc_release(a0);
-    return (BOOL)[0 isEnabled:a0 default:0];;
+    /* [UNRESOLVED] objc_release(a0); */
+    return 0;  /* [UNRESOLVED] [0 isEnabled:a0 default:0]; */
 }
 
 // @0xe8e4  types=B28@0:8@16B24
@@ -881,21 +881,21 @@ L_e8b4:;
     // 0000ec9c  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if ([a0 length]; == 0) goto L_e9c0;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_e9c0; */
 
     if (0 != 0) goto L_e950;
 
     /* [UNRESOLVED] HushKeyNeedsActivation(); */
-    if (((a0 >> 0) & 1) == 0) goto L_e950;
+    /* [UNRESOLVED] if (((a0 >> 0) & 1) == 0) goto L_e950; */
 
     goto L_ec7c;
 
 L_e950:;
     objc_retain(self);
     [self flagCache];
-    [ret objectForKeyedSubscript:a0];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:a0]; */
     objc_release(ret);
     if (ret == 0) goto L_e9c8;
 
@@ -911,12 +911,12 @@ L_e9c8:;
     if (ret != 0) goto L_ec7c;
 
     /* [UNRESOLVED] HushHostCompatKeyIsInapplicable(); */
-    if (a0 == 0) goto L_ea74;
+    /* [UNRESOLVED] if (a0 == 0) goto L_ea74; */
 
     objc_retain(self);
     [NSNumber numberWithBool:0];
     [self flagCache];
-    [ret setObject:ret forKeyedSubscript:a0];
+    /* [UNRESOLVED] [ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
     objc_release(ret);
     goto L_ec74;
@@ -942,7 +942,7 @@ L_eb00:;
     if (ret == 0) goto L_eb84;
 
 L_eb10:;
-    [ret objectForKeyedSubscript:a0];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:a0]; */
     if (ret != 0) goto L_ebd4;
 
     goto L_ebf0;
@@ -958,7 +958,7 @@ L_eb70:;
 
 L_eb84:;
     [self defaults];
-    [ret objectForKey:a0];
+    /* [UNRESOLVED] [ret objectForKey:a0]; */
     objc_release(ret);
     if (ret == 0) goto L_ebf0;
 
@@ -974,8 +974,8 @@ L_ebf0:;
 L_ebfc:;
     objc_retain(self);
     [NSNumber numberWithBool:[ret boolValue];];
-    [self unknownSelector];
-    [ret setObject:ret forKeyedSubscript:a0];
+    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(self);
@@ -984,8 +984,8 @@ L_ec74:;
     objc_release(ret);
 
 L_ec7c:;
-    objc_release(a0);
-    return (BOOL)a0;
+    /* [UNRESOLVED] objc_release(a0); */
+    return 0;  /* [UNRESOLVED] a0 */
 }
 
 // @0xed14  types=v28@0:8B16@20
@@ -1122,28 +1122,28 @@ L_ec7c:;
     // 0000eec4  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a1);
-    [a1 length];
-    if ([a1 length]; == 0) goto L_eec4;
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a1 length]; */
+    /* [UNRESOLVED] if ([a1 length]; == 0) goto L_eec4; */
 
-    if (a0 == 0) goto L_ee44;
+    /* [UNRESOLVED] if (a0 == 0) goto L_ee44; */
 
-    [a1 isEqualToString:@"switch_track"];
-    if (((a1 >> 0) & 1) == 0) goto L_eda8;
+    /* [UNRESOLVED] [a1 isEqualToString:@"switch_track"]; */
+    /* [UNRESOLVED] if (((a1 >> 0) & 1) == 0) goto L_eda8; */
 
     goto L_edcc;
 
 L_eda8:;
-    [a1 isEqualToString:@"switch_physical_track"];
+    /* [UNRESOLVED] [a1 isEqualToString:@"switch_physical_track"]; */
 
 L_edcc:;
-    [a1 isEqualToString:@"switch_device_fake"];
-    if (((a1 >> 0) & 1) == 0) goto L_edf0;
+    /* [UNRESOLVED] [a1 isEqualToString:@"switch_device_fake"]; */
+    /* [UNRESOLVED] if (((a1 >> 0) & 1) == 0) goto L_edf0; */
 
     goto L_ee10;
 
 L_edf0:;
-    [a1 unknownSelector];
+    /* [UNRESOLVED] [a1 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_ee44; */
 
 L_ee10:;
@@ -1153,7 +1153,7 @@ L_ee10:;
 
 L_ee44:;
     [self defaults];
-    [ret setBool:a0 forKey:a1];
+    /* [UNRESOLVED] [ret setBool:a0 forKey:a1]; */
     objc_release(ret);
     [self defaults];
     [ret synchronize];
@@ -1248,12 +1248,12 @@ L_eec4:;
     // 0000efc8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if ([a0 length]; == 0) goto L_ef7c;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_ef7c; */
 
     [self defaults];
-    [ret objectForKey:a0];
+    /* [UNRESOLVED] [ret objectForKey:a0]; */
     objc_release(ret);
     [NSString class];
     [ret isKindOfClass:[NSString class];];
@@ -1275,7 +1275,7 @@ L_efac:;
     objc_release(ret);
 
 L_efb4:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
 }
 
 // @0xefcc  types=v32@0:8@16@24
@@ -1355,19 +1355,19 @@ L_efb4:;
     // 0000f0b0  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a0);
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] objc_retain(a1); */
     [ret length];
     if ([ret length]; == 0) goto L_f098;
 
     [self defaults];
-    if (a0 == 0) goto L_f05c;
+    /* [UNRESOLVED] if (a0 == 0) goto L_f05c; */
 
-    [ret setObject:a0 forKey:a1];
+    /* [UNRESOLVED] [ret setObject:a0 forKey:a1]; */
     goto L_f064;
 
 L_f05c:;
-    [ret removeObjectForKey:a1];
+    /* [UNRESOLVED] [ret removeObjectForKey:a1]; */
 
 L_f064:;
     objc_release(ret);
@@ -1376,7 +1376,7 @@ L_f064:;
     objc_release(ret);
 
 L_f098:;
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a1); */
 }
 
 // @0xf0b4  types=@16@0:8
@@ -2077,7 +2077,7 @@ L_f8d0:;
     // 0000f8ec  ret
     id ret = nil;
 
-    return (id)self->/*+0x8*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x8* / */
 }
 
 // @0xf8f0  types=v24@0:8@16
@@ -2095,7 +2095,7 @@ L_f8d0:;
     // 0000f900  ret
     id ret = nil;
 
-    return (id)self->/*+0x10*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x10* / */
 }
 
 // @0xf904  types=v24@0:8@16
@@ -2113,7 +2113,7 @@ L_f8d0:;
     // 0000f914  ret
     id ret = nil;
 
-    return (id)self->/*+0x18*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x18* / */
 }
 
 // @0xf918  types=v24@0:8@16

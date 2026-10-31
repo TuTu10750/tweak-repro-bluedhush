@@ -562,7 +562,7 @@
     [ret addTarget:self action:sel_registerName("hushClose:") forControlEvents:0x40];
     [ret setTranslatesAutoresizingMaskIntoConstraints:0];
     [objc_alloc_init addSubview:ret];
-    [[MKMapView alloc] initWithFrame:0 /* unk */];
+    /* [UNRESOLVED] [[MKMapView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_map);
     [self->_map setDelegate:self];
     [self->_map setZoomEnabled:1];
@@ -1793,20 +1793,20 @@ L_92c68:;
     // 00093234  b       #0x92f14   ; sub_92f14
     id ret = nil;
 
-    objc_retain(a0);
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] objc_retain(a1); */
     [MKUserLocation class];
-    [a1 isKindOfClass:[MKUserLocation class];];
-    if (((a1 >> 0) & 1) != 0) goto L_92f18;
+    /* [UNRESOLVED] [a1 isKindOfClass:[MKUserLocation class];]; */
+    /* [UNRESOLVED] if (((a1 >> 0) & 1) != 0) goto L_92f18; */
 
     /* [UNRESOLVED] if (cond / * eq * /) goto L_92f58; */
 
 L_92f18:;
-    objc_release(a1);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] objc_release(a0); */
 
 L_92f58:;
-    [a0 dequeueReusableAnnotationViewWithIdentifier:@"hush_track_target"];
+    /* [UNRESOLVED] [a0 dequeueReusableAnnotationViewWithIdentifier:@"hush_track_target"]; */
     if (ret != 0) goto L_93230;
 
     /* [UNRESOLVED] [[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; */
@@ -1838,7 +1838,7 @@ L_92f58:;
     [ret setShadowRadius:2];
     objc_release(ret);
     [objc_alloc_init layer];
-    [ret setShadowOffset:0 /* unk */];
+    /* [UNRESOLVED] [ret setShadowOffset:0 / * unk * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; setHushCaption:objc_alloc_init]; */
     /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; addSubview:objc_alloc_init]; */
@@ -1946,7 +1946,7 @@ L_93230:;
     // 00093378  ret
     id ret = nil;
 
-    [super viewDidAppear:a0];
+    /* [UNRESOLVED] [super viewDidAppear:a0]; */
     if (0 != 0) goto L_93378;
 
     [self->_anno coordinate];

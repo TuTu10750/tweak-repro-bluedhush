@@ -129,24 +129,24 @@
     // 00141f5c  ret
     id ret = nil;
 
-    [super unknownSelector];
+    /* [UNRESOLVED] [super unknownSelector]; */
     if (super == 0) goto L_141f5c;
 
-    [UIFont unknownSelector];
-    [super unknownSelector];
-    [ret unknownSelector];
+    /* [UNRESOLVED] [UIFont unknownSelector]; */
+    /* [UNRESOLVED] [super unknownSelector]; */
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    [super unknownSelector];
-    [ret unknownSelector];
+    /* [UNRESOLVED] [super unknownSelector]; */
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    [UIFont unknownSelector];
-    [super unknownSelector];
-    [ret unknownSelector];
+    /* [UNRESOLVED] [UIFont unknownSelector]; */
+    /* [UNRESOLVED] [super unknownSelector]; */
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    [UIColor unknownSelector];
-    [super unknownSelector];
+    /* [UNRESOLVED] [UIColor unknownSelector]; */
+    /* [UNRESOLVED] [super unknownSelector]; */
     objc_release(ret);
 
 L_141f5c:;

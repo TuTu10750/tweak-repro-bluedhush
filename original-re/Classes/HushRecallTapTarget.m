@@ -529,20 +529,20 @@
     // 0003c4b0  ldr     x25, [x8, #0x518]
     id ret = nil;
 
-    objc_retain(a0);
+    /* [UNRESOLVED] objc_retain(a0); */
     [UIGestureRecognizer class];
-    [a0 isKindOfClass:[UIGestureRecognizer class];];
-    if (a0 == 0) goto L_3bf18;
+    /* [UNRESOLVED] [a0 isKindOfClass:[UIGestureRecognizer class];]; */
+    /* [UNRESOLVED] if (a0 == 0) goto L_3bf18; */
 
-    [a0 view];
+    /* [UNRESOLVED] [a0 view]; */
     goto L_3bf58;
 
 L_3bf18:;
     [UIView class];
-    [a0 isKindOfClass:[UIView class];];
-    if (a0 == 0) goto L_3bf58;
+    /* [UNRESOLVED] [a0 isKindOfClass:[UIView class];]; */
+    /* [UNRESOLVED] if (a0 == 0) goto L_3bf58; */
 
-    objc_retain(a0);
+    /* [UNRESOLVED] objc_retain(a0); */
     goto L_3bf58;
 
 L_3bf58:;
@@ -734,12 +734,12 @@ L_3c61c:;
     objc_release(ret);
 
 L_3c62c:;
-    [NSDate unknownSelector];
+    /* [UNRESOLVED] [NSDate unknownSelector]; */
     [ret timeIntervalSince1970];
     objc_release(ret);
 
 L_3c664:;
-    [NSDate unknownSelector];
+    /* [UNRESOLVED] [NSDate unknownSelector]; */
     [ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (0 / * local * / == 0) goto L_3c6b8; */
@@ -758,14 +758,14 @@ L_3c708:;
     /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"]; noteFiltered:3]; */
 
 L_3c718:;
-    [NSDate unknownSelector];
+    /* [UNRESOLVED] [NSDate unknownSelector]; */
     [ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cb54; */
 
 L_3c764:;
     /* [UNRESOLVED] objc_retain(0x257550); */
-    [NSString unknownSelector];
+    /* [UNRESOLVED] [NSString unknownSelector]; */
     /* [UNRESOLVED] objc_retain(0x257550); */
     /* [UNRESOLVED] [0x257550 objectForKeyedSubscript:ret]; */
     if (ret == 0) goto L_3c814;
@@ -812,10 +812,10 @@ L_3ca5c:;
 L_3cac4:;
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0x257550); */
-    objc_release(0 /* local */);
+    /* [UNRESOLVED] objc_release(0 / * local * /); */
     /* [UNRESOLVED] if (cond / * le * /) goto L_3cce4; */
 
-    [NSString unknownSelector];
+    /* [UNRESOLVED] [NSString unknownSelector]; */
     goto L_3cce4;
 
 L_3cb24:;
@@ -966,7 +966,7 @@ L_3d01c:;
     /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
 
 L_3d030:;
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     objc_release(0);
     objc_release(0);
@@ -986,7 +986,7 @@ L_3d090:;
     [0 respondsToSelector:NSSelectorFromString];
     if (0 == 0) goto L_3d10c;
 
-    [0 unknownSelector];
+    /* [UNRESOLVED] [0 unknownSelector]; */
 
 L_3d10c:;
     /* [UNRESOLVED] NSSelectorFromString(); */
@@ -995,7 +995,7 @@ L_3d10c:;
     [objc_loadWeakRetained respondsToSelector:NSSelectorFromString];
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
-    [objc_loadWeakRetained unknownSelector];
+    /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:4]; */
     /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:4]; == 0) goto L_3d180; */
 
@@ -1016,7 +1016,7 @@ L_3d18c:;
 
 L_3d1ac:;
     objc_release(ret);
-    objc_release(0 /* unk */);
+    /* [UNRESOLVED] objc_release(0 / * unk * /); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3d1f8; */
 
     return;

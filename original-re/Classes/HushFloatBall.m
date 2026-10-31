@@ -255,7 +255,7 @@
     // 00067678  ret
     id ret = nil;
 
-    [super initWithFrame:a0];
+    /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_67678;
 
     [UIColor clearColor];
@@ -263,7 +263,7 @@
     objc_release(ret);
     [self setUserInteractionEnabled:1];
     [self bounds];
-    [[UIImageView alloc] initWithFrame:0];
+    [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_iconView);
     [self->_iconView setContentMode:1];
     [self->_iconView setUserInteractionEnabled:0];
@@ -285,7 +285,7 @@
     [self addSubview:self->_iconView];
     [self refreshIcon];
     [NSNotificationCenter defaultCenter];
-    [ret addObserver:self selector:sel_registerName("refreshIcon") name:0 /* func */ object:0];
+    /* [UNRESOLVED] [ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];];
@@ -560,25 +560,25 @@ L_67678:;
     // 00067970  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a0);
+    /* [UNRESOLVED] objc_retain(a0); */
     [self superview];
     if (ret == 0) goto L_67950;
 
-    [a0 translationInView:ret];
+    /* [UNRESOLVED] [a0 translationInView:ret]; */
     [self center];
     [self bounds];
     [self bounds];
     [ret bounds];
     [ret bounds];
-    [self setCenter:0];
-    [a0 setTranslation:ret inView:0];
-    [a0 state];
+    [self setCenter:CGPointZero];
+    /* [UNRESOLVED] [a0 setTranslation:ret inView:0]; */
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_67950; */
 
     /* [UNRESOLVED] [@0x244888 shared]; */
     [self center];
     /* [UNRESOLVED] NSStringFromCGPoint(); */
-    [ret setString:ret forKey:0 /* func */];
+    /* [UNRESOLVED] [ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
 

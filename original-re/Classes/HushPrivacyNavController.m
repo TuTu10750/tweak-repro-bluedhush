@@ -60,16 +60,16 @@
     // 0014200c  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    [self unknownSelector];
-    [ret unknownSelector];
+    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * hi * /) goto L_141ff0; */
 
-    [self unknownSelector];
+    /* [UNRESOLVED] [self unknownSelector]; */
     goto L_14200c;
 
 L_141ff0:;
-    [super unknownSelector];
+    /* [UNRESOLVED] [super unknownSelector]; */
 
 L_14200c:;
 }

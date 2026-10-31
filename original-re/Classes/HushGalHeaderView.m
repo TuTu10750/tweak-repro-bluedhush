@@ -326,7 +326,7 @@
     // 0007c688  ret
     id ret = nil;
 
-    [super initWithFrame:a0];
+    /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_7c688;
 
     [[UILabel alloc] initWithFrame:14];
@@ -338,7 +338,7 @@
     [self->_name setMinimumScaleFactor:0.72];
     [self->_name setLineBreakMode:2];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [UIColor unknownSelector];
+    /* [UNRESOLVED] [UIColor unknownSelector]; */
     [self->_name setTextColor:ret];
     objc_release(ret);
     [self->_name setAutoresizingMask:0x12];

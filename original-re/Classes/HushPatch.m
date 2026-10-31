@@ -42,15 +42,15 @@
     // 00019174  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if ([a0 length]; == 0) goto L_19164;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19164; */
 
     [objc_retainAutorelease UTF8String];
     goto L_19164;
 
 L_19164:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return 0;
 }
 
@@ -102,11 +102,11 @@ L_19164:;
     // 00019200  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if (a1 == 0) goto L_191ec;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if (a1 == 0) goto L_191ec; */
 
-    if ([a0 length]; == 0) goto L_191ec;
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_191ec; */
 
     [objc_retainAutorelease UTF8String];
     if ([? class] == 0) goto L_191ec;
@@ -115,7 +115,7 @@ L_19164:;
     goto L_191ec;
 
 L_191ec:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return 0;
 }
 
@@ -299,13 +299,13 @@ L_191ec:;
     // 00019448  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if (a2 == 0) goto L_1942c;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if (a2 == 0) goto L_1942c; */
 
-    if (a1 == 0) goto L_1942c;
+    /* [UNRESOLVED] if (a1 == 0) goto L_1942c; */
 
-    if ([a0 length]; == 0) goto L_1942c;
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1942c; */
 
     [objc_retainAutorelease UTF8String];
     if ([? class] == 0) goto L_1931c;
@@ -318,7 +318,7 @@ L_191ec:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_193d8; */
 
     /* [UNRESOLVED] MSHookMessageEx(a1, a2); */
-    if (a3 == 0) goto L_192d0;
+    /* [UNRESOLVED] if (a3 == 0) goto L_192d0; */
 
 L_192d0:;
     if (0 != 0) goto L_192d0;
@@ -354,7 +354,7 @@ L_19400:;
     objc_release(ret);
 
 L_1942c:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return (BOOL)1;
 }
 
@@ -540,13 +540,13 @@ L_1942c:;
     // 0001971c  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if (a2 == 0) goto L_19700;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if (a2 == 0) goto L_19700; */
 
-    if (a1 == 0) goto L_19700;
+    /* [UNRESOLVED] if (a1 == 0) goto L_19700; */
 
-    if ([a0 length]; == 0) goto L_19700;
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19700; */
 
     [objc_retainAutorelease UTF8String];
     if ([? class] == 0) goto L_195f0;
@@ -560,7 +560,7 @@ L_1942c:;
 
     /* [UNRESOLVED] object_getClass(); */
     /* [UNRESOLVED] MSHookMessageEx(a1, a2); */
-    if (a3 == 0) goto L_195a4;
+    /* [UNRESOLVED] if (a3 == 0) goto L_195a4; */
 
 L_195a4:;
     if (0 != 0) goto L_195a4;
@@ -596,7 +596,7 @@ L_196d4:;
     objc_release(ret);
 
 L_19700:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return (BOOL)1;
 }
 
@@ -945,20 +945,20 @@ L_19700:;
     // 00019b90  bl      #0x1a72c0   ; ___stack_chk_fail
     id ret = nil;
 
-    objc_retain(a0);
-    objc_retain(a1);
-    [a0 length];
-    if ([a0 length]; == 0) goto L_19a24;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19a24; */
 
-    [a1 count];
-    if (a2 == 0) goto L_19a24;
+    /* [UNRESOLVED] [a1 count]; */
+    /* [UNRESOLVED] if (a2 == 0) goto L_19a24; */
 
-    if ([a1 count]; == 0) goto L_19a24;
+    /* [UNRESOLVED] if ([a1 count]; == 0) goto L_19a24; */
 
     [objc_retainAutorelease UTF8String];
     if ([? class] == 0) goto L_199b0;
 
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a1); */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_19874;
 
@@ -975,22 +975,22 @@ L_19828:;
 L_1984c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19810; */
 
-    [a1 countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_19810;
+    /* [UNRESOLVED] [a1 countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_19810; */
 
 L_19874:;
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a1); */
 
 L_1988c:;
     if (0 != 0) goto L_1988c;
 
-    [a1 componentsJoinedByString:@"|"];
+    /* [UNRESOLVED] [a1 componentsJoinedByString:@"|"]; */
     [NSString stringWithFormat:@"SKIP_ABSENT %@ [%@]"];
     /* [UNRESOLVED] sub_1944c(); */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [0x2567e8 lock]; */
-    [a1 componentsJoinedByString:@"|"];
+    /* [UNRESOLVED] [a1 componentsJoinedByString:@"|"]; */
     [NSString stringWithFormat:@"%@	%@"];
     /* [UNRESOLVED] [0x2567e0 addObject:ret]; */
     objc_release(ret);
@@ -1001,15 +1001,15 @@ L_1988c:;
 L_199b0:;
     if (0 != 0) goto L_199b0;
 
-    [a1 componentsJoinedByString:@"|"];
+    /* [UNRESOLVED] [a1 componentsJoinedByString:@"|"]; */
     [NSString stringWithFormat:@"SKIP_CLASS  %@ [%@]"];
     /* [UNRESOLVED] sub_1944c(); */
     objc_release(ret);
     objc_release(ret);
 
 L_19a24:;
-    objc_release(a1);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19b90; */
 
 L_19a6c:;
@@ -1034,7 +1034,7 @@ L_19af4:;
     objc_release(ret);
     /* [UNRESOLVED] [0x2567e8 unlock]; */
     objc_retain(0);
-    objc_release(0 /* unk */);
+    /* [UNRESOLVED] objc_release(0 / * unk * /); */
     goto L_19a24;
 
 L_19b90:;
@@ -1483,13 +1483,13 @@ L_19e0c:;
     // 0001a078  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if (a2 == 0) goto L_1a058;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if (a2 == 0) goto L_1a058; */
 
-    if (a1 == 0) goto L_1a058;
+    /* [UNRESOLVED] if (a1 == 0) goto L_1a058; */
 
-    if ([a0 length]; == 0) goto L_1a058;
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a058; */
 
     [objc_retainAutorelease UTF8String];
     if ([? class] == 0) goto L_19fa4;
@@ -1509,7 +1509,7 @@ L_19e0c:;
     /* [UNRESOLVED] method_setImplementation(a2); */
 
 L_19f24:;
-    if (a3 == 0) goto L_19f40;
+    /* [UNRESOLVED] if (a3 == 0) goto L_19f40; */
 
 L_19f40:;
     if (0 != 0) goto L_19f40;
@@ -1538,7 +1538,7 @@ L_1a040:;
     objc_release(ret);
 
 L_1a058:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return 0;
 }
 
@@ -1600,16 +1600,16 @@ L_1a058:;
     // 0001a154  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if (a1 == 0) goto L_1a140;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if (a1 == 0) goto L_1a140; */
 
-    if ([a0 length]; == 0) goto L_1a140;
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a140; */
 
     [objc_retainAutorelease UTF8String];
     if ([? class] == 0) goto L_1a140;
 
-    if (a2 == 0) goto L_1a130;
+    /* [UNRESOLVED] if (a2 == 0) goto L_1a130; */
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
     if (class_getClassMethod == 0) goto L_1a140;
@@ -1624,7 +1624,7 @@ L_1a130:;
     if (class_getInstanceMethod != 0) goto L_1a11c;
 
 L_1a140:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return 0;
 }
 
@@ -1671,9 +1671,9 @@ L_1a140:;
     // 0001a29c  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 length];
-    if ([a0 length]; == 0) goto L_1a29c;
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 length]; */
+    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a29c; */
 
     [NSString stringWithFormat:@"GROUP       %@"];
     /* [UNRESOLVED] sub_1944c(); */

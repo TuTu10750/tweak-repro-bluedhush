@@ -31,7 +31,7 @@
     // 000962d8  ret
     id ret = nil;
 
-    [super initWithStyle:2];
+    self = [super initWithStyle:2];
     if (self == 0) goto L_962d8;
 
 L_962d8:;
@@ -324,11 +324,11 @@ L_962d8:;
     // 000965d8  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a0);
+    /* [UNRESOLVED] objc_retain(a0); */
     [NSUserDefaults standardUserDefaults];
     [self hushKey];
-    [ret setObject:a0 forKey:ret];
-    objc_release(a0);
+    /* [UNRESOLVED] [ret setObject:a0 forKey:ret]; */
+    /* [UNRESOLVED] objc_release(a0); */
     objc_release(ret);
     [ret synchronize];
     [self hushReload];
@@ -509,19 +509,19 @@ L_962d8:;
     goto L_967d4;
 
 L_966a8:;
-    [[UILabel alloc] initWithFrame:0 /* unk */];
+    /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     [self hushIsFavorites];
-    [[[UILabel alloc] initWithFrame:0 /* unk */]; setText:0];
-    [[[UILabel alloc] initWithFrame:0 /* unk */]; setNumberOfLines:0];
-    [[[UILabel alloc] initWithFrame:0 /* unk */]; setTextAlignment:1];
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setText:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setNumberOfLines:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTextAlignment:1]; */
     /* [UNRESOLVED] [UIFont preferredFontForTextStyle:0x200638/ *+0x0* /]; */
-    [[[UILabel alloc] initWithFrame:0 /* unk */]; setFont:ret];
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setFont:ret]; */
     objc_release(ret);
     [UIColor secondaryLabelColor];
-    [[[UILabel alloc] initWithFrame:0 /* unk */]; setTextColor:ret];
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTextColor:ret]; */
     objc_release(ret);
     [self tableView];
-    [ret setBackgroundView:[[UILabel alloc] initWithFrame:0 /* unk */];];
+    /* [UNRESOLVED] [ret setBackgroundView:[[UILabel alloc] initWithFrame:0 / * unk * /];]; */
     objc_release(ret);
 
 L_967d4:;
@@ -888,23 +888,23 @@ L_967d4:;
     // 00096c28  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a1);
-    [a0 dequeueReusableCellWithIdentifier:@"hush_hist"];
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a0 dequeueReusableCellWithIdentifier:@"hush_hist"]; */
     if (ret != 0) goto L_968b8;
 
     [[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"];
 
 L_968b8:;
     [self hushItems];
-    [a1 row];
-    if ((([a1 row]; >> 63) & 1) != 0) goto L_96bf8;
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] if ((([a1 row]; >> 63) & 1) != 0) goto L_96bf8; */
 
-    [a1 row];
+    /* [UNRESOLVED] [a1 row]; */
     [ret count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_96bf8; */
 
-    [a1 row];
-    [ret objectAtIndexedSubscript:[a1 row];];
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row];]; */
     [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"]; defaultContentConfiguration];
     [ret objectForKeyedSubscript:@"keyword"];
     [ret description];
@@ -947,7 +947,7 @@ L_96b0c:;
 
 L_96bf8:;
     objc_release(ret);
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a1); */
 }
 
 // @0x96c2c  types=v32@0:8@16@24
@@ -1164,18 +1164,18 @@ L_96bf8:;
     // 00096ed8  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a1);
-    [a0 deselectRowAtIndexPath:a1 animated:1];
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a0 deselectRowAtIndexPath:a1 animated:1]; */
     [self hushItems];
-    [a1 row];
-    if ((([a1 row]; >> 63) & 1) != 0) goto L_96eb0;
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] if ((([a1 row]; >> 63) & 1) != 0) goto L_96eb0; */
 
-    [a1 row];
+    /* [UNRESOLVED] [a1 row]; */
     [ret count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_96eb0; */
 
-    [a1 row];
-    [ret objectAtIndexedSubscript:[a1 row];];
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row];]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_96e20;
 
@@ -1416,33 +1416,33 @@ L_96eb0:;
     // 00097190  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a1);
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a1); */
     [UIContextualAction contextualActionWithStyle:1 title:@"删除" handler:0];
     [NSArray arrayWithObjects:0 count:1];
     [UISwipeActionsConfiguration configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
-    objc_release(0 /* local */);
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(0 / * local * /); */
+    /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_97024; */
 
 L_97024:;
     /* [UNRESOLVED] stack_chk_fail(); */
     objc_retain(0);
-    [stack_chk_fail/*+0x20*/ hushItems];
+    /* [UNRESOLVED] [stack_chk_fail/ *+0x20* / hushItems]; */
     [ret mutableCopy];
     objc_release(ret);
-    [stack_chk_fail/*+0x28*/ row];
+    /* [UNRESOLVED] [stack_chk_fail/ *+0x28* / row]; */
     /* [UNRESOLVED] if ((([stack_chk_fail/ *+0x28* / row]; >> 63) & 1) != 0) goto L_97174; */
 
-    [stack_chk_fail/*+0x28*/ row];
+    /* [UNRESOLVED] [stack_chk_fail/ *+0x28* / row]; */
     [[ret mutableCopy]; count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_97174; */
 
-    [stack_chk_fail/*+0x28*/ row];
-    [[ret mutableCopy]; removeObjectAtIndex:[stack_chk_fail/*+0x28*/ row];];
-    [stack_chk_fail/*+0x20*/ hushSaveItems:[ret mutableCopy];];
+    /* [UNRESOLVED] [stack_chk_fail/ *+0x28* / row]; */
+    /* [UNRESOLVED] [[ret mutableCopy]; removeObjectAtIndex:[stack_chk_fail/ *+0x28* / row];]; */
+    /* [UNRESOLVED] [stack_chk_fail/ *+0x20* / hushSaveItems:[ret mutableCopy];]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if ([ret mutableCopy]; == 0) goto L_9715c;
 
@@ -1598,8 +1598,8 @@ L_97174:;
     // 00097364  b       #0x1a72d8   ; _objc_msgSend
     id ret = nil;
 
-    objc_retain(a1);
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a1); */
     [UIContextualAction contextualActionWithStyle:0 title:@"备注" handler:0];
     [UIColor systemBlueColor];
     [ret setBackgroundColor:ret];
@@ -1608,8 +1608,8 @@ L_97174:;
     [UISwipeActionsConfiguration configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
-    objc_release(0 /* local */);
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(0 / * local * /); */
+    /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_97318; */
 
 L_97318:;
@@ -1786,12 +1786,12 @@ L_97318:;
     id ret = nil;
 
     [self hushItems];
-    if (((a0 >> 63) & 1) != 0) goto L_9756c;
+    /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_9756c; */
 
     [ret count];
     /* [UNRESOLVED] if (cond / * le * /) goto L_9756c; */
 
-    [ret objectAtIndexedSubscript:a0];
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:a0]; */
     [UIAlertController alertControllerWithTitle:@"编辑备注" message:@"输入备注信息" preferredStyle:1];
     objc_retain(ret);
     [ret addTextFieldWithConfigurationHandler:0];

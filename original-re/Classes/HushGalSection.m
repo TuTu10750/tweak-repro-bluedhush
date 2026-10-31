@@ -10,7 +10,7 @@
     // 00068cf4  ret
     id ret = nil;
 
-    return (id)self->/*+0x8*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x8* / */
 }
 
 // @0x68cf8  types=v24@0:8@16
@@ -27,7 +27,7 @@
     // 00068d04  ret
     id ret = nil;
 
-    return (id)self->/*+0x10*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x10* / */
 }
 
 // @0x68d08  types=v24@0:8@16
@@ -44,7 +44,7 @@
     // 00068d14  ret
     id ret = nil;
 
-    return (id)self->/*+0x18*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x18* / */
 }
 
 // @0x68d18  types=v24@0:8@16

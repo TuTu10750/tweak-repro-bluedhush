@@ -10,7 +10,7 @@
     // 0019c478  ret
     id ret = nil;
 
-    return (id)self->/*+0x8*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x8* / */
 }
 
 // @0x19c47c  types=v24@0:8@16
@@ -27,7 +27,7 @@
     // 0019c488  ret
     id ret = nil;
 
-    return (id)self->/*+0x10*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x10* / */
 }
 
 // @0x19c48c  types=v24@0:8@16
@@ -44,7 +44,7 @@
     // 0019c498  ret
     id ret = nil;
 
-    return (id)self->/*+0x18*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x18* / */
 }
 
 // @0x19c49c  types=v24@0:8@16
@@ -61,7 +61,7 @@
     // 0019c4a8  ret
     id ret = nil;
 
-    return (id)self->/*+0x20*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x20* / */
 }
 
 // @0x19c4ac  types=v24@0:8@16
@@ -78,7 +78,7 @@
     // 0019c4b8  ret
     id ret = nil;
 
-    return (long long)self->/*+0x28*/;
+    return 0;  /* [UNRESOLVED] self->/ *+0x28* / */
 }
 
 // @0x19c4bc  types=v24@0:8q16
@@ -160,17 +160,17 @@
     // 0019c1a0  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a2);
-    objc_retain(a1);
-    objc_retain(a0);
-    [self unknownSelector];
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a0);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a1);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a2);
-    [[self unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] objc_retain(a2); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a0); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a2); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
 }
 
 // @0x19c1a4  types=@48@0:8@16@24@32q40
@@ -243,17 +243,17 @@
     // 0019c274  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a2);
-    objc_retain(a1);
-    objc_retain(a0);
-    [self unknownSelector];
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a0);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a1);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a2);
-    [[self unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] objc_retain(a2); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a0); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a2); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
 }
 
 // @0x19c278  types=@48@0:8@16@24@32@40
@@ -338,20 +338,20 @@
     // 0019c36c  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a3);
-    objc_retain(a2);
-    objc_retain(a1);
-    objc_retain(a0);
-    [self unknownSelector];
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a0);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a1);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a2);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a3);
-    [[self unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] objc_retain(a3); */
+    /* [UNRESOLVED] objc_retain(a2); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a0); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a2); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a3); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
 }
 
 // @0x19c370  types=@56@0:8@16@24@32@40q48
@@ -439,20 +439,20 @@
     // 0019c470  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a3);
-    objc_retain(a2);
-    objc_retain(a1);
-    objc_retain(a0);
-    [self unknownSelector];
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a0);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a1);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a2);
-    [[self unknownSelector]; unknownSelector];
-    objc_release(a3);
-    [[self unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] objc_retain(a3); */
+    /* [UNRESOLVED] objc_retain(a2); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a0); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a2); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] objc_release(a3); */
+    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
 }
 
 @end

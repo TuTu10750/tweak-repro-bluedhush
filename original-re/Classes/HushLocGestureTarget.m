@@ -222,12 +222,12 @@
     id ret = nil;
 
     /* [UNRESOLVED] [@0x244888 shared]; */
-    [ret isEnabled:0 /* func */];
+    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] if ((([ret isEnabled:0 / * func * /]; >> 0) & 1) == 0) goto L_95ca0; */
 
-    [ret setEnabled:0 /* func */ forKey:0 /* func */];
+    /* [UNRESOLVED] [ret setEnabled:0 / * func * / forKey:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_95d70; */
@@ -267,11 +267,11 @@ L_95dd8:;
 
 L_95ddc:;
     /* [UNRESOLVED] sub_b3490(); */
-    objc_retain([ret isEnabled:0 /* func */];);
+    /* [UNRESOLVED] objc_retain([ret isEnabled:0 / * func * /];); */
     objc_retain(ret);
     /* [UNRESOLVED] dispatch_async(); */
-    objc_release([ret isEnabled:0 /* func */];);
-    objc_release([ret isEnabled:0 /* func */];);
+    /* [UNRESOLVED] objc_release([ret isEnabled:0 / * func * /];); */
+    /* [UNRESOLVED] objc_release([ret isEnabled:0 / * func * /];); */
     return;
 }
 
@@ -514,7 +514,7 @@ L_95ddc:;
     // 000961e8  bl      #0x1a72fc   ; __Unwind_Resume
     id ret = nil;
 
-    objc_retain(a0);
+    /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret customLat];
     /* [UNRESOLVED] [@0x244888 shared]; */
@@ -625,7 +625,7 @@ L_961ac:;
     // 00096258  ret
     id ret = nil;
 
-    [a0 state];
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_96258; */
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */

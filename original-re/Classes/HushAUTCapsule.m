@@ -251,7 +251,7 @@
     // 0000cef8  ret
     id ret = nil;
 
-    [super initWithFrame:a0];
+    /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_cedc;
 
     [UIColor colorWithRed:0.039 green:0.518 blue:1 alpha:1];
@@ -262,7 +262,7 @@
     objc_release(ret);
     [self setClipsToBounds:1];
     [self setUserInteractionEnabled:0];
-    [[UILabel alloc] initWithFrame:0 /* unk */];
+    /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_capText);
     [self->_capText setText:@"隐私相册"];
     /* [UNRESOLVED] [UIFont systemFontOfSize:10 weight:0x200180]; */
@@ -449,13 +449,13 @@ L_cfe4:;
     objc_release(ret);
     [self bounds];
     [self bounds];
-    [self->_capText setFrame:0];
+    [self->_capText setFrame:CGRectZero];
     /* [UNRESOLVED] if (cond / * le * /) goto L_d0e0; */
 
     [self->_capText frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
     [self bounds];
-    [self->_capIcon setFrame:0];
+    [self->_capIcon setFrame:CGRectZero];
 
 L_d0e0:;
     return;
@@ -536,7 +536,7 @@ L_d0e0:;
     // 0000d1d4  ret
     id ret = nil;
 
-    [self->_capText sizeThatFits:a0];
+    /* [UNRESOLVED] [self->_capText sizeThatFits:a0]; */
     [self->_capIcon image];
     if (ret == 0) goto L_d194;
 

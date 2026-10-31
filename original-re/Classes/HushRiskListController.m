@@ -561,19 +561,19 @@ L_20d50:;
 L_20da8:;
     [self view];
     [ret bounds];
-    [[UIControl alloc] initWithFrame:0];
+    [[UIControl alloc] initWithFrame:CGRectZero];
     objc_release(ret);
     [UIColor colorWithWhite:0 alpha:0.45];
-    [[[UIControl alloc] initWithFrame:0]; setBackgroundColor:ret];
+    [[[UIControl alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIControl alloc] initWithFrame:0]; setAutoresizingMask:0x12];
-    [[[UIControl alloc] initWithFrame:0]; addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    [[[UIControl alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
+    [[[UIControl alloc] initWithFrame:CGRectZero]; addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
     [self view];
-    [ret addSubview:[[UIControl alloc] initWithFrame:0];];
+    [ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero];];
     objc_release(ret);
-    [[UIView alloc] initWithFrame:0];
-    [self setCardView:[[UIView alloc] initWithFrame:0];];
-    objc_release([[UIView alloc] initWithFrame:0];);
+    [[UIView alloc] initWithFrame:CGRectZero];
+    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero];];
+    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
     [self cardView];
     [ret setBackgroundColor:ret];
     objc_release(ret);
@@ -622,9 +622,9 @@ L_20da8:;
     [ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    [[UITableView alloc] initWithFrame:0 style:66];
-    [self setTable:[[UITableView alloc] initWithFrame:0 style:66];];
-    objc_release([[UITableView alloc] initWithFrame:0 style:66];);
+    [[UITableView alloc] initWithFrame:CGRectZero style:66];
+    [self setTable:[[UITableView alloc] initWithFrame:CGRectZero style:66];];
+    objc_release([[UITableView alloc] initWithFrame:CGRectZero style:66];);
     [UIColor clearColor];
     [self table];
     [ret setBackgroundColor:ret];
@@ -665,16 +665,16 @@ L_20da8:;
     [ret layer];
     [ret setCornerRadius:12];
     objc_release(ret);
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     [self cardView];
     [ret addSubview:ret];
     objc_release(ret);
     [self reload];
     objc_release(ret);
     objc_release([[UILabel alloc] initWithFrame:18];);
-    objc_release([[UIControl alloc] initWithFrame:0];);
+    objc_release([[UIControl alloc] initWithFrame:CGRectZero];);
     objc_release(ret);
-    objc_release(0 /* local */);
+    /* [UNRESOLVED] objc_release(0 / * local * /); */
     return;
 }
 
@@ -1285,12 +1285,12 @@ L_21748:;
     // 00021d74  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    objc_retain(a1);
-    [a0 dequeueReusableCellWithIdentifier:@"risk" forIndexPath:a1];
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] [a0 dequeueReusableCellWithIdentifier:@"risk" forIndexPath:a1]; */
     [self items];
-    [a1 row];
-    objc_release(a1);
-    [ret objectAtIndexedSubscript:[a1 row];];
+    /* [UNRESOLVED] [a1 row]; */
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row];]; */
     objc_release(ret);
     [ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
@@ -1633,9 +1633,9 @@ L_21a7c:;
     // 000220fc  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    objc_retain(a0);
-    objc_retain(a1);
-    objc_retain(a1);
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a1); */
     [UIContextualAction contextualActionWithStyle:1 title:@"取消标记" handler:0];
     [UIColor systemRedColor];
     [ret setBackgroundColor:ret];
@@ -1644,9 +1644,9 @@ L_21a7c:;
     [UISwipeActionsConfiguration configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
-    objc_release(a1);
-    objc_release(a1);
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] objc_release(a1); */
+    /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_21f40; */
 
 L_21f40:;
@@ -1659,8 +1659,8 @@ L_21f60:;
     if (objc_loadWeakRetained == 0) goto L_2208c;
 
     [objc_loadWeakRetained items];
-    [Unwind_Resume/*+0x20*/ row];
-    [ret objectAtIndexedSubscript:[Unwind_Resume/*+0x20*/ row];];
+    /* [UNRESOLVED] [Unwind_Resume/ *+0x20* / row]; */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[Unwind_Resume/ *+0x20* / row];]; */
     objc_release(ret);
     [ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
@@ -1679,7 +1679,7 @@ L_22050:;
 L_2208c:;
     objc_release(objc_loadWeakRetained);
 
-    objc_retain(0/*+0x20*/);
+    /* [UNRESOLVED] objc_retain(0/ *+0x20* /); */
 }
 
 // @0x22100  types=@16@0:8

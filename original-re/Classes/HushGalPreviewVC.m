@@ -40,7 +40,7 @@
     // 0007ac04  ret
     id ret = nil;
 
-    [super init];
+    self = [super init];
     if (self == 0) goto L_7ac04;
 
     [self setModalPresentationStyle:5];
@@ -585,25 +585,25 @@ L_7ac04:;
     [self view];
     [ret bounds];
     objc_release(ret);
-    [[UIView alloc] initWithFrame:0];
+    [[UIView alloc] initWithFrame:CGRectZero];
     /* [UNRESOLVED] HushIsDarkMode(); */
     [UIColor colorWithWhite:0.96 alpha:1];
-    [[[UIView alloc] initWithFrame:0]; setBackgroundColor:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIView alloc] initWithFrame:0]; layer];
+    [[[UIView alloc] initWithFrame:CGRectZero]; layer];
     [ret setCornerRadius:14];
     objc_release(ret);
-    [[[UIView alloc] initWithFrame:0]; setClipsToBounds:1];
-    [[[UIView alloc] initWithFrame:0]; setAutoresizingMask:0x2d];
+    [[[UIView alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
+    [[[UIView alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x2d];
     [self view];
-    [ret addSubview:[[UIView alloc] initWithFrame:0];];
+    [ret addSubview:[[UIView alloc] initWithFrame:CGRectZero];];
     objc_release(ret);
     [[UIPageViewController alloc] initWithTransitionStyle:1 navigationOrientation:0 options:0];
     objc_release(self->_pager);
     [self->_pager setDataSource:self];
     [self->_pager setDelegate:self];
     [self->_pager view];
-    [ret setFrame:0 /* unk */];
+    /* [UNRESOLVED] [ret setFrame:0 / * unk * /]; */
     objc_release(ret);
     [self->_pager view];
     [ret setAutoresizingMask:0x12];
@@ -615,7 +615,7 @@ L_7ac04:;
     objc_release(ret);
     [self addChildViewController:self->_pager];
     [self->_pager view];
-    [[[UIView alloc] initWithFrame:0]; addSubview:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:ret];
     objc_release(ret);
     [self->_pager didMoveToParentViewController:self];
     [self index];
@@ -656,9 +656,9 @@ L_7b174:;
     [self->_savedAt setClipsToBounds:1];
     [self->_savedAt setTextAlignment:1];
     [self->_savedAt setUserInteractionEnabled:0];
-    [[[UIView alloc] initWithFrame:0]; addSubview:self->_savedAt];
+    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:self->_savedAt];
     [UIButton buttonWithType:1];
-    [ret setFrame:0];
+    [ret setFrame:CGRectZero];
     [ret setTitle:@"关闭" forState:0];
     [UIFont systemFontOfSize:16];
     [ret titleLabel];
@@ -670,11 +670,11 @@ L_7b174:;
     objc_release(ret);
     [ret addTarget:self action:sel_registerName("closeTapped") forControlEvents:0x40];
     [ret setAutoresizingMask:0xa];
-    [[[UIView alloc] initWithFrame:0]; addSubview:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:ret];
     [self refreshSavedAtLabel];
     objc_release(ret);
     objc_release(ret);
-    objc_release([[UIView alloc] initWithFrame:0];);
+    objc_release([[UIView alloc] initWithFrame:CGRectZero];);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_7b460; */
 
     return;
@@ -728,7 +728,7 @@ L_7b174:;
     // 0007b4f0  ret
     id ret = nil;
 
-    [super viewDidAppear:a0];
+    /* [UNRESOLVED] [super viewDidAppear:a0]; */
     [self files];
     [ret count];
     objc_release(ret);
@@ -819,7 +819,7 @@ L_7b4f0:;
     /* [UNRESOLVED] [self->_savedAt sizeThatFits:0x7fefffffffffffff]; */
     /* [UNRESOLVED] CGRectGetMinX(); */
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    [self->_savedAt setFrame:0];
+    [self->_savedAt setFrame:CGRectZero];
     return;
 }
 
@@ -903,16 +903,16 @@ L_7b4f0:;
     // 0007b6e4  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    if (((a0 >> 63) & 1) != 0) goto L_7b6e4;
+    /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_7b6e4; */
 
     [self files];
     [ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_7b6e4; */
 
-    [objc_alloc_init setIndex:a0];
+    /* [UNRESOLVED] [objc_alloc_init setIndex:a0]; */
     [self files];
-    [ret objectAtIndexedSubscript:a0];
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:a0]; */
     [objc_alloc_init setPath:ret];
     objc_release(ret);
     objc_release(ret);
@@ -942,7 +942,7 @@ L_7b6e4:;
     // 0007b71c  ldp     x20, x19, [sp], #0x20
     // 0007b720  b       #0x1a72d8   ; _objc_msgSend
 
-    [a1 index];
+    /* [UNRESOLVED] [a1 index]; */
 }
 
 // @0x7b724  types=@32@0:8@16@24
@@ -966,7 +966,7 @@ L_7b6e4:;
     // 0007b758  ldp     x20, x19, [sp], #0x20
     // 0007b75c  b       #0x1a72d8   ; _objc_msgSend
 
-    [a1 index];
+    /* [UNRESOLVED] [a1 index]; */
 }
 
 // @0x7b760  types=v40@0:8@16B24@28B36
@@ -1041,7 +1041,7 @@ L_7b6e4:;
 
     if (0 == 0) goto L_7b82c;
 
-    [a0 viewControllers];
+    /* [UNRESOLVED] [a0 viewControllers]; */
     [ret firstObject];
     objc_release(ret);
     /* [UNRESOLVED] [@0x244c98 class]; */

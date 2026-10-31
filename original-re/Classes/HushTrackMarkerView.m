@@ -93,12 +93,12 @@
     if (ret == 0) goto L_901fc;
 
     [ret sizeThatFits:220];
-    [ret setBounds:0];
+    [ret setBounds:CGRectZero];
     [self bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
     [self bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    [ret setCenter:0];
+    [ret setCenter:CGPointZero];
 
 L_901fc:;
     objc_release(ret);

@@ -10,7 +10,7 @@
     // 0019cea4  ret
     id ret = nil;
 
-    return (id)self->/*+0x8*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x8* / */
 }
 
 // @0x19cea8  types=v24@0:8@16
@@ -27,7 +27,7 @@
     // 0019ceb4  ret
     id ret = nil;
 
-    return (id)self->/*+0x10*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x10* / */
 }
 
 // @0x19ceb8  types=v24@0:8@16
@@ -44,7 +44,7 @@
     // 0019cec4  ret
     id ret = nil;
 
-    return (id)self->/*+0x18*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x18* / */
 }
 
 // @0x19cec8  types=v24@0:8@16
@@ -61,7 +61,7 @@
     // 0019ced4  ret
     id ret = nil;
 
-    return (id)self->/*+0x20*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x20* / */
 }
 
 // @0x19ced8  types=v24@0:8@16
@@ -78,7 +78,7 @@
     // 0019cee4  ret
     id ret = nil;
 
-    return (id)self->/*+0x28*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x28* / */
 }
 
 // @0x19cee8  types=v24@0:8@16
@@ -96,7 +96,7 @@
     // 0019cef8  ret
     id ret = nil;
 
-    return (id)self->/*+0x30*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x30* / */
 }
 
 // @0x19cefc  types=v24@0:8@16

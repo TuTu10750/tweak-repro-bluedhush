@@ -114,7 +114,7 @@
     // 0007a690  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    if (((a1 >> 63) & 1) != 0) goto L_7a690;
+    /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_7a690; */
 
     [self files];
     [ret count];
@@ -122,7 +122,7 @@
     /* [UNRESOLVED] if (cond / * le * /) goto L_7a690; */
 
     [self files];
-    [ret objectAtIndexedSubscript:a1];
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:a1]; */
     [NSURL fileURLWithPath:ret];
     objc_release(ret);
     objc_release(ret);
@@ -138,7 +138,7 @@ L_7a690:;
     // 0007a698  ret
     id ret = nil;
 
-    return (id)self->/*+0x8*/;
+    return nil;  /* [UNRESOLVED] self->/ *+0x8* / */
 }
 
 // @0x7a69c  types=v24@0:8@16

@@ -218,7 +218,7 @@ L_85eac:;
     goto L_85ef4;
 
 L_85ec4:;
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     [NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_85ef4:;
@@ -458,48 +458,48 @@ L_85f54:;
     // 00086270  b       #0x86120   ; sub_86120
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 view];
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 view]; */
     [ret superview];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86124; */
 
-    [a0 state];
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86048; */
 
-    [a0 state];
+    /* [UNRESOLVED] [a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_86160; */
 
 L_86048:;
-    [a0 translationInView:ret];
+    /* [UNRESOLVED] [a0 translationInView:ret]; */
     [ret center];
     [ret bounds];
     [ret bounds];
     [ret bounds];
-    [ret setCenter:0];
-    [a0 setTranslation:ret inView:0];
+    [ret setCenter:CGPointZero];
+    /* [UNRESOLVED] [a0 setTranslation:ret inView:0]; */
 
 L_86124:;
     objc_release(ret);
     objc_release(ret);
 
 L_86160:;
-    [a0 unknownSelector];
+    /* [UNRESOLVED] [a0 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86190; */
 
-    [a0 unknownSelector];
+    /* [UNRESOLVED] [a0 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_86124; */
 
 L_86190:;
     /* [UNRESOLVED] [@0x244888 shared]; */
-    [0 /* unk */ center];
+    /* [UNRESOLVED] [0 / * unk * / center]; */
     /* [UNRESOLVED] NSStringFromCGPoint(); */
-    [ret setString:ret forKey:0 /* func */];
+    /* [UNRESOLVED] [ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_8626c;
 
-    [0 /* unk */ center];
+    /* [UNRESOLVED] [0 / * unk * / center]; */
     /* [UNRESOLVED] NSStringFromCGPoint(); */
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"]; */
     objc_release(ret);

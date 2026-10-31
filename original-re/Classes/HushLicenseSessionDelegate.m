@@ -193,16 +193,16 @@
     // 00012f18  ret
     id ret = nil;
 
-    objc_retain(a1);
-    objc_retain(a2);
-    [a1 protectionSpace];
+    /* [UNRESOLVED] objc_retain(a1); */
+    /* [UNRESOLVED] objc_retain(a2); */
+    /* [UNRESOLVED] [a1 protectionSpace]; */
     [ret authenticationMethod];
     /* [UNRESOLVED] [ret isEqualToString:0x200248/ *+0x0* /]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if ([ret isEqualToString:0x200248/ *+0x0* /]; == 0) goto L_12ebc; */
 
-    [a1 protectionSpace];
+    /* [UNRESOLVED] [a1 protectionSpace]; */
     [ret serverTrust];
     objc_release(ret);
     if ([ret serverTrust]; == 0) goto L_12ed8;
@@ -237,8 +237,8 @@ L_12ebc:;
     goto L_12ed8;
 
 L_12ed8:;
-    objc_release(a2);
-    objc_release(a1);
+    /* [UNRESOLVED] objc_release(a2); */
+    /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_12f34; */
 
     return;

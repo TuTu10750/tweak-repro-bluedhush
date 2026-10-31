@@ -282,28 +282,28 @@
     // 0013f990  ret
     id ret = nil;
 
-    objc_retain(a0);
-    [a0 unknownSelector];
+    /* [UNRESOLVED] objc_retain(a0); */
+    /* [UNRESOLVED] [a0 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13f970; */
 
     /* [UNRESOLVED] [@0x244888 unknownSelector]; */
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    if ([ret unknownSelector]; == 0) goto L_13f970;
+    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_13f970; */
 
-    [a0 unknownSelector];
+    /* [UNRESOLVED] [a0 unknownSelector]; */
     if (ret == 0) goto L_13f970;
 
 L_13f6e8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_13f754; */
 
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] NSStringFromClass(); */
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    if ((([ret unknownSelector]; >> 0) & 1) != 0) goto L_13f754;
+    /* [UNRESOLVED] if ((([ret unknownSelector]; >> 0) & 1) != 0) goto L_13f754; */
 
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     if (ret != 0) goto L_13f6e8;
 
@@ -311,8 +311,8 @@ L_13f6e8:;
 
 L_13f754:;
     /* [UNRESOLVED] sub_13f9ac(); */
-    [ret unknownSelector];
-    if ([ret unknownSelector]; == 0) goto L_13f7e8;
+    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_13f7e8; */
 
     /* [UNRESOLVED] sub_13fb48(); */
     if (ret == 0) goto L_13f808;
@@ -329,8 +329,8 @@ L_13f7e8:;
     goto L_13f960;
 
 L_13f808:;
-    [[UIImpactFeedbackGenerator alloc] unknownSelector];
-    [[[UIImpactFeedbackGenerator alloc] unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] [[UIImpactFeedbackGenerator alloc] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector]; unknownSelector]; */
     /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     if (ret == 0) goto L_13f8a4;
 
@@ -340,7 +340,7 @@ L_13f808:;
     goto L_13f8ac;
 
 L_13f88c:;
-    [[[UIImpactFeedbackGenerator alloc] unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector]; unknownSelector]; */
     goto L_13f960;
 
 L_13f8a4:;
@@ -349,9 +349,9 @@ L_13f8a4:;
 L_13f8ac:;
     objc_retain(ret);
     /* [UNRESOLVED] HushLoginUidStringOrEmpty(); */
-    [ret unknownSelector];
+    /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    if ([ret unknownSelector]; == 0) goto L_13f948;
+    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_13f948; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13f994; */
 
@@ -367,14 +367,14 @@ L_13f950:;
     objc_release(ret);
 
 L_13f958:;
-    objc_release([[UIImpactFeedbackGenerator alloc] unknownSelector];);
+    /* [UNRESOLVED] objc_release([[UIImpactFeedbackGenerator alloc] unknownSelector];); */
 
 L_13f960:;
     objc_release(ret);
     objc_release(ret);
 
 L_13f970:;
-    objc_release(a0);
+    /* [UNRESOLVED] objc_release(a0); */
     return;
 }
 
