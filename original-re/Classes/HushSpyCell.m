@@ -563,12 +563,12 @@
     /* [UNRESOLVED] [(id)self setName:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0 / * unk * // *+0x0* /]; */
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self contentView];
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -789,7 +789,7 @@ L_13abd8:;
     (void)[(id)self tagLabel];
     /* [UNRESOLVED] [(id)ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     /* [UNRESOLVED] [(id)ret setFrame:0x4052000000000000]; */
     objc_release(ret);
     (void)[(id)self detail];

@@ -1305,7 +1305,7 @@ L_21748:;
     (void)[(id)[NSString class] stringWithFormat:@"用户 %@"];
 
 L_21a34:;
-    (void)[(id)ret name];
+    /* [UNRESOLVED] [(id)ret name]; */
     (void)[(id)ret setText:ret];
     objc_release(ret);
     if ([(id)ret length] != 0) goto L_21a7c;

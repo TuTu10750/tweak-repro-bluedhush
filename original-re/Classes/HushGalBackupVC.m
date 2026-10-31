@@ -1319,7 +1319,7 @@ L_895c0:;
     if (ret == 0) goto L_89a20;
 
     (void)[(id)ret objectForKeyedSubscript:@"name"];
-    (void)[(id)ret name];
+    /* [UNRESOLVED] [(id)ret name]; */
     (void)[(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
@@ -1329,7 +1329,7 @@ L_895c0:;
     (void)[(id)ret objectForKeyedSubscript:@"size"];
     (void)[(id)ret doubleValue];
     (void)[(id)[NSString class] stringWithFormat:@"%@ · %.1f MB"];
-    (void)[(id)ret meta];
+    /* [UNRESOLVED] [(id)ret meta]; */
     (void)[(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
@@ -1357,10 +1357,10 @@ L_898ec:;
     goto L_89a78;
 
 L_89a20:;
-    (void)[(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] name];
+    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] name]; */
     /* [UNRESOLVED] [(id)ret setText:0x209f58]; */
     objc_release(ret);
-    (void)[(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] meta];
+    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] meta]; */
 
 L_89a78:;
     /* [UNRESOLVED] [(id)ret setText:0x209f58]; */

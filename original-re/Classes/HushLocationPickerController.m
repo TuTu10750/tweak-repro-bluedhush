@@ -538,7 +538,7 @@
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[NSNotificationCenter class] defaultCenter];
-    (void)[(id)ret addObserver:self selector:sel_registerName("hushLocHistoryPicked:") name:@"HushLocationHistoryPick" object:0];
+    /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("hushLocHistoryPicked:") name:@"HushLocationHistoryPick" object:0]; */
     objc_release(ret);
     (void)[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")];
     (void)[(id)self navigationItem];
@@ -1393,7 +1393,7 @@ L_9aff8:;
     objc_release(self->_pickAnno);
     (void)[(id)self->_pickAnno setCoordinate:0];
     (void)[(id)self->_map addAnnotation:self->_pickAnno];
-    (void)[(id)self hushLocAdoptTarget:0 name:0];
+    /* [UNRESOLVED] [(id)self hushLocAdoptTarget:0 name:0]; */
 }
 
 // @0x9b06c  types=v40@0:8{CLLocationCoordinate2D=dd}16@32
@@ -4024,12 +4024,12 @@ L_9dbc8:;
     /* [UNRESOLVED] objc_release(a1); */
 
     objc_retain([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]);
-    (void)[(id)ret name];
+    /* [UNRESOLVED] [(id)ret name]; */
     (void)[(id)ret length];
     objc_release(ret);
     if ([(id)ret length] == 0) goto L_9dc6c;
 
-    (void)[(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] name];
+    /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] name]; */
     goto L_9dcd0;
 
 L_9dc6c:;
@@ -4420,7 +4420,7 @@ L_9dcd0:;
     (void)[(id)ret placemark];
     (void)[(id)ret coordinate];
     objc_release(ret);
-    (void)[(id)self hushLocAdoptTarget:self->_nameHint name:0];
+    /* [UNRESOLVED] [(id)self hushLocAdoptTarget:self->_nameHint name:0]; */
     (void)[(id)self->_searchBar setShowsCancelButton:0];
     (void)[(id)self->_searchBar setText:0];
     (void)[(id)self->_searchBar resignFirstResponder];
@@ -4447,7 +4447,7 @@ L_9e08c:;
 
 L_9e0a4:;
     (void)[(id)ret placemark];
-    (void)[(id)ret name];
+    /* [UNRESOLVED] [(id)ret name]; */
     (void)[(id)[NSString class] stringWithFormat:@"(无名 / placemark=%@)"];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[LocPicker] 选中搜索结果：%@ (%.6f,%.6f)"]; */
     objc_release(ret);
@@ -6716,7 +6716,7 @@ L_a0110:;
     objc_release(ret);
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
-    (void)[(id)self hushLocAdoptTarget:self->_nameHint name:0];
+    /* [UNRESOLVED] [(id)self hushLocAdoptTarget:self->_nameHint name:0]; */
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
     (void)[(id)self moveTo:1 spanMeters:0 animated:1500];
     (void)[(id)self refreshCenter:1];

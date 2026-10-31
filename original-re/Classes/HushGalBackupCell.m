@@ -270,20 +270,20 @@
     if (self == 0) goto L_88b18;
 
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
-    (void)[(id)self setName:[[UILabel alloc] initWithFrame:CGRectZero]];
+    /* [UNRESOLVED] [(id)self setName:[[UILabel alloc] initWithFrame:16]]; */
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[UIColor class] labelColor];
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self contentView];
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -291,17 +291,17 @@
     (void)[(id)self setMeta:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     (void)[(id)[UIFont class] systemFontOfSize:12];
-    (void)[(id)self meta];
+    /* [UNRESOLVED] [(id)self meta]; */
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[UIColor class] secondaryLabelColor];
-    (void)[(id)self meta];
+    /* [UNRESOLVED] [(id)self meta]; */
     (void)[(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self contentView];
-    (void)[(id)self meta];
+    /* [UNRESOLVED] [(id)self meta]; */
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -404,10 +404,10 @@ L_88b18:;
     (void)[(id)self contentView];
     (void)[(id)ret bounds];
     objc_release(ret);
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
-    (void)[(id)self meta];
+    /* [UNRESOLVED] [(id)self meta]; */
     (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;

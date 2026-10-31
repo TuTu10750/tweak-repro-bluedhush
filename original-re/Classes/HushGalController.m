@@ -869,10 +869,10 @@ L_7de50:;
     objc_release(ret);
     (void)[(id)self setCloseButton:ret];
     (void)[(id)[NSNotificationCenter class] defaultCenter];
-    (void)[(id)ret addObserver:self selector:sel_registerName("hushgalDataUpdated") name:@"HushGalDataUpdated" object:0];
+    /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("hushgalDataUpdated") name:@"HushGalDataUpdated" object:0]; */
     objc_release(ret);
     (void)[(id)[NSNotificationCenter class] defaultCenter];
-    (void)[(id)ret addObserver:self selector:sel_registerName("hushgalProgress:") name:@"HushGalProgress" object:0];
+    /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("hushgalProgress:") name:@"HushGalProgress" object:0]; */
     objc_release(ret);
     (void)[(id)self reload];
     objc_release(ret);
@@ -4021,7 +4021,7 @@ L_807b4:;
     objc_release(ret);
     if ([(id)ret length] == 0) goto L_809d0;
 
-    (void)[(id)ret name];
+    /* [UNRESOLVED] [(id)ret name]; */
     /* [UNRESOLVED] [(id)ret setText:0x209f58]; */
     objc_release(ret);
     (void)[(id)ret count];
@@ -4074,7 +4074,7 @@ L_80b30:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if ([(id)ret unknownSelector] != 0) goto L_80b90; */
 
-    (void)[(id)ret name];
+    /* [UNRESOLVED] [(id)ret name]; */
     objc_release(ret);
 
 L_80b90:;

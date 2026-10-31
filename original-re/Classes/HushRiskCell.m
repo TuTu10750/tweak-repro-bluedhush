@@ -389,12 +389,12 @@
     /* [UNRESOLVED] [(id)self setName:objc_alloc_init]; */
     /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self contentView];
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -613,10 +613,10 @@ L_208a0:;
     (void)[(id)self source];
     /* [UNRESOLVED] [(id)ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
-    (void)[(id)self name];
+    /* [UNRESOLVED] [(id)self name]; */
     (void)[(id)ret frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
     (void)[(id)self source];
