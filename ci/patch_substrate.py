@@ -23,7 +23,7 @@ import sys
 
 LC_LOAD_DYLIB = 0xC
 OLD_SUFFIX = b"CydiaSubstrate.framework/CydiaSubstrate"
-DEFAULT_NEW = b"@rpath/libsubstrate_shim.dylib"
+DEFAULT_NEW = b"@rpath/substrate_shim.dylib"
 
 
 def patch(path: str, new_name: bytes, out_path: str | None = None) -> int:
