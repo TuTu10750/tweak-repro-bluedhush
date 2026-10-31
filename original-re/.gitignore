@@ -2,3 +2,5 @@
 packages/
 *.deb
 obj/
+__pycache__/
+*.pyc

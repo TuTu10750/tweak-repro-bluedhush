@@ -1412,7 +1412,7 @@
 }
 
 // @0x93398  types={?=BBBBBddddd}16@0:8
-- (Anon)ctx {
+- (void *)ctx {
     // ---- original disassembly ----
     // 00093398  adrp    x9, #0x246000
     // 0009339c  ldrsw   x9, [x9, #0x238]
@@ -1422,11 +1422,11 @@
     // 000933ac  ldr     q0, [x9, #0x20]
     // 000933b0  str     q0, [x8, #0x20]
     // 000933b4  ret     
-    return (Anon)0;
+    return (void *)0;
 }
 
 // @0x933b8  types=v64@0:8{?=BBBBBddddd}16
-- (void)setCtx:(Anon)a0 {
+- (void)setCtx:(void *)a0 {
     // ---- original disassembly ----
     // 000933b8  adrp    x8, #0x246000
     // 000933bc  ldrsw   x8, [x8, #0x238]

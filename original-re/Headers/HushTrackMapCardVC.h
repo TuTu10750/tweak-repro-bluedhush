@@ -94,11 +94,11 @@
     NSString * _uid;
     double _lat;
     double _lng;
-    Anon _ctx;
+    void * _ctx;
 }
 
 @property (copy, nonatomic) NSString *uid;
-@property (nonatomic) Anon ctx;
+@property (nonatomic) void * ctx;
 @property (nonatomic) double lat;
 @property (nonatomic) double lng;
 
