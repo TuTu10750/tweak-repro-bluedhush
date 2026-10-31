@@ -1,6 +1,7 @@
 // Recovered implementation for HushTrackMarkerView (from BluedHush_5.19.dylib)
 #import "HushTrackMarkerView.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushTrackMarkerView
 

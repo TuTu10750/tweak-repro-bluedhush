@@ -1,6 +1,7 @@
 // Recovered implementation for HushPatch (from BluedHush_5.19.dylib)
 #import "HushPatch.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushPatch
 

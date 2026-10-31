@@ -1,6 +1,7 @@
 // Recovered implementation for HushNMDeckPage (from BluedHush_5.19.dylib)
 #import "HushNMDeckPage.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushNMDeckPage
 

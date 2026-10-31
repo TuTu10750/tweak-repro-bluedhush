@@ -1,6 +1,7 @@
 // Recovered implementation for HushGalZipPickBridge (from BluedHush_5.19.dylib)
 #import "HushGalZipPickBridge.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushGalZipPickBridge
 

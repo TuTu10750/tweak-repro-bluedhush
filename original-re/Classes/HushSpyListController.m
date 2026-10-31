@@ -1,6 +1,7 @@
 // Recovered implementation for HushSpyListController (from BluedHush_5.19.dylib)
 #import "HushSpyListController.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushSpyListController
 

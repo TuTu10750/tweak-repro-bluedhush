@@ -1,6 +1,7 @@
 // Recovered implementation for HushQPBarView (from BluedHush_5.19.dylib)
 #import "HushQPBarView.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushQPBarView
 

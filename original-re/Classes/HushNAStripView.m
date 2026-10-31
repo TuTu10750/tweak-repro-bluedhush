@@ -1,6 +1,7 @@
 // Recovered implementation for HushNAStripView (from BluedHush_5.19.dylib)
 #import "HushNAStripView.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushNAStripView
 

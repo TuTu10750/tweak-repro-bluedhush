@@ -1,6 +1,7 @@
 // Recovered implementation for HushNTFindTargetController (from BluedHush_5.19.dylib)
 #import "HushNTFindTargetController.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushNTFindTargetController
 

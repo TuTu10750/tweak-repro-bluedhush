@@ -1,6 +1,7 @@
 // Recovered implementation for HushLicense (from BluedHush_5.19.dylib)
 #import "HushLicense.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushLicense
 

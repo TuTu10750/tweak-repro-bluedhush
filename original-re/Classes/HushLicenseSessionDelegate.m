@@ -1,6 +1,7 @@
 // Recovered implementation for HushLicenseSessionDelegate (from BluedHush_5.19.dylib)
 #import "HushLicenseSessionDelegate.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushLicenseSessionDelegate
 

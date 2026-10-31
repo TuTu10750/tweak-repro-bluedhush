@@ -1,6 +1,7 @@
 // Recovered implementation for HushRiskCell (from BluedHush_5.19.dylib)
 #import "HushRiskCell.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushRiskCell
 

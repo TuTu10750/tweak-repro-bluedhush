@@ -1,6 +1,7 @@
 // Recovered implementation for HushQuickPhraseUI (from BluedHush_5.19.dylib)
 #import "HushQuickPhraseUI.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushQuickPhraseUI
 

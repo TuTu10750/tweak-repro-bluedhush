@@ -1,6 +1,7 @@
 // Recovered implementation for HushConfig (from BluedHush_5.19.dylib)
 #import "HushConfig.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushConfig
 

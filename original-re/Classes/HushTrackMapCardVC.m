@@ -1,6 +1,7 @@
 // Recovered implementation for HushTrackMapCardVC (from BluedHush_5.19.dylib)
 #import "HushTrackMapCardVC.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushTrackMapCardVC
 

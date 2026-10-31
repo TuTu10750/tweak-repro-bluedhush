@@ -1,6 +1,7 @@
 // Recovered implementation for HushGalBackupVC (from BluedHush_5.19.dylib)
 #import "HushGalBackupVC.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushGalBackupVC
 

@@ -1,6 +1,7 @@
 // Recovered implementation for HushNTFanPaiController (from BluedHush_5.19.dylib)
 #import "HushNTFanPaiController.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushNTFanPaiController
 

@@ -1,6 +1,7 @@
 // Recovered implementation for HushModuleEntry (from BluedHush_5.19.dylib)
 #import "HushModuleEntry.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushModuleEntry
 

@@ -1,6 +1,7 @@
 // Recovered implementation for HushGalPreviewPageVC (from BluedHush_5.19.dylib)
 #import "HushGalPreviewPageVC.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushGalPreviewPageVC
 

@@ -1,6 +1,7 @@
 // Recovered implementation for HushStalkListController (from BluedHush_5.19.dylib)
 #import "HushStalkListController.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushStalkListController
 

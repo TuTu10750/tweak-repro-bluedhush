@@ -1,6 +1,7 @@
 // Recovered implementation for HushLocGestureTarget (from BluedHush_5.19.dylib)
 #import "HushLocGestureTarget.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushLocGestureTarget
 

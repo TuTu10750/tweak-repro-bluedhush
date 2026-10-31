@@ -1,6 +1,7 @@
 // Recovered implementation for HushGalHeaderView (from BluedHush_5.19.dylib)
 #import "HushGalHeaderView.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushGalHeaderView
 

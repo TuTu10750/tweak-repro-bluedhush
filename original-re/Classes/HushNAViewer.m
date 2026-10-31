@@ -1,6 +1,7 @@
 // Recovered implementation for HushNAViewer (from BluedHush_5.19.dylib)
 #import "HushNAViewer.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushNAViewer
 

@@ -1,6 +1,7 @@
 // Recovered implementation for HushSettingsPanel (from BluedHush_5.19.dylib)
 #import "HushSettingsPanel.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushSettingsPanel
 

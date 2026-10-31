@@ -1,6 +1,7 @@
 // Recovered implementation for HushTabLongPressSettings (from BluedHush_5.19.dylib)
 #import "HushTabLongPressSettings.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushTabLongPressSettings
 

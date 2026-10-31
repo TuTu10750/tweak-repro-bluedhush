@@ -1,6 +1,7 @@
 // Recovered implementation for HushNTCheckTap (from BluedHush_5.19.dylib)
 #import "HushNTCheckTap.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushNTCheckTap
 

@@ -1,6 +1,7 @@
 // Recovered implementation for HushRiskTap (from BluedHush_5.19.dylib)
 #import "HushRiskTap.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushRiskTap
 

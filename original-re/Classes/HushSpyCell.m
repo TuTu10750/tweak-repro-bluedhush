@@ -1,6 +1,7 @@
 // Recovered implementation for HushSpyCell (from BluedHush_5.19.dylib)
 #import "HushSpyCell.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushSpyCell
 

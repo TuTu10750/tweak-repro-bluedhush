@@ -1,6 +1,7 @@
 // Recovered implementation for HushVanCell (from BluedHush_5.19.dylib)
 #import "HushVanCell.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushVanCell
 

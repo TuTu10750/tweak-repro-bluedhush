@@ -1,6 +1,7 @@
 // Recovered implementation for HushHostStyle (from BluedHush_5.19.dylib)
 #import "HushHostStyle.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushHostStyle
 

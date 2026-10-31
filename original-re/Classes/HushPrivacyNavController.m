@@ -1,6 +1,7 @@
 // Recovered implementation for HushPrivacyNavController (from BluedHush_5.19.dylib)
 #import "HushPrivacyNavController.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushPrivacyNavController
 

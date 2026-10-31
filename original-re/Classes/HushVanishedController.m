@@ -1,6 +1,7 @@
 // Recovered implementation for HushVanishedController (from BluedHush_5.19.dylib)
 #import "HushVanishedController.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushVanishedController
 

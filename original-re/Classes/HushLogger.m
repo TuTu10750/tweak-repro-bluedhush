@@ -1,6 +1,7 @@
 // Recovered implementation for HushLogger (from BluedHush_5.19.dylib)
 #import "HushLogger.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushLogger
 

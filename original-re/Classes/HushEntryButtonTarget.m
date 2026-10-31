@@ -1,6 +1,7 @@
 // Recovered implementation for HushEntryButtonTarget (from BluedHush_5.19.dylib)
 #import "HushEntryButtonTarget.h"
 #import <objc/runtime.h>
+#import <sqlite3.h>
 
 @implementation HushEntryButtonTarget
 
