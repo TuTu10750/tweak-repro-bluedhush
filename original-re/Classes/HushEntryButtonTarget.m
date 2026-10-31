@@ -34,6 +34,11 @@
     // 00136548  ldp     x29, x30, [sp, #0x10]
     // 0013654c  ldp     x20, x19, [sp], #0x20
     // 00136550  b       #0x1a72d8   ; _objc_msgSend
+
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_136550;
+
+L_136550:;
 }
 
 // @0x136554  types=v16@0:8
@@ -60,7 +65,12 @@
     // 00136594  ldp     x29, x30, [sp, #0x20]
     // 00136598  ldp     x20, x19, [sp, #0x10]
     // 0013659c  add     sp, sp, #0x30
-    // 001365a0  ret     
+    // 001365a0  ret
+    id ret = nil;
+
+    [NSDate timeIntervalSinceReferenceDate];
+
+    return;
 }
 
 // @0x13663c  types=v16@0:8
@@ -94,6 +104,11 @@
     // 00136698  ldp     x29, x30, [sp, #0x10]
     // 0013669c  ldp     x20, x19, [sp], #0x20
     // 001366a0  b       #0x1a72d8   ; _objc_msgSend
+
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_1366a0;
+
+L_1366a0:;
 }
 
 // @0x1366a4  types=@16@0:8
@@ -107,7 +122,6 @@
     // 001366b0  bl      #0x1a768c   ; _objc_loadWeakRetained
     // 001366b4  ldp     x29, x30, [sp], #0x10
     // 001366b8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
 }
 
 // @0x1366bc  types=v24@0:8@16
@@ -151,7 +165,14 @@
     // 001364e0  mov     x0, x8
     // 001364e4  ldp     x29, x30, [sp], #0x10
     // 001364e8  b       #0x1a7284   ; _objc_release
-    return nil;
+
+    if (cond /* ne */) goto L_1364b4;
+
+L_136498:;
+
+L_1364b4:;
+    dispatch_once(0x207fe8, a0, a1, a2, a3);
+    goto L_136498;
 }
 
 @end

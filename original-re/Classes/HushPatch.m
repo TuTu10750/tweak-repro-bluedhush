@@ -39,8 +39,19 @@
     // 00019168  mov     x0, x20
     // 0001916c  ldp     x29, x30, [sp, #0x10]
     // 00019170  ldp     x20, x19, [sp], #0x20
-    // 00019174  ret     
-    return (BOOL)0;
+    // 00019174  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if ([a0 length]; == 0) goto L_19164;
+
+    [objc_retainAutorelease UTF8String];
+    goto L_19164;
+
+L_19164:;
+    objc_release(a0);
+    return 0;
 }
 
 // @0x19178  types=B32@0:8@16:24
@@ -88,8 +99,24 @@
     // 000191f4  ldp     x29, x30, [sp, #0x20]
     // 000191f8  ldp     x20, x19, [sp, #0x10]
     // 000191fc  ldp     x22, x21, [sp], #0x30
-    // 00019200  ret     
-    return (BOOL)0;
+    // 00019200  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if (a1 == 0) goto L_191ec;
+
+    if ([a0 length]; == 0) goto L_191ec;
+
+    [objc_retainAutorelease UTF8String];
+    if ([? class] == 0) goto L_191ec;
+
+    class_getInstanceMethod(a1);
+    goto L_191ec;
+
+L_191ec:;
+    objc_release(a0);
+    return 0;
 }
 
 // @0x19204  types=B48@0:8@16:24^?32^^?40
@@ -269,8 +296,66 @@
     // 0001943c  ldp     x22, x21, [sp, #0x30]
     // 00019440  ldp     x24, x23, [sp, #0x20]
     // 00019444  add     sp, sp, #0x60
-    // 00019448  ret     
-    return (BOOL)0;
+    // 00019448  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if (a2 == 0) goto L_1942c;
+
+    if (a1 == 0) goto L_1942c;
+
+    if ([a0 length]; == 0) goto L_1942c;
+
+    [objc_retainAutorelease UTF8String];
+    if ([? class] == 0) goto L_1931c;
+
+    class_getInstanceMethod(a1);
+    if (class_getInstanceMethod == 0) goto L_19368;
+
+    class_getInstanceMethod(a1);
+    method_getImplementation();
+    if (cond /* eq */) goto L_193d8;
+
+    MSHookMessageEx(a1, a2);
+    if (a3 == 0) goto L_192d0;
+
+L_192d0:;
+    if (0 != 0) goto L_192d0;
+
+    NSStringFromSelector();
+    goto L_19400;
+
+L_1931c:;
+    if (0 != 0) goto L_1931c;
+
+    NSStringFromSelector(sel_registerName("stringWithFormat:"), @"OK          %@ %@");
+    goto L_193a0;
+
+L_19368:;
+    if (0 != 0) goto L_19368;
+
+    NSStringFromSelector(sel_registerName("stringWithFormat:"), @"SKIP_CLASS  %@ %@");
+
+L_193a0:;
+    [NSString stringWithFormat:@"SKIP_METHOD %@ %@"];
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+    goto L_1942c;
+
+L_193d8:;
+    NSStringFromSelector();
+
+L_19400:;
+    [NSString stringWithFormat:@"OK(已装载)  %@ %@"];
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+
+L_1942c:;
+    objc_release(a0);
+    return (BOOL)1;
 }
 
 // @0x194d4  types=B48@0:8@16:24^?32^^?40
@@ -452,8 +537,67 @@
     // 00019710  ldp     x22, x21, [sp, #0x30]
     // 00019714  ldp     x24, x23, [sp, #0x20]
     // 00019718  add     sp, sp, #0x60
-    // 0001971c  ret     
-    return (BOOL)0;
+    // 0001971c  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if (a2 == 0) goto L_19700;
+
+    if (a1 == 0) goto L_19700;
+
+    if ([a0 length]; == 0) goto L_19700;
+
+    [objc_retainAutorelease UTF8String];
+    if ([? class] == 0) goto L_195f0;
+
+    class_getClassMethod(a1);
+    if (class_getClassMethod == 0) goto L_1963c;
+
+    class_getClassMethod(a1);
+    method_getImplementation();
+    if (cond /* eq */) goto L_196ac;
+
+    object_getClass();
+    MSHookMessageEx(a1, a2);
+    if (a3 == 0) goto L_195a4;
+
+L_195a4:;
+    if (0 != 0) goto L_195a4;
+
+    NSStringFromSelector();
+    goto L_196d4;
+
+L_195f0:;
+    if (0 != 0) goto L_195f0;
+
+    NSStringFromSelector(sel_registerName("stringWithFormat:"), @"OK          +[%@ %@]");
+    goto L_19674;
+
+L_1963c:;
+    if (0 != 0) goto L_1963c;
+
+    NSStringFromSelector(sel_registerName("stringWithFormat:"), @"SKIP_CLASS  +[%@ %@]");
+
+L_19674:;
+    [NSString stringWithFormat:@"SKIP_METHOD +[%@ %@]"];
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+    goto L_19700;
+
+L_196ac:;
+    NSStringFromSelector();
+
+L_196d4:;
+    [NSString stringWithFormat:@"OK(已装载)  +[%@ %@]"];
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+
+L_19700:;
+    objc_release(a0);
+    return (BOOL)1;
 }
 
 // @0x19720  types=@48@0:8@16@24^?32^^?40
@@ -799,6 +943,102 @@
     // 00019b88  bl      #0x1a7284   ; _objc_release
     // 00019b8c  b       #0x19a20   ; sub_19a20
     // 00019b90  bl      #0x1a72c0   ; ___stack_chk_fail
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    [a0 length];
+    if ([a0 length]; == 0) goto L_19a24;
+
+    [a1 count];
+    if (a2 == 0) goto L_19a24;
+
+    if ([a1 count]; == 0) goto L_19a24;
+
+    [objc_retainAutorelease UTF8String];
+    if ([? class] == 0) goto L_199b0;
+
+    objc_retain(a1);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_19874;
+
+L_19810:;
+    if (cond /* eq */) goto L_19828;
+
+L_19828:;
+    NSSelectorFromString();
+    if (NSSelectorFromString == 0) goto L_1984c;
+
+    class_getInstanceMethod(NSSelectorFromString);
+    if (class_getInstanceMethod != 0) goto L_19a6c;
+
+L_1984c:;
+    if (cond /* ne */) goto L_19810;
+
+    [a1 countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_19810;
+
+L_19874:;
+    objc_release(a1);
+
+L_1988c:;
+    if (0 != 0) goto L_1988c;
+
+    [a1 componentsJoinedByString:@"|"];
+    [NSString stringWithFormat:@"SKIP_ABSENT %@ [%@]"];
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+    [0x2567e8 lock];
+    [a1 componentsJoinedByString:@"|"];
+    [NSString stringWithFormat:@"%@	%@"];
+    [0x2567e0 addObject:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [0x2567e8 unlock];
+    goto L_19a24;
+
+L_199b0:;
+    if (0 != 0) goto L_199b0;
+
+    [a1 componentsJoinedByString:@"|"];
+    [NSString stringWithFormat:@"SKIP_CLASS  %@ [%@]"];
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+
+L_19a24:;
+    objc_release(a1);
+    objc_release(a0);
+    if (cond /* ne */) goto L_19b90;
+
+L_19a6c:;
+    method_getImplementation();
+    if (cond /* eq */) goto L_19af4;
+
+    MSHookMessageEx(0 /* adrp */, ret);
+    if (0 /* unk */ == 0) goto L_19ab0;
+
+L_19ab0:;
+    if (0 != 0) goto L_19ab0;
+
+    goto L_19af4;
+
+L_19af4:;
+    [NSString stringWithFormat:@"OK(已装载)  %@ %@"];
+    sub_1944c();
+    objc_release(ret);
+    [0x2567e8 lock];
+    [NSString stringWithFormat:@"%@	%@"];
+    [0x2567e0 addObject:ret];
+    objc_release(ret);
+    [0x2567e8 unlock];
+    objc_retain(0);
+    objc_release(0 /* unk */);
+    goto L_19a24;
+
+L_19b90:;
+    stack_chk_fail();
     return nil;
 }
 
@@ -842,7 +1082,17 @@
     // 00019c08  add     x1, x1, #0xcc8
     // 00019c0c  bl      #0x1a7320   ; _dispatch_once
     // 00019c10  b       #0x19bb0   ; sub_19bb0
-    return nil;
+
+    if (cond /* ne */) goto L_19c0c;
+
+L_19bc0:;
+    [0x2567e8 lock];
+    [0x2567d8 copy];
+    [0x2567e8 unlock];
+
+L_19c0c:;
+    dispatch_once(0x204cc8);
+    goto L_19bc0;
 }
 
 // @0x19c14  types=v16@0:8
@@ -1005,7 +1255,60 @@
     // 00019e38  ldp     x26, x25, [sp, #0x100]
     // 00019e3c  ldp     x28, x27, [sp, #0xf0]
     // 00019e40  add     sp, sp, #0x150
-    // 00019e44  ret     
+    // 00019e44  ret
+    id ret = nil;
+
+    [self records];
+    [ret count];
+    if ([ret count]; == 0) goto L_19d78;
+
+    objc_retain(ret);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_19da8;
+
+L_19ce0:;
+    if (cond /* eq */) goto L_19d00;
+
+L_19d00:;
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_19d30;
+
+    [@0x244978 logLevel:3 format:@"[PATCH] %@"];
+    goto L_19d3c;
+
+L_19d30:;
+    [[@0x244978 logLevel:3 format:@"[PATCH] %@"]; noteFiltered:3];
+
+L_19d3c:;
+    if (cond /* ne */) goto L_19ce0;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_19ce0;
+
+    goto L_19da8;
+
+L_19d78:;
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_19e04;
+
+    goto L_19df0;
+
+L_19da8:;
+    objc_release(ret);
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_19e04;
+
+L_19df0:;
+    [@0x244978 logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"];
+    goto L_19e0c;
+
+L_19e04:;
+    [[@0x244978 logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"]; noteFiltered:3];
+
+L_19e0c:;
+    objc_release(ret);
+
+    return;
 }
 
 // @0x19e4c  types=B48@0:8@16:24^?32^^?40
@@ -1177,8 +1480,65 @@
     // 0001a06c  ldp     x24, x23, [sp, #0x20]
     // 0001a070  ldp     x26, x25, [sp, #0x10]
     // 0001a074  add     sp, sp, #0x60
-    // 0001a078  ret     
-    return (BOOL)0;
+    // 0001a078  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if (a2 == 0) goto L_1a058;
+
+    if (a1 == 0) goto L_1a058;
+
+    if ([a0 length]; == 0) goto L_1a058;
+
+    [objc_retainAutorelease UTF8String];
+    if ([? class] == 0) goto L_19fa4;
+
+    class_getInstanceMethod(a1);
+    if (class_getInstanceMethod == 0) goto L_19ff0;
+
+    method_getImplementation();
+    method_getTypeEncoding();
+    class_addMethod(a1, a2, method_getTypeEncoding);
+    if ((([? class] >> 0) & 1) != 0) goto L_19f24;
+
+    class_getInstanceMethod(a1);
+    method_getImplementation();
+
+    method_setImplementation(a2);
+
+L_19f24:;
+    if (a3 == 0) goto L_19f40;
+
+L_19f40:;
+    if (0 != 0) goto L_19f40;
+
+    NSStringFromSelector();
+    [NSString stringWithFormat:@"OK          %@ %@+"];
+    goto L_1a040;
+
+L_19fa4:;
+    if (0 != 0) goto L_19fa4;
+
+    NSStringFromSelector();
+    goto L_1a028;
+
+L_19ff0:;
+    if (0 != 0) goto L_19ff0;
+
+    NSStringFromSelector(sel_registerName("stringWithFormat:"), @"SKIP_CLASS  %@ %@+");
+
+L_1a028:;
+    [NSString stringWithFormat:@"SKIP_METHOD %@ %@+"];
+
+L_1a040:;
+    sub_1944c();
+    objc_release(ret);
+    objc_release(ret);
+
+L_1a058:;
+    objc_release(a0);
+    return 0;
 }
 
 // @0x1a0b0  types=B36@0:8@16:24B32
@@ -1236,8 +1596,35 @@
     // 0001a148  ldp     x29, x30, [sp, #0x20]
     // 0001a14c  ldp     x20, x19, [sp, #0x10]
     // 0001a150  ldp     x22, x21, [sp], #0x30
-    // 0001a154  ret     
-    return (BOOL)0;
+    // 0001a154  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if (a1 == 0) goto L_1a140;
+
+    if ([a0 length]; == 0) goto L_1a140;
+
+    [objc_retainAutorelease UTF8String];
+    if ([? class] == 0) goto L_1a140;
+
+    if (a2 == 0) goto L_1a130;
+
+    class_getClassMethod(a1);
+    if (class_getClassMethod == 0) goto L_1a140;
+
+L_1a11c:;
+    method_getImplementation();
+    sub_1a158(0);
+    goto L_1a140;
+
+L_1a130:;
+    class_getInstanceMethod();
+    if (class_getInstanceMethod != 0) goto L_1a11c;
+
+L_1a140:;
+    objc_release(a0);
+    return 0;
 }
 
 // @0x1a224  types=v24@0:8@16
@@ -1281,6 +1668,17 @@
     // 0001a294  ldp     x20, x19, [sp, #0x10]
     // 0001a298  add     sp, sp, #0x30
     // 0001a29c  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 length];
+    if ([a0 length]; == 0) goto L_1a29c;
+
+    [NSString stringWithFormat:@"GROUP       %@"];
+    sub_1944c();
+    objc_release(ret);
+
+L_1a29c:;
 }
 
 // @0x1a2a0  types=v16@0:8
@@ -1380,7 +1778,29 @@
     // 0001a3dc  str     x8, [x9, #0x808]
     // 0001a3e0  ldp     x29, x30, [sp, #0x20]
     // 0001a3e4  add     sp, sp, #0x30
-    // 0001a3e8  ret     
+    // 0001a3e8  ret
+    id ret = nil;
+
+    if (cond /* ne */) goto L_1a31c;
+
+L_1a2cc:;
+    [0x2567e8 lock];
+    [0x2567d8 removeAllObjects];
+
+L_1a31c:;
+    dispatch_once(0x204cc8);
+    goto L_1a2cc;
+
+    [NSMutableArray array];
+    objc_release(0x2567d8);
+    [NSMutableArray array];
+    objc_release(0x2567e0);
+
+    dladdr();
+    if (0x2567e8 == 0) goto L_1a3e8;
+
+L_1a3e8:;
+    return;
 }
 
 @end

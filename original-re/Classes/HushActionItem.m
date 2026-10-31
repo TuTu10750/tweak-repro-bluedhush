@@ -7,8 +7,10 @@
 - (id)title {
     // ---- original disassembly ----
     // 0019c704  ldr     x0, [x0, #8]
-    // 0019c708  ret     
-    return nil;
+    // 0019c708  ret
+    id ret = nil;
+
+    return (id)self->/*+0x8*/;
 }
 
 // @0x19c70c  types=v24@0:8@16
@@ -22,8 +24,10 @@
 - (id)subtitle {
     // ---- original disassembly ----
     // 0019c714  ldr     x0, [x0, #0x10]
-    // 0019c718  ret     
-    return nil;
+    // 0019c718  ret
+    id ret = nil;
+
+    return (id)self->/*+0x10*/;
 }
 
 // @0x19c71c  types=v24@0:8@16
@@ -37,8 +41,10 @@
 - (id)icon {
     // ---- original disassembly ----
     // 0019c724  ldr     x0, [x0, #0x18]
-    // 0019c728  ret     
-    return nil;
+    // 0019c728  ret
+    id ret = nil;
+
+    return (id)self->/*+0x18*/;
 }
 
 // @0x19c72c  types=v24@0:8@16
@@ -52,8 +58,10 @@
 - (id)actionLabel {
     // ---- original disassembly ----
     // 0019c734  ldr     x0, [x0, #0x20]
-    // 0019c738  ret     
-    return nil;
+    // 0019c738  ret
+    id ret = nil;
+
+    return (id)self->/*+0x20*/;
 }
 
 // @0x19c73c  types=v24@0:8@16
@@ -67,8 +75,10 @@
 - (id /* ^block */)handler {
     // ---- original disassembly ----
     // 0019c744  ldr     x0, [x0, #0x28]
-    // 0019c748  ret     
-    return (id /* ^block */)0;
+    // 0019c748  ret
+    id ret = nil;
+
+    return (id /* ^block */)self->/*+0x28*/;
 }
 
 // @0x19c74c  types=v24@0:8@?16
@@ -152,7 +162,21 @@
     // 0019c5e4  ldp     x22, x21, [sp, #0x10]
     // 0019c5e8  ldp     x24, x23, [sp], #0x40
     // 0019c5ec  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a3);
+    objc_retain(a2);
+    objc_retain(a1);
+    objc_retain(a0);
+    [self unknownSelector];
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a0);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a1);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a2);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a3);
 }
 
 // @0x19c5f0  types=@56@0:8@16@24@32@40@?48
@@ -244,7 +268,24 @@
     // 0019c6f8  ldp     x24, x23, [sp, #0x10]
     // 0019c6fc  ldp     x26, x25, [sp], #0x50
     // 0019c700  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a4);
+    objc_retain(a3);
+    objc_retain(a2);
+    objc_retain(a1);
+    objc_retain(a0);
+    [self unknownSelector];
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a0);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a1);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a2);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a3);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a4);
 }
 
 @end

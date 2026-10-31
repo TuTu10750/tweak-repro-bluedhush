@@ -99,7 +99,22 @@
     // 00135014  ldp     x22, x21, [sp, #0x20]
     // 00135018  ldp     d9, d8, [sp, #0x10]
     // 0013501c  add     sp, sp, #0x50
-    // 00135020  ret     
+    // 00135020  ret
+    id ret = nil;
+
+    [super viewDidLoad];
+    [self setTitle:0x225c98];
+    [self tableView];
+    [ret setRowHeight:0 /* unk *//*+0x0*/];
+    objc_release(ret);
+    [self tableView];
+    [ret setEstimatedRowHeight:0x4050000000000000];
+    objc_release(ret);
+    [objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
+    [self setRefreshControl:objc_alloc_init];
+    [self hushRefresh];
+    objc_release(objc_alloc_init);
+    return;
 }
 
 // @0x135024  types=v20@0:8B16
@@ -162,7 +177,17 @@
     // 001350d4  ldp     x20, x19, [sp, #0x20]
     // 001350d8  ldp     x22, x21, [sp, #0x10]
     // 001350dc  add     sp, sp, #0x40
-    // 001350e0  ret     
+    // 001350e0  ret
+    id ret = nil;
+
+    [super viewWillAppear:a0];
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
+    [self navigationItem];
+    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];];
+    objc_release(ret);
+    [self hushRefresh];
+    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];);
+    return;
 }
 
 // @0x1350e4  types=v32@0:8@16@24
@@ -403,6 +428,77 @@
     // 001353e0  ldp     x26, x25, [sp, #0x10]
     // 001353e4  ldp     x28, x27, [sp], #0x60
     // 001353e8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
+    id ret = nil;
+
+    objc_retain(a1);
+    [a0 deselectRowAtIndexPath:a1 animated:1];
+    sub_1351b0(a1);
+    objc_release(a1);
+    [ret objectForKeyedSubscript:0x225538];
+    [ret boolValue];
+    objc_release(ret);
+    if ([ret boolValue]; == 0) goto L_1351ac;
+
+    [self hushRefresh];
+
+L_1351ac:;
+
+    objc_retain(ret);
+    objc_retain(0);
+    [NSArray class];
+    [ret isKindOfClass:[NSArray class];];
+    if (0 == 0) goto L_1353c0;
+
+    if (ret == 0) goto L_1353c0;
+
+    [0 section];
+    if ((([0 section]; >> 63) & 1) != 0) goto L_13539c;
+
+    [0 section];
+    [ret count];
+    if (cond /* hs */) goto L_13539c;
+
+    [0 section];
+    [ret objectAtIndexedSubscript:[0 section];];
+    [NSDictionary class];
+    [ret isKindOfClass:[NSDictionary class];];
+    if (ret == 0) goto L_1353a4;
+
+    [ret objectForKeyedSubscript:0x2256f8];
+    [NSArray class];
+    [ret isKindOfClass:[NSArray class];];
+    if (ret == 0) goto L_1353b0;
+
+    [0 row];
+    if ((([0 row]; >> 63) & 1) != 0) goto L_1353b0;
+
+    [0 row];
+    [ret count];
+    if (cond /* hs */) goto L_1353b0;
+
+    [0 row];
+    [ret objectAtIndexedSubscript:[0 row];];
+    [NSDictionary class];
+    [ret isKindOfClass:[NSDictionary class];];
+    objc_retain(sel_registerName("count"));
+    objc_release(ret);
+    goto L_1353b0;
+
+L_13539c:;
+    goto L_1353c0;
+
+L_1353a4:;
+    goto L_1353b8;
+
+L_1353b0:;
+    objc_release(ret);
+
+L_1353b8:;
+    objc_release(ret);
+
+L_1353c0:;
+    objc_release(0);
+    objc_release(ret);
 }
 
 // @0x1353ec  types=v16@0:8
@@ -481,7 +577,24 @@
     // 001354c8  ldp     x29, x30, [sp, #0x20]
     // 001354cc  ldp     x20, x19, [sp, #0x10]
     // 001354d0  ldp     x22, x21, [sp], #0x30
-    // 001354d4  ret     
+    // 001354d4  ret
+    id ret = nil;
+
+    HushRiskReportSections(_cmd, a0, a1, a2, a3);
+    objc_release(self->_sections);
+    [self tableView];
+    [ret reloadData];
+    objc_release(ret);
+    [self refreshControl];
+    [ret isRefreshing];
+    objc_release(ret);
+    if ([ret isRefreshing]; == 0) goto L_1354d4;
+
+    [self refreshControl];
+    [ret endRefreshing];
+
+L_1354d4:;
+    return;
 }
 
 // @0x1354d8  types=v16@0:8
@@ -543,6 +656,23 @@
     // 00135584  ldp     x20, x19, [sp, #0x10]
     // 00135588  ldp     x22, x21, [sp], #0x30
     // 0013558c  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    [self navigationController];
+    if (ret == 0) goto L_135578;
+
+    [ret viewControllers];
+    [ret count];
+    objc_release(ret);
+    if (cond /* lo */) goto L_135578;
+
+    [ret popViewControllerAnimated:1];
+    goto L_13558c;
+
+L_135578:;
+    [self dismissViewControllerAnimated:1 completion:0];
+
+L_13558c:;
 }
 
 // @0x135590  types=q24@0:8@16
@@ -554,7 +684,6 @@
     // 0013559c  adrp    x8, #0x23c000
     // 001355a0  ldr     x1, [x8, #0x580]
     // 001355a4  b       #0x1a72d8   ; _objc_msgSend
-    return (long long)0;
 }
 
 // @0x1355a8  types=q32@0:8@16q24
@@ -655,8 +784,43 @@
     // 001356dc  ldp     x20, x19, [sp, #0x20]
     // 001356e0  ldp     x22, x21, [sp, #0x10]
     // 001356e4  ldp     x24, x23, [sp], #0x40
-    // 001356e8  ret     
-    return (long long)0;
+    // 001356e8  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    if (((a1 >> 63) & 1) != 0) goto L_1356ac;
+
+    [self->_sections count];
+    if (cond /* ls */) goto L_1356ac;
+
+    [self->_sections objectAtIndexedSubscript:a1];
+    [NSDictionary class];
+    [ret isKindOfClass:[NSDictionary class];];
+    if (ret == 0) goto L_1356b4;
+
+    [ret objectForKeyedSubscript:0x2256f8];
+    [NSArray class];
+    [ret isKindOfClass:[NSArray class];];
+    if (ret == 0) goto L_1356c0;
+
+    [ret count];
+    goto L_1356c0;
+
+L_1356ac:;
+    goto L_1356d0;
+
+L_1356b4:;
+    goto L_1356c8;
+
+L_1356c0:;
+    objc_release(ret);
+
+L_1356c8:;
+    objc_release(ret);
+
+L_1356d0:;
+    objc_release(a0);
+    return 0;
 }
 
 // @0x1356ec  types=@32@0:8@16q24
@@ -736,7 +900,25 @@
     // 001357d4  ldp     x20, x19, [sp, #0x10]
     // 001357d8  ldp     x22, x21, [sp], #0x30
     // 001357dc  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    if (((a1 >> 63) & 1) != 0) goto L_1357c8;
+
+    [self->_sections count];
+    if (cond /* ls */) goto L_1357c8;
+
+    [self->_sections objectAtIndexedSubscript:a1];
+    [ret objectForKeyedSubscript:0x2141b8];
+    objc_release(ret);
+    [NSString class];
+    [ret isKindOfClass:[NSString class];];
+    objc_retain(ret);
+    objc_release(ret);
+    goto L_1357c8;
+
+L_1357c8:;
+    objc_release(a0);
 }
 
 // @0x1357e0  types=@32@0:8@16@24
@@ -1136,7 +1318,86 @@
     // 00135cd0  ldp     x28, x27, [sp, #0x10]
     // 00135cd4  add     sp, sp, #0x70
     // 00135cd8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a1);
+    [a0 dequeueReusableCellWithIdentifier:0x225cb8];
+    if (ret != 0) goto L_135874;
+
+    [[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8];
+
+L_135874:;
+    sub_1351b0(a1);
+    if (ret == 0) goto L_135b5c;
+
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; defaultContentConfiguration];
+    [ret objectForKeyedSubscript:0x20d778];
+    [ret setText:ret];
+    objc_release(ret);
+    [ret objectForKeyedSubscript:0x217658];
+    [ret setSecondaryText:ret];
+    objc_release(ret);
+    [UIFont systemFontOfSize:12];
+    [ret secondaryTextProperties];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [ret objectForKeyedSubscript:0x225cd8];
+    [ret boolValue];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [ret textProperties];
+    [ret setColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setContentConfiguration:ret];
+    [ret objectForKeyedSubscript:0x225538];
+    [ret boolValue];
+    objc_release(ret);
+    if ((([ret boolValue]; >> 0) & 1) == 0) goto L_135b88;
+
+    [objc_alloc_init setText:0x225cf8];
+    [UIFont monospacedSystemFontOfSize:15 weight:0 /* unk *//*+0x0*/];
+    [objc_alloc_init setFont:ret];
+    objc_release(ret);
+    [self view];
+    [ret tintColor];
+    [objc_alloc_init setTextColor:ret];
+    objc_release(ret);
+    goto L_135c48;
+
+L_135b5c:;
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setContentConfiguration:0];
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:0];
+    goto L_135cac;
+
+L_135b88:;
+    [ret objectForKeyedSubscript:0x21dff8];
+    [objc_alloc_init unknownSelector];
+    objc_release(ret);
+    [UIFont monospacedSystemFontOfSize:15 weight:0 /* unk *//*+0x0*/];
+    [objc_alloc_init setFont:ret];
+    objc_release(ret);
+    if (((ret >> 0) & 1) == 0) goto L_135c18;
+
+    goto L_135c18;
+
+L_135c18:;
+    [UIColor secondaryLabelColor];
+    [objc_alloc_init setTextColor:ret];
+
+L_135c48:;
+    objc_release(ret);
+    [objc_alloc_init sizeToFit];
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:objc_alloc_init];
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setSelectionStyle:0];
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryType:[ret boolValue];];
+    objc_release(objc_alloc_init);
+    objc_release(ret);
+
+L_135cac:;
+    objc_release(ret);
+    objc_release(0 /* local */);
 }
 
 @end

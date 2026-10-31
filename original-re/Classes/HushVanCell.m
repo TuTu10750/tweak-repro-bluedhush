@@ -512,7 +512,92 @@
     // 00189148  ldp     d9, d8, [sp, #0x20]
     // 0018914c  ldp     d11, d10, [sp, #0x10]
     // 00189150  add     sp, sp, #0x90
-    // 00189154  ret     
+    // 00189154  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    if (super == 0) goto L_189154;
+
+    [[NSObject alloc] unknownSelector];
+    [super unknownSelector];
+    objc_release([[NSObject alloc] unknownSelector];);
+    [super unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [[UILabel alloc] unknownSelector];
+    [super unknownSelector];
+    objc_release([[UILabel alloc] unknownSelector];);
+    [0 /* unk */ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [[UILabel alloc] unknownSelector];
+    [super unknownSelector];
+    objc_release([[UILabel alloc] unknownSelector];);
+    [UIFont unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    objc_release(objc_alloc_init);
+    [UIFont unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+
+L_189154:;
     return nil;
 }
 
@@ -634,7 +719,23 @@
     // 001892d0  ldp     d9, d8, [sp, #0x20]
     // 001892d4  ldp     d11, d10, [sp, #0x10]
     // 001892d8  add     sp, sp, #0x60
-    // 001892dc  ret     
+    // 001892dc  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    return;
 }
 
 // @0x1892e0  types=@16@0:8
@@ -643,8 +744,10 @@
     // 001892e0  nop     
     // 001892e4  ldrsw   x8, #0x24658c
     // 001892e8  ldr     x0, [x0, x8]
-    // 001892ec  ret     
-    return nil;
+    // 001892ec  ret
+    id ret = nil;
+
+    return (id)self->/*+0x0*/;
 }
 
 // @0x1892f0  types=v24@0:8@16
@@ -663,8 +766,10 @@
     // 00189304  nop     
     // 00189308  ldrsw   x8, #0x246590
     // 0018930c  ldr     x0, [x0, x8]
-    // 00189310  ret     
-    return nil;
+    // 00189310  ret
+    id ret = nil;
+
+    return (id)self->/*+0x0*/;
 }
 
 // @0x189314  types=v24@0:8@16
@@ -683,8 +788,10 @@
     // 00189328  nop     
     // 0018932c  ldrsw   x8, #0x246594
     // 00189330  ldr     x0, [x0, x8]
-    // 00189334  ret     
-    return nil;
+    // 00189334  ret
+    id ret = nil;
+
+    return (id)self->/*+0x0*/;
 }
 
 // @0x189338  types=v24@0:8@16
@@ -703,8 +810,10 @@
     // 0018934c  nop     
     // 00189350  ldrsw   x8, #0x246598
     // 00189354  ldr     x0, [x0, x8]
-    // 00189358  ret     
-    return nil;
+    // 00189358  ret
+    id ret = nil;
+
+    return (id)self->/*+0x0*/;
 }
 
 // @0x18935c  types=v24@0:8@16

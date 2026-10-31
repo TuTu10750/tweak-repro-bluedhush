@@ -518,7 +518,98 @@
     // 00141828  bl      #0x1a7284   ; _objc_release
     // 0014182c  adrp    x20, #0x243000
     // 00141830  ldr     x0, [x20, #0x448]
-    // 00141834  nop     
+    // 00141834  nop
+    id ret = nil;
+
+    [super unknownSelector];
+    if (super == 0) goto L_141938;
+
+    [super unknownSelector];
+    [UIColor unknownSelector];
+    [super unknownSelector];
+    objc_release(ret);
+    [[@0x2456c0 alloc] unknownSelector];
+    objc_release(self->_hushAvatar);
+    [self->_hushAvatar unknownSelector];
+    [self->_hushAvatar unknownSelector];
+    [self->_hushAvatar unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [self->_hushAvatar unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[UILabel alloc] unknownSelector];
+    objc_release(self->_hushName);
+    [UIFont unknownSelector];
+    [self->_hushName unknownSelector];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [self->_hushName unknownSelector];
+    objc_release(ret);
+    [self->_hushName unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[UIView alloc] unknownSelector];
+    objc_release(self->_hushSelfBadge);
+    [UIColor unknownSelector];
+    [self->_hushSelfBadge unknownSelector];
+    objc_release(ret);
+    [self->_hushSelfBadge unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self->_hushSelfBadge unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[UILabel alloc] unknownSelector];
+    objc_release(self->_hushLine2);
+    [UIFont unknownSelector];
+    [self->_hushLine2 unknownSelector];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [self->_hushLine2 unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[UILabel alloc] unknownSelector];
+    objc_release(self->_hushLine3);
+    [UIFont unknownSelector];
+    [self->_hushLine3 unknownSelector];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [self->_hushLine3 unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[UILabel alloc] unknownSelector];
+    objc_release(self->_hushCapsule);
+    [UIFont unknownSelector];
+    [self->_hushCapsule unknownSelector];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [self->_hushCapsule unknownSelector];
+    objc_release(ret);
+    [self->_hushCapsule unknownSelector];
+    [UIColor unknownSelector];
+    [self->_hushCapsule unknownSelector];
+    objc_release(ret);
+    [self->_hushCapsule unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self->_hushCapsule unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_retain(super);
+
+L_141938:;
+    objc_release(super);
     return nil;
 }
 
@@ -749,7 +840,45 @@
     // 00141c64  ldp     d11, d10, [sp, #0x20]
     // 00141c68  ldp     d13, d12, [sp, #0x10]
     // 00141c6c  add     sp, sp, #0x80
-    // 00141c70  ret     
+    // 00141c70  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self->_hushAvatar unknownSelector];
+    [self->_hushAvatar unknownSelector];
+    CGRectGetMaxX();
+    [self->_hushCapsule unknownSelector];
+    if (((ret >> 0) & 1) != 0) goto L_141b18;
+
+    [self->_hushCapsule unknownSelector];
+    [self->_hushCapsule unknownSelector];
+    [self->_hushCapsule unknownSelector];
+    CGRectGetMinX();
+
+L_141b18:;
+    [self->_hushName unknownSelector];
+    [self->_hushName unknownSelector];
+    [self->_hushName unknownSelector];
+    [self->_hushSelfBadge unknownSelector];
+    if (((ret >> 0) & 1) != 0) goto L_141bec;
+
+    CGRectGetMaxX();
+    CGRectGetMidY();
+    [self->_hushSelfBadge unknownSelector];
+
+L_141bec:;
+    CGRectGetMaxY();
+    [self->_hushLine2 unknownSelector];
+    [self->_hushLine2 unknownSelector];
+    CGRectGetMaxY();
+    [self->_hushLine3 unknownSelector];
+    return;
 }
 
 // @0x141c74  types=@16@0:8
@@ -758,8 +887,10 @@
     // 00141c74  adrp    x8, #0x246000
     // 00141c78  ldrsw   x8, [x8, #0x450]
     // 00141c7c  ldr     x0, [x0, x8]
-    // 00141c80  ret     
-    return nil;
+    // 00141c80  ret
+    id ret = nil;
+
+    return (id)self->_hushAvatar;
 }
 
 // @0x141c84  types=v24@0:8@16
@@ -778,8 +909,10 @@
     // 00141c98  adrp    x8, #0x246000
     // 00141c9c  ldrsw   x8, [x8, #0x454]
     // 00141ca0  ldr     x0, [x0, x8]
-    // 00141ca4  ret     
-    return nil;
+    // 00141ca4  ret
+    id ret = nil;
+
+    return (id)self->_hushName;
 }
 
 // @0x141ca8  types=v24@0:8@16
@@ -798,8 +931,10 @@
     // 00141cbc  adrp    x8, #0x246000
     // 00141cc0  ldrsw   x8, [x8, #0x45c]
     // 00141cc4  ldr     x0, [x0, x8]
-    // 00141cc8  ret     
-    return nil;
+    // 00141cc8  ret
+    id ret = nil;
+
+    return (id)self->_hushLine2;
 }
 
 // @0x141ccc  types=v24@0:8@16
@@ -818,8 +953,10 @@
     // 00141ce0  adrp    x8, #0x246000
     // 00141ce4  ldrsw   x8, [x8, #0x460]
     // 00141ce8  ldr     x0, [x0, x8]
-    // 00141cec  ret     
-    return nil;
+    // 00141cec  ret
+    id ret = nil;
+
+    return (id)self->_hushLine3;
 }
 
 // @0x141cf0  types=v24@0:8@16
@@ -838,8 +975,10 @@
     // 00141d04  adrp    x8, #0x246000
     // 00141d08  ldrsw   x8, [x8, #0x464]
     // 00141d0c  ldr     x0, [x0, x8]
-    // 00141d10  ret     
-    return nil;
+    // 00141d10  ret
+    id ret = nil;
+
+    return (id)self->_hushCapsule;
 }
 
 // @0x141d14  types=v24@0:8@16
@@ -858,8 +997,10 @@
     // 00141d28  adrp    x8, #0x246000
     // 00141d2c  ldrsw   x8, [x8, #0x458]
     // 00141d30  ldr     x0, [x0, x8]
-    // 00141d34  ret     
-    return nil;
+    // 00141d34  ret
+    id ret = nil;
+
+    return (id)self->_hushSelfBadge;
 }
 
 // @0x141d38  types=v24@0:8@16

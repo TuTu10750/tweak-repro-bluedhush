@@ -58,7 +58,20 @@
     // 00142004  ldp     x22, x21, [sp, #0x10]
     // 00142008  add     sp, sp, #0x40
     // 0014200c  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (cond /* hi */) goto L_141ff0;
+
+    [self unknownSelector];
+    goto L_14200c;
+
+L_141ff0:;
+    [super unknownSelector];
+
+L_14200c:;
 }
 
 @end

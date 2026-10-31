@@ -376,8 +376,72 @@
     // 00020894  ldp     x28, x27, [sp, #0x20]
     // 00020898  ldp     d9, d8, [sp, #0x10]
     // 0002089c  add     sp, sp, #0x80
-    // 000208a0  ret     
-    return nil;
+    // 000208a0  ret
+    id ret = nil;
+
+    [super initWithStyle:a0 reuseIdentifier:a1];
+    if (self == 0) goto L_208a0;
+
+    [UIColor clearColor];
+    [self setBackgroundColor:ret];
+    objc_release(ret);
+    [self setName:objc_alloc_init];
+    objc_release(objc_alloc_init);
+    [UIFont systemFontOfSize:16 weight:0x200378];
+    [self name];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self contentView];
+    [self name];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self setSource:objc_alloc_init];
+    objc_release(objc_alloc_init);
+    [UIFont systemFontOfSize:11 weight:0x200378];
+    [self source];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self source];
+    [ret setTextAlignment:1];
+    objc_release(ret);
+    [self source];
+    [ret layer];
+    [ret setCornerRadius:3];
+    objc_release(ret);
+    objc_release(ret);
+    [self source];
+    [ret layer];
+    [ret setMasksToBounds:1];
+    objc_release(ret);
+    objc_release(ret);
+    [self contentView];
+    [self source];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self setTime:objc_alloc_init];
+    objc_release(objc_alloc_init);
+    [UIFont systemFontOfSize:12];
+    [self time];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor secondaryLabelColor];
+    [self time];
+    [ret setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self contentView];
+    [self time];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+
+L_208a0:;
+    return (id)self;
 }
 
 // @0x208a4  types=v16@0:8
@@ -538,7 +602,30 @@
     // 00020a98  ldp     d9, d8, [sp, #0x20]
     // 00020a9c  ldp     d11, d10, [sp, #0x10]
     // 00020aa0  add     sp, sp, #0x70
-    // 00020aa4  ret     
+    // 00020aa4  ret
+    id ret = nil;
+
+    [super layoutSubviews];
+    [self contentView];
+    [ret bounds];
+    objc_release(ret);
+    [self source];
+    [ret sizeThatFits:0x7fefffffffffffff];
+    objc_release(ret);
+    [self name];
+    [ret setFrame:16];
+    objc_release(ret);
+    [self name];
+    [ret frame];
+    CGRectGetMaxX();
+    [self source];
+    [ret setFrame:0];
+    objc_release(ret);
+    objc_release(ret);
+    [self time];
+    [ret setFrame:16];
+    objc_release(ret);
+    return;
 }
 
 // @0x20aa8  types=@16@0:8
@@ -547,8 +634,10 @@
     // 00020aa8  adrp    x8, #0x246000
     // 00020aac  ldrsw   x8, [x8, #0x164]
     // 00020ab0  ldr     x0, [x0, x8]
-    // 00020ab4  ret     
-    return nil;
+    // 00020ab4  ret
+    id ret = nil;
+
+    return (id)self->_name;
 }
 
 // @0x20ab8  types=v24@0:8@16
@@ -567,8 +656,10 @@
     // 00020acc  adrp    x8, #0x246000
     // 00020ad0  ldrsw   x8, [x8, #0x168]
     // 00020ad4  ldr     x0, [x0, x8]
-    // 00020ad8  ret     
-    return nil;
+    // 00020ad8  ret
+    id ret = nil;
+
+    return (id)self->_source;
 }
 
 // @0x20adc  types=v24@0:8@16
@@ -587,8 +678,10 @@
     // 00020af0  adrp    x8, #0x246000
     // 00020af4  ldrsw   x8, [x8, #0x16c]
     // 00020af8  ldr     x0, [x0, x8]
-    // 00020afc  ret     
-    return nil;
+    // 00020afc  ret
+    id ret = nil;
+
+    return (id)self->_time;
 }
 
 // @0x20b00  types=v24@0:8@16

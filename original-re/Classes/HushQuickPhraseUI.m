@@ -275,7 +275,71 @@
     // 001280e4  ldp     x28, x27, [sp, #0x140]
     // 001280e8  ldp     d9, d8, [sp, #0x130]
     // 001280ec  add     sp, sp, #0x1a0
-    // 001280f0  ret     
+    // 001280f0  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    if (a0 == 0) goto L_1280ac;
+
+    objc_release(objc_loadWeakRetained);
+    if (cond /* eq */) goto L_127e24;
+
+    objc_release(self->/*+0x30*/);
+    objc_release(self->/*+0x38*/);
+    objc_release(self->/*+0x28*/);
+
+L_127e24:;
+    [self refreshGiftButton:a0];
+    [NSNumber numberWithDouble:0 /* unk */];
+    [NSNumber numberWithDouble:0 /* unk */];
+    [NSArray arrayWithObjects:-0x80 count:2];
+    objc_release(ret);
+    objc_release(ret);
+    objc_retain(ret);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_127fe0;
+
+L_127f48:;
+    if (cond /* eq */) goto L_127f60;
+
+L_127f60:;
+    [0 /* local *//*+0x0*/ doubleValue];
+    dispatch_time();
+    dispatch_after(0 /* unk */);
+    if (cond /* ne */) goto L_127f48;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_127f48;
+
+L_127fe0:;
+    objc_release(ret);
+    HushKeyValue(0x223f58);
+    [UIView class];
+    [ret isKindOfClass:[UIView class];];
+    if (ret == 0) goto L_128060;
+
+    [ret isHidden];
+    if (((ret >> 0) & 1) != 0) goto L_128060;
+
+    [ret setHidden:1];
+
+L_128060:;
+    NSSelectorFromString();
+    [0 /* local */ respondsToSelector:NSSelectorFromString];
+    if (0 /* local */ == 0) goto L_128094;
+
+    [0 /* local */ unknownSelector];
+
+L_128094:;
+    objc_release(ret);
+    objc_release(ret);
+
+L_1280ac:;
+    objc_release(0 /* local */);
+    objc_release(a0);
+
+    return;
 }
 
 // @0x128180  types=v24@0:8@16
@@ -468,6 +532,57 @@
     // 001283e0  ldp     x26, x25, [sp, #0x10]
     // 001283e4  add     sp, sp, #0x60
     // 001283e8  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    if (self->/*+0x28*/ != 0) goto L_1282b4;
+
+    [a0 currentImage];
+    [ret size];
+    if (cond /* le */) goto L_128228;
+
+    [ret size];
+    goto L_128228;
+
+L_128228:;
+    [UIImageSymbolConfiguration configurationWithPointSize:4 weight:0];
+    [UIImage systemImageNamed:0x2242f8 withConfiguration:ret];
+    [ret imageWithRenderingMode:2];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(self->/*+0x28*/);
+    objc_release(ret);
+    if (self->/*+0x28*/ == 0) goto L_1283e8;
+
+L_1282b4:;
+    [a0 currentImage];
+    if (cond /* eq */) goto L_1282fc;
+
+    objc_release(ret);
+    [self applyIconToGiftButton:a0];
+    goto L_128344;
+
+L_1282fc:;
+    [a0 currentBackgroundImage];
+    objc_release(ret);
+    objc_release(ret);
+    [self applyIconToGiftButton:a0];
+    if (ret == 0) goto L_1283e8;
+
+L_128344:;
+    [@0x244978 isEnabledForLevel:3];
+    if (self == 0) goto L_1283c8;
+
+    [a0 class];
+    NSStringFromClass();
+    [@0x244978 logLevel:3 format:0x223f98];
+    objc_release(ret);
+    goto L_1283e8;
+
+L_1283c8:;
+    [@0x244978 noteFiltered:3];
+
+L_1283e8:;
 }
 
 // @0x1283ec  types=v24@0:8@16
@@ -706,7 +821,68 @@
     // 001286f4  ldp     x26, x25, [sp, #0x100]
     // 001286f8  ldp     x28, x27, [sp, #0xf0]
     // 001286fc  add     sp, sp, #0x150
-    // 00128700  ret     
+    // 00128700  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    if (self->/*+0x30*/ != 0) goto L_128460;
+
+    [a0 currentImage];
+    objc_release(self->/*+0x30*/);
+
+L_128460:;
+    if (self->/*+0x38*/ != 0) goto L_1284a4;
+
+    [a0 currentBackgroundImage];
+    objc_release(self->/*+0x38*/);
+
+L_1284a4:;
+    [a0 setImage:self->/*+0x28*/ forState:0];
+    [a0 setImage:0 forState:1];
+    [a0 setImage:0 forState:4];
+    [a0 setImage:0 forState:2];
+    [a0 setBackgroundImage:0 forState:0];
+    [a0 setBackgroundImage:0 forState:1];
+    [a0 setBackgroundImage:0 forState:4];
+    [a0 setBackgroundImage:0 forState:2];
+    [a0 subviews];
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_128660;
+
+L_1285c8:;
+    if (cond /* eq */) goto L_1285e4;
+
+L_1285e4:;
+    [UIImageView class];
+    [0 /* local *//*+0x0*/ isKindOfClass:[UIImageView class];];
+    if (0 /* local *//*+0x0*/ == 0) goto L_128638;
+
+    [a0 imageView];
+    objc_release(ret);
+    if (cond /* eq */) goto L_128638;
+
+    [0 /* local *//*+0x0*/ setHidden:1];
+
+L_128638:;
+    if (cond /* ne */) goto L_1285c8;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_1285c8;
+
+L_128660:;
+    objc_release(ret);
+    [a0 tintColor];
+    objc_release(ret);
+    if (ret != 0) goto L_1286c8;
+
+    [UIColor labelColor];
+    [a0 setTintColor:ret];
+    objc_release(ret);
+
+L_1286c8:;
+    objc_release(a0);
+
+    return;
 }
 
 // @0x128708  types=v16@0:8
@@ -886,7 +1062,58 @@
     // 00128958  ldp     x26, x25, [sp, #0x100]
     // 0012895c  ldp     x28, x27, [sp, #0xf0]
     // 00128960  add     sp, sp, #0x150
-    // 00128964  ret     
+    // 00128964  ret
+    id ret = nil;
+
+    if (objc_loadWeakRetained == 0) goto L_12892c;
+
+    if (self->/*+0x28*/ == 0) goto L_12892c;
+
+    [objc_loadWeakRetained currentImage];
+    objc_release(ret);
+    if (cond /* ne */) goto L_12892c;
+
+    [objc_loadWeakRetained setImage:self->/*+0x30*/ forState:0];
+    [objc_loadWeakRetained setBackgroundImage:self->/*+0x38*/ forState:0];
+    [objc_loadWeakRetained subviews];
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_1288d4;
+
+L_12883c:;
+    if (cond /* eq */) goto L_128858;
+
+L_128858:;
+    [UIImageView class];
+    [0 /* local *//*+0x0*/ isKindOfClass:[UIImageView class];];
+    if (0 /* local *//*+0x0*/ == 0) goto L_1288ac;
+
+    [objc_loadWeakRetained imageView];
+    objc_release(ret);
+    if (cond /* eq */) goto L_1288ac;
+
+    [0 /* local *//*+0x0*/ setHidden:0];
+
+L_1288ac:;
+    if (cond /* ne */) goto L_12883c;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_12883c;
+
+L_1288d4:;
+    objc_release(ret);
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_128924;
+
+    [@0x244978 logLevel:3 format:0x223ff8];
+    goto L_12892c;
+
+L_128924:;
+    [[@0x244978 logLevel:3 format:0x223ff8]; noteFiltered:3];
+
+L_12892c:;
+    objc_release(objc_loadWeakRetained);
+
+    return;
 }
 
 // @0x12896c  types=@16@0:8
@@ -934,8 +1161,15 @@
     // 001289e4  mov     x0, x19
     // 001289e8  ldp     x29, x30, [sp, #0x10]
     // 001289ec  ldp     x20, x19, [sp], #0x20
-    // 001289f0  ret     
-    return nil;
+    // 001289f0  ret
+    id ret = nil;
+
+    HushKeyValue(0x224018);
+    objc_release(objc_loadWeakRetained);
+    [UITableView class];
+    [ret isKindOfClass:[UITableView class];];
+    objc_release(ret);
+    return (id)objc_loadWeakRetained;
 }
 
 // @0x1289f4  types=v24@0:8d16
@@ -960,7 +1194,10 @@
     // 00128a34  ldp     d9, d8, [sp, #0x20]
     // 00128a38  ldp     d11, d10, [sp, #0x10]
     // 00128a3c  ldp     d13, d12, [sp], #0x60
-    // 00128a40  ret     
+    // 00128a40  ret
+    id ret = nil;
+
+    return;
 }
 
 // @0x128b80  types=v40@0:8@16d24d32
@@ -1149,7 +1386,54 @@
     // 00128de4  ldp     d9, d8, [sp, #0x60]
     // 00128de8  ldp     d11, d10, [sp, #0x50]
     // 00128dec  add     sp, sp, #0xa0
-    // 00128df0  ret     
+    // 00128df0  ret
+    id ret = nil;
+
+    [a0 view];
+    if (ret == 0) goto L_128dd4;
+
+    if (self->/*+0x40*/ != 0) goto L_128c38;
+
+    [ret bounds];
+    [[@0x245418 alloc] initWithFrame:0];
+    objc_release(self->/*+0x40*/);
+
+L_128c38:;
+    [self->/*+0x40*/ superview];
+    objc_release(ret);
+    if (cond /* eq */) goto L_128c88;
+
+    [self->/*+0x40*/ removeFromSuperview];
+    [ret addSubview:self->/*+0x40*/];
+
+L_128c88:;
+    [ret bringSubviewToFront:self->/*+0x40*/];
+    [self->/*+0x40*/ setHidden:0];
+    sub_128df4();
+    if (0x4046000000000000 != 0) goto L_128d14;
+
+    [self->/*+0x48*/ isEqualToArray:ret];
+    if (((ret >> 0) & 1) != 0) goto L_128d14;
+
+    [ret copy];
+    objc_release(self->/*+0x48*/);
+    [self rebuildChips];
+
+L_128d14:;
+    [ret bounds];
+    if (cond /* le */) goto L_128dbc;
+
+    [UIView animateWithDuration:4 delay:objc_retainBlock options:0 animations:0 completion:0];
+    goto L_128dbc;
+
+L_128dbc:;
+    [self setInsetExtra:0x4046000000000000];
+    objc_release(objc_retainBlock);
+    objc_release(ret);
+
+L_128dd4:;
+    objc_release(ret);
+    return;
 }
 
 // @0x129054  types=v16@0:8
@@ -1232,7 +1516,32 @@
     // 00129144  str     xzr, [x19, #0x58]
     // 00129148  ldp     x29, x30, [sp, #0x10]
     // 0012914c  ldp     x20, x19, [sp], #0x20
-    // 00129150  ret     
+    // 00129150  ret
+    id ret = nil;
+
+    [self->/*+0x40*/ superview];
+    objc_release(ret);
+    if (ret == 0) goto L_1290a8;
+
+    [self->/*+0x40*/ removeFromSuperview];
+
+L_1290a8:;
+    [self->/*+0x40*/ setHidden:1];
+    HushInlineEditSetActive();
+    if (cond /* le */) goto L_129150;
+
+    if (objc_loadWeakRetained != 0) goto L_129118;
+
+    [self currentTable];
+    if (ret == 0) goto L_129150;
+
+L_129118:;
+    [ret contentInset];
+    [ret setContentInset:0];
+    objc_release(ret);
+
+L_129150:;
+    return;
 }
 
 // @0x129154  types=v64@0:8{CGRect={CGPoint=dd}{CGSize=dd}}16d48@56
@@ -1551,6 +1860,114 @@
     // 0012954c  ldrb    w8, [x20, #0x80]
     // 00129550  cbnz    w8, #0x129514
     // 00129554  b       #0x129488   ; sub_129488
+    id ret = nil;
+
+    objc_retain(a0);
+    [@0x244888 shared];
+    [ret isEnabled:0 /* unk */];
+    objc_release(ret);
+    if ((([ret isEnabled:0 /* unk */]; >> 0) & 1) == 0) goto L_129254;
+
+    objc_release(objc_loadWeakRetained);
+    if (cond /* eq */) goto L_129224;
+
+    [self hideBar];
+
+L_129224:;
+    HushKeyValue(0x224038);
+    if (ret == 0) goto L_129298;
+
+    goto L_1292a0;
+
+L_129254:;
+    [self restoreGiftButtonIfNeeded];
+    [self->/*+0x40*/ superview];
+    if (ret == 0) goto L_1294b8;
+
+    objc_release(ret);
+    goto L_1294c8;
+
+L_129298:;
+    objc_release(objc_loadWeakRetained);
+
+L_1292a0:;
+    objc_release(ret);
+    HushKeyValue(0x224058);
+    objc_release(objc_loadWeakRetained);
+    [UIButton class];
+    [ret isKindOfClass:[UIButton class];];
+    if (ret == 0) goto L_129344;
+
+    [self adoptGiftButton:ret keyboard:objc_loadWeakRetained];
+    objc_release(objc_loadWeakRetained);
+
+L_129344:;
+    [a0 view];
+    if (cond /* le */) goto L_129480;
+
+    CGRectGetMinY();
+    [ret bounds];
+    if (cond /* pl */) goto L_129480;
+
+    if (0 == 0) goto L_129550;
+
+    CGRectGetMinY();
+    HushKeyValue(0x224078);
+    [UIView class];
+    [ret isKindOfClass:[UIView class];];
+    if (ret == 0) goto L_12946c;
+
+    [ret superview];
+    if (ret == 0) goto L_12946c;
+
+    [ret isHidden];
+    objc_release(ret);
+    if ((([ret isHidden]; >> 0) & 1) != 0) goto L_12946c;
+
+    [ret frame];
+    CGRectGetMinY();
+
+L_12946c:;
+    [self refreshBarInVC:a0 top:0 duration:0];
+    objc_release(ret);
+    goto L_129518;
+
+L_129480:;
+    if (0 != 0) goto L_129518;
+
+L_129494:;
+    [self->/*+0x40*/ superview];
+    if (ret == 0) goto L_129500;
+
+    objc_release(ret);
+    goto L_129510;
+
+L_1294b8:;
+    if (cond /* le */) goto L_1294d4;
+
+L_1294c8:;
+    [self hideBar];
+
+L_1294d4:;
+    HushInlineEditSetActive();
+    goto L_129548;
+
+L_129500:;
+    if (cond /* le */) goto L_129518;
+
+L_129510:;
+    [self hideBar];
+
+L_129518:;
+    objc_release(ret);
+    objc_release(ret);
+
+L_129548:;
+
+L_129550:;
+    if (-1 != 0) goto L_129518;
+
+    goto L_129494;
 }
 
 // @0x129558  types=v32@0:8@16@24
@@ -1675,6 +2092,49 @@
     // 001296e4  ldp     x22, x21, [sp, #0x10]
     // 001296e8  add     sp, sp, #0x40
     // 001296ec  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a1);
+    if (a1 == 0) goto L_1295c0;
+
+    if (0 != 0) goto L_1295d0;
+
+    goto L_12964c;
+
+L_1295c0:;
+    if (0 == 0) goto L_12964c;
+
+L_1295d0:;
+    [self hideBar];
+    [@0x244978 isEnabledForLevel:4];
+    if ([@0x244978 isEnabledForLevel:4]; == 0) goto L_129620;
+
+    [@0x244978 logLevel:4 format:0x224098];
+    goto L_1296ec;
+
+L_129620:;
+    goto L_1296d4;
+
+L_12964c:;
+    [0 /* adrp */ keyboardFrame:objc_loadWeakRetained duration:0 inVC:0 /* unk */];
+    if (a1 != 0) goto L_129670;
+
+    objc_release(objc_loadWeakRetained);
+
+L_129670:;
+    [@0x244978 isEnabledForLevel:3];
+    if (objc_loadWeakRetained == 0) goto L_1296d4;
+
+    sub_128df4();
+    [ret count];
+    [@0x244978 logLevel:3 format:0x2240b8];
+    objc_release(ret);
+    goto L_1296ec;
+
+L_1296d4:;
+    [@0x244978 noteFiltered:3];
+
+L_1296ec:;
 }
 
 // @0x1296f0  types=v16@0:8
@@ -1910,7 +2370,66 @@
     // 001299dc  ldp     x26, x25, [sp, #0xf0]
     // 001299e0  ldp     x28, x27, [sp, #0xe0]
     // 001299e4  add     sp, sp, #0x140
-    // 001299e8  ret     
+    // 001299e8  ret
+    id ret = nil;
+
+    if (self->/*+0x40*/ == 0) goto L_1299c8;
+
+    [self->/*+0x40*/ stack];
+    [ret arrangedSubviews];
+    objc_release(ret);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_129840;
+
+L_1297c4:;
+    if (cond /* eq */) goto L_1297e0;
+
+L_1297e0:;
+    [self->/*+0x40*/ stack];
+    [ret removeArrangedSubview:0 /* local *//*+0x0*/];
+    objc_release(ret);
+    [0 /* local *//*+0x0*/ removeFromSuperview];
+    if (cond /* ne */) goto L_1297c4;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_1297c4;
+
+L_129840:;
+    objc_release(ret);
+    if (0 /* local *//*+0x0*/ == 0) goto L_129860;
+
+    [self addInlineEditorToStack];
+    goto L_1299c8;
+
+L_129860:;
+    sub_128df4();
+    [ret count];
+    if ([ret count]; == 0) goto L_129940;
+
+L_1298ac:;
+    [self->/*+0x40*/ stack];
+    [ret objectAtIndexedSubscript:0];
+    [self chipWithTitle:ret index:0];
+    [ret addArrangedSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [ret count];
+    if (cond /* lo */) goto L_1298ac;
+
+L_129940:;
+    [self->/*+0x40*/ stack];
+    [self addChip];
+    [ret addArrangedSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [ret copy];
+    objc_release(self->/*+0x48*/);
+    objc_release(ret);
+
+L_1299c8:;
+
+    return;
 }
 
 // @0x1299f0  types=@32@0:8@16Q24
@@ -2139,7 +2658,41 @@
     // 00129cb0  ldp     x22, x21, [sp, #0x10]
     // 00129cb4  ldp     x24, x23, [sp], #0x40
     // 00129cb8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    [UIButton buttonWithType:1];
+    [ret setTitle:a0 forState:0];
+    objc_release(a0);
+    [UIFont systemFontOfSize:14];
+    [ret titleLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor labelColor];
+    [ret setTitleColor:ret forState:0];
+    objc_release(ret);
+    [UIColor tertiarySystemBackgroundColor];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    [ret layer];
+    [ret setCornerRadius:15];
+    objc_release(ret);
+    [ret layer];
+    [ret setMasksToBounds:1];
+    objc_release(ret);
+    [ret setContentEdgeInsets:0];
+    [ret heightAnchor];
+    [ret constraintEqualToConstant:30];
+    [ret setActive:1];
+    objc_release(ret);
+    objc_release(ret);
+    [ret setTag:a1];
+    [ret addTarget:self action:sel_registerName("chipTapped:") forControlEvents:0x40];
+    [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];
+    [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]; setMinimumPressDuration:0 /* unk */];
+    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];];
+    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];);
 }
 
 // @0x129cbc  types=@16@0:8
@@ -2362,7 +2915,39 @@
     // 00129f68  ldp     x22, x21, [sp, #0x10]
     // 00129f6c  ldp     x24, x23, [sp], #0x40
     // 00129f70  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    [UIImageSymbolConfiguration configurationWithPointSize:5 weight:a1];
+    [UIButton buttonWithType:1];
+    [UIImage systemImageNamed:0x2240d8 withConfiguration:ret];
+    [ret imageWithRenderingMode:2];
+    [ret setImage:ret forState:0];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor labelColor];
+    [ret setTitleColor:ret forState:0];
+    objc_release(ret);
+    [UIColor labelColor];
+    [ret setTintColor:ret];
+    objc_release(ret);
+    [UIColor tertiarySystemBackgroundColor];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    [ret layer];
+    [ret setCornerRadius:15];
+    objc_release(ret);
+    [ret layer];
+    [ret setMasksToBounds:1];
+    objc_release(ret);
+    [ret setContentEdgeInsets:0];
+    [ret heightAnchor];
+    [ret constraintEqualToConstant:30];
+    [ret setActive:1];
+    objc_release(ret);
+    objc_release(ret);
+    [ret setTag:-1];
+    [ret addTarget:self action:sel_registerName("addChipTapped:") forControlEvents:0x40];
+    objc_release(ret);
 }
 
 // @0x129f74  types=v24@0:8@16
@@ -2723,6 +3308,139 @@
     // 0012a3e0  mov     w2, #1
     // 0012a3e4  bl      #0x1a72d8   ; _objc_msgSend
     // 0012a3e8  b       #0x12a364   ; sub_12a364
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 titleForState:0];
+    if (ret == 0) goto L_129fe4;
+
+    objc_retain(ret);
+    goto L_12a018;
+
+L_129fe4:;
+    [a0 titleLabel];
+    [ret text];
+    objc_release(ret);
+
+L_12a018:;
+    objc_release(ret);
+    objc_retain(ret);
+    objc_retain(objc_loadWeakRetained);
+    objc_retain(objc_loadWeakRetained);
+    [ret length];
+    if ([ret length]; == 0) goto L_12a370;
+
+    objc_retain(objc_loadWeakRetained);
+    if (objc_loadWeakRetained == 0) goto L_12a0b4;
+
+    [UIViewController class];
+    [objc_loadWeakRetained isKindOfClass:[UIViewController class];];
+    if (objc_loadWeakRetained == 0) goto L_12a0c4;
+
+    objc_retain(objc_loadWeakRetained);
+    goto L_12a208;
+
+L_12a0b4:;
+    goto L_12a208;
+
+L_12a0c4:;
+    HushKeyValue(0x2240f8);
+    [UIViewController class];
+    [ret isKindOfClass:[UIViewController class];];
+    if (ret == 0) goto L_12a110;
+
+    objc_retain(ret);
+    goto L_12a200;
+
+L_12a110:;
+    HushKeyValue(0x2240f8);
+    [UIViewController class];
+    [ret isKindOfClass:[UIViewController class];];
+    if (ret == 0) goto L_12a15c;
+
+    objc_retain(ret);
+    goto L_12a1f8;
+
+L_12a15c:;
+    [UIResponder class];
+    [objc_loadWeakRetained isKindOfClass:[UIResponder class];];
+    if (objc_loadWeakRetained == 0) goto L_12a1f8;
+
+    [objc_loadWeakRetained nextResponder];
+    if (ret == 0) goto L_12a1ec;
+
+L_12a1a8:;
+    [UIViewController class];
+    [ret isKindOfClass:[UIViewController class];];
+    if (((ret >> 0) & 1) != 0) goto L_12a1ec;
+
+    [ret nextResponder];
+    objc_release(ret);
+    if (ret != 0) goto L_12a1a8;
+
+L_12a1ec:;
+    goto L_12a1f8;
+
+L_12a1f8:;
+    objc_release(ret);
+
+L_12a200:;
+    objc_release(ret);
+
+L_12a208:;
+    objc_release(objc_loadWeakRetained);
+    objc_retain(ret);
+    objc_release(0);
+    NSSelectorFromString();
+    if (ret == 0) goto L_12a2d0;
+
+    [ret respondsToSelector:NSSelectorFromString];
+    if (ret == 0) goto L_12a2d0;
+
+    [@0x244978 isEnabledForLevel:3];
+    if (ret == 0) goto L_12a350;
+
+    [ret class];
+    NSStringFromClass();
+    [@0x244978 logLevel:3 format:0x224398];
+    objc_release(ret);
+    goto L_12a360;
+
+L_12a2d0:;
+    [@0x244978 isEnabledForLevel:1];
+    if (ret == 0) goto L_12a33c;
+
+    if (ret == 0) goto L_12a3e4;
+
+    [ret class];
+    NSStringFromClass();
+    [@0x244978 logLevel:1 format:0x2243b8];
+    objc_release(ret);
+    goto L_12a368;
+
+L_12a33c:;
+    goto L_12a360;
+
+L_12a350:;
+    [ret noteFiltered:3];
+
+L_12a360:;
+    [ret unknownSelector];
+
+L_12a368:;
+    objc_release(ret);
+
+L_12a370:;
+    objc_release(objc_loadWeakRetained);
+    objc_release(objc_loadWeakRetained);
+    objc_release(ret);
+    objc_release(objc_loadWeakRetained);
+    objc_release(objc_loadWeakRetained);
+    objc_release(ret);
+
+L_12a3e4:;
+    [0 /* unk */ logLevel:1 format:0x2243b8];
+    goto L_12a368;
 }
 
 // @0x12a3ec  types=v16@0:8
@@ -2815,6 +3533,30 @@
     // 0012a500  ldp     x20, x19, [sp, #0x10]
     // 0012a504  ldp     x22, x21, [sp], #0x30
     // 0012a508  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    [UIApplication sharedApplication];
+    [ret sendAction:sel_registerName("resignFirstResponder") to:0 from:0 forEvent:0];
+    objc_release(ret);
+    HushKeyValue(0x2240f8);
+    NSSelectorFromString();
+    [ret respondsToSelector:NSSelectorFromString];
+    if (ret == 0) goto L_12a4b4;
+
+    [ret unknownSelector];
+
+L_12a4b4:;
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_12a4ec;
+
+    [@0x244978 logLevel:3 format:0x224138];
+    goto L_12a4f4;
+
+L_12a4ec:;
+    [[@0x244978 logLevel:3 format:0x224138]; noteFiltered:3];
+
+L_12a4f4:;
+    objc_release(ret);
 }
 
 // @0x12a50c  types=v24@0:8q16
@@ -2867,7 +3609,15 @@
     // 0012a5a4  ldp     x29, x30, [sp, #0x40]
     // 0012a5a8  ldp     x20, x19, [sp, #0x30]
     // 0012a5ac  add     sp, sp, #0x50
-    // 0012a5b0  ret     
+    // 0012a5b0  ret
+    id ret = nil;
+
+    HushInlineEditSetActive(_cmd, a0, a1, a2, a3);
+    [self dismissChatKeyboard];
+    [self rebuildChips];
+    dispatch_time(0xaba);
+    dispatch_after(0 /* unk */);
+    return;
 }
 
 // @0x12a6fc  types=v16@0:8
@@ -2905,6 +3655,10 @@
     // 0012a758  ldp     x29, x30, [sp, #0x10]
     // 0012a75c  ldp     x20, x19, [sp], #0x20
     // 0012a760  b       #0x1a72d8   ; _objc_msgSend
+
+    [objc_loadWeakRetained resignFirstResponder];
+    objc_release(objc_loadWeakRetained);
+    HushInlineEditSetActive();
 }
 
 // @0x12a764  types=@40@0:8@16:24B32B36
@@ -3112,7 +3866,36 @@
     // 0012a9e8  ldp     x24, x23, [sp, #0x10]
     // 0012a9ec  ldp     x26, x25, [sp], #0x50
     // 0012a9f0  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    [UIButton buttonWithType:1];
+    [ret setTitle:a0 forState:0];
+    objc_release(a0);
+    [UIFont unknownSelector];
+    [ret titleLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [ret setTintColor:ret];
+    objc_release(ret);
+    [UIColor tertiarySystemBackgroundColor];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    [ret layer];
+    [ret setCornerRadius:15];
+    objc_release(ret);
+    [ret layer];
+    [ret setMasksToBounds:1];
+    objc_release(ret);
+    [ret setContentEdgeInsets:0];
+    [ret heightAnchor];
+    [ret constraintEqualToConstant:30];
+    [ret setActive:1];
+    objc_release(ret);
+    objc_release(ret);
+    [ret addTarget:self action:a1 forControlEvents:0x40];
 }
 
 // @0x12a9f4  types=v16@0:8
@@ -3418,6 +4201,61 @@
     // 0012adac  ldp     x28, x27, [sp, #0x10]
     // 0012adb0  add     sp, sp, #0x70
     // 0012adb4  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    sub_128df4(_cmd, a0, a1, a2, a3);
+    if (((self->/*+0x88*/ >> 63) & 1) != 0) goto L_12aa9c;
+
+    [ret count];
+    if (cond /* ge */) goto L_12aa9c;
+
+    [ret objectAtIndexedSubscript:self->/*+0x88*/];
+    goto L_12aa9c;
+
+L_12aa9c:;
+    [UIFont systemFontOfSize:14];
+    [objc_alloc_init setFont:ret];
+    objc_release(ret);
+    [objc_alloc_init setBorderStyle:3];
+    [objc_alloc_init setClearButtonMode:1];
+    [objc_alloc_init setReturnKeyType:9];
+    [objc_alloc_init setText:0x209f58];
+    [objc_alloc_init setPlaceholder:0x224178];
+    [objc_alloc_init widthAnchor];
+    [ret constraintEqualToConstant:0 /* unk */];
+    [ret setActive:1];
+    objc_release(ret);
+    objc_release(ret);
+    [objc_alloc_init heightAnchor];
+    [ret constraintEqualToConstant:30];
+    [ret setActive:1];
+    objc_release(ret);
+    objc_release(ret);
+    [objc_alloc_init addTarget:self action:sel_registerName("editorDone:") forControlEvents:0x80000];
+    [self editorButton:0x224198 sel:sel_registerName("editorCancelTapped:") bold:0 red:0];
+    [self editorButton:0x2241b8 sel:sel_registerName("editorSaveTapped:") bold:1 red:0];
+    [self->/*+0x40*/ stack];
+    [ret addArrangedSubview:objc_alloc_init];
+    objc_release(ret);
+    [self->/*+0x40*/ stack];
+    [ret addArrangedSubview:ret];
+    objc_release(ret);
+    if (((self->/*+0x88*/ >> 63) & 1) != 0) goto L_12ad50;
+
+    [self editorButton:0x2241d8 sel:sel_registerName("editorDeleteTapped:") bold:0 red:1];
+    [self->/*+0x40*/ stack];
+    [ret addArrangedSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+
+L_12ad50:;
+    [self->/*+0x40*/ stack];
+    [ret addArrangedSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(objc_alloc_init);
+    objc_release(0x209f58);
 }
 
 // @0x12adb8  types=v24@0:8@16
@@ -3624,6 +4462,57 @@
     // 0012b038  ldp     x26, x25, [sp, #0x20]
     // 0012b03c  add     sp, sp, #0x70
     // 0012b040  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    [objc_loadWeakRetained text];
+    [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    [ret stringByTrimmingCharactersInSet:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(objc_loadWeakRetained);
+    sub_128df4();
+    [ret mutableCopy];
+    objc_release(ret);
+    if (((self->/*+0x88*/ >> 63) & 1) != 0) goto L_12aee8;
+
+    [[ret mutableCopy]; count];
+    if (cond /* ge */) goto L_12af1c;
+
+    [ret length];
+    if ([ret length]; == 0) goto L_12af14;
+
+    [[ret mutableCopy]; setObject:ret atIndexedSubscript:self->/*+0x88*/];
+    goto L_12af1c;
+
+L_12aee8:;
+    [ret length];
+    if ([ret length]; == 0) goto L_12af1c;
+
+    goto L_12af14;
+
+L_12af14:;
+    [[ret mutableCopy]; removeObjectAtIndex:0];
+
+L_12af1c:;
+    objc_retain([ret mutableCopy];);
+    HushSharedDefaults();
+    [ret setObject:0 forKey:0x223f38];
+    objc_release([ret mutableCopy];);
+    objc_release(ret);
+    [@0x244978 isEnabledForLevel:3];
+    if (ret == 0) goto L_12b008;
+
+    [ret length];
+    [[ret mutableCopy]; count];
+    [@0x244978 logLevel:3 format:0x2241f8];
+    goto L_12b018;
+
+L_12b008:;
+    [@0x244978 noteFiltered:3];
+
+L_12b018:;
+    [self exitInlineEdit];
+    objc_release([ret mutableCopy];);
 }
 
 // @0x12b044  types=v24@0:8@16
@@ -3755,6 +4644,38 @@
     // 0012b1c8  ldp     x24, x23, [sp, #0x10]
     // 0012b1cc  add     sp, sp, #0x50
     // 0012b1d0  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    sub_128df4(_cmd, a0, a1, a2, a3);
+    [ret mutableCopy];
+    objc_release(ret);
+    if (((self->/*+0x88*/ >> 63) & 1) != 0) goto L_12b1b4;
+
+    [[ret mutableCopy]; count];
+    if (cond /* ge */) goto L_12b1b4;
+
+    [[ret mutableCopy]; objectAtIndexedSubscript:self->/*+0x88*/];
+    [[ret mutableCopy]; removeObjectAtIndex:self->/*+0x88*/];
+    objc_retain([ret mutableCopy];);
+    HushSharedDefaults();
+    [ret setObject:0 forKey:0x223f38];
+    objc_release([ret mutableCopy];);
+    objc_release(ret);
+    [@0x244978 isEnabledForLevel:3];
+    if (ret == 0) goto L_12b19c;
+
+    [[ret mutableCopy]; count];
+    [@0x244978 logLevel:3 format:0x224278];
+    goto L_12b1a4;
+
+L_12b19c:;
+    [@0x244978 noteFiltered:3];
+
+L_12b1a4:;
+    objc_release(ret);
+
+L_12b1b4:;
+    [self exitInlineEdit];
 }
 
 // @0x12b1d4  types=v24@0:8@16
@@ -3831,6 +4752,27 @@
     // 0012b2a0  ldp     x20, x19, [sp, #0x10]
     // 0012b2a4  ldp     x22, x21, [sp], #0x30
     // 0012b2a8  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 state];
+    if (cond /* ne */) goto L_12b2a8;
+
+    [a0 view];
+    [ret tag];
+    objc_release(ret);
+    sub_128df4();
+    if ((([ret tag]; >> 63) & 1) != 0) goto L_12b294;
+
+    [ret count];
+    if (cond /* ge */) goto L_12b294;
+
+    [self beginInlineEdit:[ret tag];];
+
+L_12b294:;
+    objc_release(ret);
+
+L_12b2a8:;
 }
 
 // @0x127d00  types=@16@0:8
@@ -3866,7 +4808,14 @@
     // 00127d60  mov     x0, x8
     // 00127d64  ldp     x29, x30, [sp], #0x10
     // 00127d68  b       #0x1a7284   ; _objc_release
-    return nil;
+
+    if (cond /* ne */) goto L_127d34;
+
+L_127d18:;
+
+L_127d34:;
+    dispatch_once(0x207eb8, a0, a1, a2, a3);
+    goto L_127d18;
 }
 
 @end

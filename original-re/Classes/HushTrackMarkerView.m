@@ -85,7 +85,24 @@
     // 00090208  ldp     x22, x21, [sp, #0x20]
     // 0009020c  ldp     d9, d8, [sp, #0x10]
     // 00090210  add     sp, sp, #0x50
-    // 00090214  ret     
+    // 00090214  ret
+    id ret = nil;
+
+    [super layoutSubviews];
+    [self hushCaption];
+    if (ret == 0) goto L_901fc;
+
+    [ret sizeThatFits:220];
+    [ret setBounds:0];
+    [self bounds];
+    CGRectGetMidX();
+    [self bounds];
+    CGRectGetMaxY();
+    [ret setCenter:0];
+
+L_901fc:;
+    objc_release(ret);
+    return;
 }
 
 // @0x90218  types=@16@0:8
@@ -94,8 +111,10 @@
     // 00090218  adrp    x8, #0x246000
     // 0009021c  ldrsw   x8, [x8, #0x220]
     // 00090220  ldr     x0, [x0, x8]
-    // 00090224  ret     
-    return nil;
+    // 00090224  ret
+    id ret = nil;
+
+    return (id)self->_hushCaption;
 }
 
 // @0x90228  types=v24@0:8@16

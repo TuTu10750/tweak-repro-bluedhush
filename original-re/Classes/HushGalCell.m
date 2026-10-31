@@ -417,8 +417,76 @@
     // 0007c194  ldp     x28, x27, [sp, #0x30]
     // 0007c198  ldp     d9, d8, [sp, #0x20]
     // 0007c19c  add     sp, sp, #0x90
-    // 0007c1a0  ret     
-    return nil;
+    // 0007c1a0  ret
+    id ret = nil;
+
+    [super initWithFrame:a0];
+    if (self == 0) goto L_7c1a0;
+
+    [self contentView];
+    [ret bounds];
+    [[UIImageView alloc] initWithFrame:0];
+    objc_release(self->_thumb);
+    objc_release(ret);
+    [self->_thumb setAutoresizingMask:0x12];
+    [self->_thumb setContentMode:2];
+    [self->_thumb setClipsToBounds:1];
+    HushIsDarkMode();
+    [UIColor colorWithWhite:0.96 alpha:1];
+    [self->_thumb setBackgroundColor:ret];
+    objc_release(ret);
+    [self contentView];
+    [ret addSubview:self->_thumb];
+    objc_release(ret);
+    [[UIImageView alloc] initWithFrame:0];
+    objc_release(self->_playBadge);
+    [UIImage systemImageNamed:@"play.circle.fill"];
+    [self->_playBadge setImage:ret];
+    objc_release(ret);
+    [UIColor colorWithWhite:1 alpha:0.92];
+    [self->_playBadge setTintColor:ret];
+    objc_release(ret);
+    [self contentView];
+    [ret bounds];
+    CGRectGetMidX();
+    [self contentView];
+    [ret bounds];
+    CGRectGetMidY();
+    [self->_playBadge setCenter:0];
+    objc_release(ret);
+    objc_release(ret);
+    [self->_playBadge setAutoresizingMask:0x2d];
+    [self contentView];
+    [ret addSubview:self->_playBadge];
+    objc_release(ret);
+    objc_release(self->_flashTag);
+    [self->_flashTag setText:@"闪照"];
+    [UIFont systemFontOfSize:10];
+    [self->_flashTag setFont:ret];
+    objc_release(ret);
+    [UIColor whiteColor];
+    [self->_flashTag setTextColor:ret];
+    objc_release(ret);
+    [UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    [self->_flashTag setBackgroundColor:ret];
+    objc_release(ret);
+    [self->_flashTag setTextAlignment:1];
+    [self->_flashTag layer];
+    [ret setCornerRadius:4];
+    objc_release(ret);
+    [self->_flashTag setClipsToBounds:1];
+    [self->_flashTag setHidden:1];
+    [self->_flashTag setUserInteractionEnabled:0];
+    [self->_flashTag sizeToFit];
+    [self->_flashTag bounds];
+    [self->_flashTag setFrame:4];
+    [self->_flashTag setAutoresizingMask:0x24];
+    [self contentView];
+    [ret addSubview:self->_flashTag];
+    objc_release(ret);
+
+L_7c1a0:;
+    return (id)self;
 }
 
 // @0x7c1a4  types=@16@0:8
@@ -427,8 +495,10 @@
     // 0007c1a4  adrp    x8, #0x246000
     // 0007c1a8  ldrsw   x8, [x8, #0x1b4]
     // 0007c1ac  ldr     x0, [x0, x8]
-    // 0007c1b0  ret     
-    return nil;
+    // 0007c1b0  ret
+    id ret = nil;
+
+    return (id)self->_thumb;
 }
 
 // @0x7c1b4  types=v24@0:8@16
@@ -447,8 +517,10 @@
     // 0007c1c8  adrp    x8, #0x246000
     // 0007c1cc  ldrsw   x8, [x8, #0x1b8]
     // 0007c1d0  ldr     x0, [x0, x8]
-    // 0007c1d4  ret     
-    return nil;
+    // 0007c1d4  ret
+    id ret = nil;
+
+    return (id)self->_playBadge;
 }
 
 // @0x7c1d8  types=v24@0:8@16
@@ -467,8 +539,10 @@
     // 0007c1ec  adrp    x8, #0x246000
     // 0007c1f0  ldrsw   x8, [x8, #0x1bc]
     // 0007c1f4  ldr     x0, [x0, x8]
-    // 0007c1f8  ret     
-    return nil;
+    // 0007c1f8  ret
+    id ret = nil;
+
+    return (id)self->_flashTag;
 }
 
 // @0x7c1fc  types=v24@0:8@16

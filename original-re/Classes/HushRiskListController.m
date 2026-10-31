@@ -527,6 +527,153 @@
     // 0002119c  ldr     x0, [x8, #0xd50]
     // 000211a0  adrp    x8, #0x235000
     // 000211a4  ldr     x1, [x8, #0x388]
+    id ret = nil;
+
+    [super viewDidLoad];
+    [UIColor clearColor];
+    [self view];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self view];
+    [ret bounds];
+    objc_release(ret);
+    [self view];
+    [ret bounds];
+    objc_release(ret);
+    [UIScreen mainScreen];
+    [ret traitCollection];
+    [ret userInterfaceStyle];
+    objc_release(ret);
+    objc_release(ret);
+    if (cond /* ne */) goto L_20d50;
+
+    [UIColor colorWithWhite:0.11 alpha:1];
+    [UIColor whiteColor];
+    goto L_20da8;
+
+L_20d50:;
+    [UIColor whiteColor];
+    [UIColor blackColor];
+
+L_20da8:;
+    [self view];
+    [ret bounds];
+    [[UIControl alloc] initWithFrame:0];
+    objc_release(ret);
+    [UIColor colorWithWhite:0 alpha:0.45];
+    [[[UIControl alloc] initWithFrame:0]; setBackgroundColor:ret];
+    objc_release(ret);
+    [[[UIControl alloc] initWithFrame:0]; setAutoresizingMask:0x12];
+    [[[UIControl alloc] initWithFrame:0]; addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    [self view];
+    [ret addSubview:[[UIControl alloc] initWithFrame:0];];
+    objc_release(ret);
+    [[UIView alloc] initWithFrame:0];
+    [self setCardView:[[UIView alloc] initWithFrame:0];];
+    objc_release([[UIView alloc] initWithFrame:0];);
+    [self cardView];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    [self cardView];
+    [ret layer];
+    [ret setCornerRadius:18];
+    objc_release(ret);
+    objc_release(ret);
+    [self cardView];
+    [ret layer];
+    [ret setMasksToBounds:1];
+    objc_release(ret);
+    objc_release(ret);
+    [self cardView];
+    [ret setAutoresizingMask:0x2d];
+    objc_release(ret);
+    [self view];
+    [self cardView];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [[UILabel alloc] initWithFrame:18];
+    [[[UILabel alloc] initWithFrame:18]; setText:@"风险用户名单"];
+    [UIFont systemFontOfSize:17 weight:0x200180];
+    [[[UILabel alloc] initWithFrame:18]; setFont:ret];
+    objc_release(ret);
+    [[[UILabel alloc] initWithFrame:18]; setTextColor:ret];
+    [self cardView];
+    [ret addSubview:[[UILabel alloc] initWithFrame:18];];
+    objc_release(ret);
+    [[UILabel alloc] initWithFrame:18];
+    [self setCountLabel:[[UILabel alloc] initWithFrame:18];];
+    objc_release([[UILabel alloc] initWithFrame:18];);
+    [UIFont systemFontOfSize:12];
+    [self countLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor secondaryLabelColor];
+    [self countLabel];
+    [ret setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self cardView];
+    [self countLabel];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [[UITableView alloc] initWithFrame:0 style:66];
+    [self setTable:[[UITableView alloc] initWithFrame:0 style:66];];
+    objc_release([[UITableView alloc] initWithFrame:0 style:66];);
+    [UIColor clearColor];
+    [self table];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self table];
+    [ret setSeparatorInset:0];
+    objc_release(ret);
+    [self table];
+    [ret setDataSource:self];
+    objc_release(ret);
+    [self table];
+    [ret setDelegate:self];
+    objc_release(ret);
+    [self table];
+    [ret setRowHeight:0x404e000000000000];
+    objc_release(ret);
+    [self table];
+    [@0x244a68 class];
+    [ret registerClass:[@0x244a68 class]; forCellReuseIdentifier:@"risk"];
+    objc_release(ret);
+    [self cardView];
+    [self table];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIButton buttonWithType:1];
+    [ret setFrame:14];
+    [UIColor colorWithWhite:0.95 alpha:1];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    [ret setTitle:@"关闭" forState:0];
+    [UIFont systemFontOfSize:16 weight:0x200378];
+    [ret titleLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [ret layer];
+    [ret setCornerRadius:12];
+    objc_release(ret);
+    [ret unknownSelector];
+    [self cardView];
+    [ret addSubview:ret];
+    objc_release(ret);
+    [self reload];
+    objc_release(ret);
+    objc_release([[UILabel alloc] initWithFrame:18];);
+    objc_release([[UIControl alloc] initWithFrame:0];);
+    objc_release(ret);
+    objc_release(0 /* local */);
+    return;
 }
 
 // @0x216a4  types=v16@0:8
@@ -658,6 +805,35 @@
     // 00021828  ldp     x24, x23, [sp, #0x10]
     // 0002182c  add     sp, sp, #0x50
     // 00021830  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    sub_1eb6c(_cmd, a0, a1, a2, a3);
+    [ret mutableCopy];
+    if ([ret mutableCopy]; != 0) goto L_21714;
+
+    [NSMutableArray array];
+
+L_21714:;
+    [ret mutableCopy];
+    [self setItems:[ret mutableCopy];];
+    objc_release([ret mutableCopy];);
+    if ([ret mutableCopy]; != 0) goto L_21748;
+
+    objc_release(ret);
+
+L_21748:;
+    objc_release([ret mutableCopy];);
+    objc_release(ret);
+    [self items];
+    [ret count];
+    [NSString stringWithFormat:@"共 %lu 人 · 左滑可取消标记"];
+    [self countLabel];
+    [ret setText:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self table];
+    [ret reloadData];
 }
 
 // @0x21834  types=v16@0:8
@@ -696,8 +872,13 @@
     // 00021884  mov     x0, x20
     // 00021888  ldp     x29, x30, [sp, #0x10]
     // 0002188c  ldp     x20, x19, [sp], #0x20
-    // 00021890  ret     
-    return (long long)0;
+    // 00021890  ret
+    id ret = nil;
+
+    [self items];
+    [ret count];
+    objc_release(ret);
+    return (long long)[ret count];;
 }
 
 // @0x21894  types=@32@0:8@16@24
@@ -1100,7 +1281,75 @@
     // 00021d6c  ldp     d9, d8, [sp, #0x10]
     // 00021d70  add     sp, sp, #0x80
     // 00021d74  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a1);
+    [a0 dequeueReusableCellWithIdentifier:@"risk" forIndexPath:a1];
+    [self items];
+    [a1 row];
+    objc_release(a1);
+    [ret objectAtIndexedSubscript:[a1 row];];
+    objc_release(ret);
+    [ret objectForKeyedSubscript:@"uid"];
+    HushSafeStrOrNil();
+    objc_release(ret);
+    [ret objectForKeyedSubscript:@"name"];
+    HushSafeStrOrNil();
+    objc_release(ret);
+    [ret length];
+    if ([ret length]; != 0) goto L_21a34;
+
+    [NSString stringWithFormat:@"用户 %@"];
+
+L_21a34:;
+    [ret name];
+    [ret setText:ret];
+    objc_release(ret);
+    if ([ret length]; != 0) goto L_21a7c;
+
+    objc_release(ret);
+
+L_21a7c:;
+    [ret objectForKeyedSubscript:@"source"];
+    HushSafeStrOrNil();
+    objc_retain(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [ret source];
+    [ret setText:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor colorWithRed:1 green:0.23 blue:0.19 alpha:1];
+    [ret source];
+    [ret setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [ret source];
+    [ret textColor];
+    [ret colorWithAlphaComponent:0.0941176471];
+    [ret source];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [ret objectForKeyedSubscript:@"time"];
+    [ret doubleValue];
+    objc_release(ret);
+    [objc_alloc_init setDateFormat:@"MM-dd HH:mm"];
+    [NSDate dateWithTimeIntervalSince1970:0];
+    [objc_alloc_init stringFromDate:ret];
+    [NSString stringWithFormat:@"UID %@ · %@ 标记"];
+    [ret time];
+    [ret setText:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(objc_alloc_init);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
 }
 
 // @0x21d78  types=@32@0:8@16@24
@@ -1380,7 +1629,55 @@
     // 000220f4  ldp     x29, x30, [sp, #0x10]
     // 000220f8  ldp     x20, x19, [sp], #0x20
     // 000220fc  b       #0x1a7284   ; _objc_release
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    objc_retain(a1);
+    [UIContextualAction contextualActionWithStyle:1 title:@"取消标记" handler:0];
+    [UIColor systemRedColor];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    [NSArray arrayWithObjects:0 count:1];
+    [UISwipeActionsConfiguration configurationWithActions:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(a1);
+    objc_release(a1);
+    objc_release(a0);
+    if (cond /* ne */) goto L_21f40;
+
+L_21f40:;
+    stack_chk_fail();
+    goto L_21f60;
+
+L_21f60:;
+    Unwind_Resume();
+    objc_retain(0);
+    if (objc_loadWeakRetained == 0) goto L_2208c;
+
+    [objc_loadWeakRetained items];
+    [Unwind_Resume/*+0x20*/ row];
+    [ret objectAtIndexedSubscript:[Unwind_Resume/*+0x20*/ row];];
+    objc_release(ret);
+    [ret objectForKeyedSubscript:@"uid"];
+    HushSafeStrOrNil();
+    objc_release(ret);
+    [ret length];
+    if ([ret length]; == 0) goto L_22050;
+
+    HushRiskUserUnmark();
+
+L_22050:;
+    [objc_loadWeakRetained reload];
+    objc_release(ret);
+    objc_release(ret);
+    goto L_2208c;
+
+L_2208c:;
+    objc_release(objc_loadWeakRetained);
+
+    objc_retain(0/*+0x20*/);
 }
 
 // @0x22100  types=@16@0:8
@@ -1389,8 +1686,10 @@
     // 00022100  adrp    x8, #0x246000
     // 00022104  ldrsw   x8, [x8, #0x170]
     // 00022108  ldr     x0, [x0, x8]
-    // 0002210c  ret     
-    return nil;
+    // 0002210c  ret
+    id ret = nil;
+
+    return (id)self->_cardView;
 }
 
 // @0x22110  types=v24@0:8@16
@@ -1409,8 +1708,10 @@
     // 00022148  adrp    x8, #0x246000
     // 0002214c  ldrsw   x8, [x8, #0x178]
     // 00022150  ldr     x0, [x0, x8]
-    // 00022154  ret     
-    return nil;
+    // 00022154  ret
+    id ret = nil;
+
+    return (id)self->_countLabel;
 }
 
 // @0x22158  types=v24@0:8@16
@@ -1429,8 +1730,10 @@
     // 0002216c  adrp    x8, #0x246000
     // 00022170  ldrsw   x8, [x8, #0x17c]
     // 00022174  ldr     x0, [x0, x8]
-    // 00022178  ret     
-    return nil;
+    // 00022178  ret
+    id ret = nil;
+
+    return (id)self->_items;
 }
 
 // @0x2217c  types=v24@0:8@16

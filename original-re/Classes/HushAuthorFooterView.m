@@ -381,7 +381,67 @@
     // 0019d40c  ldp     x26, x25, [sp, #0x50]
     // 0019d410  ldp     x28, x27, [sp, #0x40]
     // 0019d414  add     sp, sp, #0xa0
-    // 0019d418  ret     
+    // 0019d418  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    if (super == 0) goto L_19d3f4;
+
+    [[NSObject alloc] unknownSelector];
+    objc_release(super/*+0x0*/);
+    [super/*+0x0*/ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [super/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    [super/*+0x0*/ unknownSelector];
+    [super/*+0x0*/ unknownSelector];
+    [super/*+0x0*/ unknownSelector];
+    [super/*+0x0*/ unknownSelector];
+    [super/*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super/*+0x0*/ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super/*+0x0*/ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(super/*+0x0*/);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [super/*+0x0*/ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(super/*+0x0*/);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [super/*+0x0*/ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [super/*+0x0*/ unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+
+L_19d3f4:;
+
     return nil;
 }
 
@@ -599,7 +659,68 @@
     // 0019d6d0  ldp     x24, x23, [sp, #0x30]
     // 0019d6d4  ldp     d9, d8, [sp, #0x20]
     // 0019d6d8  add     sp, sp, #0x70
-    // 0019d6dc  ret     
+    // 0019d6dc  ret
+    id ret = nil;
+
+    objc_retain(a1);
+    sub_19d6e4();
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    if (a1 != 0) goto L_19d4f4;
+
+    [0 /* unk */ unknownSelector];
+
+L_19d4f4:;
+    [0 /* unk */ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    if (a1 != 0) goto L_19d548;
+
+    objc_release(ret);
+
+L_19d548:;
+    [self->/*+0x0*/ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_retain(self);
+    NSSelectorFromString();
+    [self unknownSelector];
+    if (self == 0) goto L_19d6a0;
+
+    [self unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    if (ret == 0) goto L_19d698;
+
+    objc_retain(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if ([ret unknownSelector]; == 0) goto L_19d690;
+
+    [@0x244978 unknownSelector];
+    if ([@0x244978 unknownSelector]; == 0) goto L_19d660;
+
+    [@0x244978 unknownSelector];
+    goto L_19d674;
+
+L_19d660:;
+    [[@0x244978 unknownSelector]; unknownSelector];
+
+L_19d674:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+
+L_19d690:;
+    objc_release(ret);
+
+L_19d698:;
+    objc_release(ret);
+
+L_19d6a0:;
+    objc_release(self);
+    objc_release(a1);
+
+    return;
 }
 
 // @0x19d8d4  types=B56@0:8@16@24{_NSRange=QQ}32q48
@@ -692,8 +813,36 @@
     // 0019d9ec  ldp     x20, x19, [sp, #0x20]
     // 0019d9f0  ldp     x22, x21, [sp, #0x10]
     // 0019d9f4  add     sp, sp, #0x40
-    // 0019d9f8  ret     
-    return (BOOL)0;
+    // 0019d9f8  ret
+    id ret = nil;
+
+    objc_retain(a1);
+    if (a4 != 0) goto L_19d9e0;
+
+    [@0x244978 unknownSelector];
+    if (a1 == 0) goto L_19d974;
+
+    [a1 unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    goto L_19d988;
+
+L_19d974:;
+    [@0x244978 unknownSelector];
+
+L_19d988:;
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    if ([@0x244978 class] == 0) goto L_19d9d8;
+
+    [ret unknownSelector];
+
+L_19d9d8:;
+    objc_release(ret);
+
+L_19d9e0:;
+    objc_release(a1);
+    return 0;
 }
 
 @end

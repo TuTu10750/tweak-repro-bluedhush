@@ -57,7 +57,18 @@
     // 0019c84c  ldp     x29, x30, [sp, #0x20]
     // 0019c850  ldp     x20, x19, [sp, #0x10]
     // 0019c854  add     sp, sp, #0x30
-    // 0019c858  ret     
+    // 0019c858  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    if (super == 0) goto L_19c858;
+
+    objc_release(super/*+0x0*/);
+    [super/*+0x0*/ unknownSelector];
+    [super unknownSelector];
+    [super unknownSelector];
+
+L_19c858:;
     return nil;
 }
 
@@ -345,6 +356,84 @@
     // 0019cbe0  ldp     x28, x27, [sp, #0x10]
     // 0019cbe4  add     sp, sp, #0x70
     // 0019cbe8  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a1);
+    objc_retain(a2);
+    objc_retain(a0);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(a0);
+    [a2 unknownSelector];
+    if ([a2 unknownSelector]; == 0) goto L_19c950;
+
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    goto L_19c958;
+
+L_19c950:;
+    [ret unknownSelector];
+
+L_19c958:;
+    HushEffectTint();
+    if (ret != 0) goto L_19c998;
+
+    [self unknownSelector];
+
+L_19c998:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (ret != 0) goto L_19c9d0;
+
+    objc_release(ret);
+
+L_19c9d0:;
+    objc_release(ret);
+    if (cond /* hi */) goto L_19ca00;
+
+    goto L_19ca00;
+
+L_19ca00:;
+    [a1 unknownSelector];
+    if ([a1 unknownSelector]; == 0) goto L_19ca64;
+
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    goto L_19ca74;
+
+L_19ca64:;
+    [ret unknownSelector];
+
+L_19ca74:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    HushApplyHostStyleToContent(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    if (ret == 0) goto L_19cb24;
+
+    [self unknownSelector];
+    goto L_19cb54;
+
+L_19cb24:;
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    objc_release(ret);
+
+L_19cb54:;
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(a2);
 }
 
 // @0x19cbec  types=v16@0:8
@@ -404,7 +493,20 @@
     // 0019cc90  ldp     x29, x30, [sp, #0x20]
     // 0019cc94  ldp     x20, x19, [sp, #0x10]
     // 0019cc98  ldp     x22, x21, [sp], #0x30
-    // 0019cc9c  ret     
+    // 0019cc9c  ret
+    id ret = nil;
+
+    [self unknownSelector];
+    objc_release(ret);
+    if (ret == 0) goto L_19cc9c;
+
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_19cc9c:;
+    return;
 }
 
 // @0x19cca0  types=@16@0:8
@@ -413,8 +515,10 @@
     // 0019cca0  nop     
     // 0019cca4  ldrsw   x8, #0x246634
     // 0019cca8  ldr     x0, [x0, x8]
-    // 0019ccac  ret     
-    return nil;
+    // 0019ccac  ret
+    id ret = nil;
+
+    return (id)self->/*+0x0*/;
 }
 
 // @0x19ccb0  types=v24@0:8@16
@@ -433,8 +537,10 @@
     // 0019ccc4  nop     
     // 0019ccc8  ldrsw   x8, #0x246638
     // 0019cccc  ldr     x0, [x0, x8]
-    // 0019ccd0  ret     
-    return (id /* ^block */)0;
+    // 0019ccd0  ret
+    id ret = nil;
+
+    return (id /* ^block */)self->/*+0x0*/;
 }
 
 // @0x19ccd4  types=v24@0:8@?16

@@ -252,8 +252,50 @@
     // 0006766c  ldp     x22, x21, [sp, #0x20]
     // 00067670  ldp     x24, x23, [sp, #0x10]
     // 00067674  add     sp, sp, #0x50
-    // 00067678  ret     
-    return nil;
+    // 00067678  ret
+    id ret = nil;
+
+    [super initWithFrame:a0];
+    if (self == 0) goto L_67678;
+
+    [UIColor clearColor];
+    [self setBackgroundColor:ret];
+    objc_release(ret);
+    [self setUserInteractionEnabled:1];
+    [self bounds];
+    [[UIImageView alloc] initWithFrame:0];
+    objc_release(self->_iconView);
+    [self->_iconView setContentMode:1];
+    [self->_iconView setUserInteractionEnabled:0];
+    [UIColor blackColor];
+    [objc_retainAutorelease CGColor];
+    [self->_iconView layer];
+    [ret setShadowColor:[objc_retainAutorelease CGColor];];
+    objc_release(ret);
+    objc_release(ret);
+    [self->_iconView layer];
+    [ret setShadowOpacity:0];
+    objc_release(ret);
+    [self->_iconView layer];
+    [ret setShadowRadius:4];
+    objc_release(ret);
+    [self->_iconView layer];
+    [ret setShadowOffset:0];
+    objc_release(ret);
+    [self addSubview:self->_iconView];
+    [self refreshIcon];
+    [NSNotificationCenter defaultCenter];
+    [ret addObserver:self selector:sel_registerName("refreshIcon") name:0 /* func */ object:0];
+    objc_release(ret);
+    [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
+    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];];
+    [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];
+    [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];];
+    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];);
+    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];);
+
+L_67678:;
+    return (id)self;
 }
 
 // @0x6767c  types=v16@0:8
@@ -294,7 +336,14 @@
     // 000676e4  ldp     x29, x30, [sp, #0x20]
     // 000676e8  ldp     x20, x19, [sp, #0x10]
     // 000676ec  add     sp, sp, #0x30
-    // 000676f0  ret     
+    // 000676f0  ret
+    id ret = nil;
+
+    [NSNotificationCenter defaultCenter];
+    [ret removeObserver:self];
+    objc_release(ret);
+    [super dealloc];
+    return;
 }
 
 // @0x676f4  types=v16@0:8
@@ -342,6 +391,14 @@
     // 0006776c  ldp     x29, x30, [sp, #0x10]
     // 00067770  ldp     x20, x19, [sp], #0x20
     // 00067774  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    HushBallIconCurrentStyle(_cmd, a0, a1, a2, a3);
+    [self bounds];
+    HushBallIconImage();
+    [self iconView];
+    [ret setImage:ret];
+    objc_release(ret);
 }
 
 // @0x67778  types=v16@0:8
@@ -501,6 +558,32 @@
     // 00067968  ldp     d9, d8, [sp, #0x10]
     // 0006796c  ldp     d11, d10, [sp], #0x60
     // 00067970  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    [self superview];
+    if (ret == 0) goto L_67950;
+
+    [a0 translationInView:ret];
+    [self center];
+    [self bounds];
+    [self bounds];
+    [ret bounds];
+    [ret bounds];
+    [self setCenter:0];
+    [a0 setTranslation:ret inView:0];
+    [a0 state];
+    if (cond /* ne */) goto L_67950;
+
+    [@0x244888 shared];
+    [self center];
+    NSStringFromCGPoint();
+    [ret setString:ret forKey:0 /* func */];
+    objc_release(ret);
+    objc_release(ret);
+
+L_67950:;
+    objc_release(ret);
 }
 
 // @0x67974  types=@16@0:8
@@ -509,8 +592,10 @@
     // 00067974  adrp    x8, #0x246000
     // 00067978  ldrsw   x8, [x8, #0x180]
     // 0006797c  ldr     x0, [x0, x8]
-    // 00067980  ret     
-    return nil;
+    // 00067980  ret
+    id ret = nil;
+
+    return (id)self->_iconView;
 }
 
 // @0x67984  types=v24@0:8@16

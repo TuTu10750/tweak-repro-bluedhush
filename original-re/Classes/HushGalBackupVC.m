@@ -514,6 +514,91 @@
     // 000892f4  ldp     x20, x19, [sp, #0x60]
     // 000892f8  ldp     x22, x21, [sp, #0x50]
     // 000892fc  ldp     x24, x23, [sp, #0x40]
+    id ret = nil;
+
+    [super viewDidLoad];
+    [self setTitle:@"管理相册备份"];
+    [UIColor systemGroupedBackgroundColor];
+    [self view];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];
+    [self navigationItem];
+    [ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];];
+    objc_release(ret);
+    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];);
+    [[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];
+    [UIColor systemRedColor];
+    [[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]; setTintColor:ret];
+    objc_release(ret);
+    [self navigationItem];
+    [ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];];
+    objc_release(ret);
+    [self view];
+    [ret bounds];
+    [[UITableView alloc] initWithFrame:2 style:0];
+    [self setTable:[[UITableView alloc] initWithFrame:2 style:0];];
+    objc_release([[UITableView alloc] initWithFrame:2 style:0];);
+    objc_release(ret);
+    [self table];
+    [ret setAutoresizingMask:0x12];
+    objc_release(ret);
+    [self table];
+    [ret setDataSource:self];
+    objc_release(ret);
+    [self table];
+    [ret setDelegate:self];
+    objc_release(ret);
+    [self table];
+    [ret setRowHeight:0x404b000000000000];
+    objc_release(ret);
+    [self table];
+    [@0x244ec8 class];
+    [ret registerClass:[@0x244ec8 class]; forCellReuseIdentifier:@"hushGalBackup"];
+    objc_release(ret);
+    [self view];
+    [self table];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];
+    [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]; setMinimumPressDuration:0.4];
+    [self table];
+    [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];];
+    objc_release(ret);
+    [self view];
+    [ret bounds];
+    [[UIView alloc] initWithFrame:0];
+    objc_release(ret);
+    [[[UIView alloc] initWithFrame:0]; bounds];
+    CGRectInset();
+    [[UILabel alloc] initWithFrame:0];
+    [[[UILabel alloc] initWithFrame:0]; setAutoresizingMask:2];
+    [[[UILabel alloc] initWithFrame:0]; setText:@"点击导入 · 长按分享 · 左滑删除；从「文件」App 也能导入备份。只删备份文件，相册照片不受影响。"];
+    [[[UILabel alloc] initWithFrame:0]; setNumberOfLines:0];
+    [UIFont systemFontOfSize:12];
+    [[[UILabel alloc] initWithFrame:0]; setFont:ret];
+    objc_release(ret);
+    [UIColor secondaryLabelColor];
+    [[[UILabel alloc] initWithFrame:0]; setTextColor:ret];
+    objc_release(ret);
+    [[[UILabel alloc] initWithFrame:0]; setTextAlignment:1];
+    [[[UIView alloc] initWithFrame:0]; addSubview:[[UILabel alloc] initWithFrame:0];];
+    [self table];
+    [ret setTableFooterView:[[UIView alloc] initWithFrame:0];];
+    objc_release(ret);
+    sub_882b8();
+    [ret mutableCopy];
+    [self setItems:[ret mutableCopy];];
+    objc_release([ret mutableCopy];);
+    objc_release(ret);
+    [self refreshTable];
+    objc_release([[UILabel alloc] initWithFrame:0];);
+    objc_release([[UIView alloc] initWithFrame:0];);
+    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];);
+    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];);
+    return;
 }
 
 // @0x89310  types=@24@0:8q16
@@ -576,7 +661,24 @@
     // 000893c0  ldp     x22, x21, [sp, #0x10]
     // 000893c4  ldp     x24, x23, [sp], #0x40
     // 000893c8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    if (cond /* lt */) goto L_89374;
+
+    [self items];
+    [ret count];
+    objc_release(ret);
+    if (cond /* ge */) goto L_89380;
+
+L_89374:;
+    goto L_893c8;
+
+L_89380:;
+    [self items];
+    [ret objectAtIndexedSubscript:0];
+    objc_release(ret);
+
+L_893c8:;
 }
 
 // @0x893cc  types=v16@0:8
@@ -741,6 +843,39 @@
     // 000895b8  ldp     x20, x19, [sp, #0x10]
     // 000895bc  ldp     x22, x21, [sp], #0x30
     // 000895c0  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    [self table];
+    [ret reloadData];
+    objc_release(ret);
+    [self items];
+    [ret count];
+    objc_release(ret);
+    if ([ret count]; == 0) goto L_8948c;
+
+    [self table];
+    [ret setBackgroundView:0];
+    goto L_895c0;
+
+L_8948c:;
+    [self table];
+    [ret bounds];
+    [[UILabel alloc] initWithFrame:0];
+    objc_release(ret);
+    [[[UILabel alloc] initWithFrame:0]; setText:@"没有本地备份文件\n可从上面的「从「文件」App 选择备份…」导入"];
+    [[[UILabel alloc] initWithFrame:0]; setNumberOfLines:0];
+    [[[UILabel alloc] initWithFrame:0]; setTextAlignment:1];
+    [UIColor secondaryLabelColor];
+    [[[UILabel alloc] initWithFrame:0]; setTextColor:ret];
+    objc_release(ret);
+    [UIFont systemFontOfSize:14];
+    [[[UILabel alloc] initWithFrame:0]; setFont:ret];
+    objc_release(ret);
+    [self table];
+    [ret setBackgroundView:[[UILabel alloc] initWithFrame:0];];
+    objc_release(ret);
+
+L_895c0:;
 }
 
 // @0x895c4  types=v16@0:8
@@ -782,6 +917,13 @@
     // 0008962c  ldp     x20, x19, [sp, #0x10]
     // 00089630  ldp     x22, x21, [sp], #0x30
     // 00089634  b       #0x1a72d8   ; _objc_msgSend
+    id ret = nil;
+
+    sub_882b8(_cmd, a0, a1, a2, a3);
+    [ret mutableCopy];
+    [self setItems:[ret mutableCopy];];
+    objc_release([ret mutableCopy];);
+    objc_release(ret);
 }
 
 // @0x89638  types=v16@0:8
@@ -820,8 +962,13 @@
     // 00089688  add     x0, x20, #1
     // 0008968c  ldp     x29, x30, [sp, #0x10]
     // 00089690  ldp     x20, x19, [sp], #0x20
-    // 00089694  ret     
-    return (long long)0;
+    // 00089694  ret
+    id ret = nil;
+
+    [self items];
+    [ret count];
+    objc_release(ret);
+    return (long long)1;
 }
 
 // @0x89698  types=@32@0:8@16@24
@@ -1157,7 +1304,72 @@
     // 00089aac  ldp     x28, x27, [sp, #0x10]
     // 00089ab0  add     sp, sp, #0x70
     // 00089ab4  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a1);
+    objc_retain(a0);
+    [a1 row];
+    if ([a1 row]; == 0) goto L_898ec;
+
+    [a0 dequeueReusableCellWithIdentifier:@"hushGalBackup" forIndexPath:a1];
+    objc_release(a0);
+    [a1 row];
+    [self itemAtRow:[a1 row];];
+    if (ret == 0) goto L_89a20;
+
+    [ret objectForKeyedSubscript:@"name"];
+    [ret name];
+    [ret setText:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [objc_alloc_init setDateFormat:@"MM-dd HH:mm"];
+    [ret objectForKeyedSubscript:@"mtime"];
+    [objc_alloc_init stringFromDate:ret];
+    [ret objectForKeyedSubscript:@"size"];
+    [ret doubleValue];
+    [NSString stringWithFormat:@"%@ · %.1f MB"];
+    [ret meta];
+    [ret setText:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    goto L_89a80;
+
+L_898ec:;
+    [ret dequeueReusableCellWithIdentifier:@"hushGalPickRow"];
+    objc_release(ret);
+    if (ret != 0) goto L_89a90;
+
+    [[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; textLabel];
+    [ret setText:@"从「文件」App 选择备份…"];
+    objc_release(ret);
+    [UIColor systemBlueColor];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; textLabel];
+    [ret setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIImage systemImageNamed:@"square.and.arrow.down.on.square"];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; imageView];
+    goto L_89a78;
+
+L_89a20:;
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; name];
+    [ret setText:0x209f58];
+    objc_release(ret);
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; meta];
+
+L_89a78:;
+    [ret setText:0x209f58];
+
+L_89a80:;
+    objc_release(ret);
+    objc_release(ret);
+
+L_89a90:;
+    objc_release(a1);
 }
 
 // @0x89ab8  types=v32@0:8@16@24
@@ -1387,7 +1599,49 @@
     // 00089d8c  ldp     x26, x25, [sp, #0x60]
     // 00089d90  ldp     x28, x27, [sp, #0x50]
     // 00089d94  add     sp, sp, #0xb0
-    // 00089d98  ret     
+    // 00089d98  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    [a0 deselectRowAtIndexPath:a1 animated:1];
+    [a1 row];
+    if ([a1 row]; == 0) goto L_89d54;
+
+    [a1 row];
+    [self itemAtRow:[a1 row];];
+    if (ret == 0) goto L_89d44;
+
+    [ret objectForKeyedSubscript:@"name"];
+    [ret objectForKeyedSubscript:@"path"];
+    [NSString stringWithFormat:@"%@\n按「合并」导入：同名文件跳过，不覆盖现有照片。"];
+    [UIAlertController alertControllerWithTitle:@"导入这份备份？" message:ret preferredStyle:1];
+    objc_release(ret);
+    [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    objc_retain(ret);
+    [UIAlertAction actionWithTitle:@"导入" style:0 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    [self presentViewController:ret animated:1 completion:0];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+
+L_89d44:;
+    objc_release(ret);
+    goto L_89d70;
+
+L_89d54:;
+    dispatch_time(0x17d7);
+    dispatch_after(0x200010, 0x2066e0);
+
+L_89d70:;
+    objc_release(a1);
+    objc_release(a0);
+    return;
 }
 
 // @0x89e58  types=v24@0:8@16
@@ -1721,7 +1975,86 @@
     // 0008a278  ldp     d9, d8, [sp, #0x30]
     // 0008a27c  ldp     d11, d10, [sp, #0x20]
     // 0008a280  add     sp, sp, #0xa0
-    // 0008a284  ret     
+    // 0008a284  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 state];
+    if (cond /* ne */) goto L_8a244;
+
+    [self table];
+    [a0 locationInView:ret];
+    objc_release(ret);
+    [self table];
+    [ret indexPathForRowAtPoint:0];
+    objc_release(ret);
+    if (ret == 0) goto L_8a23c;
+
+    [ret row];
+    [self itemAtRow:[ret row];];
+    if (ret == 0) goto L_8a234;
+
+    [ret objectForKeyedSubscript:@"path"];
+    [ret length];
+    if ([ret length]; == 0) goto L_8a22c;
+
+    [@0x244978 isEnabledForLevel:3];
+    if (ret == 0) goto L_8a028;
+
+    [ret objectForKeyedSubscript:@"name"];
+    [@0x244978 logLevel:3 format:@"[Gallery][迁移] 长按分享备份：%@"];
+    objc_release(ret);
+    goto L_8a054;
+
+L_8a028:;
+    [@0x244978 noteFiltered:3];
+
+L_8a054:;
+    [NSURL fileURLWithPath:ret];
+    [NSArray arrayWithObjects:0 count:1];
+    [[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0];
+    objc_release(ret);
+    objc_release(ret);
+    [self view];
+    [[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]; popoverPresentationController];
+    [ret setSourceView:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self table];
+    [ret cellForRowAtIndexPath:ret];
+    objc_release(ret);
+    [self view];
+    if (ret == 0) goto L_8a1a0;
+
+    [ret bounds];
+    [ret convertRect:ret fromView:0];
+    goto L_8a1bc;
+
+L_8a1a0:;
+    [ret unknownSelector];
+
+L_8a1bc:;
+    [[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]; popoverPresentationController];
+    [ret setSourceRect:0];
+    objc_release(ret);
+    objc_release(ret);
+    [self presentViewController:[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]; animated:1 completion:0];
+    objc_release(ret);
+    objc_release([[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0];);
+
+L_8a22c:;
+    objc_release(ret);
+
+L_8a234:;
+    objc_release(ret);
+
+L_8a23c:;
+    objc_release(ret);
+
+L_8a244:;
+    objc_release(a0);
+
+    return;
 }
 
 // @0x8a28c  types=@32@0:8@16@24
@@ -1892,7 +2225,35 @@
     // 0008a4a8  ldp     x29, x30, [sp, #0x10]
     // 0008a4ac  ldp     x20, x19, [sp], #0x20
     // 0008a4b0  b       #0x1a7284   ; _objc_release
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    [ret row];
+    if ([ret row]; == 0) goto L_8a3f0;
+
+    objc_retain(a1);
+    [UIContextualAction contextualActionWithStyle:1 title:@"删除" handler:0];
+    [NSArray arrayWithObjects:0 count:1];
+    [UISwipeActionsConfiguration configurationWithActions:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(a1);
+    goto L_8a3f0;
+
+L_8a3f0:;
+    objc_release(a1);
+    objc_release(a0);
+    if (cond /* ne */) goto L_8a430;
+
+L_8a430:;
+    stack_chk_fail();
+    goto L_8a450;
+
+L_8a450:;
+    Unwind_Resume();
+    [Unwind_Resume/*+0x20*/ row];
+    [objc_loadWeakRetained confirmDeleteRow:[Unwind_Resume/*+0x20*/ row];];
 }
 
 // @0x8a4b4  types=v24@0:8q16
@@ -2083,7 +2444,35 @@
     // 0008a708  ldp     x26, x25, [sp, #0x60]
     // 0008a70c  ldp     x28, x27, [sp, #0x50]
     // 0008a710  add     sp, sp, #0xb0
-    // 0008a714  ret     
+    // 0008a714  ret
+    id ret = nil;
+
+    [self itemAtRow:a0];
+    if (ret == 0) goto L_8a6f4;
+
+    [ret objectForKeyedSubscript:@"name"];
+    [ret objectForKeyedSubscript:@"path"];
+    [NSString stringWithFormat:@"确定删除 %@？此操作不可恢复（展览馆里的照片不受影响）。"];
+    [UIAlertController alertControllerWithTitle:@"删除备份" message:ret preferredStyle:1];
+    objc_release(ret);
+    [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    objc_retain(ret);
+    objc_retain(ret);
+    [UIAlertAction actionWithTitle:@"删除" style:2 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    [self presentViewController:ret animated:1 completion:0];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+
+L_8a6f4:;
+    objc_release(ret);
+    return;
 }
 
 // @0x8abf8  types=v16@0:8
@@ -2261,7 +2650,37 @@
     // 0008ae24  ldp     x24, x23, [sp, #0x50]
     // 0008ae28  ldp     x26, x25, [sp, #0x40]
     // 0008ae2c  add     sp, sp, #0x90
-    // 0008ae30  ret     
+    // 0008ae30  ret
+    id ret = nil;
+
+    [self items];
+    [ret copy];
+    objc_release(ret);
+    [[ret copy]; count];
+    if ([[ret copy]; count]; == 0) goto L_8ae0c;
+
+    [[ret copy]; count];
+    [NSString stringWithFormat:@"确定删除全部 %lu 份相册备份？此操作不可恢复（展览馆里的照片不受影响）。"];
+    [UIAlertController alertControllerWithTitle:@"删除全部备份" message:ret preferredStyle:1];
+    objc_release(ret);
+    [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    objc_retain([ret copy];);
+    [UIAlertAction actionWithTitle:@"全部删除" style:2 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    [self presentViewController:ret animated:1 completion:0];
+    objc_release([ret copy];);
+    objc_release(ret);
+    goto L_8ae14;
+
+L_8ae0c:;
+    HushToast();
+
+L_8ae14:;
+    objc_release([ret copy];);
+    return;
 }
 
 // @0x8b154  types=@16@0:8
@@ -2270,8 +2689,10 @@
     // 0008b154  adrp    x8, #0x246000
     // 0008b158  ldrsw   x8, [x8, #0x218]
     // 0008b15c  ldr     x0, [x0, x8]
-    // 0008b160  ret     
-    return nil;
+    // 0008b160  ret
+    id ret = nil;
+
+    return (id)self->_items;
 }
 
 // @0x8b164  types=v24@0:8@16

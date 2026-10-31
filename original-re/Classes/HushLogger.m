@@ -11,8 +11,10 @@
     // 00016628  cmp     w8, #5
     // 0001662c  mov     w9, #5
     // 00016630  csel    w0, w8, w9, lo
-    // 00016634  ret     
-    return (long long)0;
+    // 00016634  ret
+    id ret = nil;
+
+    return 0;
 }
 
 // @0x16638  types=v24@0:8q16
@@ -25,7 +27,10 @@
     // 00016648  csel    w8, wzr, w8, lt
     // 0001664c  adrp    x9, #0x243000
     // 00016650  str     w8, [x9, #0xe20]
-    // 00016654  ret     
+    // 00016654  ret
+    id ret = nil;
+
+    return;
 }
 
 // @0x16658  types=B24@0:8q16
@@ -41,8 +46,10 @@
     // 00016674  ldr     w9, [x9, #0xe20]
     // 00016678  cmp     w9, w8
     // 0001667c  cset    w0, ge
-    // 00016680  ret     
-    return (BOOL)0;
+    // 00016680  ret
+    id ret = nil;
+
+    return 0;
 }
 
 // @0x1668c  types=v24@0:8q16
@@ -54,7 +61,12 @@
     // 00016698  add     x9, x9, #1
     // 0001669c  stxr    w10, x9, [x8]
     // 000166a0  cbnz    w10, #0x16694
-    // 000166a4  ret     
+    // 000166a4  ret
+    id ret = nil;
+L_166a0:;
+    if (0 != 0) goto L_166a0;
+
+    return;
 }
 
 // @0x166a8  types=@24@0:8q16
@@ -68,8 +80,10 @@
     // 000166bc  adrp    x9, #0x201000
     // 000166c0  add     x9, x9, #0x7f0
     // 000166c4  ldr     x0, [x9, x8, lsl #3]
-    // 000166c8  ret     
-    return nil;
+    // 000166c8  ret
+    id ret = nil;
+
+    return (id)0x2017f0/*+0x0*/;
 }
 
 // @0x166cc  types=@24@0:8q16
@@ -83,8 +97,10 @@
     // 000166e0  adrp    x9, #0x201000
     // 000166e4  add     x9, x9, #0x820
     // 000166e8  ldr     x0, [x9, x8, lsl #3]
-    // 000166ec  ret     
-    return nil;
+    // 000166ec  ret
+    id ret = nil;
+
+    return (id)0x201820/*+0x0*/;
 }
 
 // @0x166f0  types=v16@0:8
@@ -222,6 +238,43 @@
     // 000168a4  ldp     x24, x23, [sp, #0x10]
     // 000168a8  add     sp, sp, #0x50
     // 000168ac  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    [@0x244888 shared];
+    [ret stringForKey:0 /* func */];
+    objc_release(ret);
+    objc_retain(ret);
+    [ret length];
+    if (cond /* ne */) goto L_167c0;
+
+    [ret characterAtIndex:0];
+    if (cond /* hi */) goto L_167c0;
+
+    objc_release(ret);
+    goto L_16890;
+
+L_167c0:;
+    objc_release(ret);
+    [ret length];
+    if ([ret length]; == 0) goto L_16834;
+
+    [self setLevel:3];
+    [@0x244978 isEnabledForLevel:2];
+    if ([@0x244978 isEnabledForLevel:2]; == 0) goto L_16890;
+
+    [@0x244978 logLevel:2 format:@"[Log] switch_log_level 取值非法（%@），已回落为「信息」"];
+    goto L_168ac;
+
+L_16834:;
+    [@0x244888 unknownSelector];
+    [ret isEnabled:0 /* func */];
+    objc_release(ret);
+    goto L_16890;
+
+L_16890:;
+    [0 /* adrp */ noteFiltered:2];
+
+L_168ac:;
 }
 
 // @0x168b0  types=v24@0:8q16
@@ -286,6 +339,13 @@
     // 00016970  ldp     x22, x21, [sp, #0x10]
     // 00016974  add     sp, sp, #0x40
     // 00016978  b       #0x1a72d8   ; _objc_msgSend
+    id ret = nil;
+
+    [@0x244888 shared];
+    [NSString stringWithFormat:@"%ld"];
+    [ret setString:ret forKey:0 /* func */];
+    objc_release(ret);
+    objc_release(ret);
 }
 
 // @0x1697c  types=@16@0:8
@@ -326,8 +386,11 @@
     // 000169f4  bl      #0x1a72d8   ; _objc_msgSend
     // 000169f8  ldp     x29, x30, [sp, #0x40]
     // 000169fc  add     sp, sp, #0x50
-    // 00016a00  ret     
-    return nil;
+    // 00016a00  ret
+    id ret = nil;
+
+    [NSString stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
+    return (id)[NSString stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];;
 }
 
 // @0x16a04  types=@16@0:8
@@ -411,7 +474,31 @@
     // 00016af8  ldp     x20, x19, [sp, #0x10]
     // 00016afc  ldp     x22, x21, [sp], #0x30
     // 00016b00  b       #0x1a7284   ; _objc_release
-    return nil;
+    id ret = nil;
+
+    if (cond /* ne */) goto L_16a38;
+
+L_16a1c:;
+
+L_16a38:;
+    dispatch_once(0x201720, a0, a1, a2, a3);
+    goto L_16a1c;
+
+    NSSearchPathForDirectoriesInDomains(1, 1);
+    [ret firstObject];
+    if (ret == 0) goto L_16a9c;
+
+    objc_retain(ret);
+    goto L_16ab0;
+
+L_16a9c:;
+    NSTemporaryDirectory();
+
+L_16ab0:;
+    objc_release(ret);
+    [ret stringByAppendingPathComponent:@"hooo"];
+    objc_release(0x256758);
+    objc_release(ret);
 }
 
 // @0x16b04  types=@32@0:8@16@24
@@ -529,7 +616,33 @@
     // 00016c64  add     x1, x1, #0x7b0
     // 00016c68  bl      #0x1a7320   ; _dispatch_once
     // 00016c6c  b       #0x16b44   ; sub_16b44
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    if (cond /* ne */) goto L_16c68;
+
+L_16b4c:;
+    pthread_getspecific();
+    if (ret != 0) goto L_16bac;
+
+    [objc_alloc_init setDateFormat:@"HH:mm:ss.SSS"];
+    objc_retain(objc_alloc_init);
+    pthread_setspecific(objc_alloc_init);
+
+L_16bac:;
+    [NSDate date];
+    [objc_alloc_init stringFromDate:ret];
+    objc_release(ret);
+    objc_release(objc_alloc_init);
+    [NSString stringWithFormat:@"%@ %@ [%@] %@\n"];
+    objc_release(ret);
+    objc_release(a1);
+    objc_release(a0);
+
+L_16c68:;
+    dispatch_once(0x2017b0);
+    goto L_16b4c;
 }
 
 // @0x16c70  types=v16@0:8
@@ -599,7 +712,23 @@
     // 00016d44  ldp     x20, x19, [sp, #0xd0]
     // 00016d48  ldp     x22, x21, [sp, #0xc0]
     // 00016d4c  add     sp, sp, #0xf0
-    // 00016d50  ret     
+    // 00016d50  ret
+    id ret = nil;
+
+    if (((0x243e24 >> 31) & 1) == 0) goto L_16d50;
+
+    [self logFilePath];
+    [objc_retainAutorelease fileSystemRepresentation];
+    if ([objc_retainAutorelease fileSystemRepresentation]; == 0) goto L_16d3c;
+
+    stat();
+    open(0x209);
+
+L_16d3c:;
+    objc_release(ret);
+
+L_16d50:;
+    return;
 }
 
 // @0x16f04  types=v16@0:8
@@ -618,7 +747,10 @@
     // 00016f2c  ldp     x20, x19, [sp, #0x20]
     // 00016f30  ldp     x22, x21, [sp, #0x10]
     // 00016f34  ldp     x24, x23, [sp], #0x40
-    // 00016f38  ret     
+    // 00016f38  ret
+    id ret = nil;
+
+    return;
 }
 
 // @0x17000  types=B16@0:8
@@ -684,8 +816,26 @@
     // 000170c8  ldp     x20, x19, [sp, #0x20]
     // 000170cc  ldp     x22, x21, [sp, #0x10]
     // 000170d0  ldp     x24, x23, [sp], #0x40
-    // 000170d4  ret     
-    return (BOOL)0;
+    // 000170d4  ret
+    id ret = nil;
+
+    if (((0x243e24 >> 31) & 1) != 0) goto L_170d4;
+
+    [0x256710 length];
+    if ([0x256710 length]; == 0) goto L_170d4;
+
+    [0x256710 bytes];
+    [0x256710 length];
+    write([0x256710 bytes];, [0x256710 length];);
+    if (cond /* lt */) goto L_170a4;
+
+L_170a4:;
+    [0x256710 setLength:0];
+    [self rollIfNeeded];
+    goto L_170d4;
+
+L_170d4:;
+    return 0;
 }
 
 // @0x170d8  types=v24@0:8@16
@@ -803,7 +953,42 @@
     // 00017250  ldp     x22, x21, [sp, #0x40]
     // 00017254  ldp     x24, x23, [sp, #0x30]
     // 00017258  add     sp, sp, #0x70
-    // 0001725c  ret     
+    // 0001725c  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [self openFdIfNeeded];
+    if (((0x243e24 >> 31) & 1) != 0) goto L_17244;
+
+    [objc_retainAutorelease UTF8String];
+    if ([objc_retainAutorelease UTF8String]; == 0) goto L_17244;
+
+    strlen();
+    if (strlen == 0) goto L_17244;
+
+    if (0x256710 != 0) goto L_17194;
+
+    [NSMutableData dataWithCapacity:0x10000];
+    objc_release(0x256710);
+
+L_17194:;
+    [0x256710 appendBytes:[objc_retainAutorelease UTF8String]; length:strlen];
+    [0x256710 length];
+    if (cond /* lo */) goto L_171cc;
+
+    [self flushBuffer];
+    goto L_17244;
+
+L_171cc:;
+    if (((0 >> 0) & 1) != 0) goto L_17244;
+
+    dispatch_time(0x8f0);
+
+    dispatch_after(0x2567a0);
+
+L_17244:;
+    objc_release(a0);
+    return;
 }
 
 // @0x17290  types=v36@0:8@16@24B32
@@ -971,7 +1156,60 @@
     // 000174a8  ldp     x20, x19, [sp, #0x50]
     // 000174ac  ldp     x22, x21, [sp, #0x40]
     // 000174b0  add     sp, sp, #0x70
-    // 000174b4  ret     
+    // 000174b4  ret
+    id ret = nil;
+
+    objc_retain(a1);
+    if (a0 == 0) goto L_174a0;
+
+    [self formatLine:a0 levelTag:a1];
+    if (((a2 >> 0) & 1) == 0) goto L_17344;
+
+    os_unfair_lock_lock();
+    CFAbsoluteTimeGetCurrent();
+    if (cond /* ge */) goto L_173b8;
+
+    if (cond /* le */) goto L_173b8;
+
+    os_unfair_lock_unlock();
+    goto L_1743c;
+
+L_17344:;
+    [a1 isEqualToString:@"S"];
+    if (((a1 >> 0) & 1) != 0) goto L_1743c;
+
+    [ret hasSuffix:@"\n"];
+
+    [ret length];
+    [ret substringToIndex:-1];
+    goto L_17424;
+
+L_173b8:;
+    os_unfair_lock_unlock();
+    [ret hasSuffix:@"\n"];
+    if (((ret >> 0) & 1) == 0) goto L_17410;
+
+    [ret length];
+    [ret substringToIndex:-1];
+    goto L_17424;
+
+L_17410:;
+    objc_retain(ret);
+
+L_17424:;
+    NSLog();
+    objc_release(ret);
+
+L_1743c:;
+
+    objc_retain(ret);
+    dispatch_async();
+    objc_release(ret);
+    objc_release(ret);
+
+L_174a0:;
+    objc_release(a1);
+    return;
 }
 
 // @0x174f8  types=v32@0:8q16@24
@@ -1063,7 +1301,32 @@
     // 00017614  ldp     x22, x21, [sp, #0x30]
     // 00017618  ldp     x24, x23, [sp, #0x20]
     // 0001761c  add     sp, sp, #0x60
-    // 00017620  ret     
+    // 00017620  ret
+    id ret = nil;
+
+    objc_retain(a1);
+    if (a1 == 0) goto L_17608;
+
+    [self isEnabledForLevel:a0];
+    if (((self >> 0) & 1) == 0) goto L_17600;
+
+    [[NSString alloc] initWithFormat:a1 arguments:0x10];
+
+L_175a0:;
+    if (0 != 0) goto L_175a0;
+
+    [self levelTag:a0];
+    [self emit:[[NSString alloc] initWithFormat:a1 arguments:0x10]; levelTag:ret throttle:0];
+    objc_release(ret);
+    objc_release([[NSString alloc] initWithFormat:a1 arguments:0x10];);
+    goto L_17608;
+
+L_17600:;
+    [self noteFiltered:a0];
+
+L_17608:;
+    objc_release(a1);
+    return;
 }
 
 // @0x176c0  types=v24@0:8@16
@@ -1155,7 +1418,28 @@
     // 000177dc  ldp     x22, x21, [sp, #0x50]
     // 000177e0  ldp     x24, x23, [sp, #0x40]
     // 000177e4  add     sp, sp, #0x80
-    // 000177e8  ret     
+    // 000177e8  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    if (a0 == 0) goto L_177d0;
+
+    [[NSString alloc] initWithFormat:a0 arguments:0x10];
+
+L_1772c:;
+    if (0 != 0) goto L_1772c;
+
+    [self formatLine:[[NSString alloc] initWithFormat:a0 arguments:0x10]; levelTag:@"S"];
+
+    objc_retain(ret);
+    dispatch_sync();
+    objc_release(ret);
+    objc_release(ret);
+    objc_release([[NSString alloc] initWithFormat:a0 arguments:0x10];);
+
+L_177d0:;
+    objc_release(a0);
+    return;
 }
 
 // @0x17838  types=v16@0:8
@@ -1191,7 +1475,11 @@
     // 0001789c  ldp     x29, x30, [sp, #0x40]
     // 000178a0  ldp     x20, x19, [sp, #0x30]
     // 000178a4  add     sp, sp, #0x50
-    // 000178a8  ret     
+    // 000178a8  ret
+    id ret = nil;
+
+    dispatch_sync(_cmd, a0, a1, a2, a3);
+    return;
 }
 
 // @0x178f8  types=@24@0:8Q16
@@ -1375,7 +1663,55 @@
     // 00017b34  ldp     x24, x23, [sp, #0x10]
     // 00017b38  ldp     x26, x25, [sp], #0x50
     // 00017b3c  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    [self flush];
+    [self logFilePath];
+    [NSData dataWithContentsOfFile:ret];
+    [ret length];
+    if ([ret length]; == 0) goto L_17b18;
+
+    [[NSString alloc] initWithData:ret encoding:4];
+    if ([[NSString alloc] initWithData:ret encoding:4]; != 0) goto L_17a74;
+
+    [ret length];
+    [objc_retainAutorelease bytes];
+    if ([[NSString alloc] initWithData:ret encoding:4]; == 0) goto L_17a40;
+
+L_179fc:;
+    if (cond /* lo */) goto L_179fc;
+
+    if (cond /* hs */) goto L_17a40;
+
+    [[NSString alloc] initWithData:ret encoding:0x9400];
+    if ([[NSString alloc] initWithData:ret encoding:0x9400]; != 0) goto L_17a74;
+
+L_17a40:;
+    [[NSString alloc] initWithData:ret encoding:5];
+    objc_retain([[NSString alloc] initWithData:ret encoding:0x9400];);
+    objc_release([[NSString alloc] initWithData:ret encoding:5];);
+
+L_17a74:;
+    [[[NSString alloc] initWithData:ret encoding:0x9400]; componentsSeparatedByString:@"\n"];
+    [ret count];
+    if (cond /* ls */) goto L_17afc;
+
+    [ret count];
+    [ret subarrayWithRange:0];
+    [ret componentsJoinedByString:@"\n"];
+    objc_release(ret);
+    goto L_17b08;
+
+L_17afc:;
+    objc_retain([[NSString alloc] initWithData:ret encoding:0x9400];);
+
+L_17b08:;
+    objc_release(ret);
+    objc_release([[NSString alloc] initWithData:ret encoding:0x9400];);
+
+L_17b18:;
+    objc_release(ret);
+    objc_release(ret);
 }
 
 // @0x17b40  types=v16@0:8
@@ -1411,7 +1747,11 @@
     // 00017ba4  ldp     x29, x30, [sp, #0x40]
     // 00017ba8  ldp     x20, x19, [sp, #0x30]
     // 00017bac  add     sp, sp, #0x50
-    // 00017bb0  ret     
+    // 00017bb0  ret
+    id ret = nil;
+
+    dispatch_sync(_cmd, a0, a1, a2, a3);
+    return;
 }
 
 @end

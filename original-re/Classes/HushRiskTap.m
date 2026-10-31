@@ -449,7 +449,109 @@
     // 00020410  ldp     d9, d8, [sp, #0xe0]
     // 00020414  ldp     d11, d10, [sp, #0xd0]
     // 00020418  add     sp, sp, #0x150
-    // 0002041c  ret     
+    // 0002041c  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 accessibilityValue];
+    objc_retain(ret);
+    objc_retain(ret);
+    objc_retain(a0);
+    [ret length];
+    if ([ret length]; == 0) goto L_203cc;
+
+    sub_222dc();
+    if (ret == 0) goto L_203c4;
+
+    HushRiskUserSource();
+    [ret length];
+    if ([ret length]; == 0) goto L_1ff84;
+
+    objc_retain(ret);
+    goto L_1ffb0;
+
+L_1ff84:;
+    [NSString stringWithFormat:@"用户 %@"];
+
+L_1ffb0:;
+    [NSMutableString stringWithFormat:@"UID %@"];
+    [ret length];
+    if ([ret length]; == 0) goto L_2000c;
+
+    [ret appendFormat:@" · 已标记：%@"];
+
+L_2000c:;
+    [UIAlertController alertControllerWithTitle:ret message:ret preferredStyle:0];
+    objc_retain(ret);
+    objc_retain(ret);
+    [UIAlertAction actionWithTitle:@"标记为风险用户" style:2 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    objc_retain(ret);
+    objc_retain(ret);
+    [UIAlertAction actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    [ret length];
+    if ([ret length]; == 0) goto L_20208;
+
+    objc_retain(ret);
+    [UIAlertAction actionWithTitle:@"取消标记" style:0 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    objc_release(0 /* local */);
+    objc_release(ret);
+
+L_20208:;
+    [UIAlertAction actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50];
+    [ret addAction:ret];
+    objc_release(ret);
+    [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [ret addAction:ret];
+    objc_release(ret);
+    if (a0 != 0) goto L_202a8;
+
+    [ret view];
+
+L_202a8:;
+    [ret popoverPresentationController];
+    [ret setSourceView:ret];
+    objc_release(ret);
+    if (a0 == 0) goto L_20300;
+
+    [a0 bounds];
+    goto L_20320;
+
+L_20300:;
+    objc_release(ret);
+
+L_20320:;
+    [ret popoverPresentationController];
+    [ret setSourceRect:0 /* unk */];
+    objc_release(ret);
+    [ret presentViewController:ret animated:1 completion:0];
+    objc_release(0 /* local */);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(0 /* local */);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(0 /* local */);
+    objc_release(ret);
+
+L_203c4:;
+    objc_release(ret);
+
+L_203cc:;
+    objc_release(a0);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(a0);
+    return;
 }
 
 @end

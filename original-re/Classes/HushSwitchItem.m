@@ -7,8 +7,10 @@
 - (id)key {
     // ---- original disassembly ----
     // 0019c474  ldr     x0, [x0, #8]
-    // 0019c478  ret     
-    return nil;
+    // 0019c478  ret
+    id ret = nil;
+
+    return (id)self->/*+0x8*/;
 }
 
 // @0x19c47c  types=v24@0:8@16
@@ -22,8 +24,10 @@
 - (id)title {
     // ---- original disassembly ----
     // 0019c484  ldr     x0, [x0, #0x10]
-    // 0019c488  ret     
-    return nil;
+    // 0019c488  ret
+    id ret = nil;
+
+    return (id)self->/*+0x10*/;
 }
 
 // @0x19c48c  types=v24@0:8@16
@@ -37,8 +41,10 @@
 - (id)subtitle {
     // ---- original disassembly ----
     // 0019c494  ldr     x0, [x0, #0x18]
-    // 0019c498  ret     
-    return nil;
+    // 0019c498  ret
+    id ret = nil;
+
+    return (id)self->/*+0x18*/;
 }
 
 // @0x19c49c  types=v24@0:8@16
@@ -52,8 +58,10 @@
 - (id)icon {
     // ---- original disassembly ----
     // 0019c4a4  ldr     x0, [x0, #0x20]
-    // 0019c4a8  ret     
-    return nil;
+    // 0019c4a8  ret
+    id ret = nil;
+
+    return (id)self->/*+0x20*/;
 }
 
 // @0x19c4ac  types=v24@0:8@16
@@ -67,15 +75,20 @@
 - (long long)effect {
     // ---- original disassembly ----
     // 0019c4b4  ldr     x0, [x0, #0x28]
-    // 0019c4b8  ret     
-    return (long long)0;
+    // 0019c4b8  ret
+    id ret = nil;
+
+    return (long long)self->/*+0x28*/;
 }
 
 // @0x19c4bc  types=v24@0:8q16
 - (void)setEffect:(long long)a0 {
     // ---- original disassembly ----
     // 0019c4bc  str     x2, [x0, #0x28]
-    // 0019c4c0  ret     
+    // 0019c4c0  ret
+    id ret = nil;
+
+    return;
 }
 
 // @0x19c0d4  types=@40@0:8@16@24@32
@@ -145,7 +158,19 @@
     // 0019c198  ldp     x22, x21, [sp, #0x10]
     // 0019c19c  ldp     x24, x23, [sp], #0x40
     // 0019c1a0  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a2);
+    objc_retain(a1);
+    objc_retain(a0);
+    [self unknownSelector];
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a0);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a1);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a2);
+    [[self unknownSelector]; unknownSelector];
 }
 
 // @0x19c1a4  types=@48@0:8@16@24@32q40
@@ -216,7 +241,19 @@
     // 0019c26c  ldp     x22, x21, [sp, #0x10]
     // 0019c270  ldp     x24, x23, [sp], #0x40
     // 0019c274  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a2);
+    objc_retain(a1);
+    objc_retain(a0);
+    [self unknownSelector];
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a0);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a1);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a2);
+    [[self unknownSelector]; unknownSelector];
 }
 
 // @0x19c278  types=@48@0:8@16@24@32@40
@@ -299,7 +336,22 @@
     // 0019c364  ldp     x22, x21, [sp, #0x10]
     // 0019c368  ldp     x24, x23, [sp], #0x40
     // 0019c36c  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a3);
+    objc_retain(a2);
+    objc_retain(a1);
+    objc_retain(a0);
+    [self unknownSelector];
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a0);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a1);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a2);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a3);
+    [[self unknownSelector]; unknownSelector];
 }
 
 // @0x19c370  types=@56@0:8@16@24@32@40q48
@@ -385,7 +437,22 @@
     // 0019c468  ldp     x24, x23, [sp, #0x10]
     // 0019c46c  ldp     x26, x25, [sp], #0x50
     // 0019c470  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a3);
+    objc_retain(a2);
+    objc_retain(a1);
+    objc_retain(a0);
+    [self unknownSelector];
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a0);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a1);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a2);
+    [[self unknownSelector]; unknownSelector];
+    objc_release(a3);
+    [[self unknownSelector]; unknownSelector];
 }
 
 @end

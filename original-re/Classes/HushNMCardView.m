@@ -527,7 +527,116 @@
     // 000cec68  bl      #0x1a72d8   ; _objc_msgSend
     // 000cec6c  mov     x0, x20
     // 000cec70  bl      #0x1a7284   ; _objc_release
-    return nil;
+    id ret = nil;
+
+    [super initWithFrame:a0];
+    if (self == 0) goto L_ceef8;
+
+    [UIColor clearColor];
+    [self setBackgroundColor:ret];
+    objc_release(ret);
+    [self setUserInteractionEnabled:1];
+    [NSMutableArray arrayWithCapacity:9];
+    objc_release(self->_photos);
+    [NSMutableArray arrayWithCapacity:4];
+    objc_release(self->_buttons);
+    [[UILabel alloc] initWithFrame:0 /* unk */];
+    objc_release(self->_badge);
+    [self->_badge setText:@"隐私相册"];
+    [UIFont systemFontOfSize:11 weight:0x200180];
+    [self->_badge setFont:ret];
+    objc_release(ret);
+    [UIColor whiteColor];
+    [self->_badge setTextColor:ret];
+    objc_release(ret);
+    [self->_badge setTextAlignment:1];
+    [UIColor colorWithRed:0 /* unk */ green:0 /* unk */ blue:1 alpha:1];
+    [self->_badge setBackgroundColor:ret];
+    objc_release(ret);
+    [self->_badge layer];
+    [ret setCornerRadius:12.5];
+    objc_release(ret);
+    [self->_badge setClipsToBounds:1];
+    [self addSubview:self->_badge];
+    [[UIView alloc] initWithFrame:0 /* unk */];
+    objc_release(self->_chipBox);
+    [UIColor whiteColor];
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    sub_cef28(ret);
+    [self->_chipBox setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self->_chipBox layer];
+    [ret setCornerRadius:13];
+    objc_release(ret);
+    [self->_chipBox layer];
+    [ret setBorderWidth:0.5];
+    objc_release(ret);
+    [UIColor colorWithWhite:0 alpha:0 /* unk */];
+    [UIColor colorWithWhite:1 alpha:0 /* unk */];
+    sub_cef28(ret);
+    [objc_retainAutorelease CGColor];
+    [self->_chipBox layer];
+    [ret setBorderColor:[objc_retainAutorelease CGColor];];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self addSubview:self->_chipBox];
+    [[UIView alloc] initWithFrame:0 /* unk */];
+    objc_release(self->_chipDot);
+    [UIColor colorWithRed:0 /* unk */ green:0 /* unk */ blue:0 /* unk */ alpha:1];
+    [self->_chipDot setBackgroundColor:ret];
+    objc_release(ret);
+    [self->_chipDot layer];
+    [ret setCornerRadius:4];
+    objc_release(ret);
+    [self->_chipBox addSubview:self->_chipDot];
+    [[UILabel alloc] initWithFrame:0 /* unk */];
+    objc_release(self->_chip);
+    [UIFont systemFontOfSize:13];
+    [self->_chip setFont:ret];
+    objc_release(ret);
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    sub_cef28(ret);
+    [self->_chip setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self->_chipBox addSubview:self->_chip];
+    [[UIView alloc] initWithFrame:0 /* unk */];
+    objc_release(self->_bar);
+    [UIColor whiteColor];
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    sub_cef28(ret);
+    [self->_bar setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self->_bar layer];
+    [ret setCornerRadius:12];
+    objc_release(ret);
+    [self->_bar layer];
+    [ret setBorderWidth:0.5];
+    objc_release(ret);
+    [UIColor colorWithWhite:0 alpha:0 /* unk */];
+    [UIColor colorWithWhite:1 alpha:0 /* unk */];
+    sub_cef28(ret);
+    [objc_retainAutorelease CGColor];
+    [self->_bar layer];
+    [ret setBorderColor:[objc_retainAutorelease CGColor];];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self addSubview:self->_bar];
+    objc_retain(self);
+
+L_ceef8:;
+    objc_release(self);
+    return (id)self;
 }
 
 // @0xceff4  types=v16@0:8
@@ -844,7 +953,69 @@
     // 000cf418  ldp     d11, d10, [sp, #0x150]
     // 000cf41c  ldp     d13, d12, [sp, #0x140]
     // 000cf420  add     sp, sp, #0x1d0
-    // 000cf424  ret     
+    // 000cf424  ret
+    id ret = nil;
+
+    objc_retain(0);
+    [self->_builtPhotos count];
+    [0 count];
+    if (cond /* ne */) goto L_cf0c8;
+
+    [self->_builtPhotos isEqualToArray:0];
+    if (((0 >> 0) & 1) != 0) goto L_cf3e0;
+
+L_cf0c8:;
+    objc_retain(self->_photos);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_cf15c;
+
+L_cf110:;
+    if (cond /* eq */) goto L_cf128;
+
+L_cf128:;
+    [0 /* local *//*+0x0*/ removeFromSuperview];
+    if (cond /* ne */) goto L_cf110;
+
+    [self->_photos countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([self->_photos countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_cf110;
+
+L_cf15c:;
+    objc_release(self->_photos);
+    [self->_photos removeAllObjects];
+    [0 copy];
+    objc_release(self->_builtPhotos);
+    [0 unknownSelector];
+    if ([0 unknownSelector]; == 0) goto L_cf3e0;
+
+L_cf278:;
+    [[UIImageView alloc] initWithFrame:0 /* unk */];
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; unknownSelector];
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; setClipsToBounds:1];
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; unknownSelector];
+    [ret setCornerRadius:11];
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; setBackgroundColor:ret];
+    objc_release(ret);
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; unknownSelector];
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; setTag:0];
+    [[UITapGestureRecognizer alloc] unknownSelector];
+    [[[UIImageView alloc] initWithFrame:0 /* unk */]; addGestureRecognizer:[[UITapGestureRecognizer alloc] unknownSelector];];
+    objc_release([[UITapGestureRecognizer alloc] unknownSelector];);
+    [self addSubview:[[UIImageView alloc] initWithFrame:0 /* unk */];];
+    [self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 /* unk */];];
+    [self->_photos addObject:[[UIImageView alloc] initWithFrame:0 /* unk */];];
+    [0 objectAtIndexedSubscript:0];
+    sub_cf42c(ret);
+    objc_release(ret);
+    objc_release([[UIImageView alloc] initWithFrame:0 /* unk */];);
+    [0 unknownSelector];
+    if (cond /* lo */) goto L_cf278;
+
+L_cf3e0:;
+    objc_release(0);
+
+    return;
 }
 
 // @0xcf610  types=v16@0:8
@@ -1111,7 +1282,62 @@
     // 000cf980  ldp     x28, x27, [sp, #0x130]
     // 000cf984  ldp     d9, d8, [sp, #0x120]
     // 000cf988  add     sp, sp, #0x190
-    // 000cf98c  ret     
+    // 000cf98c  ret
+    id ret = nil;
+
+    [self->_builtLabels isEqualToArray:self->_labels];
+    if (0 == 0) goto L_cf6a8;
+
+    [self->_buttons count];
+    if (cond /* eq */) goto L_cf968;
+
+L_cf6a8:;
+    objc_retain(self->_buttons);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_cf73c;
+
+L_cf6f0:;
+    if (cond /* eq */) goto L_cf708;
+
+L_cf708:;
+    [0 /* local *//*+0x0*/ removeFromSuperview];
+    if (cond /* ne */) goto L_cf6f0;
+
+    [self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_cf6f0;
+
+L_cf73c:;
+    objc_release(self->_buttons);
+    [self->_buttons removeAllObjects];
+    [self->_labels copy];
+    objc_release(self->_builtLabels);
+
+L_cf808:;
+    [UIButton unknownSelector];
+    [ret setTag:0];
+    [UIFont unknownSelector];
+    [ret titleLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [ret titleLabel];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret titleLabel];
+    [ret setMinimumScaleFactor:0 /* unk */];
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret setCornerRadius:9];
+    objc_release(ret);
+    [ret addTarget:self action:sel_registerName("hushMarkTap:") forControlEvents:0x40];
+    [self->_bar addSubview:ret];
+    [self->_buttons addObject:ret];
+    objc_release(ret);
+    if (cond /* ne */) goto L_cf808;
+
+L_cf968:;
+
+    return;
 }
 
 // @0xcf994  types=v16@0:8
@@ -1418,7 +1644,58 @@
     // 000cfd98  ldp     d13, d12, [sp, #0x150]
     // 000cfd9c  ldp     d15, d14, [sp, #0x140]
     // 000cfda0  add     sp, sp, #0x1e0
-    // 000cfda4  ret     
+    // 000cfda4  ret
+    id ret = nil;
+
+    objc_retain(self->_buttons);
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_cfd5c;
+
+L_cfaf0:;
+    if (cond /* eq */) goto L_cfb0c;
+
+L_cfb0c:;
+    [0 /* local *//*+0x0*/ tag];
+    if (cond /* ne */) goto L_cfbb4;
+
+    [UIColor unknownSelector];
+    [0 /* local *//*+0x0*/ setBackgroundColor:ret];
+    objc_release(ret);
+    [UIColor whiteColor];
+    [0 /* local *//*+0x0*/ setTitleColor:ret forState:0];
+    goto L_cfcd0;
+
+L_cfbb4:;
+    [[0 /* local *//*+0x0*/ setTitleColor:ret forState:0]; unknownSelector];
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    sub_cef28(ret);
+    [0 /* local *//*+0x0*/ setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    [UIColor colorWithWhite:0 /* unk */ alpha:1];
+    sub_cef28(ret);
+    [0 /* local *//*+0x0*/ setTitleColor:ret forState:0];
+    objc_release(ret);
+    objc_release(ret);
+
+L_cfcd0:;
+    objc_release(ret);
+    [UIFont systemFontOfSize:14 weight:0x200348];
+    [0 /* local *//*+0x0*/ titleLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    if (cond /* ne */) goto L_cfaf0;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_cfaf0;
+
+L_cfd5c:;
+    objc_release(ret);
+
+    return;
 }
 
 // @0xcfdac  types=v24@0:8@16
@@ -1500,6 +1777,27 @@
     // 000cfe94  ldp     x22, x21, [sp, #0x10]
     // 000cfe98  ldp     x24, x23, [sp], #0x40
     // 000cfe9c  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 state];
+    if (cond /* ne */) goto L_cfe9c;
+
+    [a0 view];
+    [ret tag];
+    objc_release(ret);
+    if ((([ret tag]; >> 63) & 1) != 0) goto L_cfe9c;
+
+    [self photoURLs];
+    [ret count];
+    objc_release(ret);
+    if (cond /* ge */) goto L_cfe9c;
+
+    [self photoURLs];
+    HushUserAlbumShowPhotos([ret tag];);
+    objc_release(ret);
+
+L_cfe9c:;
 }
 
 // @0xcfea0  types=v24@0:8@16
@@ -1996,6 +2294,199 @@
     // 000d04d4  ldr     x8, [x8]
     // 000d04d8  cmp     x8, x21
     // 000d04dc  b.eq    #0xd04e8
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 tag];
+    if ((([a0 tag]; >> 63) & 1) != 0) goto L_d0600;
+
+    [a0 tag];
+    if (cond /* gt */) goto L_d0600;
+
+    [self uid];
+    [ret length];
+    if ([ret length]; == 0) goto L_d05f8;
+
+    sub_d0640();
+    [a0 tag];
+    if (cond /* ne */) goto L_cff70;
+
+    goto L_cff80;
+
+L_cff70:;
+    [a0 tag];
+
+L_cff80:;
+    sub_d0740([a0 tag];);
+    [self setMarkIndex:[a0 tag];];
+    [self hushApplySelection];
+    [self labels];
+    objc_retain(0);
+    objc_release(ret);
+    if ((([a0 tag]; >> 63) & 1) != 0) goto L_d00f4;
+
+    [0 count];
+    if (cond /* ge */) goto L_d00f4;
+
+    [@0x244978 isEnabledForLevel:3];
+    if (0 == 0) goto L_d01e0;
+
+    if (ret == 0) goto L_d0210;
+
+    [ret description];
+    [ret length];
+    if ([ret length]; == 0) goto L_d02ac;
+
+    [ret length];
+    if ([ret length]; == 0) goto L_d02c4;
+
+L_d00b4:;
+    [ret characterAtIndex:0];
+    [ret length];
+    if (cond /* lo */) goto L_d00b4;
+
+    goto L_d02c4;
+
+L_d00f4:;
+    [ret/*+0xbb8*/ unknownSelector];
+    if (ret == 0) goto L_d01c8;
+
+    if (0x3e8 == 0) goto L_d01f8;
+
+    [0x3e8 description];
+    [ret length];
+    if ([ret length]; == 0) goto L_d0204;
+
+    [ret length];
+    if ([ret length]; == 0) goto L_d0228;
+
+L_d0184:;
+    [ret characterAtIndex:0];
+    [ret length];
+    if (cond /* lo */) goto L_d0184;
+
+    goto L_d0228;
+
+L_d01c8:;
+    [ret/*+0xbb8*/ noteFiltered:3];
+    goto L_d029c;
+
+L_d01e0:;
+    [ret noteFiltered:3];
+    goto L_d0370;
+
+L_d01f8:;
+    goto L_d0288;
+
+L_d0204:;
+    goto L_d0268;
+
+L_d0210:;
+    goto L_d031c;
+
+L_d0228:;
+    [ret length];
+    [NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+
+L_d0268:;
+    objc_release(ret);
+
+L_d0288:;
+    [sel_registerName("objectAtIndexedSubscript:") logLevel:3 format:@"[NearbyMark] uid=%@ 取消评价"];
+    objc_release(ret);
+
+L_d029c:;
+    HushToast();
+    goto L_d03cc;
+
+L_d02ac:;
+    goto L_d0304;
+
+L_d02c4:;
+    [sel_registerName("objectAtIndexedSubscript:") length];
+    [NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+
+L_d0304:;
+    objc_release(sel_registerName("objectAtIndexedSubscript:"));
+
+L_d031c:;
+    [sel_registerName("characterAtIndex:") objectAtIndexedSubscript:a0];
+    [ret logLevel:3 format:@"[NearbyMark] uid=%@ 评价「%@」"];
+    objc_release(ret);
+    objc_release(ret);
+
+L_d0370:;
+    [sel_registerName("characterAtIndex:") objectAtIndexedSubscript:a0];
+    [NSString stringWithFormat:@"已评价：%@"];
+    HushToast();
+    objc_release(ret);
+    objc_release(ret);
+
+L_d03cc:;
+    [self superview];
+    if (ret == 0) goto L_d0444;
+
+L_d03fc:;
+    [UITableView class];
+    [ret isKindOfClass:[UITableView class];];
+    if (((ret >> 0) & 1) != 0) goto L_d0444;
+
+    [ret superview];
+    objc_release(ret);
+    if (ret != 0) goto L_d03fc;
+
+L_d0444:;
+    [UITableView class];
+    [ret isKindOfClass:[UITableView class];];
+    if (ret == 0) goto L_d05e8;
+
+    [ret visibleCells];
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_d05d4;
+
+L_d04dc:;
+    if (cond /* eq */) goto L_d04f8;
+
+L_d04f8:;
+    [self superview];
+    [ret superview];
+    objc_release(ret);
+    objc_release(ret);
+    if (cond /* eq */) goto L_d05ac;
+
+    if (ret == 0) goto L_d05a0;
+
+    [ret uid];
+    [ret isEqualToString:0x3e8];
+    objc_release(ret);
+    if ([ret isEqualToString:0x3e8]; == 0) goto L_d05a0;
+
+    [ret setMarkIndex:a0];
+    [ret hushApplySelection];
+
+L_d05a0:;
+    objc_release(ret);
+
+L_d05ac:;
+    if (cond /* ne */) goto L_d04dc;
+
+    [ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_d04dc;
+
+L_d05d4:;
+    objc_release(ret);
+
+L_d05e8:;
+    objc_release(ret);
+    objc_release(0 /* adrp */);
+
+L_d05f8:;
+    objc_release(0x3e8);
+
+L_d0600:;
+    objc_release(0 /* unk */);
+
+    return;
 }
 
 // @0xd0b34  types=v24@0:8d16
@@ -2371,7 +2862,70 @@
     // 000d1060  ldp     d13, d12, [sp, #0x20]
     // 000d1064  ldp     d15, d14, [sp, #0x10]
     // 000d1068  add     sp, sp, #0xb0
-    // 000d106c  ret     
+    // 000d106c  ret
+    id ret = nil;
+
+    [self hushEnsurePhotos];
+    [self hushEnsureButtons];
+    [self->_buttons count];
+    if (cond /* lt */) goto L_d0c48;
+
+L_d0bd0:;
+    [self->_buttons objectAtIndexedSubscript:0];
+    [self->_labels objectAtIndexedSubscript:0];
+    [ret setTitle:ret forState:0];
+    objc_release(ret);
+    objc_release(ret);
+    [self->_buttons count];
+    if (cond /* lt */) goto L_d0bd0;
+
+L_d0c48:;
+    [self hushApplySelection];
+    [self->_photos count];
+    if ([self->_photos count]; == 0) goto L_d0e54;
+
+    if (cond /* lt */) goto L_d0d6c;
+
+L_d0d6c:;
+    [self->_photos objectAtIndexedSubscript:0];
+    [ret setFrame:0];
+    objc_release(ret);
+    if (cond /* ne */) goto L_d0d6c;
+
+    [self->_badge setHidden:0];
+    [self->_badge sizeThatFits:0];
+    [self->_badge setFrame:0];
+    goto L_d0e74;
+
+L_d0e54:;
+    [self->_badge setHidden:1];
+
+L_d0e74:;
+    [self->_chipText length];
+    [self->_chipBox setHidden:1];
+    if ([self->_chipText length]; == 0) goto L_d0f9c;
+
+    [self->_chip setText:self->_chipText];
+    [self->_chip sizeThatFits:0];
+    [self->_chipBox setFrame:0];
+    [self->_chipDot setFrame:14];
+    [self->_chip setFrame:30];
+    goto L_d0f9c;
+
+L_d0f9c:;
+    [self->_bar setFrame:14];
+    [self->_buttons count];
+    if (cond /* lt */) goto L_d106c;
+
+L_d0ff8:;
+    [self->_buttons objectAtIndexedSubscript:0];
+    [ret setFrame:8];
+    objc_release(ret);
+    [self->_buttons count];
+    if (cond /* lt */) goto L_d0ff8;
+
+L_d106c:;
+    return;
 }
 
 // @0xd1070  types=@16@0:8
@@ -2380,8 +2934,10 @@
     // 000d1070  adrp    x8, #0x246000
     // 000d1074  ldrsw   x8, [x8, #0x320]
     // 000d1078  ldr     x0, [x0, x8]
-    // 000d107c  ret     
-    return nil;
+    // 000d107c  ret
+    id ret = nil;
+
+    return (id)self->_uid;
 }
 
 // @0xd1080  types=v24@0:8@16
@@ -2398,8 +2954,10 @@
     // 000d108c  adrp    x8, #0x246000
     // 000d1090  ldrsw   x8, [x8, #0x30c]
     // 000d1094  ldr     x0, [x0, x8]
-    // 000d1098  ret     
-    return nil;
+    // 000d1098  ret
+    id ret = nil;
+
+    return (id)self->_photoURLs;
 }
 
 // @0xd109c  types=v24@0:8@16
@@ -2416,8 +2974,10 @@
     // 000d10a8  adrp    x8, #0x246000
     // 000d10ac  ldrsw   x8, [x8, #0x318]
     // 000d10b0  ldr     x0, [x0, x8]
-    // 000d10b4  ret     
-    return nil;
+    // 000d10b4  ret
+    id ret = nil;
+
+    return (id)self->_labels;
 }
 
 // @0xd10b8  types=v24@0:8@16
@@ -2434,8 +2994,10 @@
     // 000d10c4  adrp    x8, #0x246000
     // 000d10c8  ldrsw   x8, [x8, #0x2ec]
     // 000d10cc  ldr     x0, [x0, x8]
-    // 000d10d0  ret     
-    return (long long)0;
+    // 000d10d0  ret
+    id ret = nil;
+
+    return (long long)self->_markIndex;
 }
 
 // @0xd10d4  types=v24@0:8q16
@@ -2444,7 +3006,10 @@
     // 000d10d4  adrp    x8, #0x246000
     // 000d10d8  ldrsw   x8, [x8, #0x2ec]
     // 000d10dc  str     x2, [x0, x8]
-    // 000d10e0  ret     
+    // 000d10e0  ret
+    id ret = nil;
+
+    return;
 }
 
 // @0xd10e4  types=@16@0:8
@@ -2453,8 +3018,10 @@
     // 000d10e4  adrp    x8, #0x246000
     // 000d10e8  ldrsw   x8, [x8, #0x31c]
     // 000d10ec  ldr     x0, [x0, x8]
-    // 000d10f0  ret     
-    return nil;
+    // 000d10f0  ret
+    id ret = nil;
+
+    return (id)self->_chipText;
 }
 
 // @0xd10f4  types=v24@0:8@16

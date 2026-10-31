@@ -29,8 +29,13 @@
     // 0007a59c  mov     x0, x20
     // 0007a5a0  ldp     x29, x30, [sp, #0x10]
     // 0007a5a4  ldp     x20, x19, [sp], #0x20
-    // 0007a5a8  ret     
-    return (long long)0;
+    // 0007a5a8  ret
+    id ret = nil;
+
+    [self files];
+    [ret count];
+    objc_release(ret);
+    return (long long)[ret count];;
 }
 
 // @0x7a5ac  types=@32@0:8@16q24
@@ -107,15 +112,33 @@
     // 0007a688  ldp     x22, x21, [sp, #0x10]
     // 0007a68c  ldp     x24, x23, [sp], #0x40
     // 0007a690  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    if (((a1 >> 63) & 1) != 0) goto L_7a690;
+
+    [self files];
+    [ret count];
+    objc_release(ret);
+    if (cond /* le */) goto L_7a690;
+
+    [self files];
+    [ret objectAtIndexedSubscript:a1];
+    [NSURL fileURLWithPath:ret];
+    objc_release(ret);
+    objc_release(ret);
+    goto L_7a690;
+
+L_7a690:;
 }
 
 // @0x7a694  types=@16@0:8
 - (id)files {
     // ---- original disassembly ----
     // 0007a694  ldr     x0, [x0, #8]
-    // 0007a698  ret     
-    return nil;
+    // 0007a698  ret
+    id ret = nil;
+
+    return (id)self->/*+0x8*/;
 }
 
 // @0x7a69c  types=v24@0:8@16

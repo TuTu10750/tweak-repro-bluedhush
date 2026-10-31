@@ -110,8 +110,29 @@
     // 000c54f0  ldp     x20, x19, [sp, #0x20]
     // 000c54f4  ldp     x22, x21, [sp, #0x10]
     // 000c54f8  add     sp, sp, #0x40
-    // 000c54fc  ret     
-    return nil;
+    // 000c54fc  ret
+    id ret = nil;
+
+    [super initWithFrame:a0];
+    if (self == 0) goto L_c54e4;
+
+    [UIColor clearColor];
+    [self setBackgroundColor:ret];
+    objc_release(ret);
+    [self setClipsToBounds:1];
+    [self bounds];
+    [[UIScrollView alloc] initWithFrame:0];
+    objc_release(self->_scrollView);
+    [self->_scrollView setAutoresizingMask:0x12];
+    [self->_scrollView setShowsHorizontalScrollIndicator:0];
+    [self->_scrollView setAlwaysBounceHorizontal:1];
+    [self->_scrollView setClipsToBounds:1];
+    [self addSubview:self->_scrollView];
+    objc_retain(self);
+
+L_c54e4:;
+    objc_release(self);
+    return (id)self;
 }
 
 // @0xc5500  types=v24@0:8@16
@@ -638,6 +659,147 @@
     // 000c5b34  mov     x2, x28
     // 000c5b38  bl      #0x1a72d8   ; _objc_msgSend
     // 000c5b3c  mov     x0, x22
+    id ret = nil;
+
+    objc_retain(a0);
+    [NSArray class];
+    [a0 isKindOfClass:[NSArray class];];
+    objc_retain(0);
+    [self urls];
+    [ret count];
+    [0 count];
+    if (cond /* ne */) goto L_c569c;
+
+    [self urls];
+    [ret isEqualToArray:0];
+    objc_release(ret);
+    objc_release(ret);
+    [self setUrls:0];
+    if ([ret isEqualToArray:0]; == 0) goto L_c56e0;
+
+    [self scrollView];
+    [ret subviews];
+    [ret count];
+    [0 count];
+    objc_release(ret);
+    objc_release(ret);
+    if (cond /* ne */) goto L_c56e0;
+
+    goto L_c5db8;
+
+L_c569c:;
+    objc_release(ret);
+    [self setUrls:0];
+
+L_c56e0:;
+    [self scrollView];
+    [ret subviews];
+    [ret makeObjectsPerformSelector:sel_registerName("removeFromSuperview")];
+    objc_release(ret);
+    objc_release(ret);
+    [self scrollView];
+    [ret setScrollEnabled:1];
+    objc_release(ret);
+    [self scrollView];
+    [ret setBounces:1];
+    objc_release(ret);
+    [self scrollView];
+    [ret setAlwaysBounceHorizontal:1];
+    objc_release(ret);
+    [self scrollView];
+    [ret setAlwaysBounceVertical:0];
+    objc_release(ret);
+    [self scrollView];
+    [ret setShowsHorizontalScrollIndicator:0];
+    objc_release(ret);
+    [self scrollView];
+    [ret setShowsVerticalScrollIndicator:0];
+    objc_release(ret);
+    [UIColor clearColor];
+    [self setBackgroundColor:ret];
+    objc_release(ret);
+    [UIColor clearColor];
+    [self scrollView];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [0 count];
+    if ([0 count]; == 0) goto L_c5cbc;
+
+L_c59d8:;
+    [0 objectAtIndexedSubscript:0];
+    [NSURL URLWithString:ret];
+    if (ret == 0) goto L_c5c80;
+
+    [[UIImageView alloc] unknownSelector];
+    [[[UIImageView alloc] unknownSelector]; setContentMode:2];
+    [[[UIImageView alloc] unknownSelector]; unknownSelector];
+    [[[UIImageView alloc] unknownSelector]; layer];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[[UIImageView alloc] unknownSelector]; setUserInteractionEnabled:1];
+    [[[UIImageView alloc] unknownSelector]; unknownSelector];
+    [UIColor colorWithWhite:0.5 alpha:0 /* unk */];
+    [[[UIImageView alloc] unknownSelector]; setBackgroundColor:ret];
+    objc_release(ret);
+    [[UITapGestureRecognizer alloc] unknownSelector];
+    [[[UIImageView alloc] unknownSelector]; unknownSelector];
+    [self scrollView];
+    [ret addSubview:[[UIImageView alloc] unknownSelector];];
+    objc_release(ret);
+    CGAffineTransformMakeScale();
+    [[[UIImageView alloc] unknownSelector]; setTransform:0];
+    if (cond /* ls */) goto L_c5c68;
+
+    [ret copy];
+    objc_retain(ret);
+    dispatch_time();
+    objc_retain(ret);
+    objc_retain([ret copy];);
+    dispatch_after(0x200010);
+    objc_release(0 /* local */);
+    objc_release([ret copy];);
+    objc_release(ret);
+    objc_release([ret copy];);
+    goto L_c5c70;
+
+L_c5c68:;
+    sub_c5e08(ret, ret);
+
+L_c5c70:;
+    objc_release([[UITapGestureRecognizer alloc] unknownSelector];);
+    objc_release([[UIImageView alloc] unknownSelector];);
+
+L_c5c80:;
+    objc_release(ret);
+    objc_release(ret);
+    [0 count];
+    if (cond /* lo */) goto L_c59d8;
+
+L_c5cbc:;
+    [self scrollView];
+    [ret setContentOffset:0 /* unk */];
+    objc_release(ret);
+    [0 count];
+    if ([0 count]; == 0) goto L_c5d30;
+
+    [0 count];
+
+L_c5d30:;
+    [0 count];
+    [self scrollView];
+    [ret setContentSize:0];
+    objc_release(ret);
+    [0 count];
+    if ([0 count]; != 0) goto L_c5db8;
+
+    [self setHidden:1];
+    [self setAlpha:1];
+
+L_c5db8:;
+    objc_release(0);
+    objc_release(a0);
+    return;
 }
 
 // @0xc619c  types=v24@0:8@16
@@ -825,7 +987,65 @@
     // 000c63e4  ldp     x24, x23, [sp, #0x50]
     // 000c63e8  ldp     x26, x25, [sp, #0x40]
     // 000c63ec  add     sp, sp, #0x90
-    // 000c63f0  ret     
+    // 000c63f0  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 state];
+    if (cond /* ne */) goto L_c63d4;
+
+    [a0 view];
+    [ret tag];
+    objc_release(ret);
+    if ((([ret tag]; >> 63) & 1) != 0) goto L_c63d4;
+
+    [self urls];
+    [ret count];
+    objc_release(ret);
+    if (cond /* ge */) goto L_c63d4;
+
+    [@0x244978 isEnabledForLevel:4];
+    if (ret == 0) goto L_c62d8;
+
+    [self urls];
+    [ret count];
+    [@0x244978 logLevel:4 format:@"[NearbyAlbum] 点开大图 index=%ld / %lu"];
+    objc_release(ret);
+    goto L_c62e4;
+
+L_c62d8:;
+    [@0x244978 noteFiltered:4];
+
+L_c62e4:;
+    [self urls];
+    objc_retain(ret);
+    [NSArray class];
+    [ret isKindOfClass:[NSArray class];];
+    if (ret == 0) goto L_c63c4;
+
+    [ret count];
+    if ([ret count]; == 0) goto L_c63c4;
+
+    objc_retain(ret);
+    [NSThread isMainThread];
+    if (ret == 0) goto L_c63ac;
+
+    goto L_c63b4;
+
+L_c63ac:;
+    dispatch_async(objc_retainBlock);
+
+L_c63b4:;
+    objc_release(objc_retainBlock);
+    objc_release(ret);
+
+L_c63c4:;
+    objc_release(ret);
+    objc_release(ret);
+
+L_c63d4:;
+    objc_release(a0);
+    return;
 }
 
 // @0xc63f4  types=@16@0:8
@@ -834,8 +1054,10 @@
     // 000c63f4  adrp    x8, #0x246000
     // 000c63f8  ldrsw   x8, [x8, #0x2c8]
     // 000c63fc  ldr     x0, [x0, x8]
-    // 000c6400  ret     
-    return nil;
+    // 000c6400  ret
+    id ret = nil;
+
+    return (id)self->_urls;
 }
 
 // @0xc6404  types=v24@0:8@16
@@ -852,8 +1074,10 @@
     // 000c6410  adrp    x8, #0x246000
     // 000c6414  ldrsw   x8, [x8, #0x2c4]
     // 000c6418  ldr     x0, [x0, x8]
-    // 000c641c  ret     
-    return nil;
+    // 000c641c  ret
+    id ret = nil;
+
+    return (id)self->_scrollView;
 }
 
 // @0xc6420  types=v24@0:8@16

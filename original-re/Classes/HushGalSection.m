@@ -7,8 +7,10 @@
 - (id)sid {
     // ---- original disassembly ----
     // 00068cf0  ldr     x0, [x0, #8]
-    // 00068cf4  ret     
-    return nil;
+    // 00068cf4  ret
+    id ret = nil;
+
+    return (id)self->/*+0x8*/;
 }
 
 // @0x68cf8  types=v24@0:8@16
@@ -22,8 +24,10 @@
 - (id)name {
     // ---- original disassembly ----
     // 00068d00  ldr     x0, [x0, #0x10]
-    // 00068d04  ret     
-    return nil;
+    // 00068d04  ret
+    id ret = nil;
+
+    return (id)self->/*+0x10*/;
 }
 
 // @0x68d08  types=v24@0:8@16
@@ -37,8 +41,10 @@
 - (id)files {
     // ---- original disassembly ----
     // 00068d10  ldr     x0, [x0, #0x18]
-    // 00068d14  ret     
-    return nil;
+    // 00068d14  ret
+    id ret = nil;
+
+    return (id)self->/*+0x18*/;
 }
 
 // @0x68d18  types=v24@0:8@16

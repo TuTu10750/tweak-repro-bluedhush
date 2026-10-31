@@ -262,8 +262,51 @@
     // 00088b0c  ldp     x28, x27, [sp, #0x20]
     // 00088b10  ldp     d9, d8, [sp, #0x10]
     // 00088b14  add     sp, sp, #0x80
-    // 00088b18  ret     
-    return nil;
+    // 00088b18  ret
+    id ret = nil;
+
+    [super initWithStyle:a0 reuseIdentifier:a1];
+    if (self == 0) goto L_88b18;
+
+    [[UILabel alloc] initWithFrame:16];
+    [self setName:[[UILabel alloc] initWithFrame:16];];
+    objc_release([[UILabel alloc] initWithFrame:16];);
+    [UIFont systemFontOfSize:16 weight:0x200378];
+    [self name];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor labelColor];
+    [self name];
+    [ret setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self contentView];
+    [self name];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [[UILabel alloc] initWithFrame:16];
+    [self setMeta:[[UILabel alloc] initWithFrame:16];];
+    objc_release([[UILabel alloc] initWithFrame:16];);
+    [UIFont systemFontOfSize:12];
+    [self meta];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor secondaryLabelColor];
+    [self meta];
+    [ret setTextColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self contentView];
+    [self meta];
+    [ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+
+L_88b18:;
+    return (id)self;
 }
 
 // @0x88b1c  types=v16@0:8
@@ -353,7 +396,20 @@
     // 00088c28  ldp     x22, x21, [sp, #0x20]
     // 00088c2c  ldp     d9, d8, [sp, #0x10]
     // 00088c30  add     sp, sp, #0x50
-    // 00088c34  ret     
+    // 00088c34  ret
+    id ret = nil;
+
+    [super layoutSubviews];
+    [self contentView];
+    [ret bounds];
+    objc_release(ret);
+    [self name];
+    [ret setFrame:16];
+    objc_release(ret);
+    [self meta];
+    [ret setFrame:16];
+    objc_release(ret);
+    return;
 }
 
 // @0x88c38  types=@16@0:8
@@ -362,8 +418,10 @@
     // 00088c38  adrp    x8, #0x246000
     // 00088c3c  ldrsw   x8, [x8, #0x20c]
     // 00088c40  ldr     x0, [x0, x8]
-    // 00088c44  ret     
-    return nil;
+    // 00088c44  ret
+    id ret = nil;
+
+    return (id)self->_name;
 }
 
 // @0x88c48  types=v24@0:8@16
@@ -382,8 +440,10 @@
     // 00088c5c  adrp    x8, #0x246000
     // 00088c60  ldrsw   x8, [x8, #0x210]
     // 00088c64  ldr     x0, [x0, x8]
-    // 00088c68  ret     
-    return nil;
+    // 00088c68  ret
+    id ret = nil;
+
+    return (id)self->_meta;
 }
 
 // @0x88c6c  types=v24@0:8@16

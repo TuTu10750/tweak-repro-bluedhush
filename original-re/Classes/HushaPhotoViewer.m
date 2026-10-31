@@ -527,6 +527,114 @@
     // 0017f8d0  ldr     x0, #0x243858
     // 0017f8d4  nop     
     // 0017f8d8  ldr     x1, #0x23e648
+    id ret = nil;
+
+    [super unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    objc_release(self->/*+0x0*/);
+    objc_release(ret);
+    [self->/*+0x0*/ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if ([ret unknownSelector]; == 0) goto L_17f698;
+
+L_17f53c:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    sub_17fa70(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release([[NSObject alloc] unknownSelector];);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (cond /* lo */) goto L_17f53c;
+
+L_17f698:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    objc_release(self->/*+0x0*/);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    [self->/*+0x0*/ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    return;
 }
 
 // @0x17fc8c  types=v16@0:8
@@ -716,7 +824,61 @@
     // 0017fee8  ldp     x26, x25, [sp, #0x100]
     // 0017feec  ldp     x28, x27, [sp, #0xf0]
     // 0017fef0  add     sp, sp, #0x150
-    // 0017fef4  ret     
+    // 0017fef4  ret
+    id ret = nil;
+
+    if (((a0 >> 63) & 1) != 0) goto L_17fed4;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (cond /* le */) goto L_17fed4;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    HushAlbumHighResolutionURL();
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_17feb4;
+
+    [ret unknownSelector];
+    if (((ret >> 0) & 1) != 0) goto L_17feb4;
+
+    [self->/*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_17fea4;
+
+L_17fe1c:;
+    if (cond /* eq */) goto L_17fe38;
+
+L_17fe38:;
+    [UIImageView class];
+    [0 /* local *//*+0x0*/ isKindOfClass:[UIImageView class];];
+    if (0 /* local *//*+0x0*/ == 0) goto L_17fe64;
+
+    if (cond /* eq */) goto L_17fe9c;
+
+L_17fe64:;
+    if (cond /* ne */) goto L_17fe1c;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_17fe1c;
+
+    goto L_17fea4;
+
+L_17fe9c:;
+    sub_17fa70(ret);
+
+L_17fea4:;
+    objc_release(ret);
+
+L_17feb4:;
+    objc_release(ret);
+    objc_release(ret);
+
+L_17fed4:;
+
+    return;
 }
 
 // @0x17fefc  types=v24@0:8@16
@@ -809,6 +971,18 @@
     // 00180018  ldp     d9, d8, [sp, #0x10]
     // 0018001c  add     sp, sp, #0x60
     // 00180020  b       #0x1a72d8   ; _objc_msgSend
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    objc_release(a0);
+    [self unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [self->/*+0x0*/ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
 }
 
 // @0x180024  types=@16@0:8
@@ -817,8 +991,10 @@
     // 00180024  nop     
     // 00180028  ldrsw   x8, #0x246584
     // 0018002c  ldr     x0, [x0, x8]
-    // 00180030  ret     
-    return nil;
+    // 00180030  ret
+    id ret = nil;
+
+    return (id)self->/*+0x0*/;
 }
 
 // @0x180034  types=v24@0:8@16
@@ -835,8 +1011,10 @@
     // 00180040  nop     
     // 00180044  ldrsw   x8, #0x246588
     // 00180048  ldr     x0, [x0, x8]
-    // 0018004c  ret     
-    return (long long)0;
+    // 0018004c  ret
+    id ret = nil;
+
+    return (long long)self->/*+0x0*/;
 }
 
 // @0x180050  types=v24@0:8q16
@@ -845,7 +1023,10 @@
     // 00180050  nop     
     // 00180054  ldrsw   x8, #0x246588
     // 00180058  str     x2, [x0, x8]
-    // 0018005c  ret     
+    // 0018005c  ret
+    id ret = nil;
+
+    return;
 }
 
 @end

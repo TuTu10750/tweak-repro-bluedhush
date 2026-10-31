@@ -50,7 +50,23 @@
     // 0008d0cc  b       #0x1a732c   ; _dispatch_async
     // 0008d0d0  ldp     x29, x30, [sp, #0x10]
     // 0008d0d4  ldp     x20, x19, [sp], #0x20
-    // 0008d0d8  ret     
+    // 0008d0d8  ret
+    id ret = nil;
+
+    [@0x244978 isEnabledForLevel:3];
+    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_8d09c;
+
+    [@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"];
+    goto L_8d0b0;
+
+L_8d09c:;
+    [[@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"]; noteFiltered:3];
+
+L_8d0b0:;
+    if (0x2579e8 == 0) goto L_8d0d8;
+
+L_8d0d8:;
+    return;
 }
 
 // @0x8d118  types=v24@0:8@16
@@ -189,7 +205,45 @@
     // 0008d2d0  ldp     x26, x25, [sp, #0x20]
     // 0008d2d4  ldp     x28, x27, [sp, #0x10]
     // 0008d2d8  add     sp, sp, #0x70
-    // 0008d2dc  ret     
+    // 0008d2dc  ret
+    id ret = nil;
+
+    [@0x244888 shared];
+    [ret isEnabled:0 /* func */];
+    if (0 == 0) goto L_8d190;
+
+    objc_release(ret);
+    goto L_8d1d8;
+
+L_8d190:;
+    [@0x244888 shared];
+    [ret isEnabled:0 /* func */];
+    objc_release(ret);
+    objc_release(ret);
+    if ([ret isEnabled:0 /* func */]; == 0) goto L_8d2dc;
+
+L_8d1d8:;
+    objc_retain(0x257a08);
+    sub_8d3b0();
+    if (0x257a08 == 0) goto L_8d204;
+
+    sub_8d460();
+
+L_8d204:;
+    [@0x244978 isEnabledForLevel:3];
+
+    [0x257a08 description];
+    [ret length];
+
+    [ret length];
+
+L_8d28c:;
+    [ret characterAtIndex:0];
+    [ret length];
+    if (cond /* lo */) goto L_8d28c;
+
+L_8d2dc:;
+    return;
 }
 
 // @0x8e348  types=v24@0:8@16
@@ -313,7 +367,36 @@
     // 0008e4c0  ldp     x24, x23, [sp, #0x20]
     // 0008e4c4  ldp     d9, d8, [sp, #0x10]
     // 0008e4c8  add     sp, sp, #0x60
-    // 0008e4cc  ret     
+    // 0008e4cc  ret
+    id ret = nil;
+
+    [a0 state];
+    if (cond /* ne */) goto L_8e4cc;
+
+    sub_8d3b0();
+    if ([a0 state]; == 0) goto L_8e4cc;
+
+    objc_retain(0x257a08);
+    [ret length];
+
+    sub_8e5c4();
+
+    [ret objectForKeyedSubscript:@"success"];
+    [ret boolValue];
+    objc_release(ret);
+
+    [ret objectForKeyedSubscript:@"lat"];
+    [ret doubleValue];
+    objc_release(ret);
+    [ret objectForKeyedSubscript:@"lng"];
+    [ret doubleValue];
+    objc_release(ret);
+    [@0x244978 isEnabledForLevel:3];
+
+    [@0x244978 logLevel:3 format:@"[PreTrack] 长按按钮 → 打开地图（缓存目标 %.6f,%.6f）"];
+
+L_8e4cc:;
+    return;
 }
 
 @end

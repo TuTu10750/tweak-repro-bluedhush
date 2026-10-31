@@ -7,8 +7,10 @@
 - (id)title {
     // ---- original disassembly ----
     // 0019cea0  ldr     x0, [x0, #8]
-    // 0019cea4  ret     
-    return nil;
+    // 0019cea4  ret
+    id ret = nil;
+
+    return (id)self->/*+0x8*/;
 }
 
 // @0x19cea8  types=v24@0:8@16
@@ -22,8 +24,10 @@
 - (id)icon {
     // ---- original disassembly ----
     // 0019ceb0  ldr     x0, [x0, #0x10]
-    // 0019ceb4  ret     
-    return nil;
+    // 0019ceb4  ret
+    id ret = nil;
+
+    return (id)self->/*+0x10*/;
 }
 
 // @0x19ceb8  types=v24@0:8@16
@@ -37,8 +41,10 @@
 - (id)subtitle {
     // ---- original disassembly ----
     // 0019cec0  ldr     x0, [x0, #0x18]
-    // 0019cec4  ret     
-    return nil;
+    // 0019cec4  ret
+    id ret = nil;
+
+    return (id)self->/*+0x18*/;
 }
 
 // @0x19cec8  types=v24@0:8@16
@@ -52,8 +58,10 @@
 - (id)footer {
     // ---- original disassembly ----
     // 0019ced0  ldr     x0, [x0, #0x20]
-    // 0019ced4  ret     
-    return nil;
+    // 0019ced4  ret
+    id ret = nil;
+
+    return (id)self->/*+0x20*/;
 }
 
 // @0x19ced8  types=v24@0:8@16
@@ -67,8 +75,10 @@
 - (id)sections {
     // ---- original disassembly ----
     // 0019cee0  ldr     x0, [x0, #0x28]
-    // 0019cee4  ret     
-    return nil;
+    // 0019cee4  ret
+    id ret = nil;
+
+    return (id)self->/*+0x28*/;
 }
 
 // @0x19cee8  types=v24@0:8@16
@@ -83,8 +93,10 @@
 - (id)items {
     // ---- original disassembly ----
     // 0019cef4  ldr     x0, [x0, #0x30]
-    // 0019cef8  ret     
-    return nil;
+    // 0019cef8  ret
+    id ret = nil;
+
+    return (id)self->/*+0x30*/;
 }
 
 // @0x19cefc  types=v24@0:8@16

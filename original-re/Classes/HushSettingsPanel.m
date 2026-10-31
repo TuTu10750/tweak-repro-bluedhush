@@ -417,7 +417,76 @@
     // 0019ebbc  ldp     x22, x21, [sp, #0x20]
     // 0019ebc0  ldp     x24, x23, [sp, #0x10]
     // 0019ebc4  add     sp, sp, #0x50
-    // 0019ebc8  ret     
+    // 0019ebc8  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    [self unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [[NSObject alloc] unknownSelector];
+    [self unknownSelector];
+    objc_release([[NSObject alloc] unknownSelector];);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    [self unknownSelector];
+    objc_release([[NSObject alloc] unknownSelector];);
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    HushTableViewTrimSectionTopPadding();
+    objc_release(ret);
+    [self unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    return;
 }
 
 // @0x19ebcc  types=v16@0:8
@@ -458,7 +527,14 @@
     // 0019ec34  ldp     x29, x30, [sp, #0x20]
     // 0019ec38  ldp     x20, x19, [sp, #0x10]
     // 0019ec3c  add     sp, sp, #0x30
-    // 0019ec40  ret     
+    // 0019ec40  ret
+    id ret = nil;
+
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [super unknownSelector];
+    return;
 }
 
 // @0x19ec44  types=v16@0:8
@@ -525,7 +601,20 @@
     // 0019ed0c  ldp     x29, x30, [sp, #0x40]
     // 0019ed10  ldp     x20, x19, [sp, #0x30]
     // 0019ed14  add     sp, sp, #0x50
-    // 0019ed18  ret     
+    // 0019ed18  ret
+    id ret = nil;
+
+    [0 /* unk */ unknownSelector];
+    if (((0 >> 0) & 1) == 0) goto L_19ed08;
+
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+
+L_19ed08:;
+    dispatch_async();
+    return;
 }
 
 // @0x19ed2c  types=v20@0:8B16
@@ -714,7 +803,57 @@
     // 0019ef6c  ldp     x22, x21, [sp, #0x20]
     // 0019ef70  ldp     x24, x23, [sp, #0x10]
     // 0019ef74  add     sp, sp, #0x50
-    // 0019ef78  ret     
+    // 0019ef78  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if ([self unknownSelector]; == 0) goto L_19ef18;
+
+    if ([ret unknownSelector]; == 0) goto L_19ee08;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_19ee08:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    if ([ret unknownSelector]; == 0) goto L_19eea0;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_19eea0:;
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    goto L_19ef44;
+
+L_19ef18:;
+    if (((ret >> 0) & 1) != 0) goto L_19ef78;
+
+    [self unknownSelector];
+
+L_19ef44:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_19ef78:;
+    return;
 }
 
 // @0x19ef7c  types=v20@0:8B16
@@ -742,7 +881,12 @@
     // 0019efbc  ldp     x29, x30, [sp, #0x20]
     // 0019efc0  ldp     x20, x19, [sp, #0x10]
     // 0019efc4  add     sp, sp, #0x30
-    // 0019efc8  ret     
+    // 0019efc8  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    [self unknownSelector];
+    return;
 }
 
 // @0x19efcc  types=v16@0:8
@@ -946,7 +1090,48 @@
     // 0019f244  ldp     d9, d8, [sp, #0x20]
     // 0019f248  ldp     d11, d10, [sp, #0x10]
     // 0019f24c  add     sp, sp, #0x80
-    // 0019f250  ret     
+    // 0019f250  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (ret == 0) goto L_19f1a8;
+
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (cond /* le */) goto L_19f1a8;
+
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_19f1a8:;
+    [self unknownSelector];
+    if (self == 0) goto L_19f22c;
+
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+
+L_19f22c:;
+    objc_release(ret);
+    return;
 }
 
 // @0x19f254  types=v16@0:8
@@ -1472,7 +1657,530 @@
     // 0019f884  adr     x3, #0x22f0d8
     // 0019f888  nop     
     // 0019f88c  adr     x4, #0x22f0f8
-    // 0019f890  nop     
+    // 0019f890  nop
+    id ret = nil;
+
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [@0x245dc8 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x22e898, 0x22e8b8, 0x22e8d8, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [@0x245dc8 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x22f6f8, 0x22f718, 0x22f738, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a38b8();
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x230078, 0x230098, 0x2300b8, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a38b8();
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x217a98, 0x230a78, 0x230a98, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    HushSpyPanelSubtitle();
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x230e18, 0x230e38, 0x230e58, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x2312b8, 0x2312d8, 0x2312f8, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x230358, 0x2317b8, 0x2317d8, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    HushBallIconCurrentStyle();
+    HushBallIconStyleTitle();
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x231c58, 0x231c78, 0x231c98, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    sub_1a33a4(0x231ef8, 0x231f18, 0x231f38, ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    objc_retain(ret);
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a3200;
+
+L_1a2e58:;
+    if (cond /* eq */) goto L_1a2e84;
+
+L_1a2e84:;
+    [0 /* local *//*+0x0*/ sections];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a3150;
+
+L_1a2edc:;
+    if (cond /* eq */) goto L_1a2f08;
+
+L_1a2f08:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a310c;
+
+L_1a2f98:;
+    if (cond /* eq */) goto L_1a2fb8;
+
+L_1a2fb8:;
+    [0 /* unk */ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    if (0 /* local *//*+0x0*/ == 0) goto L_1a30e0;
+
+    objc_retain(0 /* local *//*+0x0*/);
+    [ret unknownSelector];
+    HushHostCompatNote();
+    objc_release(ret);
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a30cc;
+
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if ((([ret unknownSelector]; >> 0) & 1) != 0) goto L_1a30cc;
+
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+
+L_1a30cc:;
+    objc_release(ret);
+    objc_release(0 /* local *//*+0x0*/);
+
+L_1a30e0:;
+    if (cond /* ne */) goto L_1a2f98;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a2f98;
+
+L_1a310c:;
+    objc_release(ret);
+    if (cond /* ne */) goto L_1a2edc;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a2edc;
+
+L_1a3150:;
+    objc_release(ret);
+    if (cond /* ne */) goto L_1a2e58;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a2e58;
+
+    if (1 == 0) goto L_1a3200;
+
+    [0 /* unk */ unknownSelector];
+    if ([0 /* unk */ unknownSelector]; == 0) goto L_1a31f4;
+
+    [0 /* unk */ unknownSelector];
+    goto L_1a3200;
+
+L_1a31f4:;
+    [[0 /* unk */ unknownSelector]; unknownSelector];
+
+L_1a3200:;
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+
+    return;
 }
 
 // @0x1a3e68  types=v16@0:8
@@ -1797,7 +2505,69 @@
     // 001a42b4  ldp     x24, x23, [sp, #0x20]
     // 001a42b8  ldp     x26, x25, [sp, #0x10]
     // 001a42bc  ldp     x28, x27, [sp], #0x60
-    // 001a42c0  ret     
+    // 001a42c0  ret
+    id ret = nil;
+
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a4268;
+
+L_1a3f40:;
+    if (cond /* eq */) goto L_1a3f6c;
+
+L_1a3f6c:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a4230;
+
+L_1a401c:;
+    if (cond /* eq */) goto L_1a403c;
+
+L_1a403c:;
+    [0 /* unk */ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    if ((([0 /* local *//*+0x0*/ unknownSelector]; >> 0) & 1) != 0) goto L_1a411c;
+
+    [0 /* local *//*+0x0*/ unknownSelector];
+    objc_retain(0x209f58);
+    objc_release(ret);
+    [0 /* local *//*+0x0*/ unknownSelector];
+    if (cond /* hi */) goto L_1a411c;
+
+    goto L_1a411c;
+
+L_1a411c:;
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(0x209f58);
+    objc_release(ret);
+    objc_release(ret);
+    if (cond /* ne */) goto L_1a401c;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a401c;
+
+L_1a4230:;
+    objc_release(ret);
+    if (cond /* ne */) goto L_1a3f40;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a3f40;
+
+L_1a4268:;
+    objc_release(ret);
+    [self unknownSelector];
+    objc_release(ret);
+
+    return;
 }
 
 // @0x1a42c8  types=v24@0:8@16
@@ -2056,7 +2826,68 @@
     // 001a4614  ldp     x26, x25, [sp, #0x120]
     // 001a4618  ldp     x28, x27, [sp, #0x110]
     // 001a461c  add     sp, sp, #0x170
-    // 001a4620  ret     
+    // 001a4620  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [0 /* unk */ unknownSelector];
+    [a0 unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a4588;
+
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a44c8;
+
+L_1a4410:;
+    if (cond /* eq */) goto L_1a4434;
+
+L_1a4434:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    objc_retain(0);
+    objc_release(ret);
+    [0 unknownSelector];
+    if (cond /* eq */) goto L_1a4494;
+
+    [ret unknownSelector];
+
+L_1a4494:;
+    objc_release(0);
+    if (cond /* ne */) goto L_1a4410;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a4410;
+
+L_1a44c8:;
+    objc_release(ret);
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_1a45cc;
+
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    goto L_1a45d8;
+
+L_1a4588:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    goto L_1a45d8;
+
+L_1a45cc:;
+    [ret unknownSelector];
+
+L_1a45d8:;
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(a0);
+
+    return;
 }
 
 // @0x1a4628  types=@16@0:8
@@ -2161,7 +2992,29 @@
     // 001a4750  ldp     x20, x19, [sp, #0x10]
     // 001a4754  ldp     x22, x21, [sp], #0x30
     // 001a4758  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    if (ret == 0) goto L_1a46d8;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_retain(ret);
+    goto L_1a473c;
+
+L_1a46d8:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_retain(ret);
+    objc_release(ret);
+
+L_1a473c:;
+    objc_release(ret);
+    objc_release(ret);
 }
 
 // @0x1a475c  types=v24@0:8@16
@@ -2207,6 +3060,12 @@
     // 001a47d4  ldp     x20, x19, [sp, #0x10]
     // 001a47d8  ldp     x22, x21, [sp], #0x30
     // 001a47dc  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    [a0 unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    objc_release(ret);
 }
 
 // @0x1a47e0  types=v16@0:8
@@ -2272,7 +3131,22 @@
     // 001a4894  ldp     x20, x19, [sp, #0x20]
     // 001a4898  ldp     x22, x21, [sp, #0x10]
     // 001a489c  ldp     x24, x23, [sp], #0x40
-    // 001a48a0  ret     
+    // 001a48a0  ret
+    id ret = nil;
+
+    [self unknownSelector];
+    if (0 == 0) goto L_1a48a0;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+
+L_1a48a0:;
+    return;
 }
 
 // @0x1a49d0  types=@16@0:8
@@ -2442,7 +3316,36 @@
     // 001a4be4  ldp     x22, x21, [sp, #0x10]
     // 001a4be8  ldp     d9, d8, [sp], #0x40
     // 001a4bec  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    [self unknownSelector];
+    objc_release(ret);
+    if (ret == 0) goto L_1a4a40;
+
+    goto L_1a4aa8;
+
+L_1a4a40:;
+    [[NSObject alloc] unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [self unknownSelector];
+    objc_release([[NSObject alloc] unknownSelector];);
+
+L_1a4aa8:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
 }
 
 // @0x1a4bf0  types=v32@0:8@16@24
@@ -2512,6 +3415,12 @@
     // 001a4c94  ldp     x20, x19, [sp, #0x10]
     // 001a4c98  ldp     x22, x21, [sp], #0x30
     // 001a4c9c  b       #0x1a72d8   ; _objc_msgSend
+    id ret = nil;
+
+    objc_retain(a0);
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    objc_release(a0);
 }
 
 // @0x1a4ca0  types=v24@0:8@16
@@ -2696,6 +3605,42 @@
     // 001a4ecc  ldp     x28, x27, [sp, #0x20]
     // 001a4ed0  add     sp, sp, #0x80
     // 001a4ed4  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    if (a0 == 0) goto L_1a4ed4;
+
+    [@0x244978 unknownSelector];
+    if (a0 == 0) goto L_1a4dcc;
+
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    [ret unknownSelector];
+    [a0 unknownSelector];
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    goto L_1a4df8;
+
+L_1a4dcc:;
+    [@0x244978 unknownSelector];
+
+L_1a4df8:;
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release([[NSObject alloc] unknownSelector];);
+
+L_1a4ed4:;
 }
 
 // @0x1a4ed8  types=v16@0:8
@@ -2940,6 +3885,38 @@
     // 001a51e0  nop     
     // 001a51e4  ldr     x1, #0x23ffa0
     // 001a51e8  b       #0x1a72d8   ; _objc_msgSend
+    id ret = nil;
+
+    [@0x244978 unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [@0x244978 unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [UIAlertAction unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [UIAlertAction unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    objc_retain(self);
+    objc_release(ret);
+    [self unknownSelector];
+    objc_release(self);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
 }
 
 // @0x1a51ec  types=B16@0:8
@@ -2969,16 +3946,23 @@
     // 001a522c  mov     x0, x20
     // 001a5230  ldp     x29, x30, [sp, #0x10]
     // 001a5234  ldp     x20, x19, [sp], #0x20
-    // 001a5238  ret     
-    return (BOOL)0;
+    // 001a5238  ret
+    id ret = nil;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    return 0;
 }
 
 // @0x1a523c  types=q24@0:8@16
 - (long long)numberOfSectionsInTableView:(id)a0 {
     // ---- original disassembly ----
     // 001a523c  mov     w0, #1
-    // 001a5240  ret     
-    return (long long)0;
+    // 001a5240  ret
+    id ret = nil;
+
+    return (long long)1;
 }
 
 // @0x1a5244  types=@32@0:8@16q24
@@ -2999,15 +3983,18 @@
     // 001a526c  csel    x0, x9, x8, ne
     // 001a5270  ldp     x29, x30, [sp], #0x10
     // 001a5274  b       #0x1a73bc   ; _objc_retainAutoreleaseReturnValue
-    return nil;
+
+    [self unknownSelector];
 }
 
 // @0x1a5278  types=d32@0:8@16q24
 - (double)tableView:(id)a0 heightForHeaderInSection:(long long)a1 {
     // ---- original disassembly ----
     // 001a5278  fmov    d0, #30.00000000
-    // 001a527c  ret     
-    return (double)0;
+    // 001a527c  ret
+    id ret = nil;
+
+    return (double)self;
 }
 
 // @0x1a5280  types=@16@0:8
@@ -3216,6 +4203,57 @@
     // 001a5540  ldp     x28, x27, [sp], #0x60
     // 001a5544  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     // 001a5548  bl      #0x1a72c0   ; ___stack_chk_fail
+    id ret = nil;
+
+    [self unknownSelector];
+    if (0 == 0) goto L_1a5330;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_retain(self);
+    objc_release(ret);
+    goto L_1a5520;
+
+L_1a5330:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a54b8;
+
+L_1a539c:;
+    if (cond /* eq */) goto L_1a53c4;
+
+L_1a53c4:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a5480;
+
+L_1a5418:;
+    if (cond /* eq */) goto L_1a5434;
+
+L_1a5434:;
+    [@0x245dc8 unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    if (cond /* ne */) goto L_1a5418;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a5418;
+
+L_1a5480:;
+    objc_release(ret);
+    if (cond /* ne */) goto L_1a539c;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a539c;
+
+L_1a54b8:;
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+
+L_1a5520:;
+    if (cond /* ne */) goto L_1a5548;
+
+L_1a5548:;
+    stack_chk_fail();
     return nil;
 }
 
@@ -3404,15 +4442,65 @@
     // 001a57c0  ldp     d9, d8, [sp, #0x100]
     // 001a57c4  ldp     d11, d10, [sp, #0xf0]
     // 001a57c8  add     sp, sp, #0x170
-    // 001a57cc  ret     
-    return (double)0;
+    // 001a57cc  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [self unknownSelector];
+    if (cond /* le */) goto L_1a55dc;
+
+    [self unknownSelector];
+    goto L_1a5788;
+
+L_1a55dc:;
+    [a0 unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a5764;
+
+L_1a5654:;
+    if (cond /* eq */) goto L_1a5670;
+
+L_1a5670:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    CGRectGetMinX();
+    objc_release(ret);
+    [0 /* local *//*+0x0*/ unknownSelector];
+    if (cond /* ne */) goto L_1a5654;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a5654;
+
+    objc_release(ret);
+    if (cond /* le */) goto L_1a5788;
+
+    [self unknownSelector];
+    [@0x244978 unknownSelector];
+    if ([@0x244978 unknownSelector]; == 0) goto L_1a577c;
+
+    [@0x244978 unknownSelector];
+    goto L_1a5788;
+
+L_1a5764:;
+    objc_release(ret);
+    goto L_1a5788;
+
+L_1a577c:;
+    [objc_release unknownSelector];
+
+L_1a5788:;
+    objc_release(0 /* local */);
+
+    return 0;
 }
 
 // @0x1a57d4  types=@32@0:8@16q24
 - (id)tableView:(id)a0 titleForFooterInSection:(long long)a1 {
     // ---- original disassembly ----
     // 001a57d4  mov     x0, #0
-    // 001a57d8  ret     
+    // 001a57d8  ret
+    id ret = nil;
+
     return nil;
 }
 
@@ -3521,7 +4609,30 @@
     // 001a591c  ldp     x24, x23, [sp, #0x10]
     // 001a5920  ldp     d9, d8, [sp], #0x50
     // 001a5924  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
-    return nil;
+    id ret = nil;
+
+    objc_retain(a0);
+    [self unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a5900;
+
+    [a0 unknownSelector];
+    if (ret != 0) goto L_1a588c;
+
+    [[NSObject alloc] unknownSelector];
+
+L_1a588c:;
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    goto L_1a5900;
+
+L_1a5900:;
+    objc_release(ret);
+    objc_release(a0);
 }
 
 // @0x1a5928  types=d32@0:8@16q24
@@ -3658,8 +4769,41 @@
     // 001a5adc  ldp     d9, d8, [sp, #0x30]
     // 001a5ae0  ldp     d11, d10, [sp, #0x20]
     // 001a5ae4  add     sp, sp, #0x70
-    // 001a5ae8  ret     
-    return (double)0;
+    // 001a5ae8  ret
+    id ret = nil;
+
+    objc_retain(a0);
+    [self unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a5aa8;
+
+    [self unknownSelector];
+    [a0 unknownSelector];
+    objc_retain(ret);
+
+    sub_19d6e4();
+    objc_release(ret);
+    [0x259828 unknownSelector];
+    objc_release(ret);
+    [0x259828 unknownSelector];
+    if (cond /* le */) goto L_1a5ac0;
+
+    [@0x244978 unknownSelector];
+    if ([@0x244978 unknownSelector]; == 0) goto L_1a5ab8;
+
+    [@0x244978 unknownSelector];
+    goto L_1a5ac0;
+
+L_1a5aa8:;
+    goto L_1a5ac0;
+
+L_1a5ab8:;
+    [[@0x244978 unknownSelector]; unknownSelector];
+
+L_1a5ac0:;
+    objc_release(ret);
+    objc_release(a0);
+    return 0;
 }
 
 // @0x1a5b04  types=q32@0:8@16q24
@@ -3699,8 +4843,14 @@
     // 001a5b68  mov     x0, x20
     // 001a5b6c  ldp     x29, x30, [sp, #0x10]
     // 001a5b70  ldp     x20, x19, [sp], #0x20
-    // 001a5b74  ret     
-    return (long long)0;
+    // 001a5b74  ret
+    id ret = nil;
+
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    return (long long)[ret unknownSelector];;
 }
 
 // @0x1a5b78  types=@32@0:8@16@24
@@ -4227,6 +5377,248 @@
     // 001a61ac  nop     
     // 001a61b0  ldr     x1, #0x23fa70
     // 001a61b4  mov     x0, x23
+    id ret = nil;
+
+    objc_retain(a0);
+    objc_retain(a1);
+    [0 /* unk */ unknownSelector];
+    [self unknownSelector];
+    if (self == 0) goto L_1a60b4;
+
+    [self unknownSelector];
+    [a1 unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [a0 unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    if (ret == 0) goto L_1a6404;
+
+    objc_retain(ret);
+    [ret unknownSelector];
+    HushKeyNeedsActivation();
+    if (ret == 0) goto L_1a5d4c;
+
+    HushActivationIsActive();
+
+L_1a5d4c:;
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* local */ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    HushHostCompatNote();
+    objc_release(ret);
+    [ret unknownSelector];
+    [0 /* local */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [0 /* local */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [0 /* local */ unknownSelector];
+    [ret unknownSelector];
+    objc_retain(ret);
+    objc_retain(ret);
+    objc_retain(ret);
+    [0 /* local */ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    goto L_1a6530;
+
+L_1a60b4:;
+    [a0 unknownSelector];
+    if (ret != 0) goto L_1a60fc;
+
+    [[NSObject alloc] unknownSelector];
+
+L_1a60fc:;
+    [ret unknownSelector];
+    [0 /* local */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_1a63a4;
+
+L_1a6308:;
+    if (cond /* eq */) goto L_1a6324;
+
+L_1a6324:;
+    [@0x245dc8 class];
+    [0 /* local *//*+0x0*/ isKindOfClass:[@0x245dc8 class];];
+    if (0 /* local *//*+0x0*/ == 0) goto L_1a6370;
+
+    [0 /* local *//*+0x0*/ key];
+    HushKeyNeedsActivation();
+    objc_release(ret);
+    if (((HushKeyNeedsActivation >> 0) & 1) != 0) goto L_1a63b0;
+
+L_1a6370:;
+    if (cond /* ne */) goto L_1a6308;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_1a6308;
+
+L_1a63a4:;
+    objc_release(ret);
+    goto L_1a63cc;
+
+L_1a63b0:;
+    objc_release(ret);
+    HushActivationIsActive();
+    if (ret == 0) goto L_1a6554;
+
+L_1a63cc:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+    goto L_1a65cc;
+
+L_1a6404:;
+    objc_retain(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    [[ret unknownSelector]; unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    [[ret unknownSelector]; unknownSelector];
+    [self unknownSelector];
+    objc_release(ret);
+
+L_1a6530:;
+    objc_release(ret);
+    goto L_1a66c0;
+
+L_1a6554:;
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_1a65cc:;
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    HushApplyHostStyleToContent(0 /* unk */);
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [0 /* unk */ unknownSelector];
+    if (ret == 0) goto L_1a6670;
+
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    goto L_1a66a0;
+
+L_1a6670:;
+    [0 /* unk */ unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+
+L_1a66a0:;
+    objc_release(ret);
+    [self unknownSelector];
+
+L_1a66c0:;
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(0 /* unk */);
+    objc_release(0 /* adrp */);
+    objc_release(a0);
+    if (cond /* ne */) goto L_1a6724;
+
+L_1a6724:;
+    stack_chk_fail();
+    goto L_1a674c;
+
+    goto L_1a674c;
+
+L_1a674c:;
+    Unwind_Resume();
+    if (objc_loadWeakRetained == 0) goto L_1a691c;
+
+    [Unwind_Resume/*+0x20*/ unknownSelector];
+    if ([Unwind_Resume/*+0x20*/ unknownSelector]; == 0) goto L_1a67dc;
+
+    [Unwind_Resume/*+0x28*/ unknownSelector];
+    goto L_1a691c;
+
+L_1a67dc:;
+    objc_retain(Unwind_Resume/*+0x30*/);
+    HushActivationInterceptToggle();
+    if (((objc_destroyWeak >> 0) & 1) == 0) goto L_1a68ac;
+
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [@0x244978 unknownSelector];
+    if ([@0x244978 unknownSelector]; == 0) goto L_1a68c4;
+
+    [@0x244978 unknownSelector];
+    goto L_1a68e0;
+
+L_1a68ac:;
+    [Unwind_Resume/*+0x28*/ unknownSelector];
+    goto L_1a6914;
+
+L_1a68c4:;
+    [ret unknownSelector];
+
+L_1a68e0:;
+    [Unwind_Resume/*+0x30*/ unknownSelector];
+    if (ret == 0) goto L_1a691c;
+
+    [objc_loadWeakRetained unknownSelector];
+    [ret unknownSelector];
+
+L_1a6914:;
+    objc_release(ret);
+
+L_1a691c:;
+    objc_release(objc_loadWeakRetained);
     return nil;
 }
 
@@ -4280,6 +5672,14 @@
     // 001a6ab0  ldp     x20, x19, [sp, #0x10]
     // 001a6ab4  ldp     x22, x21, [sp], #0x30
     // 001a6ab8  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a0);
+    [a1 unknownSelector];
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    [a0 unknownSelector];
+    objc_release(a0);
 }
 
 // @0x1a6abc  types=v32@0:8@16@24
@@ -4560,6 +5960,70 @@
     // 001a6e24  ldp     x26, x25, [sp, #0x10]
     // 001a6e28  add     sp, sp, #0x60
     // 001a6e2c  b       #0x1a7284   ; _objc_release
+    id ret = nil;
+
+    objc_retain(a1);
+    [a0 unknownSelector];
+    [self unknownSelector];
+    if (self == 0) goto L_1a6c40;
+
+    [self unknownSelector];
+    [a1 unknownSelector];
+    objc_release(a1);
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_1a6cb0;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    goto L_1a6cc4;
+
+L_1a6c40:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    goto L_1a6e04;
+
+L_1a6cb0:;
+    [[ret unknownSelector]; unknownSelector];
+
+L_1a6cc4:;
+    [self unknownSelector];
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if ([ret unknownSelector]; == 0) goto L_1a6d44;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_1a6d44:;
+    [self unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    if ([ret unknownSelector]; == 0) goto L_1a6e0c;
+
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [self unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+
+L_1a6e04:;
+    [self unknownSelector];
+
+L_1a6e0c:;
+    objc_release(ret);
 }
 
 // @0x19da50  types=@16@0:8
@@ -4595,7 +6059,14 @@
     // 0019dab0  mov     x0, x8
     // 0019dab4  ldp     x29, x30, [sp], #0x10
     // 0019dab8  b       #0x1a7284   ; _objc_release
-    return nil;
+
+    if (cond /* ne */) goto L_19da84;
+
+L_19da68:;
+
+L_19da84:;
+    dispatch_once(0x2090c0, a0, a1, a2, a3);
+    goto L_19da68;
 }
 
 // @0x19dabc  types=v16@0:8
@@ -5131,6 +6602,262 @@
     // 0019e100  nop     
     // 0019e104  ldr     x1, #0x23fc20
     // 0019e108  bl      #0x1a72d8   ; _objc_msgSend
+    id ret = nil;
+
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    if (ret == 0) goto L_19dc00;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if ([ret unknownSelector]; == 0) goto L_19dc00;
+
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_19df0c;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    goto L_19df1c;
+
+L_19dc00:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+    HushVisibleTopViewController();
+    HushVisibleNavigationController();
+    if (ret != 0) goto L_19dc68;
+
+    [ret unknownSelector];
+    if (ret == 0) goto L_19df7c;
+
+L_19dc68:;
+    [ret unknownSelector];
+    NSStringFromClass();
+    [ret unknownSelector];
+    objc_release(ret);
+    if (cond /* eq */) goto L_19de98;
+
+    [@0x245c88 unknownSelector];
+    if (ret == 0) goto L_19de98;
+
+    [@0x245c88 unknownSelector];
+    [ret unknownSelector];
+    if (ret == 0) goto L_19dd38;
+
+    [@0x245c88 unknownSelector];
+
+L_19dd38:;
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_19dfdc;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    NSStringFromClass();
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    if (ret == 0) goto L_19e04c;
+
+    [ret unknownSelector];
+    goto L_19e04c;
+
+L_19de98:;
+    [@0x244978 unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_19def4;
+
+    [0x22e6d8 unknownSelector];
+    NSStringFromClass();
+    [@0x244978 unknownSelector];
+    goto L_19e0d4;
+
+L_19def4:;
+    [@0x244978 unknownSelector];
+    goto L_19e0dc;
+
+L_19df0c:;
+    [ret unknownSelector];
+
+L_19df1c:;
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    if (ret == 0) goto L_19e658;
+
+    [ret unknownSelector];
+    goto L_19e658;
+
+L_19df7c:;
+    if (cond /* lt */) goto L_19dff0;
+
+    [@0x244978 unknownSelector];
+
+    [@0x244978 unknownSelector];
+    goto L_19e650;
+
+L_19dfdc:;
+    [0x22e6f8 unknownSelector];
+    goto L_19e0cc;
+
+L_19dff0:;
+    dispatch_time(0x1dcd);
+    dispatch_after(0 /* unk */);
+    goto L_19e650;
+
+L_19e04c:;
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(0x22e738);
+
+L_19e0cc:;
+    objc_release(ret);
+
+L_19e0d4:;
+    objc_release(ret);
+
+L_19e0dc:;
+    objc_retain(ret);
+    if (ret == 0) goto L_19e374;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    if (ret == 0) goto L_19e374;
+
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_19e238;
+
+L_19e1c4:;
+    if (cond /* eq */) goto L_19e1dc;
+
+L_19e1dc:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    NSStringFromClass();
+    [ret addObject:ret];
+    objc_release(ret);
+    if (cond /* ne */) goto L_19e1c4;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_19e1c4;
+
+L_19e238:;
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (cond /* eq */) goto L_19e3e0;
+
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_19e47c;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    NSStringFromClass();
+    [ret unknownSelector];
+    NSStringFromClass();
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    goto L_19e464;
+
+L_19e374:;
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_19e3d0;
+
+    [ret unknownSelector];
+    NSStringFromClass();
+    if (ret == 0) goto L_19e494;
+
+    [ret unknownSelector];
+    NSStringFromClass();
+    goto L_19e494;
+
+L_19e3d0:;
+    [@0x244978 unknownSelector];
+    goto L_19e588;
+
+L_19e3e0:;
+    [[@0x244978 unknownSelector]; unknownSelector];
+    if ([@0x244978 class] == 0) goto L_19e630;
+
+    [@0x244978 unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+
+L_19e464:;
+    objc_release(ret);
+    goto L_19e638;
+
+L_19e47c:;
+    goto L_19e630;
+
+L_19e494:;
+    [ret unknownSelector];
+    if (((ret >> 0) & 1) == 0) goto L_19e54c;
+
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [@0x244978 unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    if (ret != 0) goto L_19e558;
+
+    goto L_19e560;
+
+L_19e54c:;
+    [@0x244978 unknownSelector];
+    if (ret == 0) goto L_19e560;
+
+L_19e558:;
+    objc_release(0x20dcb8);
+
+L_19e560:;
+    objc_release(ret);
+
+L_19e588:;
+    [[NSObject alloc] unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release([[NSObject alloc] unknownSelector];);
+    [[NSObject alloc] unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    goto L_19e638;
+
+L_19e630:;
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+
+L_19e638:;
+    objc_release([@0x244978 class]);
+    objc_release(ret);
+    objc_release(ret);
+
+L_19e650:;
+    objc_release(ret);
+
+L_19e658:;
+    objc_release(0 /* unk */);
+    objc_release(ret);
+
+    return;
 }
 
 @end

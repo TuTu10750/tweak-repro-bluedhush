@@ -126,7 +126,30 @@
     // 00141f50  ldp     x22, x21, [sp, #0x20]
     // 00141f54  ldp     x24, x23, [sp, #0x10]
     // 00141f58  add     sp, sp, #0x50
-    // 00141f5c  ret     
+    // 00141f5c  ret
+    id ret = nil;
+
+    [super unknownSelector];
+    if (super == 0) goto L_141f5c;
+
+    [UIFont unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [UIFont unknownSelector];
+    [super unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor unknownSelector];
+    [super unknownSelector];
+    objc_release(ret);
+
+L_141f5c:;
     return nil;
 }
 

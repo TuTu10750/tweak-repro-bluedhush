@@ -9,8 +9,10 @@
     // 00198534  nop     
     // 00198538  ldrsw   x8, #0x2465fc
     // 0019853c  ldr     x0, [x0, x8]
-    // 00198540  ret     
-    return (long long)0;
+    // 00198540  ret
+    id ret = nil;
+
+    return (long long)self->/*+0x0*/;
 }
 
 // @0x198544  types=v24@0:8q16
@@ -19,7 +21,10 @@
     // 00198544  nop     
     // 00198548  ldrsw   x8, #0x2465fc
     // 0019854c  str     x2, [x0, x8]
-    // 00198550  ret     
+    // 00198550  ret
+    id ret = nil;
+
+    return;
 }
 
 // @0x197d04  types=@28@0:8q16B24
@@ -546,6 +551,121 @@
     // 00198338  mov     x29, x29
     // 0019833c  bl      #0x1a72b4   ; _objc_retainAutoreleasedReturnValue
     // 00198340  mov     x26, x0
+    id ret = nil;
+
+    [[NSObject alloc] unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [UIColor unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (((a1 >> 0) & 1) != 0) goto L_197e98;
+
+    [UIColor unknownSelector];
+
+L_197e98:;
+    [objc_retainAutorelease unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    if (((a1 >> 0) & 1) == 0) goto L_197efc;
+
+    [ret unknownSelector];
+    goto L_197f2c;
+
+L_197efc:;
+    objc_release(ret);
+    [UIColor unknownSelector];
+
+L_197f2c:;
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+    HushBallIconImage();
+    [[NSObject alloc] unknownSelector];
+    objc_release(ret);
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[NSObject alloc] unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    HushBallIconStyleTitle();
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+    if (a1 == 0) goto L_1980b0;
+
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    goto L_1980ec;
+
+L_1980b0:;
+    [UIColor unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    objc_release(ret);
+
+L_1980ec:;
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [[[NSObject alloc] unknownSelector]; unknownSelector];
+    [ret unknownSelector];
+    [0 /* unk */ unknownSelector];
+    [0 /* unk */ unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release([[NSObject alloc] unknownSelector];);
+    objc_release([[NSObject alloc] unknownSelector];);
+    objc_release(ret);
+    if (cond /* ne */) goto L_198530;
+
+L_198530:;
+    stack_chk_fail();
     return nil;
 }
 

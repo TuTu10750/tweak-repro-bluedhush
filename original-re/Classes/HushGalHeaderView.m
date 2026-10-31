@@ -323,8 +323,55 @@
     // 0007c67c  ldp     x28, x27, [sp, #0x20]
     // 0007c680  ldp     d9, d8, [sp, #0x10]
     // 0007c684  add     sp, sp, #0x80
-    // 0007c688  ret     
-    return nil;
+    // 0007c688  ret
+    id ret = nil;
+
+    [super initWithFrame:a0];
+    if (self == 0) goto L_7c688;
+
+    [[UILabel alloc] initWithFrame:14];
+    objc_release(self->_name);
+    [UIFont boldSystemFontOfSize:12];
+    [self->_name setFont:ret];
+    objc_release(ret);
+    [self->_name setAdjustsFontSizeToFitWidth:1];
+    [self->_name setMinimumScaleFactor:0.72];
+    [self->_name setLineBreakMode:2];
+    HushIsDarkMode();
+    [UIColor unknownSelector];
+    [self->_name setTextColor:ret];
+    objc_release(ret);
+    [self->_name setAutoresizingMask:0x12];
+    [self addSubview:self->_name];
+    [[UILabel alloc] initWithFrame:-118];
+    objc_release(self->_count);
+    [UIFont systemFontOfSize:12];
+    [self->_count setFont:ret];
+    objc_release(ret);
+    HushIsDarkMode();
+    [UIColor colorWithWhite:0.42 alpha:1];
+    [self->_count setTextColor:ret];
+    objc_release(ret);
+    [self->_count setTextAlignment:2];
+    [self->_count setAutoresizingMask:0x11];
+    [self addSubview:self->_count];
+    [UIButton buttonWithType:1];
+    objc_release(self->_home);
+    [self->_home setFrame:-0x3faf000000000000];
+    [self->_home setTitle:@"主页" forState:0];
+    [UIFont systemFontOfSize:14];
+    [self->_home titleLabel];
+    [ret setFont:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    [self->_home setTitleColor:ret forState:0];
+    objc_release(ret);
+    [self->_home setAutoresizingMask:0x11];
+    [self addSubview:self->_home];
+
+L_7c688:;
+    return (id)self;
 }
 
 // @0x7c68c  types=@16@0:8
@@ -333,8 +380,10 @@
     // 0007c68c  adrp    x8, #0x246000
     // 0007c690  ldrsw   x8, [x8, #0x1c0]
     // 0007c694  ldr     x0, [x0, x8]
-    // 0007c698  ret     
-    return nil;
+    // 0007c698  ret
+    id ret = nil;
+
+    return (id)self->_name;
 }
 
 // @0x7c69c  types=v24@0:8@16
@@ -353,8 +402,10 @@
     // 0007c6b0  adrp    x8, #0x246000
     // 0007c6b4  ldrsw   x8, [x8, #0x1c8]
     // 0007c6b8  ldr     x0, [x0, x8]
-    // 0007c6bc  ret     
-    return nil;
+    // 0007c6bc  ret
+    id ret = nil;
+
+    return (id)self->_home;
 }
 
 // @0x7c6c0  types=v24@0:8@16
@@ -373,8 +424,10 @@
     // 0007c6d4  adrp    x8, #0x246000
     // 0007c6d8  ldrsw   x8, [x8, #0x1c4]
     // 0007c6dc  ldr     x0, [x0, x8]
-    // 0007c6e0  ret     
-    return nil;
+    // 0007c6e0  ret
+    id ret = nil;
+
+    return (id)self->_count;
 }
 
 // @0x7c6e4  types=v24@0:8@16

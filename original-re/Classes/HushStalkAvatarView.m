@@ -9,8 +9,10 @@
     // 001411c8  adrp    x8, #0x246000
     // 001411cc  ldrsw   x8, [x8, #0x44c]
     // 001411d0  ldr     x0, [x0, x8]
-    // 001411d4  ret     
-    return nil;
+    // 001411d4  ret
+    id ret = nil;
+
+    return (id)self->_hushURL;
 }
 
 // @0x1411d8  types=v24@0:8@16

@@ -397,7 +397,81 @@
     // 0015d344  ldp     x28, x27, [sp, #0x20]
     // 0015d348  ldp     d9, d8, [sp, #0x10]
     // 0015d34c  ldp     d11, d10, [sp], #0x80
-    // 0015d350  ret     
+    // 0015d350  ret
+    id ret = nil;
+
+    sub_15d358(_cmd, a0, a1, a2, a3);
+    HushVisibleTopViewController();
+    if (ret == 0) goto L_15d308;
+
+    [0 /* unk */ unknownSelector];
+    [NSArray unknownSelector];
+    [NSArray unknownSelector];
+    [NSArray unknownSelector];
+    [NSArray unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_retain(ret);
+    [ret unknownSelector];
+    if ([ret unknownSelector]; == 0) goto L_15d1b0;
+
+L_15d044:;
+    if (cond /* eq */) goto L_15d064;
+
+L_15d064:;
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [0 /* local *//*+0x0*/ unknownSelector];
+    [ret unknownSelector];
+    if (((ret >> 0) & 1) == 0) goto L_15d0cc;
+
+    [0x229df8 unknownSelector];
+    goto L_15d108;
+
+L_15d0cc:;
+    objc_retain(ret);
+
+L_15d108:;
+    objc_retain(ret);
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    objc_release(ret);
+    if (cond /* ne */) goto L_15d044;
+
+    [ret unknownSelector];
+    if ([ret unknownSelector]; != 0) goto L_15d044;
+
+    goto L_15d1b0;
+
+L_15d1b0:;
+    objc_release(ret);
+    [0 /* unk */ unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+    [ret unknownSelector];
+    objc_release(ret);
+    objc_release(ret);
+
+L_15d308:;
+    objc_release(ret);
+    objc_release(ret);
+
+    return;
 }
 
 @end

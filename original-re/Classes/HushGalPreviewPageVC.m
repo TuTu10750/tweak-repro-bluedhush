@@ -213,7 +213,43 @@
     // 0007a93c  ldp     x24, x23, [sp, #0x60]
     // 0007a940  ldp     x26, x25, [sp, #0x50]
     // 0007a944  add     sp, sp, #0xa0
-    // 0007a948  ret     
+    // 0007a948  ret
+    id ret = nil;
+
+    [super viewDidLoad];
+    [UIColor clearColor];
+    [self view];
+    [ret setBackgroundColor:ret];
+    objc_release(ret);
+    objc_release(ret);
+    [self view];
+    [ret bounds];
+    [[UIImageView alloc] initWithFrame:0];
+    objc_release(ret);
+    [[[UIImageView alloc] initWithFrame:0]; setContentMode:1];
+    [UIColor clearColor];
+    [[[UIImageView alloc] initWithFrame:0]; setBackgroundColor:ret];
+    objc_release(ret);
+    [[[UIImageView alloc] initWithFrame:0]; setAutoresizingMask:0x12];
+    [[[UIImageView alloc] initWithFrame:0]; setAccessibilityIdentifier:@"hushgal_preview_image"];
+    [self view];
+    [ret addSubview:[[UIImageView alloc] initWithFrame:0];];
+    objc_release(ret);
+    objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:0];);
+    [self path];
+    [ret length];
+    if ([ret length]; == 0) goto L_7a924;
+
+    dispatch_get_global_queue(0);
+    objc_retain(ret);
+    dispatch_async();
+    objc_release(ret);
+    objc_release(ret);
+
+L_7a924:;
+    objc_release(ret);
+    objc_release([[UIImageView alloc] initWithFrame:0];);
+    return;
 }
 
 // @0x7ab1c  types=@16@0:8
@@ -222,8 +258,10 @@
     // 0007ab1c  adrp    x8, #0x246000
     // 0007ab20  ldrsw   x8, [x8, #0x198]
     // 0007ab24  ldr     x0, [x0, x8]
-    // 0007ab28  ret     
-    return nil;
+    // 0007ab28  ret
+    id ret = nil;
+
+    return (id)self->_path;
 }
 
 // @0x7ab2c  types=v24@0:8@16
@@ -240,8 +278,10 @@
     // 0007ab38  adrp    x8, #0x246000
     // 0007ab3c  ldrsw   x8, [x8, #0x19c]
     // 0007ab40  ldr     x0, [x0, x8]
-    // 0007ab44  ret     
-    return (long long)0;
+    // 0007ab44  ret
+    id ret = nil;
+
+    return (long long)self->_index;
 }
 
 // @0x7ab48  types=v24@0:8q16
@@ -250,7 +290,10 @@
     // 0007ab48  adrp    x8, #0x246000
     // 0007ab4c  ldrsw   x8, [x8, #0x19c]
     // 0007ab50  str     x2, [x0, x8]
-    // 0007ab54  ret     
+    // 0007ab54  ret
+    id ret = nil;
+
+    return;
 }
 
 @end
