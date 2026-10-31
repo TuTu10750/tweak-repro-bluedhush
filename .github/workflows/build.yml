@@ -284,3 +284,69 @@ jobs:
             original-re/.theos/obj/**/*.dylib
           if-no-files-found: warn
           retention-days: 14
+
+  # ==========================================================================
+  # build-original-re-linux : 同一份 original-re，跑在 ubuntu（Linux 分钟不计 macOS 配额）
+  # 只验证 ObjC 语法/链接，不追求 arm64e 切片 —— 架构降到 arm64 单切片。
+  # ==========================================================================
+  build-original-re-linux:
+    runs-on: ubuntu-latest
+
+    env:
+      THEOS: ${{ github.workspace }}/theos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install toolchain (Linux)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clang lld build-essential libssl-dev zstd ldid curl git make
+          clang --version | head -2
+
+      - name: Fetch Theos + iPhoneOS SDK
+        run: |
+          git clone --recursive --depth 1 https://github.com/theos/theos.git "$THEOS"
+          mkdir -p "$THEOS/sdks"
+          curl -fsSL https://github.com/theos/sdks/archive/master.tar.gz -o /tmp/sdks.tar.gz
+          tar xzf /tmp/sdks.tar.gz -C /tmp
+          for d in /tmp/sdks-master/iPhoneOS*.sdk; do cp -R "$d" "$THEOS/sdks/" 2>/dev/null || true; done
+          ls "$THEOS/sdks"
+
+      - name: Sanity (tree shape)
+        run: |
+          echo "headers: $(ls original-re/Headers/*.h | wc -l)"
+          echo "impls  : $(ls original-re/Classes/*.m | wc -l)"
+          echo "hooks  : $(grep -c '^%hook' original-re/Hooks/Hooks.generated.xm)"
+          test "$(ls original-re/Headers/*.h | wc -l)" = "76"
+          test "$(ls original-re/Classes/*.m | wc -l)" = "76"
+
+      - name: Build original-re (arm64)
+        run: |
+          set -o pipefail
+          make -C original-re clean || true
+          make -C original-re ARCHS=arm64 FINALPACKAGE=1 2>&1 | tee build-original-re-linux.log
+          echo "--- outputs ---"
+          find original-re/.theos/obj -name '*.dylib' | sort
+
+      - name: Report (does not fail the job)
+        if: always()
+        run: |
+          echo "== total errors =="
+          grep -c "error:" build-original-re-linux.log || true
+          echo "== errors by message =="
+          grep -E "error:" build-original-re-linux.log | sed -E 's/^.*error: //' | sort | uniq -c | sort -rn | head -40 || true
+          echo "== distinct failing files =="
+          grep -E "error:" build-original-re-linux.log | sed -E 's/^([^:]+):.*/\1/' | sort | uniq -c | sort -rn | head -40 || true
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-re-build-linux
+          path: |
+            build-original-re-linux.log
+            original-re/.theos/obj/**/*.dylib
+          if-no-files-found: warn
+          retention-days: 14
