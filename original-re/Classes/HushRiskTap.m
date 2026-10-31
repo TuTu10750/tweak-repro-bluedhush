@@ -460,10 +460,10 @@
     [ret length];
     if ([ret length]; == 0) goto L_203cc;
 
-    sub_222dc();
+    /* [UNRESOLVED] sub_222dc(); */
     if (ret == 0) goto L_203c4;
 
-    HushRiskUserSource();
+    /* [UNRESOLVED] HushRiskUserSource(); */
     [ret length];
     if ([ret length]; == 0) goto L_1ff84;
 
@@ -503,7 +503,7 @@ L_2000c:;
     objc_release(ret);
 
 L_20208:;
-    [UIAlertAction actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50];
+    /* [UNRESOLVED] [UIAlertAction actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
     [ret addAction:ret];
     objc_release(ret);
     [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];

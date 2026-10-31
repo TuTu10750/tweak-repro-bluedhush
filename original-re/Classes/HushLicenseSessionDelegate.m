@@ -197,35 +197,37 @@
     objc_retain(a2);
     [a1 protectionSpace];
     [ret authenticationMethod];
-    [ret isEqualToString:0x200248/*+0x0*/];
+    /* [UNRESOLVED] [ret isEqualToString:0x200248/ *+0x0* /]; */
     objc_release(ret);
     objc_release(ret);
-    if ([ret isEqualToString:0x200248/*+0x0*/]; == 0) goto L_12ebc;
+    /* [UNRESOLVED] if ([ret isEqualToString:0x200248/ *+0x0* /]; == 0) goto L_12ebc; */
 
     [a1 protectionSpace];
     [ret serverTrust];
     objc_release(ret);
     if ([ret serverTrust]; == 0) goto L_12ed8;
 
-    SecTrustGetCertificateAtIndex(0);
+    /* [UNRESOLVED] SecTrustGetCertificateAtIndex(0); */
     if (SecTrustGetCertificateAtIndex == 0) goto L_12ed8;
 
-    SecCertificateCopyData();
+    /* [UNRESOLVED] SecCertificateCopyData(); */
     if (SecCertificateCopyData == 0) goto L_12ed8;
 
-    CFDataGetBytePtr();
-    CFDataGetLength();
-    CC_SHA256(CFDataGetLength);
+    /* [UNRESOLVED] CFDataGetBytePtr(); */
+    /* [UNRESOLVED] CFDataGetLength(); */
+    /* [UNRESOLVED] CC_SHA256(CFDataGetLength); */
     [NSMutableString string];
 
 L_12e20:;
     [ret appendFormat:@"%02X"];
-    if (cond /* ne */) goto L_12e20;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_12e20; */
 
-    [ret isEqualToString:0x256650];
-    CFRelease();
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_12f1c; */
+
+    /* [UNRESOLVED] [ret isEqualToString:0x256650]; */
+    /* [UNRESOLVED] CFRelease(); */
     objc_release(ret);
-    if ((([ret isEqualToString:0x256650]; >> 0) & 1) == 0) goto L_12ed8;
+    /* [UNRESOLVED] if ((([ret isEqualToString:0x256650]; >> 0) & 1) == 0) goto L_12ed8; */
 
     [NSURLCredential credentialForTrust:[ret serverTrust];];
     objc_release(ret);
@@ -237,6 +239,7 @@ L_12ebc:;
 L_12ed8:;
     objc_release(a2);
     objc_release(a1);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_12f34; */
 
     return;
 }

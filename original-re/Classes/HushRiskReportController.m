@@ -103,12 +103,12 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [self setTitle:0x225c98];
+    /* [UNRESOLVED] [self setTitle:0x225c98]; */
     [self tableView];
     [ret setRowHeight:0 /* unk *//*+0x0*/];
     objc_release(ret);
     [self tableView];
-    [ret setEstimatedRowHeight:0x4050000000000000];
+    /* [UNRESOLVED] [ret setEstimatedRowHeight:0x4050000000000000]; */
     objc_release(ret);
     [objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
     [self setRefreshControl:objc_alloc_init];
@@ -432,9 +432,9 @@
 
     objc_retain(a1);
     [a0 deselectRowAtIndexPath:a1 animated:1];
-    sub_1351b0(a1);
+    /* [UNRESOLVED] sub_1351b0(a1); */
     objc_release(a1);
-    [ret objectForKeyedSubscript:0x225538];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225538]; */
     [ret boolValue];
     objc_release(ret);
     if ([ret boolValue]; == 0) goto L_1351ac;
@@ -456,7 +456,7 @@ L_1351ac:;
 
     [0 section];
     [ret count];
-    if (cond /* hs */) goto L_13539c;
+    /* [UNRESOLVED] if (cond / * hs * /) goto L_13539c; */
 
     [0 section];
     [ret objectAtIndexedSubscript:[0 section];];
@@ -464,7 +464,7 @@ L_1351ac:;
     [ret isKindOfClass:[NSDictionary class];];
     if (ret == 0) goto L_1353a4;
 
-    [ret objectForKeyedSubscript:0x2256f8];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2256f8]; */
     [NSArray class];
     [ret isKindOfClass:[NSArray class];];
     if (ret == 0) goto L_1353b0;
@@ -474,7 +474,7 @@ L_1351ac:;
 
     [0 row];
     [ret count];
-    if (cond /* hs */) goto L_1353b0;
+    /* [UNRESOLVED] if (cond / * hs * /) goto L_1353b0; */
 
     [0 row];
     [ret objectAtIndexedSubscript:[0 row];];
@@ -580,7 +580,7 @@ L_1353c0:;
     // 001354d4  ret
     id ret = nil;
 
-    HushRiskReportSections(_cmd, a0, a1, a2, a3);
+    /* [UNRESOLVED] HushRiskReportSections(_cmd, a0, a1, a2, a3); */
     objc_release(self->_sections);
     [self tableView];
     [ret reloadData];
@@ -664,7 +664,7 @@ L_1354d4:;
     [ret viewControllers];
     [ret count];
     objc_release(ret);
-    if (cond /* lo */) goto L_135578;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_135578; */
 
     [ret popViewControllerAnimated:1];
     goto L_13558c;
@@ -791,14 +791,14 @@ L_13558c:;
     if (((a1 >> 63) & 1) != 0) goto L_1356ac;
 
     [self->_sections count];
-    if (cond /* ls */) goto L_1356ac;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_1356ac; */
 
     [self->_sections objectAtIndexedSubscript:a1];
     [NSDictionary class];
     [ret isKindOfClass:[NSDictionary class];];
     if (ret == 0) goto L_1356b4;
 
-    [ret objectForKeyedSubscript:0x2256f8];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2256f8]; */
     [NSArray class];
     [ret isKindOfClass:[NSArray class];];
     if (ret == 0) goto L_1356c0;
@@ -906,10 +906,10 @@ L_1356d0:;
     if (((a1 >> 63) & 1) != 0) goto L_1357c8;
 
     [self->_sections count];
-    if (cond /* ls */) goto L_1357c8;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_1357c8; */
 
     [self->_sections objectAtIndexedSubscript:a1];
-    [ret objectForKeyedSubscript:0x2141b8];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x2141b8]; */
     objc_release(ret);
     [NSString class];
     [ret isKindOfClass:[NSString class];];
@@ -1321,20 +1321,20 @@ L_1357c8:;
     id ret = nil;
 
     objc_retain(a1);
-    [a0 dequeueReusableCellWithIdentifier:0x225cb8];
+    /* [UNRESOLVED] [a0 dequeueReusableCellWithIdentifier:0x225cb8]; */
     if (ret != 0) goto L_135874;
 
-    [[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8];
+    /* [UNRESOLVED] [[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; */
 
 L_135874:;
-    sub_1351b0(a1);
+    /* [UNRESOLVED] sub_1351b0(a1); */
     if (ret == 0) goto L_135b5c;
 
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; defaultContentConfiguration];
-    [ret objectForKeyedSubscript:0x20d778];
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; defaultContentConfiguration]; */
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x20d778]; */
     [ret setText:ret];
     objc_release(ret);
-    [ret objectForKeyedSubscript:0x217658];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x217658]; */
     [ret setSecondaryText:ret];
     objc_release(ret);
     [UIFont systemFontOfSize:12];
@@ -1342,7 +1342,7 @@ L_135874:;
     [ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [ret objectForKeyedSubscript:0x225cd8];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225cd8]; */
     [ret boolValue];
     objc_release(ret);
     [UIColor unknownSelector];
@@ -1350,13 +1350,13 @@ L_135874:;
     [ret setColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setContentConfiguration:ret];
-    [ret objectForKeyedSubscript:0x225538];
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setContentConfiguration:ret]; */
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225538]; */
     [ret boolValue];
     objc_release(ret);
     if ((([ret boolValue]; >> 0) & 1) == 0) goto L_135b88;
 
-    [objc_alloc_init setText:0x225cf8];
+    /* [UNRESOLVED] [objc_alloc_init setText:0x225cf8]; */
     [UIFont monospacedSystemFontOfSize:15 weight:0 /* unk *//*+0x0*/];
     [objc_alloc_init setFont:ret];
     objc_release(ret);
@@ -1367,12 +1367,12 @@ L_135874:;
     goto L_135c48;
 
 L_135b5c:;
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setContentConfiguration:0];
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:0];
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setContentConfiguration:0]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:0]; */
     goto L_135cac;
 
 L_135b88:;
-    [ret objectForKeyedSubscript:0x21dff8];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x21dff8]; */
     [objc_alloc_init unknownSelector];
     objc_release(ret);
     [UIFont monospacedSystemFontOfSize:15 weight:0 /* unk *//*+0x0*/];
@@ -1389,9 +1389,9 @@ L_135c18:;
 L_135c48:;
     objc_release(ret);
     [objc_alloc_init sizeToFit];
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:objc_alloc_init];
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setSelectionStyle:0];
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryType:[ret boolValue];];
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:objc_alloc_init]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setSelectionStyle:0]; */
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryType:[ret boolValue];]; */
     objc_release(objc_alloc_init);
     objc_release(ret);
 

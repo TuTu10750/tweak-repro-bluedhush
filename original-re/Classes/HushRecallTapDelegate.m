@@ -185,23 +185,23 @@
     [ret hitTest:0 withEvent:0];
     objc_retain(ret);
     [NSMutableString string];
-    if (cond /* ne */) goto L_3bb84;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_3bb84; */
 
     objc_retain(ret);
     goto L_3bc14;
 
 L_3bb84:;
-    if (cond /* eq */) goto L_3bbfc;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_3bbfc; */
 
     [ret class];
-    NSStringFromClass();
+    /* [UNRESOLVED] NSStringFromClass(); */
     [ret appendFormat:@"%@ ← "];
     objc_release(ret);
     [ret superview];
     objc_release(ret);
     if (ret == 0) goto L_3bbfc;
 
-    if (cond /* ne */) goto L_3bb84;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_3bb84; */
 
     goto L_3bbfc;
 
@@ -210,14 +210,14 @@ L_3bbfc:;
 
 L_3bc14:;
     objc_release(ret);
-    [@0x244978 isEnabledForLevel:3];
-    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_3bc68;
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_3bc68; */
 
-    [@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"];
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"]; */
     goto L_3bc70;
 
 L_3bc68:;
-    [[@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"]; noteFiltered:3];
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"]; noteFiltered:3]; */
 
 L_3bc70:;
     objc_release(ret);

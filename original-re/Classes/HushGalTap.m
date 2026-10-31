@@ -180,8 +180,8 @@
     // 00085f94  ret
     id ret = nil;
 
-    HushChatFlashCurrentSessionId(_cmd, a0, a1, a2, a3);
-    [@0x244978 isEnabledForLevel:3];
+    /* [UNRESOLVED] HushChatFlashCurrentSessionId(_cmd, a0, a1, a2, a3); */
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (0 == 0) goto L_85e64;
 
     [ret length];
@@ -199,16 +199,16 @@
 L_85e20:;
     [ret characterAtIndex:0];
     [ret length];
-    if (cond /* lo */) goto L_85e20;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_85e20; */
 
     goto L_85ec4;
 
 L_85e64:;
-    [@0x244978 noteFiltered:3];
+    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
     goto L_85f54;
 
 L_85e90:;
-    [@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"];
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
     goto L_85f54;
 
 L_85ea0:;
@@ -225,12 +225,12 @@ L_85ef4:;
     objc_release(ret);
 
 L_85f14:;
-    [@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"];
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
     objc_release(ret);
 
 L_85f54:;
     objc_retain(ret);
-    dispatch_async();
+    /* [UNRESOLVED] dispatch_async(); */
     objc_release(ret);
     objc_release(ret);
     return;
@@ -461,13 +461,13 @@ L_85f54:;
     objc_retain(a0);
     [a0 view];
     [ret superview];
-    if (cond /* eq */) goto L_86124;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_86124; */
 
     [a0 state];
-    if (cond /* eq */) goto L_86048;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_86048; */
 
     [a0 state];
-    if (cond /* ne */) goto L_86160;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_86160; */
 
 L_86048:;
     [a0 translationInView:ret];
@@ -484,29 +484,29 @@ L_86124:;
 
 L_86160:;
     [a0 unknownSelector];
-    if (cond /* eq */) goto L_86190;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_86190; */
 
     [a0 unknownSelector];
-    if (cond /* ne */) goto L_86124;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_86124; */
 
 L_86190:;
-    [@0x244888 shared];
+    /* [UNRESOLVED] [@0x244888 shared]; */
     [0 /* unk */ center];
-    NSStringFromCGPoint();
+    /* [UNRESOLVED] NSStringFromCGPoint(); */
     [ret setString:ret forKey:0 /* func */];
     objc_release(ret);
     objc_release(ret);
-    [@0x244978 isEnabledForLevel:3];
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_8626c;
 
     [0 /* unk */ center];
-    NSStringFromCGPoint();
-    [@0x244978 logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"];
+    /* [UNRESOLVED] NSStringFromCGPoint(); */
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"]; */
     objc_release(ret);
     goto L_86124;
 
 L_8626c:;
-    [@0x244978 noteFiltered:3];
+    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
     goto L_86124;
 }
 
@@ -555,9 +555,9 @@ L_8626c:;
     // 000862f4  ret
     id ret = nil;
 
-    HushChatFlashCurrentSessionId(_cmd, a0, a1, a2, a3);
+    /* [UNRESOLVED] HushChatFlashCurrentSessionId(_cmd, a0, a1, a2, a3); */
     objc_retain(ret);
-    dispatch_async();
+    /* [UNRESOLVED] dispatch_async(); */
     objc_release(ret);
     objc_release(ret);
     return;

@@ -79,14 +79,14 @@
     // 0018dc30  bl      #0x1a72fc   ; __Unwind_Resume
     id ret = nil;
 
-    HushTopViewController(0x208e78, a0, a1, a2, a3);
-    [@0x245be8 unknownSelector];
+    /* [UNRESOLVED] HushTopViewController(0x208e78, a0, a1, a2, a3); */
+    /* [UNRESOLVED] [@0x245be8 unknownSelector]; */
     [ret unknownSelector];
     if (((ret >> 0) & 1) != 0) goto L_18dc10;
 
     [objc_alloc_init unknownSelector];
     [objc_alloc_init unknownSelector];
-    sub_18af04();
+    /* [UNRESOLVED] sub_18af04(); */
     [ret unknownSelector];
     objc_release(objc_alloc_init);
 
@@ -95,10 +95,10 @@ L_18dc10:;
     goto L_18dc1c;
 
 L_18dc1c:;
-    if (cond /* ne */) goto L_18dc30;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_18dc30; */
 
 L_18dc30:;
-    Unwind_Resume();
+    /* [UNRESOLVED] Unwind_Resume(); */
     return;
 }
 
@@ -107,8 +107,8 @@ L_18dc30:;
     // ---- original disassembly ----
     // 0018dc34  mov     x0, #0
     // 0018dc38  b       #0x84638   ; HushGalOpen
-L_18dc38:;
-    goto L_18dc38;
+
+    /* [UNRESOLVED] goto L_18dc38 (empty loop) */
 }
 
 @end

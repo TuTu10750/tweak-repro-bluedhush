@@ -647,6 +647,7 @@
     objc_release([[UIView alloc] initWithFrame:0 /* unk */];);
 
 L_127c44:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_127c74; */
 
     return (id)self;
 }

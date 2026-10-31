@@ -668,7 +668,7 @@ L_c54e4:;
     [self urls];
     [ret count];
     [0 count];
-    if (cond /* ne */) goto L_c569c;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_c569c; */
 
     [self urls];
     [ret isEqualToArray:0];
@@ -683,7 +683,7 @@ L_c54e4:;
     [0 count];
     objc_release(ret);
     objc_release(ret);
-    if (cond /* ne */) goto L_c56e0;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_c56e0; */
 
     goto L_c5db8;
 
@@ -747,16 +747,16 @@ L_c59d8:;
     [self scrollView];
     [ret addSubview:[[UIImageView alloc] unknownSelector];];
     objc_release(ret);
-    CGAffineTransformMakeScale();
+    /* [UNRESOLVED] CGAffineTransformMakeScale(); */
     [[[UIImageView alloc] unknownSelector]; setTransform:0];
-    if (cond /* ls */) goto L_c5c68;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_c5c68; */
 
     [ret copy];
     objc_retain(ret);
-    dispatch_time();
+    /* [UNRESOLVED] dispatch_time(); */
     objc_retain(ret);
     objc_retain([ret copy];);
-    dispatch_after(0x200010);
+    /* [UNRESOLVED] dispatch_after(0x200010); */
     objc_release(0 /* local */);
     objc_release([ret copy];);
     objc_release(ret);
@@ -764,7 +764,7 @@ L_c59d8:;
     goto L_c5c70;
 
 L_c5c68:;
-    sub_c5e08(ret, ret);
+    /* [UNRESOLVED] sub_c5e08(ret, ret); */
 
 L_c5c70:;
     objc_release([[UITapGestureRecognizer alloc] unknownSelector];);
@@ -774,7 +774,7 @@ L_c5c80:;
     objc_release(ret);
     objc_release(ret);
     [0 count];
-    if (cond /* lo */) goto L_c59d8;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_c59d8; */
 
 L_c5cbc:;
     [self scrollView];
@@ -992,7 +992,7 @@ L_c5db8:;
 
     objc_retain(a0);
     [a0 state];
-    if (cond /* ne */) goto L_c63d4;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_c63d4; */
 
     [a0 view];
     [ret tag];
@@ -1002,19 +1002,19 @@ L_c5db8:;
     [self urls];
     [ret count];
     objc_release(ret);
-    if (cond /* ge */) goto L_c63d4;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_c63d4; */
 
-    [@0x244978 isEnabledForLevel:4];
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:4]; */
     if (ret == 0) goto L_c62d8;
 
     [self urls];
     [ret count];
-    [@0x244978 logLevel:4 format:@"[NearbyAlbum] 点开大图 index=%ld / %lu"];
+    /* [UNRESOLVED] [@0x244978 logLevel:4 format:@"[NearbyAlbum] 点开大图 index=%ld / %lu"]; */
     objc_release(ret);
     goto L_c62e4;
 
 L_c62d8:;
-    [@0x244978 noteFiltered:4];
+    /* [UNRESOLVED] [@0x244978 noteFiltered:4]; */
 
 L_c62e4:;
     [self urls];
@@ -1033,7 +1033,7 @@ L_c62e4:;
     goto L_c63b4;
 
 L_c63ac:;
-    dispatch_async(objc_retainBlock);
+    /* [UNRESOLVED] dispatch_async(objc_retainBlock); */
 
 L_c63b4:;
     objc_release(objc_retainBlock);

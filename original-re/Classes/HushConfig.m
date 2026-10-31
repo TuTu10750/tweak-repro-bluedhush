@@ -94,7 +94,7 @@
     objc_release(self->/*+0x10*/);
     [self registerDefaults];
     [NSNotificationCenter defaultCenter];
-    [ret addObserver:self selector:sel_registerName("hush_clearFlagCache") name:0x2001c8/*+0x0*/ object:0];
+    /* [UNRESOLVED] [ret addObserver:self selector:sel_registerName("hush_clearFlagCache") name:0x2001c8/ *+0x0* / object:0]; */
     objc_release(ret);
 
 L_e3f8:;
@@ -150,7 +150,7 @@ L_e3f8:;
     [ret removeAllObjects];
     objc_release(ret);
 
-    Unwind_Resume();
+    /* [UNRESOLVED] Unwind_Resume(); */
     return;
 }
 
@@ -380,25 +380,27 @@ L_e3f8:;
     // 0000e74c  ret
     id ret = nil;
 
-    objc_retain(0x2565c8);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e750; */
+
+    /* [UNRESOLVED] objc_retain(0x2565c8); */
     [self defaults];
     [ret dictionaryRepresentation];
     objc_release(ret);
     objc_retain(self);
     [self setPrefsSnapshot:ret];
     objc_release(self);
-    objc_retain(0x2565c8);
+    /* [UNRESOLVED] objc_retain(0x2565c8); */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e66c;
 
 L_e5a8:;
-    if (cond /* eq */) goto L_e5c8;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_e5c8; */
 
 L_e5c8:;
-    [0x2565c8 objectForKeyedSubscript:0 /* local *//*+0x0*/];
+    /* [UNRESOLVED] [0x2565c8 objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     if (ret == 0) goto L_e630;
 
-    [0x2565c8 objectForKeyedSubscript:0 /* local *//*+0x0*/];
+    /* [UNRESOLVED] [0x2565c8 objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     [ret boolValue];
     [self isEnabled:0 /* local *//*+0x0*/ default:[ret boolValue];];
     objc_release(ret);
@@ -409,29 +411,30 @@ L_e630:;
 
 L_e638:;
     objc_release(ret);
-    if (cond /* ne */) goto L_e5a8;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e5a8; */
 
-    [0x2565c8 countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([0x2565c8 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e5a8;
+    /* [UNRESOLVED] [0x2565c8 countByEnumeratingWithState:0 objects:0 count:0x10]; */
+    /* [UNRESOLVED] if ([0x2565c8 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e5a8; */
 
 L_e66c:;
-    objc_release(0x2565c8);
+    /* [UNRESOLVED] objc_release(0x2565c8); */
     objc_retain(self);
     [self setPrefsSnapshot:0];
     objc_release(self);
-    [@0x244978 isEnabledForLevel:4];
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:4]; */
     if (self == 0) goto L_e704;
 
-    [0x2565c8 count];
-    [@0x244978 logLevel:4 format:@"[Config] 开关缓存预热完成（%lu 键，单次快照）"];
+    /* [UNRESOLVED] [0x2565c8 count]; */
+    /* [UNRESOLVED] [@0x244978 logLevel:4 format:@"[Config] 开关缓存预热完成（%lu 键，单次快照）"]; */
     goto L_e70c;
 
 L_e704:;
-    [@0x244978 noteFiltered:4];
+    /* [UNRESOLVED] [@0x244978 noteFiltered:4]; */
 
 L_e70c:;
     objc_release(ret);
-    objc_release(0x2565c8);
+    /* [UNRESOLVED] objc_release(0x2565c8); */
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e768; */
 
     return;
 }
@@ -476,14 +479,13 @@ L_e70c:;
     id ret = nil;
 
     [self defaults];
-    if (cond /* ne */) goto L_e7f8;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e7f8; */
 
-L_e7d4:;
-    [ret registerDefaults:0x2565c8];
+    /* [UNRESOLVED] [ret registerDefaults:0x2565c8]; */
 
 L_e7f8:;
-    dispatch_once(0x201218);
-    goto L_e7d4;
+    /* [UNRESOLVED] dispatch_once(0x201218); */
+    /* [UNRESOLVED] goto L_e7d4 (empty loop) */
 }
 
 // @0xe800  types=B24@0:8@16
@@ -555,7 +557,9 @@ L_e7f8:;
     [a0 length];
     if ([a0 length]; == 0) goto L_e888;
 
-    [0x2565c8 objectForKeyedSubscript:a0];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e8cc; */
+
+    /* [UNRESOLVED] [0x2565c8 objectForKeyedSubscript:a0]; */
     if (ret == 0) goto L_e8a0;
 
     [ret boolValue];
@@ -883,7 +887,7 @@ L_e8b4:;
 
     if (0 != 0) goto L_e950;
 
-    HushKeyNeedsActivation();
+    /* [UNRESOLVED] HushKeyNeedsActivation(); */
     if (((a0 >> 0) & 1) == 0) goto L_e950;
 
     goto L_ec7c;
@@ -906,7 +910,7 @@ L_e9c8:;
     objc_release(self);
     if (ret != 0) goto L_ec7c;
 
-    HushHostCompatKeyIsInapplicable();
+    /* [UNRESOLVED] HushHostCompatKeyIsInapplicable(); */
     if (a0 == 0) goto L_ea74;
 
     objc_retain(self);
@@ -919,8 +923,9 @@ L_e9c8:;
 
 L_ea74:;
     [self prefsSnapshot];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_ece0; */
 
-    [0x2565d8 containsObject:a0];
+    /* [UNRESOLVED] [0x2565d8 containsObject:a0]; */
     if (self == 0) goto L_eb00;
 
     if (ret == 0) goto L_eb38;
@@ -1139,7 +1144,7 @@ L_edcc:;
 
 L_edf0:;
     [a1 unknownSelector];
-    if (cond /* ne */) goto L_ee44;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_ee44; */
 
 L_ee10:;
     [self defaults];
@@ -1439,9 +1444,10 @@ L_f098:;
     id ret = nil;
 
     [NSMutableDictionary dictionary];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_f180; */
 
     objc_retain(ret);
-    [0x2565c8 enumerateKeysAndObjectsUsingBlock:0];
+    /* [UNRESOLVED] [0x2565c8 enumerateKeysAndObjectsUsingBlock:0]; */
     objc_release(ret);
     objc_release(ret);
     return nil;
@@ -1521,7 +1527,9 @@ L_f098:;
     // 0000f338  ret
     id ret = nil;
 
-    [0x2565c8 enumerateKeysAndObjectsUsingBlock:a0];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_f33c; */
+
+    /* [UNRESOLVED] [0x2565c8 enumerateKeysAndObjectsUsingBlock:a0]; */
     [self defaults];
     [ret removeObjectForKey:@"switch_log_level"];
     objc_release(ret);
@@ -2042,7 +2050,7 @@ L_f678:;
     goto L_f8d0;
 
 L_f844:;
-    NSSearchPathForDirectoriesInDomains(1, 1);
+    /* [UNRESOLVED] NSSearchPathForDirectoriesInDomains(1, 1); */
     [ret firstObject];
     if (ret == 0) goto L_f880;
 
@@ -2050,7 +2058,7 @@ L_f844:;
     goto L_f894;
 
 L_f880:;
-    NSTemporaryDirectory();
+    /* [UNRESOLVED] NSTemporaryDirectory(); */
 
 L_f894:;
     objc_release(ret);
@@ -2150,13 +2158,11 @@ L_f8d0:;
     // 0000e2f4  ldp     x29, x30, [sp], #0x10
     // 0000e2f8  b       #0x1a7284   ; _objc_release
 
-    if (cond /* ne */) goto L_e2c4;
-
-L_e2a8:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e2c4; */
 
 L_e2c4:;
-    dispatch_once(0x201198, a0, a1, a2, a3);
-    goto L_e2a8;
+    /* [UNRESOLVED] dispatch_once(0x201198, a0, a1, a2, a3); */
+    /* [UNRESOLVED] goto L_e2a8 (empty loop) */
 }
 
 @end

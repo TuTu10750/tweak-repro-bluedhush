@@ -63,7 +63,7 @@
     [self unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    if (cond /* hi */) goto L_141ff0;
+    /* [UNRESOLVED] if (cond / * hi * /) goto L_141ff0; */
 
     [self unknownSelector];
     goto L_14200c;

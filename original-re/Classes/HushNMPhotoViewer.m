@@ -532,7 +532,7 @@
     [super viewDidLoad];
     [UIColor whiteColor];
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     objc_release(ret);
     objc_release(ret);
     [self view];
@@ -542,7 +542,7 @@
     [self->_urls isKindOfClass:[NSArray class];];
     if (((self->_urls >> 0) & 1) != 0) goto L_e4b44;
 
-    objc_storeStrong((id *)&[self->_urls isKindOfClass:[NSArray class];];, 0x200130/*+0x0*/);
+    /* [UNRESOLVED] objc_storeStrong((id *)&[self->_urls isKindOfClass:[NSArray class];];, 0x200130/ *+0x0* /); */
 
 L_e4b44:;
     [self->_urls count];
@@ -617,14 +617,14 @@ L_e50c8:;
     [self->_pages addObject:[[UIImageView alloc] initWithFrame:0 /* unk */];];
     [self->_urls objectAtIndexedSubscript:0];
     [self->_urls objectAtIndexedSubscript:0];
-    HushAlbumHighResolutionURL();
-    sub_d4df8(ret, ret);
+    /* [UNRESOLVED] HushAlbumHighResolutionURL(); */
+    /* [UNRESOLVED] sub_d4df8(ret, ret); */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
     objc_release([[UIImageView alloc] initWithFrame:0 /* unk */];);
     [self->_urls count];
-    if (cond /* lo */) goto L_e50c8;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_e50c8; */
 
 L_e5200:;
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")];
@@ -661,12 +661,12 @@ L_e5318:;
     [self->_thumbBoxes addObject:[[UIView alloc] initWithFrame:0 /* unk */];];
     [self->_thumbImgs addObject:[[UIImageView alloc] initWithFrame:0 /* unk */];];
     [self->_urls objectAtIndexedSubscript:0];
-    sub_cf42c(ret);
+    /* [UNRESOLVED] sub_cf42c(ret); */
     objc_release(ret);
     objc_release([[UIImageView alloc] initWithFrame:0 /* unk */];);
     objc_release([[UIView alloc] initWithFrame:0 /* unk */];);
     [self->_urls count];
-    if (cond /* lo */) goto L_e5318;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_e5318; */
 
 L_e5508:;
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];
@@ -676,6 +676,7 @@ L_e5508:;
     objc_release(ret);
     objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];);
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e559c; */
 
     return;
 }
@@ -1031,16 +1032,16 @@ L_e5508:;
     [super viewDidLayoutSubviews];
     [self view];
     [ret bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
     [self view];
     [ret bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
     [self view];
     [ret safeAreaInsets];
     objc_release(ret);
-    if (cond /* pl */) goto L_e5778;
+    /* [UNRESOLVED] if (cond / * pl * /) goto L_e5778; */
 
     [self view];
     [ret window];
@@ -1071,19 +1072,19 @@ L_e5778:;
     [self->_pager setFrame:0];
     [self->_pages count];
     [self->_pager bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_pager setContentSize:-18];
     [self->_pages count];
     if ([self->_pages count]; == 0) goto L_e5990;
 
 L_e5908:;
     [self->_pager bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_pages objectAtIndexedSubscript:0];
     [ret setFrame:-24];
     objc_release(ret);
     [self->_pages count];
-    if (cond /* lo */) goto L_e5908;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_e5908; */
 
 L_e5990:;
     [self->_pager setContentOffset:self->_cur];
@@ -1572,22 +1573,23 @@ L_e5990:;
     if ([self->_thumbBoxes count]; == 0) goto L_e602c;
 
     [self->_strip bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     [self->_strip bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_thumbBoxes count];
     [NSMutableArray arrayWithCapacity:[self->_thumbBoxes count];];
-    if (cond /* lt */) goto L_e5bb0;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_e5bb0; */
 
 L_e5b2c:;
     [NSNumber numberWithDouble:0];
     [ret addObject:ret];
     objc_release(ret);
-    if (cond /* ne */) goto L_e5b2c;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e5b2c; */
 
 L_e5bb0:;
     [self->_strip setContentInset:0];
     [self->_strip setContentSize:2];
+    /* [UNRESOLVED] if (cond / * le * /) goto L_e6030; */
 
 L_e5cbc:;
     [ret objectAtIndexedSubscript:0];
@@ -1634,7 +1636,7 @@ L_e5cbc:;
     [ret setAlpha:0/*+0x-a0*/];
     objc_release(ret);
     objc_release(ret);
-    if (cond /* ne */) goto L_e5cbc;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e5cbc; */
 
 L_e602c:;
     return;
@@ -1705,11 +1707,11 @@ L_e602c:;
     if (((self->_cur >> 63) & 1) != 0) goto L_e61b8;
 
     [self->_urls count];
-    if (cond /* ge */) goto L_e61b8;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_e61b8; */
 
     [self->_backdrop setImage:0];
     [self->_urls objectAtIndexedSubscript:self->_cur];
-    sub_cf42c(ret);
+    /* [UNRESOLVED] sub_cf42c(ret); */
 
 L_e61b8:;
 }
@@ -1802,7 +1804,7 @@ L_e61b8:;
 
     objc_retain(a0);
     [a0 state];
-    if (cond /* ne */) goto L_e62c8;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e62c8; */
 
     [a0 view];
     [ret tag];
@@ -1810,12 +1812,12 @@ L_e61b8:;
     if ((([ret tag]; >> 63) & 1) != 0) goto L_e62c8;
 
     [self->_urls count];
-    if (cond /* ge */) goto L_e62c8;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_e62c8; */
 
     [self p_layoutThumbs];
     [self p_updateBackdrop];
     [self->_pager bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     [self->_pager setContentOffset:1 animated:0];
 
 L_e62c8:;
@@ -1874,12 +1876,13 @@ L_e62c8:;
     // 000e6374  ret
     id ret = nil;
 
-    if (cond /* ne */) goto L_e6374;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e6374; */
 
     [a0 bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     [self->_pager contentOffset];
     [self->_urls count];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e6378; */
 
 L_e6374:;
     return;
@@ -1922,7 +1925,7 @@ L_e6374:;
     id ret = nil;
 
     [a0 state];
-    if (cond /* ne */) goto L_e6404;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e6404; */
 
 L_e6404:;
     return;
@@ -2003,6 +2006,7 @@ L_e6404:;
     [self view];
     objc_release(ret);
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_e64d0; */
 
 L_e64b0:;
     objc_release(a0);
@@ -2166,11 +2170,11 @@ L_e64b0:;
     [a0 translationInView:ret];
     objc_release(ret);
     [a0 state];
-    if (cond /* ne */) goto L_e6624;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e6624; */
 
-    if (cond /* le */) goto L_e670c;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_e670c; */
 
-    CGAffineTransformMakeTranslation();
+    /* [UNRESOLVED] CGAffineTransformMakeTranslation(); */
     [self view];
     [ret setTransform:0];
     objc_release(ret);
@@ -2178,13 +2182,13 @@ L_e64b0:;
 
 L_e6624:;
     [a0 unknownSelector];
-    if (cond /* eq */) goto L_e6650;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_e6650; */
 
     [a0 unknownSelector];
-    if (cond /* ne */) goto L_e670c;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_e670c; */
 
 L_e6650:;
-    if (cond /* le */) goto L_e6704;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_e6704; */
 
     [ret view];
     [ret setTransform:0];

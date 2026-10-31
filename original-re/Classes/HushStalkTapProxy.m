@@ -531,14 +531,14 @@
 
     objc_retain(a0);
     [a0 unknownSelector];
-    if (cond /* ne */) goto L_14119c;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14119c; */
 
-    [@0x244888 unknownSelector];
+    /* [UNRESOLVED] [@0x244888 unknownSelector]; */
     [ret unknownSelector];
     objc_release(ret);
     if ([ret unknownSelector]; == 0) goto L_14119c;
 
-    [@0x244888 unknownSelector];
+    /* [UNRESOLVED] [@0x244888 unknownSelector]; */
     [ret unknownSelector];
     objc_release(ret);
     if ([ret unknownSelector]; == 0) goto L_14119c;
@@ -547,10 +547,10 @@
     if (ret == 0) goto L_14119c;
 
 L_140770:;
-    if (cond /* eq */) goto L_1407f0;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_1407f0; */
 
     [ret unknownSelector];
-    NSStringFromClass();
+    /* [UNRESOLVED] NSStringFromClass(); */
     [ret unknownSelector];
     objc_release(ret);
     if ((([ret unknownSelector]; >> 0) & 1) != 0) goto L_1407f0;
@@ -563,19 +563,19 @@ L_140770:;
 
 L_1407f0:;
     objc_retain(ret);
-    sub_152fc8(-0x80, -0x88, -0x90);
+    /* [UNRESOLVED] sub_152fc8(-0x80, -0x88, -0x90); */
     objc_retain(0/*+0x-80*/);
     objc_retain(0/*+0x-88*/);
     objc_retain(0/*+0x-90*/);
     [0/*+0x-80*/ unknownSelector];
-    if ([0/*+0x-80*/ unknownSelector]; == 0) goto L_140abc;
+    /* [UNRESOLVED] if ([0/ *+0x-80* / unknownSelector]; == 0) goto L_140abc; */
 
-    [@0x244888 unknownSelector];
+    /* [UNRESOLVED] [@0x244888 unknownSelector]; */
     [ret unknownSelector];
     objc_release(ret);
     if ((([ret unknownSelector]; >> 0) & 1) == 0) goto L_140ac8;
 
-    sub_1459ac(-0x98);
+    /* [UNRESOLVED] sub_1459ac(-0x98); */
     if (ret == 0) goto L_140ad4;
 
     [ret unknownSelector];
@@ -584,26 +584,26 @@ L_1407f0:;
     [ret unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    sub_144658();
-    if (0/*+0x-80*/ == 0) goto L_140ba8;
+    /* [UNRESOLVED] sub_144658(); */
+    /* [UNRESOLVED] if (0/ *+0x-80* / == 0) goto L_140ba8; */
 
     if ([ret unknownSelector]; == 0) goto L_140ba8;
 
-    sub_145b28();
-    if (((0/*+0x-98*/ >> 63) & 1) != 0) goto L_1409f0;
+    /* [UNRESOLVED] sub_145b28(); */
+    /* [UNRESOLVED] if (((0/ *+0x-98* / >> 63) & 1) != 0) goto L_1409f0; */
 
     [NSNumber unknownSelector];
     [ret unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
     objc_release(ret);
-    sub_157724();
+    /* [UNRESOLVED] sub_157724(); */
 
 L_1409f0:;
-    [@0x244978 unknownSelector];
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     if (ret == 0) goto L_140af8;
 
-    if (0/*+0x-80*/ == 0) goto L_140b08;
+    /* [UNRESOLVED] if (0/ *+0x-80* / == 0) goto L_140b08; */
 
     [0/*+0x-80*/ unknownSelector];
     [ret unknownSelector];
@@ -615,7 +615,7 @@ L_1409f0:;
 L_140a80:;
     [ret unknownSelector];
     [ret unknownSelector];
-    if (cond /* lo */) goto L_140a80;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_140a80; */
 
     goto L_140b2c;
 
@@ -623,11 +623,11 @@ L_140abc:;
     goto L_140ac8;
 
 L_140ac8:;
-    HushToast();
+    /* [UNRESOLVED] HushToast(); */
     goto L_141174;
 
 L_140ad4:;
-    sub_144658();
+    /* [UNRESOLVED] sub_144658(); */
     goto L_140ba8;
 
 L_140af8:;
@@ -655,11 +655,11 @@ L_140b9c:;
     objc_release(sub_144658);
 
 L_140ba8:;
-    HushVisibleTopViewController();
+    /* [UNRESOLVED] HushVisibleTopViewController(); */
     if (ret == 0) goto L_141160;
 
     [0/*+0x-88*/ unknownSelector];
-    if ([0/*+0x-88*/ unknownSelector]; == 0) goto L_140c34;
+    /* [UNRESOLVED] if ([0/ *+0x-88* / unknownSelector]; == 0) goto L_140c34; */
 
     [NSString unknownSelector];
     goto L_140c34;
@@ -728,7 +728,7 @@ L_140fdc:;
     objc_release(ret);
     [ret unknownSelector];
     objc_release(ret);
-    objc_release(0x2281b8);
+    /* [UNRESOLVED] objc_release(0x2281b8); */
 
 L_141160:;
     objc_release(ret);
@@ -780,13 +780,11 @@ L_14119c:;
     // 00140648  ldp     x29, x30, [sp], #0x10
     // 0014064c  b       #0x1a7284   ; _objc_release
 
-    if (cond /* ne */) goto L_140618;
-
-L_1405fc:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_140618; */
 
 L_140618:;
-    dispatch_once(0x208128, a0, a1, a2, a3);
-    goto L_1405fc;
+    /* [UNRESOLVED] dispatch_once(0x208128, a0, a1, a2, a3); */
+    /* [UNRESOLVED] goto L_1405fc (empty loop) */
 }
 
 @end

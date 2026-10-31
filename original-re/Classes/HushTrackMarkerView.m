@@ -95,9 +95,9 @@
     [ret sizeThatFits:220];
     [ret setBounds:0];
     [self bounds];
-    CGRectGetMidX();
+    /* [UNRESOLVED] CGRectGetMidX(); */
     [self bounds];
-    CGRectGetMaxY();
+    /* [UNRESOLVED] CGRectGetMaxY(); */
     [ret setCenter:0];
 
 L_901fc:;

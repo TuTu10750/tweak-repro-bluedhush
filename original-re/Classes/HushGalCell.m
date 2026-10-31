@@ -431,7 +431,7 @@
     [self->_thumb setAutoresizingMask:0x12];
     [self->_thumb setContentMode:2];
     [self->_thumb setClipsToBounds:1];
-    HushIsDarkMode();
+    /* [UNRESOLVED] HushIsDarkMode(); */
     [UIColor colorWithWhite:0.96 alpha:1];
     [self->_thumb setBackgroundColor:ret];
     objc_release(ret);
@@ -448,10 +448,10 @@
     objc_release(ret);
     [self contentView];
     [ret bounds];
-    CGRectGetMidX();
+    /* [UNRESOLVED] CGRectGetMidX(); */
     [self contentView];
     [ret bounds];
-    CGRectGetMidY();
+    /* [UNRESOLVED] CGRectGetMidY(); */
     [self->_playBadge setCenter:0];
     objc_release(ret);
     objc_release(ret);

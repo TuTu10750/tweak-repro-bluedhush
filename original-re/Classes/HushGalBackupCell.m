@@ -271,7 +271,7 @@
     [[UILabel alloc] initWithFrame:16];
     [self setName:[[UILabel alloc] initWithFrame:16];];
     objc_release([[UILabel alloc] initWithFrame:16];);
-    [UIFont systemFontOfSize:16 weight:0x200378];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
     [self name];
     [ret setFont:ret];
     objc_release(ret);

@@ -387,7 +387,7 @@
     objc_release(ret);
     [self setName:objc_alloc_init];
     objc_release(objc_alloc_init);
-    [UIFont systemFontOfSize:16 weight:0x200378];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
     [self name];
     [ret setFont:ret];
     objc_release(ret);
@@ -399,7 +399,7 @@
     objc_release(ret);
     [self setSource:objc_alloc_init];
     objc_release(objc_alloc_init);
-    [UIFont systemFontOfSize:11 weight:0x200378];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:11 weight:0x200378]; */
     [self source];
     [ret setFont:ret];
     objc_release(ret);
@@ -610,14 +610,14 @@ L_208a0:;
     [ret bounds];
     objc_release(ret);
     [self source];
-    [ret sizeThatFits:0x7fefffffffffffff];
+    /* [UNRESOLVED] [ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
     [self name];
     [ret setFrame:16];
     objc_release(ret);
     [self name];
     [ret frame];
-    CGRectGetMaxX();
+    /* [UNRESOLVED] CGRectGetMaxX(); */
     [self source];
     [ret setFrame:0];
     objc_release(ret);

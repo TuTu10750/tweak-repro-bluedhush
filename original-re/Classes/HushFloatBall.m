@@ -393,9 +393,9 @@ L_67678:;
     // 00067774  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    HushBallIconCurrentStyle(_cmd, a0, a1, a2, a3);
+    /* [UNRESOLVED] HushBallIconCurrentStyle(_cmd, a0, a1, a2, a3); */
     [self bounds];
-    HushBallIconImage();
+    /* [UNRESOLVED] HushBallIconImage(); */
     [self iconView];
     [ret setImage:ret];
     objc_release(ret);
@@ -573,11 +573,11 @@ L_67678:;
     [self setCenter:0];
     [a0 setTranslation:ret inView:0];
     [a0 state];
-    if (cond /* ne */) goto L_67950;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_67950; */
 
-    [@0x244888 shared];
+    /* [UNRESOLVED] [@0x244888 shared]; */
     [self center];
-    NSStringFromCGPoint();
+    /* [UNRESOLVED] NSStringFromCGPoint(); */
     [ret setString:ret forKey:0 /* func */];
     objc_release(ret);
     objc_release(ret);

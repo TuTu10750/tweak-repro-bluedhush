@@ -265,7 +265,7 @@
     [[UILabel alloc] initWithFrame:0 /* unk */];
     objc_release(self->_capText);
     [self->_capText setText:@"隐私相册"];
-    [UIFont systemFontOfSize:10 weight:0x200180];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:10 weight:0x200180]; */
     [self->_capText setFont:ret];
     objc_release(ret);
     [UIColor whiteColor];
@@ -436,7 +436,7 @@ L_cedc:;
     id ret = nil;
 
     [super layoutSubviews];
-    [self->_capText sizeThatFits:0x7fefffffffffffff];
+    /* [UNRESOLVED] [self->_capText sizeThatFits:0x7fefffffffffffff]; */
     [self->_capIcon image];
     if (ret == 0) goto L_cfe4;
 
@@ -450,10 +450,10 @@ L_cfe4:;
     [self bounds];
     [self bounds];
     [self->_capText setFrame:0];
-    if (cond /* le */) goto L_d0e0;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_d0e0; */
 
     [self->_capText frame];
-    CGRectGetMaxX();
+    /* [UNRESOLVED] CGRectGetMaxX(); */
     [self bounds];
     [self->_capIcon setFrame:0];
 

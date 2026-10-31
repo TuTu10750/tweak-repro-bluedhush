@@ -551,11 +551,11 @@
     [ret setDelegate:self];
     objc_release(ret);
     [self table];
-    [ret setRowHeight:0x404b000000000000];
+    /* [UNRESOLVED] [ret setRowHeight:0x404b000000000000]; */
     objc_release(ret);
     [self table];
-    [@0x244ec8 class];
-    [ret registerClass:[@0x244ec8 class]; forCellReuseIdentifier:@"hushGalBackup"];
+    /* [UNRESOLVED] [@0x244ec8 class]; */
+    /* [UNRESOLVED] [ret registerClass:[@0x244ec8 class]; forCellReuseIdentifier:@"hushGalBackup"]; */
     objc_release(ret);
     [self view];
     [self table];
@@ -572,7 +572,7 @@
     [[UIView alloc] initWithFrame:0];
     objc_release(ret);
     [[[UIView alloc] initWithFrame:0]; bounds];
-    CGRectInset();
+    /* [UNRESOLVED] CGRectInset(); */
     [[UILabel alloc] initWithFrame:0];
     [[[UILabel alloc] initWithFrame:0]; setAutoresizingMask:2];
     [[[UILabel alloc] initWithFrame:0]; setText:@"点击导入 · 长按分享 · 左滑删除；从「文件」App 也能导入备份。只删备份文件，相册照片不受影响。"];
@@ -588,7 +588,7 @@
     [self table];
     [ret setTableFooterView:[[UIView alloc] initWithFrame:0];];
     objc_release(ret);
-    sub_882b8();
+    /* [UNRESOLVED] sub_882b8(); */
     [ret mutableCopy];
     [self setItems:[ret mutableCopy];];
     objc_release([ret mutableCopy];);
@@ -663,12 +663,12 @@
     // 000893c8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    if (cond /* lt */) goto L_89374;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_89374; */
 
     [self items];
     [ret count];
     objc_release(ret);
-    if (cond /* ge */) goto L_89380;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_89380; */
 
 L_89374:;
     goto L_893c8;
@@ -919,7 +919,7 @@ L_895c0:;
     // 00089634  b       #0x1a72d8   ; _objc_msgSend
     id ret = nil;
 
-    sub_882b8(_cmd, a0, a1, a2, a3);
+    /* [UNRESOLVED] sub_882b8(_cmd, a0, a1, a2, a3); */
     [ret mutableCopy];
     [self setItems:[ret mutableCopy];];
     objc_release([ret mutableCopy];);
@@ -1357,12 +1357,12 @@ L_898ec:;
 
 L_89a20:;
     [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; name];
-    [ret setText:0x209f58];
+    /* [UNRESOLVED] [ret setText:0x209f58]; */
     objc_release(ret);
     [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"]; meta];
 
 L_89a78:;
-    [ret setText:0x209f58];
+    /* [UNRESOLVED] [ret setText:0x209f58]; */
 
 L_89a80:;
     objc_release(ret);
@@ -1635,8 +1635,8 @@ L_89d44:;
     goto L_89d70;
 
 L_89d54:;
-    dispatch_time(0x17d7);
-    dispatch_after(0x200010, 0x2066e0);
+    /* [UNRESOLVED] dispatch_time(0x17d7); */
+    /* [UNRESOLVED] dispatch_after(0x200010, 0x2066e0); */
 
 L_89d70:;
     objc_release(a1);
@@ -1980,7 +1980,7 @@ L_89d70:;
 
     objc_retain(a0);
     [a0 state];
-    if (cond /* ne */) goto L_8a244;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_8a244; */
 
     [self table];
     [a0 locationInView:ret];
@@ -1998,16 +1998,16 @@ L_89d70:;
     [ret length];
     if ([ret length]; == 0) goto L_8a22c;
 
-    [@0x244978 isEnabledForLevel:3];
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_8a028;
 
     [ret objectForKeyedSubscript:@"name"];
-    [@0x244978 logLevel:3 format:@"[Gallery][迁移] 长按分享备份：%@"];
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery][迁移] 长按分享备份：%@"]; */
     objc_release(ret);
     goto L_8a054;
 
 L_8a028:;
-    [@0x244978 noteFiltered:3];
+    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
 
 L_8a054:;
     [NSURL fileURLWithPath:ret];
@@ -2053,6 +2053,7 @@ L_8a23c:;
 
 L_8a244:;
     objc_release(a0);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_8a288; */
 
     return;
 }
@@ -2244,14 +2245,14 @@ L_8a244:;
 L_8a3f0:;
     objc_release(a1);
     objc_release(a0);
-    if (cond /* ne */) goto L_8a430;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_8a430; */
 
 L_8a430:;
-    stack_chk_fail();
+    /* [UNRESOLVED] stack_chk_fail(); */
     goto L_8a450;
 
 L_8a450:;
-    Unwind_Resume();
+    /* [UNRESOLVED] Unwind_Resume(); */
     [Unwind_Resume/*+0x20*/ row];
     [objc_loadWeakRetained confirmDeleteRow:[Unwind_Resume/*+0x20*/ row];];
 }
@@ -2676,7 +2677,7 @@ L_8a6f4:;
     goto L_8ae14;
 
 L_8ae0c:;
-    HushToast();
+    /* [UNRESOLVED] HushToast(); */
 
 L_8ae14:;
     objc_release([ret copy];);

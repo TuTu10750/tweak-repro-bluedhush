@@ -328,7 +328,7 @@ L_199d2c:;
     [ret unknownSelector];
     objc_release(ret);
     [self unknownSelector];
-    HushTableViewTrimSectionTopPadding();
+    /* [UNRESOLVED] HushTableViewTrimSectionTopPadding(); */
     objc_release(ret);
     [0 /* unk */ unknownSelector];
     [self unknownSelector];
@@ -457,7 +457,7 @@ L_199d2c:;
     [ret unknownSelector];
 
 L_19a0e8:;
-    dispatch_async();
+    /* [UNRESOLVED] dispatch_async(); */
     return;
 }
 
@@ -602,7 +602,7 @@ L_19a0e8:;
     [self unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    if (cond /* le */) goto L_19a284;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_19a284; */
 
     [self unknownSelector];
     [ret unknownSelector];
@@ -691,7 +691,7 @@ L_19a284:;
     [self unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    if (cond /* le */) goto L_19a358;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_19a358; */
 
     [self unknownSelector];
     [ret unknownSelector];
@@ -898,13 +898,13 @@ L_19a358:;
     [self unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    if (cond /* le */) goto L_19a4c8;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_19a4c8; */
 
     [self unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
     [ret unknownSelector];
-    HushItemCountSummary();
+    /* [UNRESOLVED] HushItemCountSummary(); */
     objc_release(ret);
     [ret unknownSelector];
     if ([ret unknownSelector]; == 0) goto L_19a50c;
@@ -1522,10 +1522,10 @@ L_19a754:;
 L_19a850:;
     [a0 unknownSelector];
     [ret unknownSelector];
-    HushKeyNeedsActivation();
+    /* [UNRESOLVED] HushKeyNeedsActivation(); */
     if (ret == 0) goto L_19a89c;
 
-    HushActivationIsActive();
+    /* [UNRESOLVED] HushActivationIsActive(); */
     goto L_19a89c;
 
 L_19a89c:;
@@ -1552,7 +1552,7 @@ L_19a948:;
     objc_release(ret);
     objc_release(ret);
     [ret unknownSelector];
-    HushHostCompatNote();
+    /* [UNRESOLVED] HushHostCompatNote(); */
     objc_release(ret);
     [ret unknownSelector];
     [ret unknownSelector];
@@ -1597,7 +1597,7 @@ L_19ac2c:;
     [ret unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    HushApplyHostStyleToContent(0 /* unk */);
+    /* [UNRESOLVED] HushApplyHostStyleToContent(0 / * unk * /); */
     [ret unknownSelector];
     [0 /* unk */ unknownSelector];
     if (ret == 0) goto L_19ad80;
@@ -1635,11 +1635,11 @@ L_19ae40:;
     goto L_19aeb4;
 
 L_19aeb4:;
-    Unwind_Resume();
+    /* [UNRESOLVED] Unwind_Resume(); */
     if (objc_loadWeakRetained == 0) goto L_19b0a4;
 
     objc_retain(Unwind_Resume/*+0x20*/);
-    HushActivationInterceptToggle();
+    /* [UNRESOLVED] HushActivationInterceptToggle(); */
     if (((objc_destroyWeak >> 0) & 1) == 0) goto L_19af84;
 
     if (0 == 0) goto L_19af9c;
@@ -1658,14 +1658,14 @@ L_19af9c:;
     [0 /* unk */ unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    [@0x244978 unknownSelector];
-    if ([@0x244978 unknownSelector]; == 0) goto L_19b034;
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] if ([@0x244978 unknownSelector]; == 0) goto L_19b034; */
 
-    [@0x244978 unknownSelector];
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     goto L_19b048;
 
 L_19b034:;
-    [[@0x244978 unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] [[@0x244978 unknownSelector]; unknownSelector]; */
 
 L_19b048:;
     [objc_loadWeakRetained unknownSelector];
@@ -2127,7 +2127,7 @@ L_19b638:;
     [self unknownSelector];
     [ret unknownSelector];
     objc_release(ret);
-    if (cond /* le */) goto L_19b7a4;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_19b7a4; */
 
     [self unknownSelector];
     [ret unknownSelector];
@@ -2478,10 +2478,10 @@ L_19ba7c:;
     [[[NSObject alloc] unknownSelector]; unknownSelector];
     [[NSObject alloc] unknownSelector];
     [[[NSObject alloc] unknownSelector]; unknownSelector];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     [objc_alloc_init unknownSelector];
     [[[NSObject alloc] unknownSelector]; unknownSelector];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     [[[NSObject alloc] unknownSelector]; unknownSelector];
     [[[NSObject alloc] unknownSelector]; unknownSelector];
     [[[NSObject alloc] unknownSelector]; unknownSelector];

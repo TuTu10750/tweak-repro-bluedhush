@@ -337,7 +337,7 @@
     [self->_name setAdjustsFontSizeToFitWidth:1];
     [self->_name setMinimumScaleFactor:0.72];
     [self->_name setLineBreakMode:2];
-    HushIsDarkMode();
+    /* [UNRESOLVED] HushIsDarkMode(); */
     [UIColor unknownSelector];
     [self->_name setTextColor:ret];
     objc_release(ret);
@@ -348,7 +348,7 @@
     [UIFont systemFontOfSize:12];
     [self->_count setFont:ret];
     objc_release(ret);
-    HushIsDarkMode();
+    /* [UNRESOLVED] HushIsDarkMode(); */
     [UIColor colorWithWhite:0.42 alpha:1];
     [self->_count setTextColor:ret];
     objc_release(ret);
@@ -357,7 +357,7 @@
     [self addSubview:self->_count];
     [UIButton buttonWithType:1];
     objc_release(self->_home);
-    [self->_home setFrame:-0x3faf000000000000];
+    /* [UNRESOLVED] [self->_home setFrame:-0x3faf000000000000]; */
     [self->_home setTitle:@"主页" forState:0];
     [UIFont systemFontOfSize:14];
     [self->_home titleLabel];

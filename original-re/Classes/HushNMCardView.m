@@ -543,7 +543,7 @@
     [[UILabel alloc] initWithFrame:0 /* unk */];
     objc_release(self->_badge);
     [self->_badge setText:@"隐私相册"];
-    [UIFont systemFontOfSize:11 weight:0x200180];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:11 weight:0x200180]; */
     [self->_badge setFont:ret];
     objc_release(ret);
     [UIColor whiteColor];
@@ -562,7 +562,7 @@
     objc_release(self->_chipBox);
     [UIColor whiteColor];
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [self->_chipBox setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
@@ -575,7 +575,7 @@
     objc_release(ret);
     [UIColor colorWithWhite:0 alpha:0 /* unk */];
     [UIColor colorWithWhite:1 alpha:0 /* unk */];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [objc_retainAutorelease CGColor];
     [self->_chipBox layer];
     [ret setBorderColor:[objc_retainAutorelease CGColor];];
@@ -600,7 +600,7 @@
     objc_release(ret);
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [self->_chip setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
@@ -610,7 +610,7 @@
     objc_release(self->_bar);
     [UIColor whiteColor];
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [self->_bar setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
@@ -623,7 +623,7 @@
     objc_release(ret);
     [UIColor colorWithWhite:0 alpha:0 /* unk */];
     [UIColor colorWithWhite:1 alpha:0 /* unk */];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [objc_retainAutorelease CGColor];
     [self->_bar layer];
     [ret setBorderColor:[objc_retainAutorelease CGColor];];
@@ -959,7 +959,7 @@ L_ceef8:;
     objc_retain(0);
     [self->_builtPhotos count];
     [0 count];
-    if (cond /* ne */) goto L_cf0c8;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cf0c8; */
 
     [self->_builtPhotos isEqualToArray:0];
     if (((0 >> 0) & 1) != 0) goto L_cf3e0;
@@ -970,11 +970,11 @@ L_cf0c8:;
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_cf15c;
 
 L_cf110:;
-    if (cond /* eq */) goto L_cf128;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_cf128; */
 
 L_cf128:;
     [0 /* local *//*+0x0*/ removeFromSuperview];
-    if (cond /* ne */) goto L_cf110;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cf110; */
 
     [self->_photos countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([self->_photos countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_cf110;
@@ -1006,14 +1006,15 @@ L_cf278:;
     [self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 /* unk */];];
     [self->_photos addObject:[[UIImageView alloc] initWithFrame:0 /* unk */];];
     [0 objectAtIndexedSubscript:0];
-    sub_cf42c(ret);
+    /* [UNRESOLVED] sub_cf42c(ret); */
     objc_release(ret);
     objc_release([[UIImageView alloc] initWithFrame:0 /* unk */];);
     [0 unknownSelector];
-    if (cond /* lo */) goto L_cf278;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_cf278; */
 
 L_cf3e0:;
     objc_release(0);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cf428; */
 
     return;
 }
@@ -1289,7 +1290,7 @@ L_cf3e0:;
     if (0 == 0) goto L_cf6a8;
 
     [self->_buttons count];
-    if (cond /* eq */) goto L_cf968;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_cf968; */
 
 L_cf6a8:;
     objc_retain(self->_buttons);
@@ -1297,11 +1298,11 @@ L_cf6a8:;
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_cf73c;
 
 L_cf6f0:;
-    if (cond /* eq */) goto L_cf708;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_cf708; */
 
 L_cf708:;
     [0 /* local *//*+0x0*/ removeFromSuperview];
-    if (cond /* ne */) goto L_cf6f0;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cf6f0; */
 
     [self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_cf6f0;
@@ -1333,9 +1334,10 @@ L_cf808:;
     [self->_bar addSubview:ret];
     [self->_buttons addObject:ret];
     objc_release(ret);
-    if (cond /* ne */) goto L_cf808;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cf808; */
 
 L_cf968:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cf990; */
 
     return;
 }
@@ -1652,11 +1654,11 @@ L_cf968:;
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_cfd5c;
 
 L_cfaf0:;
-    if (cond /* eq */) goto L_cfb0c;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_cfb0c; */
 
 L_cfb0c:;
     [0 /* local *//*+0x0*/ tag];
-    if (cond /* ne */) goto L_cfbb4;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cfbb4; */
 
     [UIColor unknownSelector];
     [0 /* local *//*+0x0*/ setBackgroundColor:ret];
@@ -1668,32 +1670,33 @@ L_cfb0c:;
 L_cfbb4:;
     [[0 /* local *//*+0x0*/ setTitleColor:ret forState:0]; unknownSelector];
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [0 /* local *//*+0x0*/ setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
     [UIColor colorWithWhite:0 /* unk */ alpha:1];
-    sub_cef28(ret);
+    /* [UNRESOLVED] sub_cef28(ret); */
     [0 /* local *//*+0x0*/ setTitleColor:ret forState:0];
     objc_release(ret);
     objc_release(ret);
 
 L_cfcd0:;
     objc_release(ret);
-    [UIFont systemFontOfSize:14 weight:0x200348];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:14 weight:0x200348]; */
     [0 /* local *//*+0x0*/ titleLabel];
     [ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    if (cond /* ne */) goto L_cfaf0;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cfaf0; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_cfaf0;
 
 L_cfd5c:;
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cfda8; */
 
     return;
 }
@@ -1781,7 +1784,7 @@ L_cfd5c:;
 
     objc_retain(a0);
     [a0 state];
-    if (cond /* ne */) goto L_cfe9c;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cfe9c; */
 
     [a0 view];
     [ret tag];
@@ -1791,10 +1794,10 @@ L_cfd5c:;
     [self photoURLs];
     [ret count];
     objc_release(ret);
-    if (cond /* ge */) goto L_cfe9c;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_cfe9c; */
 
     [self photoURLs];
-    HushUserAlbumShowPhotos([ret tag];);
+    /* [UNRESOLVED] HushUserAlbumShowPhotos([ret tag];); */
     objc_release(ret);
 
 L_cfe9c:;
@@ -2301,15 +2304,15 @@ L_cfe9c:;
     if ((([a0 tag]; >> 63) & 1) != 0) goto L_d0600;
 
     [a0 tag];
-    if (cond /* gt */) goto L_d0600;
+    /* [UNRESOLVED] if (cond / * gt * /) goto L_d0600; */
 
     [self uid];
     [ret length];
     if ([ret length]; == 0) goto L_d05f8;
 
-    sub_d0640();
+    /* [UNRESOLVED] sub_d0640(); */
     [a0 tag];
-    if (cond /* ne */) goto L_cff70;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_cff70; */
 
     goto L_cff80;
 
@@ -2317,7 +2320,7 @@ L_cff70:;
     [a0 tag];
 
 L_cff80:;
-    sub_d0740([a0 tag];);
+    /* [UNRESOLVED] sub_d0740([a0 tag];); */
     [self setMarkIndex:[a0 tag];];
     [self hushApplySelection];
     [self labels];
@@ -2326,9 +2329,9 @@ L_cff80:;
     if ((([a0 tag]; >> 63) & 1) != 0) goto L_d00f4;
 
     [0 count];
-    if (cond /* ge */) goto L_d00f4;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_d00f4; */
 
-    [@0x244978 isEnabledForLevel:3];
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (0 == 0) goto L_d01e0;
 
     if (ret == 0) goto L_d0210;
@@ -2343,7 +2346,7 @@ L_cff80:;
 L_d00b4:;
     [ret characterAtIndex:0];
     [ret length];
-    if (cond /* lo */) goto L_d00b4;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_d00b4; */
 
     goto L_d02c4;
 
@@ -2363,7 +2366,7 @@ L_d00f4:;
 L_d0184:;
     [ret characterAtIndex:0];
     [ret length];
-    if (cond /* lo */) goto L_d0184;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_d0184; */
 
     goto L_d0228;
 
@@ -2396,7 +2399,7 @@ L_d0288:;
     objc_release(ret);
 
 L_d029c:;
-    HushToast();
+    /* [UNRESOLVED] HushToast(); */
     goto L_d03cc;
 
 L_d02ac:;
@@ -2418,7 +2421,7 @@ L_d031c:;
 L_d0370:;
     [sel_registerName("characterAtIndex:") objectAtIndexedSubscript:a0];
     [NSString stringWithFormat:@"已评价：%@"];
-    HushToast();
+    /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
 
@@ -2445,14 +2448,14 @@ L_d0444:;
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_d05d4;
 
 L_d04dc:;
-    if (cond /* eq */) goto L_d04f8;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_d04f8; */
 
 L_d04f8:;
     [self superview];
     [ret superview];
     objc_release(ret);
     objc_release(ret);
-    if (cond /* eq */) goto L_d05ac;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_d05ac; */
 
     if (ret == 0) goto L_d05a0;
 
@@ -2468,7 +2471,7 @@ L_d05a0:;
     objc_release(ret);
 
 L_d05ac:;
-    if (cond /* ne */) goto L_d04dc;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_d04dc; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_d04dc;
@@ -2485,6 +2488,7 @@ L_d05f8:;
 
 L_d0600:;
     objc_release(0 /* unk */);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_d063c; */
 
     return;
 }
@@ -2868,7 +2872,7 @@ L_d0600:;
     [self hushEnsurePhotos];
     [self hushEnsureButtons];
     [self->_buttons count];
-    if (cond /* lt */) goto L_d0c48;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_d0c48; */
 
 L_d0bd0:;
     [self->_buttons objectAtIndexedSubscript:0];
@@ -2877,20 +2881,20 @@ L_d0bd0:;
     objc_release(ret);
     objc_release(ret);
     [self->_buttons count];
-    if (cond /* lt */) goto L_d0bd0;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_d0bd0; */
 
 L_d0c48:;
     [self hushApplySelection];
     [self->_photos count];
     if ([self->_photos count]; == 0) goto L_d0e54;
 
-    if (cond /* lt */) goto L_d0d6c;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_d0d6c; */
 
 L_d0d6c:;
     [self->_photos objectAtIndexedSubscript:0];
     [ret setFrame:0];
     objc_release(ret);
-    if (cond /* ne */) goto L_d0d6c;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_d0d6c; */
 
     [self->_badge setHidden:0];
     [self->_badge sizeThatFits:0];
@@ -2915,14 +2919,14 @@ L_d0e74:;
 L_d0f9c:;
     [self->_bar setFrame:14];
     [self->_buttons count];
-    if (cond /* lt */) goto L_d106c;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_d106c; */
 
 L_d0ff8:;
     [self->_buttons objectAtIndexedSubscript:0];
     [ret setFrame:8];
     objc_release(ret);
     [self->_buttons count];
-    if (cond /* lt */) goto L_d0ff8;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_d0ff8; */
 
 L_d106c:;
     return;

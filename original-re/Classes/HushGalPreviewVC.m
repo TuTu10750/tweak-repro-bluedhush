@@ -586,7 +586,7 @@ L_7ac04:;
     [ret bounds];
     objc_release(ret);
     [[UIView alloc] initWithFrame:0];
-    HushIsDarkMode();
+    /* [UNRESOLVED] HushIsDarkMode(); */
     [UIColor colorWithWhite:0.96 alpha:1];
     [[[UIView alloc] initWithFrame:0]; setBackgroundColor:ret];
     objc_release(ret);
@@ -625,7 +625,7 @@ L_7ac04:;
     [self files];
     [ret count];
     objc_release(ret);
-    if (cond /* lt */) goto L_7b0d4;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_7b0d4; */
 
 L_7b0c8:;
     [self setIndex:0];
@@ -675,6 +675,7 @@ L_7b174:;
     objc_release(ret);
     objc_release(ret);
     objc_release([[UIView alloc] initWithFrame:0];);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_7b460; */
 
     return;
 }
@@ -815,9 +816,9 @@ L_7b4f0:;
     id ret = nil;
 
     [super viewDidLayoutSubviews];
-    [self->_savedAt sizeThatFits:0x7fefffffffffffff];
-    CGRectGetMinX();
-    CGRectGetMaxY();
+    /* [UNRESOLVED] [self->_savedAt sizeThatFits:0x7fefffffffffffff]; */
+    /* [UNRESOLVED] CGRectGetMinX(); */
+    /* [UNRESOLVED] CGRectGetMaxY(); */
     [self->_savedAt setFrame:0];
     return;
 }
@@ -907,7 +908,7 @@ L_7b4f0:;
     [self files];
     [ret count];
     objc_release(ret);
-    if (cond /* le */) goto L_7b6e4;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_7b6e4; */
 
     [objc_alloc_init setIndex:a0];
     [self files];
@@ -1043,8 +1044,8 @@ L_7b6e4:;
     [a0 viewControllers];
     [ret firstObject];
     objc_release(ret);
-    [@0x244c98 class];
-    [ret isKindOfClass:[@0x244c98 class];];
+    /* [UNRESOLVED] [@0x244c98 class]; */
+    /* [UNRESOLVED] [ret isKindOfClass:[@0x244c98 class];]; */
     if (ret == 0) goto L_7b828;
 
     [ret index];
@@ -1351,7 +1352,7 @@ L_7b82c:;
     [self index];
     [self files];
     [ret count];
-    if (cond /* ge */) goto L_7b904;
+    /* [UNRESOLVED] if (cond / * ge * /) goto L_7b904; */
 
     [self files];
     [self index];
@@ -1369,22 +1370,22 @@ L_7b918:;
     [0 length];
     if ([0 length]; == 0) goto L_7b9a8;
 
-    HushGalSourceTextOfFile();
+    /* [UNRESOLVED] HushGalSourceTextOfFile(); */
     [ret length];
     if ([ret length]; == 0) goto L_7b9dc;
 
-    sub_7ba74();
+    /* [UNRESOLVED] sub_7ba74(); */
     [NSString stringWithFormat:@"%@  ·  来源：%@"];
     goto L_7ba04;
 
 L_7b9a8:;
-    [self->_savedAt setText:0x209f58];
+    /* [UNRESOLVED] [self->_savedAt setText:0x209f58]; */
     [self view];
     [ret setNeedsLayout];
     goto L_7ba54;
 
 L_7b9dc:;
-    sub_7ba74();
+    /* [UNRESOLVED] sub_7ba74(); */
 
 L_7ba04:;
     [self->_savedAt setText:ret];
@@ -1406,13 +1407,13 @@ L_7ba54:;
     [ret attributesOfItemAtPath:0 error:0];
     objc_release(0);
     objc_release(ret);
-    [ret objectForKeyedSubscript:0x200508/*+0x0*/];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x200508/ *+0x0* /]; */
     if (ret == 0) goto L_7bb90;
 
-    if (cond /* ne */) goto L_7bbc4;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_7bbc4; */
 
 L_7bb40:;
-    [0x257998 stringFromDate:ret];
+    /* [UNRESOLVED] [0x257998 stringFromDate:ret]; */
     [NSString stringWithFormat:@"保存时间：%@"];
     objc_release(ret);
     goto L_7bb90;
@@ -1422,7 +1423,7 @@ L_7bb90:;
     objc_release(ret);
 
 L_7bbc4:;
-    dispatch_once(0x206500);
+    /* [UNRESOLVED] dispatch_once(0x206500); */
     goto L_7bb40;
 }
 

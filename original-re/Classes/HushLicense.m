@@ -118,14 +118,14 @@
     id ret = nil;
 
     [NSUserDefaults standardUserDefaults];
-    if (cond /* ne */) goto L_136c4;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_136c4; */
 
 L_1368c:;
-    [ret stringForKey:0x256680];
+    /* [UNRESOLVED] [ret stringForKey:0x256680]; */
     objc_release(ret);
 
 L_136c4:;
-    dispatch_once(0x201570);
+    /* [UNRESOLVED] dispatch_once(0x201570); */
     goto L_1368c;
 }
 
@@ -266,8 +266,9 @@ L_137b0:;
 
 L_137c4:;
     [NSUserDefaults standardUserDefaults];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_1382c; */
 
-    [ret boolForKey:0x256690];
+    /* [UNRESOLVED] [ret boolForKey:0x256690]; */
 
 L_13804:;
     objc_release(ret);
@@ -584,7 +585,7 @@ L_13814:;
     [ret uppercaseString];
     objc_release(ret);
     [ret length];
-    if (cond /* hi */) goto L_13930;
+    /* [UNRESOLVED] if (cond / * hi * /) goto L_13930; */
 
     if (a1 == 0) goto L_13bf0;
 
@@ -603,36 +604,42 @@ L_13930:;
     goto L_13bd8;
 
 L_139b0:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_13c14; */
 
-    [ret setObject:ret forKey:0x256680];
+    /* [UNRESOLVED] [ret setObject:ret forKey:0x256680]; */
     [NSDate date];
     [ret timeIntervalSince1970];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_13c2c; */
 
-    [ret setDouble:0x2566a0 forKey:0];
+    /* [UNRESOLVED] [ret setDouble:0x2566a0 forKey:0]; */
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_13c4c; */
 
-    [ret setBool:0 forKey:0x256690];
+    /* [UNRESOLVED] [ret setBool:0 forKey:0x256690]; */
     [self _recheckRemoteAsync:ret];
     if (a1 == 0) goto L_13be0;
 
     goto L_13be0;
 
 L_13a90:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_13c64; */
 
-    [ret setObject:ret forKey:0x256680];
+    /* [UNRESOLVED] [ret setObject:ret forKey:0x256680]; */
     [NSDate date];
     [ret timeIntervalSince1970];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_13c7c; */
 
-    [ret setDouble:0x2566a0 forKey:0];
+    /* [UNRESOLVED] [ret setDouble:0x2566a0 forKey:0]; */
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_13c9c; */
 
-    [ret setBool:1 forKey:0x256690];
+    /* [UNRESOLVED] [ret setBool:1 forKey:0x256690]; */
     [self _recheckRemoteAsync:ret];
     [NSNotificationCenter defaultCenter];
     [ret postNotificationName:@"HushActivationDidChange" object:0];
     objc_release(ret);
-    HushActivationStatusLine();
-    [@0x244978 logSync:@"[License] 激活成功：%@"];
+    /* [UNRESOLVED] HushActivationStatusLine(); */
+    /* [UNRESOLVED] [@0x244978 logSync:@"[License] 激活成功：%@"]; */
     objc_release(ret);
 
 L_13bd8:;
@@ -959,7 +966,7 @@ L_13bf0:;
     // 000140bc  bl      #0x1a72c0   ; ___stack_chk_fail
     id ret = nil;
 
-    [a0 stringByReplacingOccurrencesOfString:@" " withString:0x209f58];
+    /* [UNRESOLVED] [a0 stringByReplacingOccurrencesOfString:@" " withString:0x209f58]; */
     [ret length];
     if (((a0 >> 0) & 1) != 0) goto L_13e3c;
 
@@ -978,7 +985,7 @@ L_13da4:;
     [ret appendBytes:0 length:1];
     objc_release(ret);
     [ret length];
-    if (cond /* lo */) goto L_13da4;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_13da4; */
 
 L_13e2c:;
     objc_retain(ret);
@@ -997,13 +1004,13 @@ L_13e58:;
     if (0 == 0) goto L_14064;
 
     [0 length];
-    if (cond /* lo */) goto L_14064;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_14064; */
 
     [objc_retainAutorelease bytes];
     [0 length];
-    if (cond /* ne */) goto L_14064;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14064; */
 
-    if (cond /* ne */) goto L_14064;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14064; */
 
     [NSData dataWithBytes:[objc_retainAutorelease bytes]; length:0xc];
     [[NSString alloc] initWithBytes:2 length:0 encoding:4];
@@ -1022,7 +1029,7 @@ L_13e58:;
 
 L_14064:;
     objc_release(0);
-    if (cond /* ne */) goto L_140bc;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_140bc; */
 
 L_140ac:;
     objc_release([[NSString alloc] initWithBytes:2 length:0 encoding:4];);
@@ -1030,7 +1037,7 @@ L_140ac:;
     goto L_14064;
 
 L_140bc:;
-    stack_chk_fail();
+    /* [UNRESOLVED] stack_chk_fail(); */
     return nil;
 }
 
@@ -1161,17 +1168,19 @@ L_140bc:;
     [a0 objectForKeyedSubscript:@"body"];
     [a0 objectForKeyedSubscript:@"sig"];
     objc_release(a0);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14248; */
 
     objc_retain(objc_retainAutorelease);
     [ret bytes];
-    [0x2566b0 length];
+    /* [UNRESOLVED] [0x2566b0 length]; */
     [objc_retainAutorelease bytes];
     [ret length];
-    CCHmac([ret bytes];, [0x2566b0 length];, [objc_retainAutorelease bytes];, [ret length];);
+    /* [UNRESOLVED] CCHmac([ret bytes];, [0x2566b0 length];, [objc_retainAutorelease bytes];, [ret length];); */
     [objc_retainAutorelease bytes];
-    objc_release(0x2566b0);
+    /* [UNRESOLVED] objc_release(0x2566b0); */
     objc_release(ret);
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14260; */
 
     return (BOOL)a0;
 }
@@ -1288,7 +1297,7 @@ L_140bc:;
 
     [self deviceCode];
     [ret length];
-    if (cond /* ls */) goto L_14330;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_14330; */
 
     [ret length];
     [ret substringFromIndex:-4];
@@ -1486,7 +1495,7 @@ L_143a8:;
     [NSDate date];
     [ret timeIntervalSince1970];
     objc_release(ret);
-    if (cond /* le */) goto L_144bc;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_144bc; */
 
     goto L_14598;
 
@@ -1503,10 +1512,11 @@ L_144bc:;
     if ([ret unsignedIntValue]; == 0) goto L_14598;
 
     [NSUserDefaults standardUserDefaults];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_145b4; */
 
-    [ret doubleForKey:0x2566a0];
+    /* [UNRESOLVED] [ret doubleForKey:0x2566a0]; */
     objc_release(ret);
-    if (cond /* lt */) goto L_14598;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_14598; */
 
     [NSDate date];
     [ret timeIntervalSince1970];
@@ -1584,9 +1594,11 @@ L_14598:;
     if (0 == 0) goto L_1468c;
 
     [NSUserDefaults standardUserDefaults];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_146a4; */
 
-    [ret doubleForKey:0x2566a0];
+    /* [UNRESOLVED] [ret doubleForKey:0x2566a0]; */
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_14690; */
 
     [NSDate date];
     [ret timeIntervalSince1970];
@@ -1709,8 +1721,9 @@ L_1468c:;
     if ([ret unsignedIntValue]; == 0) goto L_147cc;
 
     [NSUserDefaults standardUserDefaults];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_147f8; */
 
-    [ret doubleForKey:0x2566a0];
+    /* [UNRESOLVED] [ret doubleForKey:0x2566a0]; */
     objc_release(ret);
     goto L_147cc;
 
@@ -1838,24 +1851,24 @@ L_147dc:;
     id ret = nil;
 
     [self expiryTimestamp];
-    if (cond /* lt */) goto L_148b4;
+    /* [UNRESOLVED] if (cond / * lt * /) goto L_148b4; */
 
     [NSDate date];
     [ret timeIntervalSince1970];
     objc_release(ret);
-    if (cond /* le */) goto L_14914;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_14914; */
 
 L_148b4:;
-    dispatch_time(6);
-    dispatch_after(0x200010);
+    /* [UNRESOLVED] dispatch_time(6); */
+    /* [UNRESOLVED] dispatch_after(0x200010); */
     goto L_1497c;
 
 L_14914:;
     [NSNotificationCenter defaultCenter];
     [ret postNotificationName:@"HushActivationDidChange" object:0];
     objc_release(ret);
-    [@0x244978 logSync:@"[License] 限时授权已到期，受限功能停用（定位与追踪 / 限制解放）"];
-    HushShowActivationUI();
+    /* [UNRESOLVED] [@0x244978 logSync:@"[License] 限时授权已到期，受限功能停用（定位与追踪 / 限制解放）"]; */
+    /* [UNRESOLVED] HushShowActivationUI(); */
 
 L_1497c:;
     return;
@@ -2098,7 +2111,9 @@ L_1497c:;
     [a0 length];
     if ([a0 length]; == 0) goto L_14c54;
 
-    [NSURL URLWithString:0x2566c0];
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14c8c; */
+
+    /* [UNRESOLVED] [NSURL URLWithString:0x2566c0]; */
     if (ret == 0) goto L_14c4c;
 
     [NSMutableURLRequest requestWithURL:ret];
@@ -2111,9 +2126,10 @@ L_1497c:;
     [NSJSONSerialization dataWithJSONObject:ret options:0 error:0];
     [ret setHTTPBody:ret];
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14ca4; */
 
     [NSURLSessionConfiguration ephemeralSessionConfiguration];
-    [NSURLSession sessionWithConfiguration:ret delegate:0x256640 delegateQueue:0];
+    /* [UNRESOLVED] [NSURLSession sessionWithConfiguration:ret delegate:0x256640 delegateQueue:0]; */
     objc_retain(a0);
     objc_retain(ret);
     [ret dataTaskWithRequest:ret completionHandler:0];
@@ -2131,6 +2147,7 @@ L_14c4c:;
 
 L_14c54:;
     objc_release(a0);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_14cbc; */
 
     return;
 }

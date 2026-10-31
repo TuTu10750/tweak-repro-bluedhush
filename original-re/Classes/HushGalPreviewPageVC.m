@@ -240,9 +240,9 @@
     [ret length];
     if ([ret length]; == 0) goto L_7a924;
 
-    dispatch_get_global_queue(0);
+    /* [UNRESOLVED] dispatch_get_global_queue(0); */
     objc_retain(ret);
-    dispatch_async();
+    /* [UNRESOLVED] dispatch_async(); */
     objc_release(ret);
     objc_release(ret);
 

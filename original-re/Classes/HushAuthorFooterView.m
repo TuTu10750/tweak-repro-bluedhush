@@ -441,6 +441,7 @@
     objc_release(ret);
 
 L_19d3f4:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_19d41c; */
 
     return nil;
 }
@@ -663,7 +664,7 @@ L_19d3f4:;
     id ret = nil;
 
     objc_retain(a1);
-    sub_19d6e4();
+    /* [UNRESOLVED] sub_19d6e4(); */
     [self->/*+0x0*/ unknownSelector];
     objc_release(ret);
     if (a1 != 0) goto L_19d4f4;
@@ -682,7 +683,7 @@ L_19d548:;
     [self->/*+0x0*/ unknownSelector];
     [self->/*+0x0*/ unknownSelector];
     objc_retain(self);
-    NSSelectorFromString();
+    /* [UNRESOLVED] NSSelectorFromString(); */
     [self unknownSelector];
     if (self == 0) goto L_19d6a0;
 
@@ -697,14 +698,14 @@ L_19d548:;
     objc_release(ret);
     if ([ret unknownSelector]; == 0) goto L_19d690;
 
-    [@0x244978 unknownSelector];
-    if ([@0x244978 unknownSelector]; == 0) goto L_19d660;
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] if ([@0x244978 unknownSelector]; == 0) goto L_19d660; */
 
-    [@0x244978 unknownSelector];
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     goto L_19d674;
 
 L_19d660:;
-    [[@0x244978 unknownSelector]; unknownSelector];
+    /* [UNRESOLVED] [[@0x244978 unknownSelector]; unknownSelector]; */
 
 L_19d674:;
     [ret unknownSelector];
@@ -719,6 +720,7 @@ L_19d698:;
 L_19d6a0:;
     objc_release(self);
     objc_release(a1);
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_19d6e0; */
 
     return;
 }
@@ -819,21 +821,21 @@ L_19d6a0:;
     objc_retain(a1);
     if (a4 != 0) goto L_19d9e0;
 
-    [@0x244978 unknownSelector];
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     if (a1 == 0) goto L_19d974;
 
     [a1 unknownSelector];
-    [@0x244978 unknownSelector];
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     objc_release(ret);
     goto L_19d988;
 
 L_19d974:;
-    [@0x244978 unknownSelector];
+    /* [UNRESOLVED] [@0x244978 unknownSelector]; */
 
 L_19d988:;
     [0 /* unk */ unknownSelector];
     [ret unknownSelector];
-    if ([@0x244978 class] == 0) goto L_19d9d8;
+    /* [UNRESOLVED] if ([@0x244978 class] == 0) goto L_19d9d8; */
 
     [ret unknownSelector];
 

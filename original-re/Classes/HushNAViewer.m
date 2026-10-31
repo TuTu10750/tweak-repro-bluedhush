@@ -647,7 +647,7 @@ L_c6544:;
     [UIButton buttonWithType:1];
     [self view];
     [ret bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     [ret setFrame:0];
     objc_release(ret);
     [ret setAutoresizingMask:0x21];
@@ -661,7 +661,7 @@ L_c6544:;
     [UIColor whiteColor];
     [ret setTitleColor:ret forState:0];
     objc_release(ret);
-    [UIFont systemFontOfSize:25 weight:0x200378];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:25 weight:0x200378]; */
     [ret titleLabel];
     [ret setFont:ret];
     objc_release(ret);
@@ -673,10 +673,10 @@ L_c6544:;
     [self setCloseButton:ret];
     [self view];
     [ret bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     [self view];
     [ret bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     [[UILabel alloc] initWithFrame:0];
     objc_release(ret);
     objc_release(ret);
@@ -1241,15 +1241,15 @@ L_c6544:;
 
     [self view];
     [ret bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
     [self view];
     [ret bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
-    if (cond /* ls */) goto L_c7490;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_c7490; */
 
-    if (cond /* ls */) goto L_c7490;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_c7490; */
 
     [self imageURLs];
     [ret count];
@@ -1263,11 +1263,11 @@ L_c6544:;
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_c6e6c;
 
 L_c6e20:;
-    if (cond /* eq */) goto L_c6e38;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c6e38; */
 
 L_c6e38:;
     [0 /* local *//*+0x0*/ removeFromSuperview];
-    if (cond /* ne */) goto L_c6e20;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_c6e20; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_c6e20;
@@ -1314,7 +1314,7 @@ L_c6fb0:;
     objc_release(ret);
     [[[UIImageView alloc] initWithFrame:0]; unknownSelector];
     [[[UIImageView alloc] initWithFrame:0]; setClipsToBounds:1];
-    sub_c74c0(ret);
+    /* [UNRESOLVED] sub_c74c0(ret); */
     [[[UIView alloc] initWithFrame:0]; unknownSelector];
     [[[UIView alloc] initWithFrame:0]; unknownSelector];
     [[UIImageView alloc] initWithFrame:0];
@@ -1338,7 +1338,7 @@ L_c6fb0:;
     [0 /* local */ unknownSelector];
     [ret count];
     objc_release(ret);
-    if (cond /* lo */) goto L_c6fb0;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_c6fb0; */
 
 L_c7384:;
     [0 /* local */ unknownSelector];
@@ -1357,6 +1357,7 @@ L_c7384:;
     [0 /* local */ bdh_updatePage];
 
 L_c7490:;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_c74bc; */
 
     return;
 }
@@ -1446,7 +1447,7 @@ L_c7490:;
     [self imageURLs];
     [ret count];
     objc_release(ret);
-    if (cond /* le */) goto L_c76d8;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_c76d8; */
 
     [self pagingScrollView];
     [ret viewWithTag:0];
@@ -1547,9 +1548,9 @@ L_c76d8:;
 
     [self pagingScrollView];
     [ret bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
-    if (cond /* ls */) goto L_c77d8;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_c77d8; */
 
     [self pagingScrollView];
     [ret contentOffset];
@@ -1812,7 +1813,7 @@ L_c77d8:;
     [self imageURLs];
     [ret count];
     objc_release(ret);
-    if (cond /* le */) goto L_c7ae8;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_c7ae8; */
 
     [NSNumber numberWithInteger:a0];
     [self loadedHighResolutionIndexes];
@@ -2040,9 +2041,9 @@ L_c7ae8:;
 
     [self pagingScrollView];
     [ret bounds];
-    CGRectGetWidth();
+    /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
-    if (cond /* ls */) goto L_c7f50;
+    /* [UNRESOLVED] if (cond / * ls * /) goto L_c7f50; */
 
     [self pagingScrollView];
     [ret contentOffset];
@@ -2115,6 +2116,7 @@ L_c7f50:;
     [self pagingScrollView];
     objc_release(a0);
     objc_release(ret);
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c7fd0; */
 
     return;
 }
@@ -2173,7 +2175,7 @@ L_c7f50:;
     objc_retain(a0);
     [self pagingScrollView];
     objc_release(ret);
-    if (cond /* eq */) goto L_c806c;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c806c; */
 
     [a0 tag];
     [a0 viewWithTag:0x64];
@@ -2324,7 +2326,7 @@ L_c806c:;
     objc_retain(a0);
     [self pagingScrollView];
     objc_release(ret);
-    if (cond /* eq */) goto L_c8230;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c8230; */
 
     [self viewForZoomingInScrollView:a0];
     if (ret == 0) goto L_c8210;
@@ -2448,7 +2450,7 @@ L_c8230:;
     objc_retain(a0);
     [self pagingScrollView];
     objc_release(ret);
-    if (cond /* eq */) goto L_c8358;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c8358; */
 
     [a0 panGestureRecognizer];
     [ret setEnabled:0];
@@ -2523,7 +2525,7 @@ L_c8358:;
 
     objc_retain(a0);
     [self dismissPanGesture];
-    if (cond /* eq */) goto L_c83c4;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c83c4; */
 
     objc_release(ret);
     goto L_c83e0;
@@ -2629,7 +2631,7 @@ L_c83e0:;
     [ret panGestureRecognizer];
     objc_release(ret);
     [self dismissPanGesture];
-    if (cond /* eq */) goto L_c8610;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c8610; */
 
     [self dismissPanGesture];
     objc_release(ret);
@@ -2851,24 +2853,27 @@ L_c8610:;
     objc_release(ret);
     [self view];
     [ret bounds];
-    CGRectGetHeight();
+    /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
     [a0 state];
     objc_release(a0);
-    if (cond /* lo */) goto L_c87b8;
+    /* [UNRESOLVED] if (cond / * lo * /) goto L_c87b8; */
 
-    if (cond /* eq */) goto L_c883c;
+    /* [UNRESOLVED] if (cond / * eq * /) goto L_c883c; */
 
-    if (cond /* ne */) goto L_c88d8;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_c88d8; */
 
 L_c87b8:;
     [self setInteractiveDismissInProgress:0];
+    /* [UNRESOLVED] if (cond / * gt * /) goto L_c88dc; */
+
+    /* [UNRESOLVED] if (cond / * gt * /) goto L_c88dc; */
 
     [UIView animateWithDuration:0 /* unk */ animations:0];
     goto L_c88d8;
 
 L_c883c:;
-    CGAffineTransformMakeTranslation();
+    /* [UNRESOLVED] CGAffineTransformMakeTranslation(); */
     [self unknownSelector];
     [ret setTransform:0];
     objc_release(ret);

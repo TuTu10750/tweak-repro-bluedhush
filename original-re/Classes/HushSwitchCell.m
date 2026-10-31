@@ -376,7 +376,7 @@ L_19c950:;
     [ret unknownSelector];
 
 L_19c958:;
-    HushEffectTint();
+    /* [UNRESOLVED] HushEffectTint(); */
     if (ret != 0) goto L_19c998;
 
     [self unknownSelector];
@@ -391,7 +391,7 @@ L_19c998:;
 
 L_19c9d0:;
     objc_release(ret);
-    if (cond /* hi */) goto L_19ca00;
+    /* [UNRESOLVED] if (cond / * hi * /) goto L_19ca00; */
 
     goto L_19ca00;
 
@@ -412,7 +412,7 @@ L_19ca74:;
     [ret unknownSelector];
     objc_release(ret);
     [0 /* unk */ unknownSelector];
-    HushApplyHostStyleToContent(ret);
+    /* [UNRESOLVED] HushApplyHostStyleToContent(ret); */
     [self unknownSelector];
     [ret unknownSelector];
     if (ret == 0) goto L_19cb24;

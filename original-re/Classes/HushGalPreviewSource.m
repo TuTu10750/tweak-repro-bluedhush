@@ -119,7 +119,7 @@
     [self files];
     [ret count];
     objc_release(ret);
-    if (cond /* le */) goto L_7a690;
+    /* [UNRESOLVED] if (cond / * le * /) goto L_7a690; */
 
     [self files];
     [ret objectAtIndexedSubscript:a1];

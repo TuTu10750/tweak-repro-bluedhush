@@ -584,7 +584,7 @@ L_197efc:;
 L_197f2c:;
     [[[NSObject alloc] unknownSelector]; unknownSelector];
     objc_release(ret);
-    HushBallIconImage();
+    /* [UNRESOLVED] HushBallIconImage(); */
     [[NSObject alloc] unknownSelector];
     objc_release(ret);
     [[[NSObject alloc] unknownSelector]; unknownSelector];
@@ -592,7 +592,7 @@ L_197f2c:;
     [[[NSObject alloc] unknownSelector]; unknownSelector];
     [[NSObject alloc] unknownSelector];
     [[[NSObject alloc] unknownSelector]; unknownSelector];
-    HushBallIconStyleTitle();
+    /* [UNRESOLVED] HushBallIconStyleTitle(); */
     [[[NSObject alloc] unknownSelector]; unknownSelector];
     objc_release(ret);
     [0 /* unk */ unknownSelector];
@@ -662,10 +662,10 @@ L_1980ec:;
     objc_release([[NSObject alloc] unknownSelector];);
     objc_release([[NSObject alloc] unknownSelector];);
     objc_release(ret);
-    if (cond /* ne */) goto L_198530;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_198530; */
 
 L_198530:;
-    stack_chk_fail();
+    /* [UNRESOLVED] stack_chk_fail(); */
     return nil;
 }
 

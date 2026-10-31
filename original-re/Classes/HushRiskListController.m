@@ -546,11 +546,13 @@
     [ret userInterfaceStyle];
     objc_release(ret);
     objc_release(ret);
-    if (cond /* ne */) goto L_20d50;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_20d50; */
 
     [UIColor colorWithWhite:0.11 alpha:1];
     [UIColor whiteColor];
     goto L_20da8;
+
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_216a0; */
 
 L_20d50:;
     [UIColor whiteColor];
@@ -595,7 +597,7 @@ L_20da8:;
     objc_release(ret);
     [[UILabel alloc] initWithFrame:18];
     [[[UILabel alloc] initWithFrame:18]; setText:@"风险用户名单"];
-    [UIFont systemFontOfSize:17 weight:0x200180];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:17 weight:0x200180]; */
     [[[UILabel alloc] initWithFrame:18]; setFont:ret];
     objc_release(ret);
     [[[UILabel alloc] initWithFrame:18]; setTextColor:ret];
@@ -638,11 +640,11 @@ L_20da8:;
     [ret setDelegate:self];
     objc_release(ret);
     [self table];
-    [ret setRowHeight:0x404e000000000000];
+    /* [UNRESOLVED] [ret setRowHeight:0x404e000000000000]; */
     objc_release(ret);
     [self table];
-    [@0x244a68 class];
-    [ret registerClass:[@0x244a68 class]; forCellReuseIdentifier:@"risk"];
+    /* [UNRESOLVED] [@0x244a68 class]; */
+    /* [UNRESOLVED] [ret registerClass:[@0x244a68 class]; forCellReuseIdentifier:@"risk"]; */
     objc_release(ret);
     [self cardView];
     [self table];
@@ -655,7 +657,7 @@ L_20da8:;
     [ret setBackgroundColor:ret];
     objc_release(ret);
     [ret setTitle:@"关闭" forState:0];
-    [UIFont systemFontOfSize:16 weight:0x200378];
+    /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
     [ret titleLabel];
     [ret setFont:ret];
     objc_release(ret);
@@ -807,7 +809,7 @@ L_20da8:;
     // 00021830  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    sub_1eb6c(_cmd, a0, a1, a2, a3);
+    /* [UNRESOLVED] sub_1eb6c(_cmd, a0, a1, a2, a3); */
     [ret mutableCopy];
     if ([ret mutableCopy]; != 0) goto L_21714;
 
@@ -1291,10 +1293,10 @@ L_21748:;
     [ret objectAtIndexedSubscript:[a1 row];];
     objc_release(ret);
     [ret objectForKeyedSubscript:@"uid"];
-    HushSafeStrOrNil();
+    /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret objectForKeyedSubscript:@"name"];
-    HushSafeStrOrNil();
+    /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret length];
     if ([ret length]; != 0) goto L_21a34;
@@ -1311,7 +1313,7 @@ L_21a34:;
 
 L_21a7c:;
     [ret objectForKeyedSubscript:@"source"];
-    HushSafeStrOrNil();
+    /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_retain(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1645,14 +1647,14 @@ L_21a7c:;
     objc_release(a1);
     objc_release(a1);
     objc_release(a0);
-    if (cond /* ne */) goto L_21f40;
+    /* [UNRESOLVED] if (cond / * ne * /) goto L_21f40; */
 
 L_21f40:;
-    stack_chk_fail();
+    /* [UNRESOLVED] stack_chk_fail(); */
     goto L_21f60;
 
 L_21f60:;
-    Unwind_Resume();
+    /* [UNRESOLVED] Unwind_Resume(); */
     objc_retain(0);
     if (objc_loadWeakRetained == 0) goto L_2208c;
 
@@ -1661,12 +1663,12 @@ L_21f60:;
     [ret objectAtIndexedSubscript:[Unwind_Resume/*+0x20*/ row];];
     objc_release(ret);
     [ret objectForKeyedSubscript:@"uid"];
-    HushSafeStrOrNil();
+    /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret length];
     if ([ret length]; == 0) goto L_22050;
 
-    HushRiskUserUnmark();
+    /* [UNRESOLVED] HushRiskUserUnmark(); */
 
 L_22050:;
     [objc_loadWeakRetained reload];

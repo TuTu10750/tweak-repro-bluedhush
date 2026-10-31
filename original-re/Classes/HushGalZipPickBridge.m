@@ -384,7 +384,7 @@
     id ret = nil;
 
     objc_retain(a1);
-    objc_release(0x2579b8);
+    /* [UNRESOLVED] objc_release(0x2579b8); */
     [a1 firstObject];
     objc_release(a1);
     if (ret == 0) goto L_87c8c;
@@ -393,7 +393,7 @@
     [ret length];
     if ([ret length]; == 0) goto L_879dc;
 
-    NSTemporaryDirectory();
+    /* [UNRESOLVED] NSTemporaryDirectory(); */
     [ret length];
     if ([ret length]; == 0) goto L_879c0;
 
@@ -422,18 +422,18 @@ L_879cc:;
 
 L_879dc:;
     objc_release(ret);
-    [@0x244978 isEnabledForLevel:3];
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_87a80;
 
     [ret lastPathComponent];
     [0 lastPathComponent];
-    [@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选择完成：%@ → %@"];
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选择完成：%@ → %@"]; */
     objc_release(ret);
     objc_release(ret);
     goto L_87a8c;
 
 L_87a80:;
-    [@0x244978 noteFiltered:3];
+    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
 
 L_87a8c:;
     [0 length];
@@ -444,32 +444,32 @@ L_87a8c:;
     [NSFileManager defaultManager];
     [ret attributesOfItemAtPath:0 error:0];
     objc_release(ret);
-    [ret objectForKeyedSubscript:0x200488/*+0x0*/];
+    /* [UNRESOLVED] [ret objectForKeyedSubscript:0x200488/ *+0x0* /]; */
     [ret unsignedLongLongValue];
     objc_release(ret);
     if ([ret unsignedLongLongValue]; == 0) goto L_87b84;
 
-    [@0x244978 isEnabledForLevel:3];
-    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_87bc0;
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_87bc0; */
 
-    [@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"];
+    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; */
     goto L_87bd0;
 
 L_87b84:;
-    [[@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; unknownSelector];
-    if ([[@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; unknownSelector]; == 0) goto L_87c50;
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; unknownSelector]; */
+    /* [UNRESOLVED] if ([[@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; unknownSelector]; == 0) goto L_87c50; */
 
-    [@0x244978 logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"];
+    /* [UNRESOLVED] [@0x244978 logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"]; */
     goto L_87c58;
 
 L_87bc0:;
-    [[@0x244978 logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"]; noteFiltered:3];
+    /* [UNRESOLVED] [[@0x244978 logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"]; noteFiltered:3]; */
 
 L_87bd0:;
-    dispatch_time(0x17d7);
+    /* [UNRESOLVED] dispatch_time(0x17d7); */
     objc_retain(0);
     objc_retain(ret);
-    dispatch_after(0x200010);
+    /* [UNRESOLVED] dispatch_after(0x200010); */
     objc_release(ret);
     objc_release(0);
     goto L_87c6c;
@@ -478,8 +478,8 @@ L_87c50:;
     [objc_release noteFiltered:1];
 
 L_87c58:;
-    sub_8b39c();
-    HushToast();
+    /* [UNRESOLVED] sub_8b39c(); */
+    /* [UNRESOLVED] HushToast(); */
 
 L_87c6c:;
     objc_release(ret);
@@ -531,9 +531,9 @@ L_87c8c:;
     // 00087d20  ldp     x20, x19, [sp], #0x20
     // 00087d24  b       #0x1a72d8   ; _objc_msgSend
 
-    objc_release(0x2579b8);
-    [@0x244978 isEnabledForLevel:3];
-    if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_87d24;
+    /* [UNRESOLVED] objc_release(0x2579b8); */
+    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_87d24; */
 
 L_87d24:;
 }

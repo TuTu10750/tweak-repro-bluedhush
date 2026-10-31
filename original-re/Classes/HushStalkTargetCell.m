@@ -528,7 +528,7 @@
     [UIColor unknownSelector];
     [super unknownSelector];
     objc_release(ret);
-    [[@0x2456c0 alloc] unknownSelector];
+    /* [UNRESOLVED] [[@0x2456c0 alloc] unknownSelector]; */
     objc_release(self->_hushAvatar);
     [self->_hushAvatar unknownSelector];
     [self->_hushAvatar unknownSelector];
@@ -852,14 +852,14 @@ L_141938:;
     objc_release(ret);
     [self->_hushAvatar unknownSelector];
     [self->_hushAvatar unknownSelector];
-    CGRectGetMaxX();
+    /* [UNRESOLVED] CGRectGetMaxX(); */
     [self->_hushCapsule unknownSelector];
     if (((ret >> 0) & 1) != 0) goto L_141b18;
 
     [self->_hushCapsule unknownSelector];
     [self->_hushCapsule unknownSelector];
     [self->_hushCapsule unknownSelector];
-    CGRectGetMinX();
+    /* [UNRESOLVED] CGRectGetMinX(); */
 
 L_141b18:;
     [self->_hushName unknownSelector];
@@ -868,15 +868,15 @@ L_141b18:;
     [self->_hushSelfBadge unknownSelector];
     if (((ret >> 0) & 1) != 0) goto L_141bec;
 
-    CGRectGetMaxX();
-    CGRectGetMidY();
+    /* [UNRESOLVED] CGRectGetMaxX(); */
+    /* [UNRESOLVED] CGRectGetMidY(); */
     [self->_hushSelfBadge unknownSelector];
 
 L_141bec:;
-    CGRectGetMaxY();
+    /* [UNRESOLVED] CGRectGetMaxY(); */
     [self->_hushLine2 unknownSelector];
     [self->_hushLine2 unknownSelector];
-    CGRectGetMaxY();
+    /* [UNRESOLVED] CGRectGetMaxY(); */
     [self->_hushLine3 unknownSelector];
     return;
 }
