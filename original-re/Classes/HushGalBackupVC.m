@@ -851,7 +851,7 @@ L_893c8:;
     [self items];
     [ret count];
     objc_release(ret);
-    if ([ret count]; == 0) goto L_8948c;
+    if ([ret count]== 0) goto L_8948c;
 
     [self table];
     [ret setBackgroundView:0];
@@ -1996,7 +1996,7 @@ L_89d70:;
 
     [ret objectForKeyedSubscript:@"path"];
     [ret length];
-    if ([ret length]; == 0) goto L_8a22c;
+    if ([ret length]== 0) goto L_8a22c;
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_8a028;
@@ -2231,7 +2231,7 @@ L_8a244:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     [ret row];
-    if ([ret row]; == 0) goto L_8a3f0;
+    if ([ret row]== 0) goto L_8a3f0;
 
     /* [UNRESOLVED] objc_retain(a1); */
     [UIContextualAction contextualActionWithStyle:1 title:@"删除" handler:0];
@@ -2658,7 +2658,7 @@ L_8a6f4:;
     [ret copy];
     objc_release(ret);
     [[ret copy]; count];
-    if ([[ret copy]; count]; == 0) goto L_8ae0c;
+    if ([[ret copy]count]== 0) goto L_8ae0c;
 
     [[ret copy]; count];
     [NSString stringWithFormat:@"确定删除全部 %lu 份相册备份？此操作不可恢复（展览馆里的照片不受影响）。"];

@@ -458,14 +458,14 @@
     objc_retain(ret);
     /* [UNRESOLVED] objc_retain(a0); */
     [ret length];
-    if ([ret length]; == 0) goto L_203cc;
+    if ([ret length]== 0) goto L_203cc;
 
     /* [UNRESOLVED] sub_222dc(); */
     if (ret == 0) goto L_203c4;
 
     /* [UNRESOLVED] HushRiskUserSource(); */
     [ret length];
-    if ([ret length]; == 0) goto L_1ff84;
+    if ([ret length]== 0) goto L_1ff84;
 
     objc_retain(ret);
     goto L_1ffb0;
@@ -476,7 +476,7 @@ L_1ff84:;
 L_1ffb0:;
     [NSMutableString stringWithFormat:@"UID %@"];
     [ret length];
-    if ([ret length]; == 0) goto L_2000c;
+    if ([ret length]== 0) goto L_2000c;
 
     [ret appendFormat:@" · 已标记：%@"];
 
@@ -493,7 +493,7 @@ L_2000c:;
     [ret addAction:ret];
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_20208;
+    if ([ret length]== 0) goto L_20208;
 
     objc_retain(ret);
     [UIAlertAction actionWithTitle:@"取消标记" style:0 handler:0];

@@ -437,7 +437,7 @@
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225538]; */
     [ret boolValue];
     objc_release(ret);
-    if ([ret boolValue]; == 0) goto L_1351ac;
+    if ([ret boolValue]== 0) goto L_1351ac;
 
     [self hushRefresh];
 
@@ -452,7 +452,7 @@ L_1351ac:;
     if (ret == 0) goto L_1353c0;
 
     [0 section];
-    if ((([0 section]; >> 63) & 1) != 0) goto L_13539c;
+    if ((([0 section]>> 63) & 1) != 0) goto L_13539c;
 
     [0 section];
     [ret count];
@@ -470,7 +470,7 @@ L_1351ac:;
     if (ret == 0) goto L_1353b0;
 
     [0 row];
-    if ((([0 row]; >> 63) & 1) != 0) goto L_1353b0;
+    if ((([0 row]>> 63) & 1) != 0) goto L_1353b0;
 
     [0 row];
     [ret count];
@@ -588,7 +588,7 @@ L_1353c0:;
     [self refreshControl];
     [ret isRefreshing];
     objc_release(ret);
-    if ([ret isRefreshing]; == 0) goto L_1354d4;
+    if ([ret isRefreshing]== 0) goto L_1354d4;
 
     [self refreshControl];
     [ret endRefreshing];
@@ -1354,7 +1354,7 @@ L_135874:;
     /* [UNRESOLVED] [ret objectForKeyedSubscript:0x225538]; */
     [ret boolValue];
     objc_release(ret);
-    if ((([ret boolValue]; >> 0) & 1) == 0) goto L_135b88;
+    if ((([ret boolValue]>> 0) & 1) == 0) goto L_135b88;
 
     /* [UNRESOLVED] [objc_alloc_init setText:0x225cf8]; */
     /* [UNRESOLVED] [UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */

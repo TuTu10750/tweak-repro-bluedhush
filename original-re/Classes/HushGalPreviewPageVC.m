@@ -238,7 +238,7 @@
     objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero];);
     [self path];
     [ret length];
-    if ([ret length]; == 0) goto L_7a924;
+    if ([ret length]== 0) goto L_7a924;
 
     /* [UNRESOLVED] dispatch_get_global_queue(0); */
     objc_retain(ret);

@@ -619,7 +619,7 @@ L_7ac04:;
     objc_release(ret);
     [self->_pager didMoveToParentViewController:self];
     [self index];
-    if ((([self index]; >> 63) & 1) != 0) goto L_7b0c8;
+    if ((([self index]>> 63) & 1) != 0) goto L_7b0c8;
 
     [self index];
     [self files];
@@ -732,7 +732,7 @@ L_7b174:;
     [self files];
     [ret count];
     objc_release(ret);
-    if ([ret count]; != 0) goto L_7b4f0;
+    if ([ret count]!= 0) goto L_7b4f0;
 
     [self closeTapped];
 
@@ -1347,7 +1347,7 @@ L_7b82c:;
     id ret = nil;
 
     [self index];
-    if ((([self index]; >> 63) & 1) != 0) goto L_7b8f8;
+    if ((([self index]>> 63) & 1) != 0) goto L_7b8f8;
 
     [self index];
     [self files];
@@ -1368,11 +1368,11 @@ L_7b904:;
 
 L_7b918:;
     [0 length];
-    if ([0 length]; == 0) goto L_7b9a8;
+    if ([0 length]== 0) goto L_7b9a8;
 
     /* [UNRESOLVED] HushGalSourceTextOfFile(); */
     [ret length];
-    if ([ret length]; == 0) goto L_7b9dc;
+    if ([ret length]== 0) goto L_7b9dc;
 
     /* [UNRESOLVED] sub_7ba74(); */
     [NSString stringWithFormat:@"%@  ·  来源：%@"];
@@ -1389,7 +1389,7 @@ L_7b9dc:;
 
 L_7ba04:;
     [self->_savedAt setText:ret];
-    if ([ret length]; == 0) goto L_7ba1c;
+    if ([ret length]== 0) goto L_7ba1c;
 
     objc_release(ret);
 

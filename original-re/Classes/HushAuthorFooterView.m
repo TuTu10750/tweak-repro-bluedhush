@@ -385,7 +385,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_19d3f4;
+    /* [UNRESOLVED] if (super == 0) goto L_19d3f4; */
 
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] objc_release(super/ *+0x0* /); */

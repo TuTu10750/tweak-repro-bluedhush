@@ -242,7 +242,7 @@ L_136c4:;
 
     [self storedCode];
     [ret length];
-    if ([ret length]; == 0) goto L_137a8;
+    if ([ret length]== 0) goto L_137a8;
 
     [self _parseCode:ret];
     if (ret == 0) goto L_137c4;
@@ -973,7 +973,7 @@ L_13bf0:;
     [ret length];
     [NSMutableData dataWithCapacity:0];
     [ret length];
-    if ([ret length]; == 0) goto L_13e2c;
+    if ([ret length]== 0) goto L_13e2c;
 
 L_13da4:;
     [ret substringWithRange:0];
@@ -1014,7 +1014,7 @@ L_13e58:;
 
     [NSData dataWithBytes:[objc_retainAutorelease bytes]; length:0xc];
     [[NSString alloc] initWithBytes:2 length:0 encoding:4];
-    if ([[NSString alloc] initWithBytes:2 length:0 encoding:4]; == 0) goto L_140ac;
+    if ([[NSString alloc] initWithBytes:2 length:0 encoding:4]== 0) goto L_140ac;
 
     [NSData dataWithBytes:0 length:8];
     [NSNumber numberWithUnsignedShort:0];
@@ -1293,7 +1293,7 @@ L_140bc:;
     /* [UNRESOLVED] [a0 objectForKeyedSubscript:@"tail"]; */
     [ret unsignedShortValue];
     objc_release(ret);
-    if ([ret unsignedShortValue]; == 0) goto L_14328;
+    if ([ret unsignedShortValue]== 0) goto L_14328;
 
     [self deviceCode];
     [ret length];
@@ -1490,7 +1490,7 @@ L_143a8:;
     /* [UNRESOLVED] [a0 objectForKeyedSubscript:@"window"]; */
     [ret unsignedIntValue];
     objc_release(ret);
-    if ([ret unsignedIntValue]; == 0) goto L_144bc;
+    if ([ret unsignedIntValue]== 0) goto L_144bc;
 
     [NSDate date];
     [ret timeIntervalSince1970];
@@ -1509,7 +1509,7 @@ L_144bc:;
     /* [UNRESOLVED] [a0 unknownSelector]; */
     [ret unsignedIntValue];
     objc_release(ret);
-    if ([ret unsignedIntValue]; == 0) goto L_14598;
+    if ([ret unsignedIntValue]== 0) goto L_14598;
 
     [NSUserDefaults standardUserDefaults];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_145b4; */
@@ -1710,7 +1710,7 @@ L_1468c:;
 
     [self storedCode];
     [ret length];
-    if ([ret length]; == 0) goto L_147dc;
+    if ([ret length]== 0) goto L_147dc;
 
     [self _parseCode:ret];
     if (ret == 0) goto L_147cc;
@@ -1718,7 +1718,7 @@ L_1468c:;
     [ret objectForKeyedSubscript:@"duration"];
     [ret unsignedIntValue];
     objc_release(ret);
-    if ([ret unsignedIntValue]; == 0) goto L_147cc;
+    if ([ret unsignedIntValue]== 0) goto L_147cc;
 
     [NSUserDefaults standardUserDefaults];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_147f8; */

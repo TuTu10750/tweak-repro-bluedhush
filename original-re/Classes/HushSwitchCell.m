@@ -61,7 +61,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_19c858;
+    /* [UNRESOLVED] if (super == 0) goto L_19c858; */
 
     /* [UNRESOLVED] objc_release(super/ *+0x0* /); */
     /* [UNRESOLVED] [super/ *+0x0* / unknownSelector]; */

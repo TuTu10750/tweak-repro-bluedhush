@@ -94,7 +94,7 @@
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_199d2c;
+    /* [UNRESOLVED] if (super == 0) goto L_199d2c; */
 
     /* [UNRESOLVED] [a0 unknownSelector]; */
     /* [UNRESOLVED] objc_release(super/ *+0x0* /); */

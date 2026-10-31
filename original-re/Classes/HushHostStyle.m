@@ -27,7 +27,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_193930;
+    /* [UNRESOLVED] if (super == 0) goto L_193930; */
 
 L_193930:;
     return nil;

@@ -811,7 +811,7 @@ L_20da8:;
 
     /* [UNRESOLVED] sub_1eb6c(_cmd, a0, a1, a2, a3); */
     [ret mutableCopy];
-    if ([ret mutableCopy]; != 0) goto L_21714;
+    if ([ret mutableCopy]!= 0) goto L_21714;
 
     [NSMutableArray array];
 
@@ -819,7 +819,7 @@ L_21714:;
     [ret mutableCopy];
     [self setItems:[ret mutableCopy];];
     objc_release([ret mutableCopy];);
-    if ([ret mutableCopy]; != 0) goto L_21748;
+    if ([ret mutableCopy]!= 0) goto L_21748;
 
     objc_release(ret);
 
@@ -1299,7 +1299,7 @@ L_21748:;
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret length];
-    if ([ret length]; != 0) goto L_21a34;
+    if ([ret length]!= 0) goto L_21a34;
 
     [NSString stringWithFormat:@"用户 %@"];
 
@@ -1307,7 +1307,7 @@ L_21a34:;
     [ret name];
     [ret setText:ret];
     objc_release(ret);
-    if ([ret length]; != 0) goto L_21a7c;
+    if ([ret length]!= 0) goto L_21a7c;
 
     objc_release(ret);
 
@@ -1666,7 +1666,7 @@ L_21f60:;
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_22050;
+    if ([ret length]== 0) goto L_22050;
 
     /* [UNRESOLVED] HushRiskUserUnmark(); */
 

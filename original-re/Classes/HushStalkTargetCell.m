@@ -522,7 +522,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_141938;
+    /* [UNRESOLVED] if (super == 0) goto L_141938; */
 
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [UIColor unknownSelector]; */
@@ -606,10 +606,10 @@
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    objc_retain(super);
+    /* [UNRESOLVED] objc_retain(super); */
 
 L_141938:;
-    objc_release(super);
+    /* [UNRESOLVED] objc_release(super); */
     return nil;
 }
 

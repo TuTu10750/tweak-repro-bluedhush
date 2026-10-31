@@ -1117,7 +1117,7 @@ L_161b70:;
     [ret isEqualToString:ret];
     objc_release(ret);
     objc_release(ret);
-    if ([ret isEqualToString:ret]; != 0) goto L_161e48;
+    if ([ret isEqualToString:ret]!= 0) goto L_161e48;
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_161b54; */
 

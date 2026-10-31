@@ -599,7 +599,7 @@
     [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]; imageWithActions:0];
     objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:12];);
     [objc_retainAutorelease CGImage];
-    if ([objc_retainAutorelease CGImage]; == 0) goto L_983b8;
+    if ([objc_retainAutorelease CGImage]== 0) goto L_983b8;
 
     /* [UNRESOLVED] CGImageGetWidth(); */
     /* [UNRESOLVED] CGImageGetHeight(); */
@@ -826,7 +826,7 @@ L_98664:;
     [UIButton buttonWithType:1];
     objc_release(self->_mapTypeButton);
     [@"map" length];
-    if ([@"map" length]; == 0) goto L_991d4;
+    if ([@"map" length]== 0) goto L_991d4;
 
     [UIImage systemImageNamed:@"map"];
     goto L_991d4;
@@ -2850,7 +2850,7 @@ L_9bf90:;
 L_9c970:;
     [self->_map gestureRecognizers];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_9ca44;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_9ca44;
 
 L_9c9c4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_9c9e0; */
@@ -2865,7 +2865,7 @@ L_9c9e0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9c9c4; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_9c9c4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_9c9c4;
 
     goto L_9ca44;
 
@@ -2962,7 +2962,7 @@ L_9ca44:;
     id ret = nil;
 
     [self->_nameHint length];
-    if ([self->_nameHint length]; == 0) goto L_9cbac;
+    if ([self->_nameHint length]== 0) goto L_9cbac;
 
     [self->_map centerCoordinate];
     /* [UNRESOLVED] cos(); */
@@ -3107,7 +3107,7 @@ L_9cbac:;
     /* [UNRESOLVED] objc_release(a1); */
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_9cd5c;
+    if ([ret length]== 0) goto L_9cd5c;
 
     /* [UNRESOLVED] [a0 setShowsCancelButton:1]; */
     /* [UNRESOLVED] dispatch_time(0x1dcd); */
@@ -3332,7 +3332,7 @@ L_9cd6c:;
     [self->_addrLabel text];
     [ret hasPrefix:@"正在搜索"];
     objc_release(ret);
-    if ([ret hasPrefix:@"正在搜索"]; == 0) goto L_9cff4;
+    if ([ret hasPrefix:@"正在搜索"]== 0) goto L_9cff4;
 
 L_9cff4:;
     return;
@@ -3544,7 +3544,7 @@ L_9cff4:;
     /* [UNRESOLVED] [a0 stringByTrimmingCharactersInSet:ret]; */
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_9d254;
+    if ([ret length]== 0) goto L_9d254;
 
     [self->_search cancel];
     [NSString stringWithFormat:@"正在搜索「%@」…"];
@@ -4026,7 +4026,7 @@ L_9dbc8:;
     [ret name];
     [ret length];
     objc_release(ret);
-    if ([ret length]; == 0) goto L_9dc6c;
+    if ([ret length]== 0) goto L_9dc6c;
 
     [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; name];
     goto L_9dcd0;
@@ -4037,7 +4037,7 @@ L_9dc6c:;
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_9dcd0;
+    if ([ret length]== 0) goto L_9dcd0;
 
     objc_retain(ret);
     goto L_9dcd0;
@@ -4948,7 +4948,7 @@ L_9f01c:;
 
     /* [UNRESOLVED] [a0 gestureRecognizers]; */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_9f190;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_9f190;
 
 L_9f124:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_9f140; */
@@ -4963,7 +4963,7 @@ L_9f140:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9f124; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_9f124;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_9f124;
 
 L_9f190:;
     objc_release(ret);
@@ -5544,7 +5544,7 @@ L_9f450:;
     [NSMutableArray array];
     /* [UNRESOLVED] objc_retain(a0); */
     [ret length];
-    if ([ret length]; == 0) goto L_9f84c;
+    if ([ret length]== 0) goto L_9f84c;
 
     /* [UNRESOLVED] [UIImage systemImageNamed:a0]; */
     /* [UNRESOLVED] objc_release(a0); */
@@ -5880,7 +5880,7 @@ L_9f860:;
     [ret length];
     objc_release(ret);
     objc_release(ret);
-    if ([ret length]; == 0) goto L_9fc3c;
+    if ([ret length]== 0) goto L_9fc3c;
 
 L_9f9ec:;
     /* [UNRESOLVED] [@0x244888 shared]; */
@@ -5900,7 +5900,7 @@ L_9fa9c:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret hasCustomLocation];
     objc_release(ret);
-    if ((([ret hasCustomLocation]; >> 0) & 1) == 0) goto L_9fbbc;
+    if ((([ret hasCustomLocation]>> 0) & 1) == 0) goto L_9fbbc;
 
 L_9faf0:;
     /* [UNRESOLVED] [@0x244888 shared]; */
@@ -6350,14 +6350,14 @@ L_9ffa0:;
     objc_release(ret);
     objc_retain(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_a0050;
+    if ([ret length]== 0) goto L_a0050;
 
     [UIImage systemImageNamed:ret];
     if (ret != 0) goto L_a00a0;
 
 L_a0050:;
     [@"map" length];
-    if ([@"map" length]; == 0) goto L_a00a0;
+    if ([@"map" length]== 0) goto L_a00a0;
 
     [UIImage systemImageNamed:@"map"];
     goto L_a00a0;
@@ -7563,7 +7563,7 @@ L_a08a8:;
     [NSUserDefaults standardUserDefaults];
     /* [UNRESOLVED] [ret arrayForKey:0 / * func * /]; */
     [ret mutableCopy];
-    if ([ret mutableCopy]; == 0) goto L_a1498;
+    if ([ret mutableCopy]== 0) goto L_a1498;
 
     objc_retain([ret mutableCopy];);
     goto L_a14ac;
@@ -7578,7 +7578,7 @@ L_a14ac:;
     /* [UNRESOLVED] objc_release(0 / * unk * /); */
     objc_release(ret);
     [self->_centerAddr length];
-    if ([self->_centerAddr length]; == 0) goto L_a1500;
+    if ([self->_centerAddr length]== 0) goto L_a1500;
 
     objc_retain(self->_centerAddr);
     goto L_a1524;
@@ -7613,7 +7613,7 @@ L_a15a0:;
     [ret length];
     objc_release(ret);
     objc_release(ret);
-    if ([ret length]; == 0) goto L_a1724;
+    if ([ret length]== 0) goto L_a1724;
 
     [ret objectForKeyedSubscript:@"note"];
     goto L_a1724;
@@ -8262,7 +8262,7 @@ L_a199c:;
     if (((self >> 0) & 1) == 0) goto L_a1b98;
 
     [self->_centerAddr length];
-    if ([self->_centerAddr length]; == 0) goto L_a1bec;
+    if ([self->_centerAddr length]== 0) goto L_a1bec;
 
     goto L_a1bec;
 
@@ -8304,7 +8304,7 @@ L_a1e00:;
     [NSUserDefaults standardUserDefaults];
     /* [UNRESOLVED] [ret arrayForKey:0 / * func * /]; */
     [ret mutableCopy];
-    if ([ret mutableCopy]; == 0) goto L_a1e74;
+    if ([ret mutableCopy]== 0) goto L_a1e74;
 
     objc_retain([ret mutableCopy];);
     goto L_a1e94;
@@ -8341,7 +8341,7 @@ L_a1f28:;
     [ret length];
     objc_release(ret);
     objc_release(ret);
-    if ([ret length]; == 0) goto L_a2098;
+    if ([ret length]== 0) goto L_a2098;
 
     [ret objectForKeyedSubscript:@"note"];
     goto L_a2098;

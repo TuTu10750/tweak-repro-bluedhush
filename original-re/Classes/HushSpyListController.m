@@ -1277,7 +1277,7 @@ L_13b0c0:;
     [NSMutableArray array];
     /* [UNRESOLVED] objc_retain(0x2592a0); */
     [ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]; == 0) goto L_13c694;
+    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]== 0) goto L_13c694;
 
 L_13c0fc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_13c11c; */
@@ -1290,11 +1290,11 @@ L_13c11c:;
     if (ret == 0) goto L_13c654;
 
     [ret count];
-    if ([ret count]; == 0) goto L_13c654;
+    if ([ret count]== 0) goto L_13c654;
 
     objc_retain(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_13c2a8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_13c2a8;
 
 L_13c1dc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_13c1fc; */
@@ -1315,7 +1315,7 @@ L_13c274:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13c1dc; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_13c1dc;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_13c1dc;
 
     goto L_13c2a8;
 
@@ -1395,14 +1395,14 @@ L_13c654:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13c0fc; */
 
     [ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]; != 0) goto L_13c0fc;
+    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]!= 0) goto L_13c0fc;
 
 L_13c694:;
     objc_release(ret);
     /* [UNRESOLVED] [ret sortUsingComparator:0x2080b8]; */
     objc_release(ret);
     [ret mutableCopy];
-    if ([ret mutableCopy]; == 0) goto L_13c6fc;
+    if ([ret mutableCopy]== 0) goto L_13c6fc;
 
     [self setItems:[ret mutableCopy];];
     goto L_13c730;
@@ -1417,7 +1417,7 @@ L_13c730:;
     objc_release(ret);
     [self items];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_13c838;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_13c838;
 
 L_13c7b8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_13c7d4; */
@@ -1429,7 +1429,7 @@ L_13c7d4:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13c7b8; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_13c7b8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_13c7b8;
 
     goto L_13c838;
 

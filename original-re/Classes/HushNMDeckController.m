@@ -978,7 +978,7 @@ L_df028:;
 L_df3a8:;
     [ret subviews];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_df53c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_df53c;
 
 L_df40c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_df428; */
@@ -997,7 +997,7 @@ L_df428:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_df40c; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_df40c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_df40c;
 
     goto L_df53c;
 
@@ -1712,7 +1712,7 @@ L_e17f4:;
     if (ret == 0) goto L_e193c;
 
     [0 length];
-    if ([0 length]; == 0) goto L_e193c;
+    if ([0 length]== 0) goto L_e193c;
 
     /* [UNRESOLVED] object_getClass(); */
     if (object_getClass == 0) goto L_e193c;
@@ -2591,7 +2591,7 @@ L_e1cc8:;
 
     /* [UNRESOLVED] sub_df09c(); */
     [ret count];
-    if ([ret count]; == 0) goto L_e230c;
+    if ([ret count]== 0) goto L_e230c;
 
     [ret contentOffset];
     if (((0 >> 63) & 1) != 0) goto L_e230c;
@@ -2613,11 +2613,11 @@ L_e1eac:;
     [ret copy];
     /* [UNRESOLVED] objc_release(0x258008); */
     [ret length];
-    if ([ret length]; == 0) goto L_e1f84;
+    if ([ret length]== 0) goto L_e1f84;
 
     objc_retain(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_e1f78;
+    if ([ret length]== 0) goto L_e1f78;
 
     /* [UNRESOLVED] dispatch_time(0x8f0); */
     objc_retain(ret);
@@ -2629,17 +2629,17 @@ L_e1f78:;
 
 L_e1f84:;
     [ret length];
-    if ([ret length]; == 0) goto L_e1f9c;
+    if ([ret length]== 0) goto L_e1f9c;
 
     /* [UNRESOLVED] HushNMDeckRefreshUid(); */
 
 L_e1f9c:;
     [ret length];
-    if ([ret length]; == 0) goto L_e207c;
+    if ([ret length]== 0) goto L_e207c;
 
     objc_retain(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_e2070;
+    if ([ret length]== 0) goto L_e2070;
 
     /* [UNRESOLVED] if (0x258088 != 0) goto L_e2004; */
 
@@ -2661,7 +2661,7 @@ L_e2070:;
 L_e207c:;
     /* [UNRESOLVED] sub_df09c(); */
     [ret count];
-    if ([ret count]; == 0) goto L_e21b0;
+    if ([ret count]== 0) goto L_e21b0;
 
 L_e20bc:;
     [ret count];
@@ -2673,7 +2673,7 @@ L_e20bc:;
     objc_release(ret);
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_e219c;
+    if ([ret length]== 0) goto L_e219c;
 
     /* [UNRESOLVED] dispatch_time(); */
     objc_retain(ret);
@@ -2698,7 +2698,7 @@ L_e21fc:;
     objc_release(ret);
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_e2280;
+    if ([ret length]== 0) goto L_e2280;
 
     [ret addObject:ret];
 
@@ -2708,7 +2708,7 @@ L_e2280:;
 
 L_e2298:;
     [ret count];
-    if ([ret count]; == 0) goto L_e22fc;
+    if ([ret count]== 0) goto L_e22fc;
 
     /* [UNRESOLVED] [ret enumerateObjectsUsingBlock:0 / * unk * /]; */
 
@@ -2861,7 +2861,7 @@ L_e2314:;
 
     [ret subviews];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e2734;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_e2734;
 
 L_e26c4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e26e0; */
@@ -2877,7 +2877,7 @@ L_e270c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e26c4; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e26c4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_e26c4;
 
 L_e2734:;
     objc_release(ret);
@@ -3536,7 +3536,7 @@ L_e2c1c:;
     objc_release(ret);
     [ret subviews];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e2ea4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_e2ea4;
 
 L_e2e58:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e2e70; */
@@ -3546,7 +3546,7 @@ L_e2e70:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e2e58; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e2e58;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_e2e58;
 
 L_e2ea4:;
     objc_release(ret);
@@ -3862,7 +3862,7 @@ L_e2ea4:;
     if (ret == 0) goto L_e31f4;
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e317c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_e317c;
 
 L_e310c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e3128; */
@@ -3872,7 +3872,7 @@ L_e3128:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e310c; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e310c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_e310c;
 
 L_e317c:;
     [ret navigationController];
@@ -4523,7 +4523,7 @@ L_e3770:;
     [ret copy];
     objc_release(ret);
     [[ret copy]; countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([[ret copy]; countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e397c;
+    if ([[ret copy]countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_e397c;
 
 L_e3910:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e392c; */
@@ -4538,7 +4538,7 @@ L_e3954:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e3910; */
 
     [[ret copy]; countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([[ret copy]; countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e3910;
+    if ([[ret copy]countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_e3910;
 
 L_e397c:;
     objc_release([ret copy];);
@@ -5111,7 +5111,7 @@ L_e3f00:;
     objc_release(ret);
     objc_release(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e4034;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_e4034;
 
 L_e3fcc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e3fe4; */
@@ -5123,7 +5123,7 @@ L_e3fe4:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e3fcc; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_e3fcc;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_e3fcc;
 
 L_e4034:;
     objc_release(ret);

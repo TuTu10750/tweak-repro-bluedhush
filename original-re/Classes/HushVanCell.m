@@ -516,7 +516,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_189154;
+    /* [UNRESOLVED] if (super == 0) goto L_189154; */
 
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */

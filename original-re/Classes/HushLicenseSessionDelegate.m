@@ -205,7 +205,7 @@
     /* [UNRESOLVED] [a1 protectionSpace]; */
     [ret serverTrust];
     objc_release(ret);
-    if ([ret serverTrust]; == 0) goto L_12ed8;
+    if ([ret serverTrust]== 0) goto L_12ed8;
 
     /* [UNRESOLVED] SecTrustGetCertificateAtIndex(0); */
     if (SecTrustGetCertificateAtIndex == 0) goto L_12ed8;

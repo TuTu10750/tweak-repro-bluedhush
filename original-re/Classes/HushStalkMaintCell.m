@@ -130,7 +130,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    if (super == 0) goto L_141f5c;
+    /* [UNRESOLVED] if (super == 0) goto L_141f5c; */
 
     /* [UNRESOLVED] [UIFont unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */

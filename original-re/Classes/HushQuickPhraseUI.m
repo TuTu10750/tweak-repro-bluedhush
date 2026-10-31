@@ -298,7 +298,7 @@ L_127e24:;
     objc_release(ret);
     objc_retain(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_127fe0;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_127fe0;
 
 L_127f48:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_127f60; */
@@ -310,7 +310,7 @@ L_127f60:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_127f48; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_127f48;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_127f48;
 
 L_127fe0:;
     objc_release(ret);
@@ -848,7 +848,7 @@ L_1284a4:;
     /* [UNRESOLVED] [a0 setBackgroundImage:0 forState:2]; */
     /* [UNRESOLVED] [a0 subviews]; */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_128660;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_128660;
 
 L_1285c8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_1285e4; */
@@ -868,7 +868,7 @@ L_128638:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1285c8; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_1285c8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_1285c8;
 
 L_128660:;
     objc_release(ret);
@@ -1079,7 +1079,7 @@ L_1286c8:;
     /* [UNRESOLVED] [objc_loadWeakRetained setBackgroundImage:self->/ *+0x38* / forState:0]; */
     [objc_loadWeakRetained subviews];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_1288d4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_1288d4;
 
 L_12883c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_128858; */
@@ -1099,7 +1099,7 @@ L_1288ac:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_12883c; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_12883c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_12883c;
 
 L_1288d4:;
     objc_release(ret);
@@ -1927,7 +1927,7 @@ L_129344:;
 
     [ret isHidden];
     objc_release(ret);
-    if ((([ret isHidden]; >> 0) & 1) != 0) goto L_12946c;
+    if ((([ret isHidden]>> 0) & 1) != 0) goto L_12946c;
 
     [ret frame];
     /* [UNRESOLVED] CGRectGetMinY(); */
@@ -2384,7 +2384,7 @@ L_1296ec:;
     [ret arrangedSubviews];
     objc_release(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_129840;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_129840;
 
 L_1297c4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_1297e0; */
@@ -2397,7 +2397,7 @@ L_1297e0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1297c4; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_1297c4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_1297c4;
 
 L_129840:;
     objc_release(ret);
@@ -2409,7 +2409,7 @@ L_129840:;
 L_129860:;
     /* [UNRESOLVED] sub_128df4(); */
     [ret count];
-    if ([ret count]; == 0) goto L_129940;
+    if ([ret count]== 0) goto L_129940;
 
 L_1298ac:;
     /* [UNRESOLVED] [self->/ *+0x40* / stack]; */
@@ -3334,7 +3334,7 @@ L_12a018:;
     objc_retain(objc_loadWeakRetained);
     objc_retain(objc_loadWeakRetained);
     [ret length];
-    if ([ret length]; == 0) goto L_12a370;
+    if ([ret length]== 0) goto L_12a370;
 
     objc_retain(objc_loadWeakRetained);
     if (objc_loadWeakRetained == 0) goto L_12a0b4;
@@ -4485,14 +4485,14 @@ L_12ad50:;
     /* [UNRESOLVED] if (cond / * ge * /) goto L_12af1c; */
 
     [ret length];
-    if ([ret length]; == 0) goto L_12af14;
+    if ([ret length]== 0) goto L_12af14;
 
     /* [UNRESOLVED] [[ret mutableCopy]; setObject:ret atIndexedSubscript:self->/ *+0x88* /]; */
     goto L_12af1c;
 
 L_12aee8:;
     [ret length];
-    if ([ret length]; == 0) goto L_12af1c;
+    if ([ret length]== 0) goto L_12af1c;
 
     goto L_12af14;
 
@@ -4768,7 +4768,7 @@ L_12b1b4:;
     [ret tag];
     objc_release(ret);
     /* [UNRESOLVED] sub_128df4(); */
-    if ((([ret tag]; >> 63) & 1) != 0) goto L_12b294;
+    if ((([ret tag]>> 63) & 1) != 0) goto L_12b294;
 
     [ret count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_12b294; */

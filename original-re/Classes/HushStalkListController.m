@@ -1006,7 +1006,7 @@ L_143510:;
     /* [UNRESOLVED] [[ret unknownSelector]; unknownSelector]; */
     [ret boolValue];
     objc_release(ret);
-    if ([ret boolValue]; == 0) goto L_143bd8;
+    if ([ret boolValue]== 0) goto L_143bd8;
 
     objc_retain(ret);
     /* [UNRESOLVED] sub_1459ac(); */
@@ -1024,7 +1024,7 @@ L_143510:;
     [ret boolValue];
     objc_release(ret);
     objc_release(ret);
-    if ([ret boolValue]; == 0) goto L_143b74;
+    if ([ret boolValue]== 0) goto L_143b74;
 
     /* [UNRESOLVED] [NSNumber unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -1039,10 +1039,10 @@ L_143510:;
 
     /* [UNRESOLVED] [ret unknownSelector]; */
     [ret length];
-    if ([ret length]; == 0) goto L_143af0;
+    if ([ret length]== 0) goto L_143af0;
 
     [ret length];
-    if ([ret length]; == 0) goto L_143b08;
+    if ([ret length]== 0) goto L_143b08;
 
 L_1437e8:;
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -5376,7 +5376,7 @@ L_148508:;
     /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
     objc_retain(ret);
     [ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]; == 0) goto L_148860;
+    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]== 0) goto L_148860;
 
 L_1487b8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_1487d4; */
@@ -5395,7 +5395,7 @@ L_148834:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1487b8; */
 
     [ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]; != 0) goto L_1487b8;
+    if ([ret countByEnumeratingWithState:0 objects:-0x100 count:0x10]!= 0) goto L_1487b8;
 
 L_148860:;
     objc_release(ret);
@@ -5421,7 +5421,7 @@ L_1488c0:;
     objc_release(ret);
     /* [UNRESOLVED] objc_retain(0 / * unk * // *+0x0* /); */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_148af8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_148af8;
 
 L_1489e4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_148a28; */

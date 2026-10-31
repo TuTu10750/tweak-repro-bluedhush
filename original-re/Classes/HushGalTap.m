@@ -185,16 +185,16 @@
     if (0 == 0) goto L_85e64;
 
     [ret length];
-    if ([ret length]; == 0) goto L_85e90;
+    if ([ret length]== 0) goto L_85e90;
 
     if (ret == 0) goto L_85ea0;
 
     [ret description];
     [ret length];
-    if ([ret length]; == 0) goto L_85eac;
+    if ([ret length]== 0) goto L_85eac;
 
     [ret length];
-    if ([ret length]; == 0) goto L_85ec4;
+    if ([ret length]== 0) goto L_85ec4;
 
 L_85e20:;
     [ret characterAtIndex:0];

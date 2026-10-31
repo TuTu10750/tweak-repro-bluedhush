@@ -568,7 +568,7 @@ L_960f4:;
 L_96128:;
     objc_release(ret);
     [0 length];
-    if ([0 length]; != 0) goto L_961a4;
+    if ([0 length]!= 0) goto L_961a4;
 
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret customLat];

@@ -675,7 +675,7 @@ L_c54e4:;
     objc_release(ret);
     objc_release(ret);
     [self setUrls:0];
-    if ([ret isEqualToArray:0]; == 0) goto L_c56e0;
+    if ([ret isEqualToArray:0]== 0) goto L_c56e0;
 
     [self scrollView];
     [ret subviews];
@@ -724,7 +724,7 @@ L_c56e0:;
     objc_release(ret);
     objc_release(ret);
     [0 count];
-    if ([0 count]; == 0) goto L_c5cbc;
+    if ([0 count]== 0) goto L_c5cbc;
 
 L_c59d8:;
     [0 objectAtIndexedSubscript:0];
@@ -781,7 +781,7 @@ L_c5cbc:;
     /* [UNRESOLVED] [ret setContentOffset:0 / * unk * /]; */
     objc_release(ret);
     [0 count];
-    if ([0 count]; == 0) goto L_c5d30;
+    if ([0 count]== 0) goto L_c5d30;
 
     [0 count];
 
@@ -791,7 +791,7 @@ L_c5d30:;
     [ret setContentSize:0];
     objc_release(ret);
     [0 count];
-    if ([0 count]; != 0) goto L_c5db8;
+    if ([0 count]!= 0) goto L_c5db8;
 
     [self setHidden:1];
     [self setAlpha:1];
@@ -997,7 +997,7 @@ L_c5db8:;
     /* [UNRESOLVED] [a0 view]; */
     [ret tag];
     objc_release(ret);
-    if ((([ret tag]; >> 63) & 1) != 0) goto L_c63d4;
+    if ((([ret tag]>> 63) & 1) != 0) goto L_c63d4;
 
     [self urls];
     [ret count];
@@ -1024,7 +1024,7 @@ L_c62e4:;
     if (ret == 0) goto L_c63c4;
 
     [ret count];
-    if ([ret count]; == 0) goto L_c63c4;
+    if ([ret count]== 0) goto L_c63c4;
 
     objc_retain(ret);
     [NSThread isMainThread];

@@ -561,7 +561,7 @@ L_3bfe0:;
     [ret hasSuffix:@"bdcustommenuview"];
     objc_release(ret);
     objc_release(ret);
-    if ((([ret hasSuffix:@"bdcustommenuview"]; >> 0) & 1) != 0) goto L_3c05c;
+    if ((([ret hasSuffix:@"bdcustommenuview"]>> 0) & 1) != 0) goto L_3c05c;
 
     [0 superview];
     objc_release(0);
@@ -893,7 +893,7 @@ L_3cd4c:;
     /* [UNRESOLVED] sub_505e8(); */
     [ret visibleCells];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_3ce10;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_3ce10;
 
 L_3cdbc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_3cdd8; */
@@ -905,7 +905,7 @@ L_3cdd8:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cdbc; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_3cdbc;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_3cdbc;
 
 L_3ce10:;
     objc_release(ret);

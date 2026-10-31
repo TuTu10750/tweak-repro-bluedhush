@@ -391,7 +391,7 @@ L_e3f8:;
     objc_release(self);
     /* [UNRESOLVED] objc_retain(0x2565c8); */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_e66c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_e66c;
 
 L_e5a8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e5c8; */
@@ -934,7 +934,7 @@ L_ea74:;
 
     [ret boolValue];
     objc_release(ret);
-    if ((([ret boolValue]; >> 0) & 1) != 0) goto L_eb10;
+    if ((([ret boolValue]>> 0) & 1) != 0) goto L_eb10;
 
     goto L_eb70;
 
@@ -951,7 +951,7 @@ L_eb38:;
     [self defaults];
     [ret boolForKey:@"purify_master"];
     objc_release(ret);
-    if ((([ret boolForKey:@"purify_master"]; >> 0) & 1) != 0) goto L_eb84;
+    if ((([ret boolForKey:@"purify_master"]>> 0) & 1) != 0) goto L_eb84;
 
 L_eb70:;
     goto L_ebfc;
@@ -1358,7 +1358,7 @@ L_efb4:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     [ret length];
-    if ([ret length]; == 0) goto L_f098;
+    if ([ret length]== 0) goto L_f098;
 
     [self defaults];
     /* [UNRESOLVED] if (a0 == 0) goto L_f05c; */
@@ -1621,7 +1621,7 @@ L_f098:;
 
     [self stringForKey:@"runtime_custom_lat"];
     [ret length];
-    if ([ret length]; == 0) goto L_f4ac;
+    if ([ret length]== 0) goto L_f4ac;
 
     [ret doubleValue];
     goto L_f4ac;
@@ -1675,7 +1675,7 @@ L_f4ac:;
 
     [self stringForKey:@"runtime_custom_lng"];
     [ret length];
-    if ([ret length]; == 0) goto L_f528;
+    if ([ret length]== 0) goto L_f528;
 
     [ret doubleValue];
     goto L_f528;
@@ -1802,7 +1802,7 @@ L_f528:;
 
     [self stringForKey:@"runtime_custom_altitude"];
     [ret length];
-    if ([ret length]; == 0) goto L_f678;
+    if ([ret length]== 0) goto L_f678;
 
     [ret doubleValue];
     goto L_f678;
@@ -2044,7 +2044,7 @@ L_f678:;
 
     [self stringForKey:@"runtime_backup_dir"];
     [ret length];
-    if ([ret length]; == 0) goto L_f844;
+    if ([ret length]== 0) goto L_f844;
 
     objc_retain(ret);
     goto L_f8d0;

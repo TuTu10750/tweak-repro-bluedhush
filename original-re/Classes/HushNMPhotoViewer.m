@@ -604,7 +604,7 @@ L_e4b44:;
     [ret addSubview:self->_pager];
     objc_release(ret);
     [self->_urls count];
-    if ([self->_urls count]; == 0) goto L_e5200;
+    if ([self->_urls count]== 0) goto L_e5200;
 
 L_e50c8:;
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
@@ -637,7 +637,7 @@ L_e5200:;
     [ret addSubview:self->_strip];
     objc_release(ret);
     [self->_urls count];
-    if ([self->_urls count]; == 0) goto L_e5508;
+    if ([self->_urls count]== 0) goto L_e5508;
 
 L_e5318:;
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
@@ -1075,7 +1075,7 @@ L_e5778:;
     /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_pager setContentSize:-18];
     [self->_pages count];
-    if ([self->_pages count]; == 0) goto L_e5990;
+    if ([self->_pages count]== 0) goto L_e5990;
 
 L_e5908:;
     [self->_pager bounds];
@@ -1570,7 +1570,7 @@ L_e5990:;
     id ret = nil;
 
     [self->_thumbBoxes count];
-    if ([self->_thumbBoxes count]; == 0) goto L_e602c;
+    if ([self->_thumbBoxes count]== 0) goto L_e602c;
 
     [self->_strip bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
@@ -1809,7 +1809,7 @@ L_e61b8:;
     /* [UNRESOLVED] [a0 view]; */
     [ret tag];
     objc_release(ret);
-    if ((([ret tag]; >> 63) & 1) != 0) goto L_e62c8;
+    if ((([ret tag]>> 63) & 1) != 0) goto L_e62c8;
 
     [self->_urls count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_e62c8; */

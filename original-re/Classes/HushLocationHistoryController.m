@@ -502,7 +502,7 @@ L_962d8:;
     [self hushItems];
     [ret count];
     objc_release(ret);
-    if ([ret count]; == 0) goto L_966a8;
+    if ([ret count]== 0) goto L_966a8;
 
     [self tableView];
     [ret setBackgroundView:0];
@@ -922,7 +922,7 @@ L_968b8:;
     [ret description];
     objc_release(ret);
     [ret length];
-    if ([ret length]; == 0) goto L_96b0c;
+    if ([ret length]== 0) goto L_96b0c;
 
     [ret stringByAppendingFormat:@"\n备注: %@"];
     objc_release(ret);
@@ -1444,7 +1444,7 @@ L_97024:;
     /* [UNRESOLVED] [[ret mutableCopy]; removeObjectAtIndex:[stack_chk_fail/ *+0x28* / row];]; */
     /* [UNRESOLVED] [stack_chk_fail/ *+0x20* / hushSaveItems:[ret mutableCopy];]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    if ([ret mutableCopy]; == 0) goto L_9715c;
+    if ([ret mutableCopy]== 0) goto L_9715c;
 
     [[ret mutableCopy]; count];
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 历史已删除 1 条（余 %lu）"]; */

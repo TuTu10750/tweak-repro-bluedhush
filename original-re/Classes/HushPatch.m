@@ -960,7 +960,7 @@ L_19700:;
 
     /* [UNRESOLVED] objc_retain(a1); */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_19874;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_19874;
 
 L_19810:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_19828; */
@@ -1259,11 +1259,11 @@ L_19c0c:;
 
     [self records];
     [ret count];
-    if ([ret count]; == 0) goto L_19d78;
+    if ([ret count]== 0) goto L_19d78;
 
     objc_retain(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_19da8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_19da8;
 
 L_19ce0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_19d00; */
@@ -1282,7 +1282,7 @@ L_19d3c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19ce0; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_19ce0;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_19ce0;
 
     goto L_19da8;
 

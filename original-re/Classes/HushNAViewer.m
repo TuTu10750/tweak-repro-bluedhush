@@ -1254,13 +1254,13 @@ L_c6544:;
     [self imageURLs];
     [ret count];
     objc_release(ret);
-    if ([ret count]; == 0) goto L_c7490;
+    if ([ret count]== 0) goto L_c7490;
 
     [self pagingScrollView];
     [ret subviews];
     objc_release(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_c6e6c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_c6e6c;
 
 L_c6e20:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c6e38; */
@@ -1270,7 +1270,7 @@ L_c6e38:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c6e20; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_c6e20;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_c6e20;
 
 L_c6e6c:;
     objc_release(ret);
@@ -1280,7 +1280,7 @@ L_c6e6c:;
     /* [UNRESOLVED] [self unknownSelector]; */
     [ret count];
     objc_release(ret);
-    if ([ret count]; == 0) goto L_c7384;
+    if ([ret count]== 0) goto L_c7384;
 
 L_c6fb0:;
     /* [UNRESOLVED] [0 / * local * / unknownSelector]; */
@@ -2037,7 +2037,7 @@ L_c7ae8:;
     [self imageURLs];
     [ret count];
     objc_release(ret);
-    if ([ret count]; == 0) goto L_c7ef8;
+    if ([ret count]== 0) goto L_c7ef8;
 
     [self pagingScrollView];
     [ret bounds];

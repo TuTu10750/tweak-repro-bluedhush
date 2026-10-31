@@ -1710,7 +1710,7 @@ L_1673a8:;
     /* [UNRESOLVED] [self unknownSelector]; */
     [ret count];
     objc_release(ret);
-    if ([ret count]; == 0) goto L_167a24;
+    if ([ret count]== 0) goto L_167a24;
 
 L_16759c:;
     /* [UNRESOLVED] [self unknownSelector]; */
