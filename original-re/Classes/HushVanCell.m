@@ -583,7 +583,7 @@
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [super unknownSelector]; */
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */

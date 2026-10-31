@@ -1323,9 +1323,9 @@ L_895c0:;
     (void)[(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)objc_alloc_init setDateFormat:@"MM-dd HH:mm"];
+    /* [UNRESOLVED] [(id)objc_alloc_init setDateFormat:@"MM-dd HH:mm"]; */
     (void)[(id)ret objectForKeyedSubscript:@"mtime"];
-    (void)[(id)objc_alloc_init stringFromDate:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init stringFromDate:ret]; */
     (void)[(id)ret objectForKeyedSubscript:@"size"];
     (void)[(id)ret doubleValue];
     (void)[(id)[NSString class] stringWithFormat:@"%@ · %.1f MB"];
@@ -1987,7 +1987,7 @@ L_89d70:;
     /* [UNRESOLVED] [(id)a0 locationInView:ret]; */
     objc_release(ret);
     (void)[(id)self table];
-    (void)[(id)ret indexPathForRowAtPoint:0];
+    (void)[(id)ret indexPathForRowAtPoint:CGPointZero];
     objc_release(ret);
     if (ret == 0) goto L_8a23c;
 
@@ -2028,7 +2028,7 @@ L_8a054:;
     if (ret == 0) goto L_8a1a0;
 
     (void)[(id)ret bounds];
-    (void)[(id)ret convertRect:ret fromView:0];
+    (void)[(id)ret convertRect:CGRectZero fromView:0];
     goto L_8a1bc;
 
 L_8a1a0:;
@@ -2036,7 +2036,7 @@ L_8a1a0:;
 
 L_8a1bc:;
     (void)[(id)[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0] popoverPresentationController];
-    (void)[(id)ret setSourceRect:0];
+    (void)[(id)ret setSourceRect:CGRectZero];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self presentViewController:[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0] animated:1 completion:0];

@@ -577,7 +577,7 @@ L_ded64:;
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setTag:0x232c]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setDelegate:self]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setAlwaysBounceVertical:1]; */
-    (void)[(id)objc_alloc_init addTarget:self action:sel_registerName("pullRefresh:") forControlEvents:0x1000];
+    /* [UNRESOLVED] [(id)objc_alloc_init addTarget:self action:sel_registerName("pullRefresh:") forControlEvents:0x1000]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setRefreshControl:objc_alloc_init]; */
     (void)[(id)self view];
     /* [UNRESOLVED] [(id)ret addSubview:[[UIScrollView alloc] initWithFrame:0 / * unk * /]]; */
@@ -598,7 +598,7 @@ L_df028:;
     (void)[(id)self view];
     (void)[(id)ret setTag:ret];
     objc_release(ret);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] objc_release([[UIScrollView alloc] initWithFrame:0 / * unk * /]); */
     objc_release(ret);
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0 / * unk * /]); */

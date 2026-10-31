@@ -602,7 +602,7 @@ L_198a98:;
 
 L_198b5c:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_198a00; */
 

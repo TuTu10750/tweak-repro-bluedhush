@@ -627,15 +627,15 @@ L_16b4c:;
     /* [UNRESOLVED] pthread_getspecific(); */
     if (ret != 0) goto L_16bac;
 
-    (void)[(id)objc_alloc_init setDateFormat:@"HH:mm:ss.SSS"];
-    objc_retain(objc_alloc_init);
+    /* [UNRESOLVED] [(id)objc_alloc_init setDateFormat:@"HH:mm:ss.SSS"]; */
+    /* [UNRESOLVED] objc_retain(objc_alloc_init); */
     /* [UNRESOLVED] pthread_setspecific(objc_alloc_init); */
 
 L_16bac:;
     (void)[(id)[NSDate class] date];
-    (void)[(id)objc_alloc_init stringFromDate:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init stringFromDate:ret]; */
     objc_release(ret);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     (void)[(id)[NSString class] stringWithFormat:@"%@ %@ [%@] %@\n"];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a1); */

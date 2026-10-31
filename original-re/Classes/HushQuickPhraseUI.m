@@ -4221,19 +4221,19 @@ L_12a4f4:;
 
 L_12aa9c:;
     (void)[(id)[UIFont class] systemFontOfSize:14];
-    (void)[(id)objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setFont:ret]; */
     objc_release(ret);
-    (void)[(id)objc_alloc_init setBorderStyle:3];
-    (void)[(id)objc_alloc_init setClearButtonMode:1];
-    (void)[(id)objc_alloc_init setReturnKeyType:9];
+    /* [UNRESOLVED] [(id)objc_alloc_init setBorderStyle:3]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init setClearButtonMode:1]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init setReturnKeyType:9]; */
     /* [UNRESOLVED] [(id)objc_alloc_init setText:0x209f58]; */
     /* [UNRESOLVED] [(id)objc_alloc_init setPlaceholder:0x224178]; */
-    (void)[(id)objc_alloc_init widthAnchor];
+    /* [UNRESOLVED] [(id)objc_alloc_init widthAnchor]; */
     /* [UNRESOLVED] [(id)ret constraintEqualToConstant:0 / * unk * /]; */
     (void)[(id)ret setActive:1];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)objc_alloc_init heightAnchor];
+    /* [UNRESOLVED] [(id)objc_alloc_init heightAnchor]; */
     (void)[(id)ret constraintEqualToConstant:30];
     (void)[(id)ret setActive:1];
     objc_release(ret);
@@ -4242,7 +4242,7 @@ L_12aa9c:;
     /* [UNRESOLVED] [(id)self editorButton:0x224198 sel:sel_registerName("editorCancelTapped:") bold:0 red:0]; */
     /* [UNRESOLVED] [(id)self editorButton:0x2241b8 sel:sel_registerName("editorSaveTapped:") bold:1 red:0]; */
     /* [UNRESOLVED] [(id)self->/ *+0x40* / stack]; */
-    (void)[(id)ret addArrangedSubview:objc_alloc_init];
+    /* [UNRESOLVED] [(id)ret addArrangedSubview:objc_alloc_init]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->/ *+0x40* / stack]; */
     (void)[(id)ret addArrangedSubview:ret];
@@ -4261,7 +4261,7 @@ L_12ad50:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] objc_release(0x209f58); */
 }
 

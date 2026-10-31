@@ -674,7 +674,7 @@ L_f8dd8:;
     (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
     (void)[(id)ret popoverPresentationController];
-    (void)[(id)ret setSourceRect:0];
+    (void)[(id)ret setSourceRect:CGRectZero];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);

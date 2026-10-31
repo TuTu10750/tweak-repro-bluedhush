@@ -1887,7 +1887,7 @@ L_18c544:;
     objc_release(ret);
 
 L_18c670:;
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     return 0;
 }
 

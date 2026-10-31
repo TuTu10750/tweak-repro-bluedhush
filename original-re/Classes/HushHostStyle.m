@@ -1167,7 +1167,7 @@ L_193b60:;
 L_193b68:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
-    if (((objc_alloc_init >> 0) & 1) != 0) goto L_193cdc;
+    /* [UNRESOLVED] if (((objc_alloc_init >> 0) & 1) != 0) goto L_193cdc; */
 
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */

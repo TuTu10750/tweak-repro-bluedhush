@@ -2487,7 +2487,7 @@ L_19ba7c:;
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector]); */
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] objc_release(a1); */
 }
 

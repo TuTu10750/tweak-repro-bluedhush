@@ -3551,11 +3551,11 @@ L_9cff4:;
     (void)[(id)[NSString class] stringWithFormat:@"正在搜索「%@」…"];
     (void)[(id)self->_addrLabel setText:ret];
     objc_release(ret);
-    (void)[(id)objc_alloc_init setNaturalLanguageQuery:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setNaturalLanguageQuery:ret]; */
     (void)[(id)self->_map region];
-    (void)[(id)objc_alloc_init setRegion:0];
-    (void)[[MKLocalSearch alloc] initWithRequest:objc_alloc_init];
-    objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init], [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
+    /* [UNRESOLVED] [(id)objc_alloc_init setRegion:0]; */
+    /* [UNRESOLVED] [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]; */
+    /* [UNRESOLVED] objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init], [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]); */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_9d1a8; */
 
@@ -3566,13 +3566,13 @@ L_9d1a8:;
     /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[LocPicker] 搜索地名：%@"] noteFiltered:3]; */
 
 L_9d1f8:;
-    objc_retain([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
+    /* [UNRESOLVED] objc_retain([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]); */
     objc_retain(ret);
-    (void)[(id)[[MKLocalSearch alloc] initWithRequest:objc_alloc_init] startWithCompletionHandler:0];
+    /* [UNRESOLVED] [(id)[[MKLocalSearch alloc] initWithRequest:objc_alloc_init] startWithCompletionHandler:0]; */
     objc_release(ret);
-    objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
-    objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]); */
+    /* [UNRESOLVED] objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]); */
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
 
 L_9d254:;
     objc_release(ret);

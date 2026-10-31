@@ -98,10 +98,10 @@ L_160ee0:;
 
 L_160ef0:;
 
-    objc_retain(objc_alloc_init);
+    /* [UNRESOLVED] objc_retain(objc_alloc_init); */
     /* [UNRESOLVED] dispatch_async(); */
-    objc_release(objc_alloc_init);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     return;
 }
 
@@ -550,10 +550,10 @@ L_1617a4:;
     goto L_161850;
 
 L_161850:;
-    objc_retain(objc_alloc_init);
+    /* [UNRESOLVED] objc_retain(objc_alloc_init); */
     /* [UNRESOLVED] dispatch_async(); */
-    objc_release(objc_alloc_init);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     return;
 }
 

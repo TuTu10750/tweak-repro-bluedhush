@@ -914,7 +914,7 @@ L_7b4f0:;
     /* [UNRESOLVED] [(id)objc_alloc_init setIndex:a0]; */
     (void)[(id)self files];
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */
-    (void)[(id)objc_alloc_init setPath:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setPath:ret]; */
     objc_release(ret);
     objc_release(ret);
     goto L_7b6e4;

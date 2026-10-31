@@ -741,13 +741,13 @@ L_7d278:;
     objc_release(ret);
 
 L_7d714:;
-    (void)[(id)objc_alloc_init setMinimumInteritemSpacing:4];
-    (void)[(id)objc_alloc_init setMinimumLineSpacing:6];
-    (void)[(id)objc_alloc_init setSectionInset:0];
+    /* [UNRESOLVED] [(id)objc_alloc_init setMinimumInteritemSpacing:4]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init setMinimumLineSpacing:6]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init setSectionInset:0]; */
     /* [UNRESOLVED] [(id)objc_alloc_init setHeaderReferenceSize:0 / * unk * /]; */
-    (void)[[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0];
-    (void)[(id)self setGrid:[[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]];
-    objc_release([[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]);
+    /* [UNRESOLVED] [[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]; */
+    /* [UNRESOLVED] [(id)self setGrid:[[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]]; */
+    /* [UNRESOLVED] objc_release([[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]); */
     (void)[(id)self grid];
     (void)[(id)ret setDataSource:self];
     objc_release(ret);
@@ -876,7 +876,7 @@ L_7de50:;
     objc_release(ret);
     (void)[(id)self reload];
     objc_release(ret);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:-0x3f97000000000000]); */
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
@@ -5155,15 +5155,15 @@ L_81588:;
     if (ret == 0) goto L_81838;
 
     (void)[(id)ret files];
-    (void)[(id)objc_alloc_init setFiles:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setFiles:ret]; */
     objc_release(ret);
-    (void)[(id)self setPreviewSource:objc_alloc_init];
-    (void)[(id)objc_alloc_init setDataSource:objc_alloc_init];
+    /* [UNRESOLVED] [(id)self setPreviewSource:objc_alloc_init]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init setDataSource:objc_alloc_init]; */
     /* [UNRESOLVED] [(id)a1 item]; */
     /* [UNRESOLVED] [(id)objc_alloc_init setCurrentPreviewItemIndex:[(id)a1 item]]; */
-    (void)[(id)self presentViewController:objc_alloc_init animated:1 completion:0];
-    objc_release(objc_alloc_init);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] [(id)self presentViewController:objc_alloc_init animated:1 completion:0]; */
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     goto L_819a8;
 
 L_81838:;
@@ -5192,10 +5192,10 @@ L_81914:;
     /* [UNRESOLVED] [(id)ret indexOfObject:0 / * local * /]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_8199c; */
 
-    (void)[(id)objc_alloc_init setFiles:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setFiles:ret]; */
     /* [UNRESOLVED] [(id)objc_alloc_init setIndex:[(id)ret indexOfObject:0 / * local * /]]; */
-    (void)[(id)self presentViewController:objc_alloc_init animated:1 completion:0];
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] [(id)self presentViewController:objc_alloc_init animated:1 completion:0]; */
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
 
 L_8199c:;
     objc_release(ret);

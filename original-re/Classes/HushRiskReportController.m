@@ -111,10 +111,10 @@
     (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setEstimatedRowHeight:0x4050000000000000]; */
     objc_release(ret);
-    (void)[(id)objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
-    (void)[(id)self setRefreshControl:objc_alloc_init];
+    /* [UNRESOLVED] [(id)objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000]; */
+    /* [UNRESOLVED] [(id)self setRefreshControl:objc_alloc_init]; */
     (void)[(id)self hushRefresh];
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     return;
 }
 
@@ -1359,11 +1359,11 @@ L_135874:;
 
     /* [UNRESOLVED] [(id)objc_alloc_init setText:0x225cf8]; */
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    (void)[(id)objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setFont:ret]; */
     objc_release(ret);
     (void)[(id)self view];
     (void)[(id)ret tintColor];
-    (void)[(id)objc_alloc_init setTextColor:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setTextColor:ret]; */
     objc_release(ret);
     goto L_135c48;
 
@@ -1377,7 +1377,7 @@ L_135b88:;
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    (void)[(id)objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setFont:ret]; */
     objc_release(ret);
     if (((ret >> 0) & 1) == 0) goto L_135c18;
 
@@ -1385,15 +1385,15 @@ L_135b88:;
 
 L_135c18:;
     (void)[(id)[UIColor class] secondaryLabelColor];
-    (void)[(id)objc_alloc_init setTextColor:ret];
+    /* [UNRESOLVED] [(id)objc_alloc_init setTextColor:ret]; */
 
 L_135c48:;
     objc_release(ret);
-    (void)[(id)objc_alloc_init sizeToFit];
+    /* [UNRESOLVED] [(id)objc_alloc_init sizeToFit]; */
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryView:objc_alloc_init]; */
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setSelectionStyle:0]; */
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryType:[(id)ret boolValue]]; */
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     objc_release(ret);
 
 L_135cac:;

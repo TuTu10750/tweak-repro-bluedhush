@@ -2332,7 +2332,7 @@ L_13d4d8:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -2891,11 +2891,11 @@ L_13d708:;
 
 L_13d8a0:;
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if (objc_alloc_init == 0) goto L_13da68;
+    /* [UNRESOLVED] if (objc_alloc_init == 0) goto L_13da68; */
 
 L_13d8c0:;
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
-    if (((objc_alloc_init >> 0) & 1) == 0) goto L_13da68;
+    /* [UNRESOLVED] if (((objc_alloc_init >> 0) & 1) == 0) goto L_13da68; */
 
     /* [UNRESOLVED] [(id)[NSMutableDictionary class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -2904,7 +2904,7 @@ L_13d8c0:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
-    if (objc_alloc_init == 0) goto L_13db60;
+    /* [UNRESOLVED] if (objc_alloc_init == 0) goto L_13db60; */
 
     if (ret == 0) goto L_13dc04;
 

@@ -89,7 +89,7 @@
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] sub_18af04(); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    objc_release(objc_alloc_init);
+    /* [UNRESOLVED] objc_release(objc_alloc_init); */
 
 L_18dc10:;
 
