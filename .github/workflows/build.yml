@@ -16,6 +16,7 @@ on:
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-14
 
     env:
@@ -222,6 +223,7 @@ jobs:
   # 与上面两个变体完全独立：不同 Makefile、不同 TWEAK_NAME、不同产物。
   # ==========================================================================
   build-original-re:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-14
 
     env:
@@ -302,7 +304,13 @@ jobs:
       - name: Install toolchain (Linux)
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq clang lld build-essential libssl-dev zstd ldid curl git make
+          sudo apt-get install -y -qq clang lld build-essential libssl-dev zstd curl git make || \
+            sudo apt-get install -y -qq clang build-essential libssl-dev zstd curl git make
+          # ubuntu-24.04 has no ldid package; grab the procursus build (non-fatal if it moves)
+          curl -fsSL -o /tmp/ldid \
+            "https://github.com/ProcursusTeam/ldid/releases/download/v2.1.5-procursus7/ldid_linux_x86_64" || true
+          if [ -s /tmp/ldid ]; then sudo install -m755 /tmp/ldid /usr/local/bin/ldid; fi
+          which ldid || echo "ldid absent (compile-only build does not need it)"
           clang --version | head -2
 
       - name: Fetch Theos + iPhoneOS SDK
@@ -326,7 +334,7 @@ jobs:
         run: |
           set -o pipefail
           make -C original-re clean || true
-          make -C original-re ARCHS=arm64 FINALPACKAGE=1 2>&1 | tee build-original-re-linux.log
+          make -C original-re ARCHS=arm64 2>&1 | tee build-original-re-linux.log
           echo "--- outputs ---"
           find original-re/.theos/obj -name '*.dylib' | sort
 
