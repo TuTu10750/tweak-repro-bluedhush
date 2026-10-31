@@ -2463,7 +2463,7 @@ L_d04f8:;
     (void)[(id)ret uid];
     (void)[(id)ret isEqualToString:nil];
     objc_release(ret);
-    if ([(id)ret isEqualToString:0x3e8] == 0) goto L_d05a0;
+    /* [UNRESOLVED] if ([(id)ret isEqualToString:0x3e8] == 0) goto L_d05a0; */
 
     /* [UNRESOLVED] [(id)ret setMarkIndex:a0]; */
     (void)[(id)ret hushApplySelection];

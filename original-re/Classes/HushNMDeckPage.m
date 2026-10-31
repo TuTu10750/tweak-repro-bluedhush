@@ -7341,7 +7341,7 @@ L_dcc5c:;
     /* [UNRESOLVED] [(id)self->_badge text]; */
     (void)[(id)ret isEqualToString:nil];
     objc_release(ret);
-    if ((([(id)ret isEqualToString:0] >> 0) & 1) != 0) goto L_dccb8;
+    /* [UNRESOLVED] if ((([(id)ret isEqualToString:0] >> 0) & 1) != 0) goto L_dccb8; */
 
     /* [UNRESOLVED] [(id)self->_badge setText:0]; */
 

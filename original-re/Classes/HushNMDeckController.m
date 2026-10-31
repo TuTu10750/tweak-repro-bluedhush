@@ -2608,7 +2608,7 @@ L_e1cc8:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e1eac; */
 
     /* [UNRESOLVED] [objc_release isEqualToString:0]; */
-    if (((objc_release >> 0) & 1) != 0) goto L_e2304;
+    /* [UNRESOLVED] if (((objc_release >> 0) & 1) != 0) goto L_e2304; */
 
 L_e1eac:;
     (void)[(id)ret copy];
