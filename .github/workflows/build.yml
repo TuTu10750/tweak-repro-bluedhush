@@ -376,6 +376,19 @@ jobs:
           echo "--- outputs ---"
           find original-re/.theos/obj -name '*.dylib' 2>/dev/null | sort
 
+      - name: Upload dylib + build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-re-dylib-linux
+          path: |
+            original-re/.theos/obj/debug/BluedHushRE.dylib
+            original-re/.theos/obj/debug/arm64/BluedHushRE.dylib
+            build-original-re-linux.log
+            syntax.log
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Report (does not fail the job)
         if: always()
         run: |
