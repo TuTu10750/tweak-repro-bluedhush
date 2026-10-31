@@ -44,7 +44,7 @@
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [a0 length]; */
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19164; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_19164; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     goto L_19164;
@@ -106,7 +106,7 @@ L_19164:;
     /* [UNRESOLVED] [a0 length]; */
     /* [UNRESOLVED] if (a1 == 0) goto L_191ec; */
 
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_191ec; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_191ec; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_191ec;
@@ -305,7 +305,7 @@ L_191ec:;
 
     /* [UNRESOLVED] if (a1 == 0) goto L_1942c; */
 
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1942c; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_1942c; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_1931c;
@@ -546,7 +546,7 @@ L_1942c:;
 
     /* [UNRESOLVED] if (a1 == 0) goto L_19700; */
 
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19700; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_19700; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_195f0;
@@ -948,19 +948,19 @@ L_19700:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [a0 length]; */
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19a24; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_19a24; */
 
     /* [UNRESOLVED] [a1 count]; */
     /* [UNRESOLVED] if (a2 == 0) goto L_19a24; */
 
-    /* [UNRESOLVED] if ([a1 count]; == 0) goto L_19a24; */
+    /* [UNRESOLVED] if ([a1 count] == 0) goto L_19a24; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_199b0;
 
     /* [UNRESOLVED] objc_retain(a1); */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_19874;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_19874;
 
 L_19810:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_19828; */
@@ -976,7 +976,7 @@ L_1984c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19810; */
 
     /* [UNRESOLVED] [a1 countByEnumeratingWithState:0 objects:0 count:0x10]; */
-    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_19810; */
+    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_19810; */
 
 L_19874:;
     /* [UNRESOLVED] objc_release(a1); */
@@ -1259,50 +1259,50 @@ L_19c0c:;
 
     [self records];
     [ret count];
-    if ([ret count]== 0) goto L_19d78;
+    if ([ret count] == 0) goto L_19d78;
 
     objc_retain(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_19da8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_19da8;
 
 L_19ce0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_19d00; */
 
 L_19d00:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_19d30; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_19d30; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[PATCH] %@"]; */
     goto L_19d3c;
 
 L_19d30:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[PATCH] %@"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[PATCH] %@"] noteFiltered:3]; */
 
 L_19d3c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19ce0; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_19ce0;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_19ce0;
 
     goto L_19da8;
 
 L_19d78:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_19e04; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_19e04; */
 
     goto L_19df0;
 
 L_19da8:;
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_19e04; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_19e04; */
 
 L_19df0:;
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"]; */
     goto L_19e0c;
 
 L_19e04:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[PATCH] 汇总 installed=%lu skipped=%lu"] noteFiltered:3]; */
 
 L_19e0c:;
     objc_release(ret);
@@ -1489,7 +1489,7 @@ L_19e0c:;
 
     /* [UNRESOLVED] if (a1 == 0) goto L_1a058; */
 
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a058; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_1a058; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_19fa4;
@@ -1604,7 +1604,7 @@ L_1a058:;
     /* [UNRESOLVED] [a0 length]; */
     /* [UNRESOLVED] if (a1 == 0) goto L_1a140; */
 
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a140; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_1a140; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_1a140;
@@ -1673,7 +1673,7 @@ L_1a140:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [a0 length]; */
-    /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a29c; */
+    /* [UNRESOLVED] if ([a0 length] == 0) goto L_1a29c; */
 
     [NSString stringWithFormat:@"GROUP       %@"];
     /* [UNRESOLVED] sub_1944c(); */

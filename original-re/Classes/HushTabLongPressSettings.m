@@ -414,7 +414,7 @@
     objc_release(ret);
     objc_retain(ret);
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_15d1b0; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_15d1b0; */
 
 L_15d044:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_15d064; */
@@ -443,7 +443,7 @@ L_15d108:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_15d044; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_15d044; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_15d044; */
 
     goto L_15d1b0;
 

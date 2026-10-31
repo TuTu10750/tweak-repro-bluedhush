@@ -365,7 +365,7 @@ L_19c858:;
     /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] [a2 unknownSelector]; */
-    /* [UNRESOLVED] if ([a2 unknownSelector]; == 0) goto L_19c950; */
+    /* [UNRESOLVED] if ([a2 unknownSelector] == 0) goto L_19c950; */
 
     /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -397,7 +397,7 @@ L_19c9d0:;
 
 L_19ca00:;
     /* [UNRESOLVED] [a1 unknownSelector]; */
-    /* [UNRESOLVED] if ([a1 unknownSelector]; == 0) goto L_19ca64; */
+    /* [UNRESOLVED] if ([a1 unknownSelector] == 0) goto L_19ca64; */
 
     /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */

@@ -200,12 +200,12 @@
     /* [UNRESOLVED] [ret isEqualToString:0x200248/ *+0x0* /]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret isEqualToString:0x200248/ *+0x0* /]; == 0) goto L_12ebc; */
+    /* [UNRESOLVED] if ([ret isEqualToString:0x200248/ *+0x0* /] == 0) goto L_12ebc; */
 
     /* [UNRESOLVED] [a1 protectionSpace]; */
     [ret serverTrust];
     objc_release(ret);
-    if ([ret serverTrust]== 0) goto L_12ed8;
+    if ([ret serverTrust] == 0) goto L_12ed8;
 
     /* [UNRESOLVED] SecTrustGetCertificateAtIndex(0); */
     if (SecTrustGetCertificateAtIndex == 0) goto L_12ed8;
@@ -227,7 +227,7 @@ L_12e20:;
     /* [UNRESOLVED] [ret isEqualToString:0x256650]; */
     /* [UNRESOLVED] CFRelease(); */
     objc_release(ret);
-    /* [UNRESOLVED] if ((([ret isEqualToString:0x256650]; >> 0) & 1) == 0) goto L_12ed8; */
+    /* [UNRESOLVED] if ((([ret isEqualToString:0x256650] >> 0) & 1) == 0) goto L_12ed8; */
 
     [NSURLCredential credentialForTrust:[ret serverTrust]];
     objc_release(ret);

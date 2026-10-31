@@ -157,13 +157,13 @@
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [[self unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a3); */
 }
 

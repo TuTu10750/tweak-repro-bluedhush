@@ -502,7 +502,7 @@ L_962d8:;
     [self hushItems];
     [ret count];
     objc_release(ret);
-    if ([ret count]== 0) goto L_966a8;
+    if ([ret count] == 0) goto L_966a8;
 
     [self tableView];
     [ret setBackgroundView:0];
@@ -511,17 +511,17 @@ L_962d8:;
 L_966a8:;
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     [self hushIsFavorites];
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setText:0]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setNumberOfLines:0]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTextAlignment:1]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setText:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setNumberOfLines:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTextAlignment:1]; */
     /* [UNRESOLVED] [UIFont preferredFontForTextStyle:0x200638/ *+0x0* /]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setFont:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
     [UIColor secondaryLabelColor];
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTextColor:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:ret]; */
     objc_release(ret);
     [self tableView];
-    /* [UNRESOLVED] [ret setBackgroundView:[[UILabel alloc] initWithFrame:0 / * unk * /];]; */
+    /* [UNRESOLVED] [ret setBackgroundView:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
     objc_release(ret);
 
 L_967d4:;
@@ -559,7 +559,7 @@ L_967d4:;
     [self hushItems];
     [ret count];
     objc_release(ret);
-    return (long long)[ret count];;
+    return (long long)[ret count];
 }
 
 // @0x96824  types=@32@0:8@16@24
@@ -897,15 +897,15 @@ L_967d4:;
 L_968b8:;
     [self hushItems];
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] if ((([a1 row]; >> 63) & 1) != 0) goto L_96bf8; */
+    /* [UNRESOLVED] if ((([a1 row] >> 63) & 1) != 0) goto L_96bf8; */
 
     /* [UNRESOLVED] [a1 row]; */
     [ret count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_96bf8; */
 
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row];]; */
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"]; defaultContentConfiguration];
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row]]; */
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"] defaultContentConfiguration];
     [ret objectForKeyedSubscript:@"keyword"];
     [ret description];
     objc_release(ret);
@@ -922,7 +922,7 @@ L_968b8:;
     [ret description];
     objc_release(ret);
     [ret length];
-    if ([ret length]== 0) goto L_96b0c;
+    if ([ret length] == 0) goto L_96b0c;
 
     [ret stringByAppendingFormat:@"\n备注: %@"];
     objc_release(ret);
@@ -938,7 +938,7 @@ L_96b0c:;
     [ret setColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"]; setContentConfiguration:ret];
+    [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:@"hush_hist"] setContentConfiguration:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1168,14 +1168,14 @@ L_96bf8:;
     /* [UNRESOLVED] [a0 deselectRowAtIndexPath:a1 animated:1]; */
     [self hushItems];
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] if ((([a1 row]; >> 63) & 1) != 0) goto L_96eb0; */
+    /* [UNRESOLVED] if ((([a1 row] >> 63) & 1) != 0) goto L_96eb0; */
 
     /* [UNRESOLVED] [a1 row]; */
     [ret count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_96eb0; */
 
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row];]; */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row]]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_96e20;
 
@@ -1434,19 +1434,19 @@ L_97024:;
     [ret mutableCopy];
     objc_release(ret);
     /* [UNRESOLVED] [stack_chk_fail/ *+0x28* / row]; */
-    /* [UNRESOLVED] if ((([stack_chk_fail/ *+0x28* / row]; >> 63) & 1) != 0) goto L_97174; */
+    /* [UNRESOLVED] if ((([stack_chk_fail/ *+0x28* / row] >> 63) & 1) != 0) goto L_97174; */
 
     /* [UNRESOLVED] [stack_chk_fail/ *+0x28* / row]; */
-    [[ret mutableCopy]; count];
+    [[ret mutableCopy] count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_97174; */
 
     /* [UNRESOLVED] [stack_chk_fail/ *+0x28* / row]; */
-    /* [UNRESOLVED] [[ret mutableCopy]; removeObjectAtIndex:[stack_chk_fail/ *+0x28* / row];]; */
-    /* [UNRESOLVED] [stack_chk_fail/ *+0x20* / hushSaveItems:[ret mutableCopy];]; */
+    /* [UNRESOLVED] [[ret mutableCopy] removeObjectAtIndex:[stack_chk_fail/ *+0x28* / row]]; */
+    /* [UNRESOLVED] [stack_chk_fail/ *+0x20* / hushSaveItems:[ret mutableCopy]]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    if ([ret mutableCopy]== 0) goto L_9715c;
+    if ([ret mutableCopy] == 0) goto L_9715c;
 
-    [[ret mutableCopy]; count];
+    [[ret mutableCopy] count];
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 历史已删除 1 条（余 %lu）"]; */
     goto L_97174;
 

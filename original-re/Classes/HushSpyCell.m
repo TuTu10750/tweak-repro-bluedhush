@@ -559,8 +559,8 @@
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0x4052000000000000]; */
-    /* [UNRESOLVED] [self setName:[[UILabel alloc] initWithFrame:0x4052000000000000];]; */
-    /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000];); */
+    /* [UNRESOLVED] [self setName:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
+    /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
     /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0 / * unk * // *+0x0* /]; */
     [self name];
     [ret setFont:ret];
@@ -572,8 +572,8 @@
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0x4052000000000000]; */
-    /* [UNRESOLVED] [self setDetail:[[UILabel alloc] initWithFrame:0x4052000000000000];]; */
-    /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000];); */
+    /* [UNRESOLVED] [self setDetail:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
+    /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
     [UIFont systemFontOfSize:12];
     [self detail];
     [ret setFont:ret];

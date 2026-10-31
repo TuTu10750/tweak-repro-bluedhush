@@ -255,12 +255,12 @@ L_195080:;
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     goto L_1951d4;
 
 L_1951d4:;
@@ -1138,7 +1138,7 @@ L_193a28:;
 L_193a74:;
     /* [UNRESOLVED] [a0 unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_193b68; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_193b68; */
 
 L_193acc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_193ae8; */
@@ -1156,7 +1156,7 @@ L_193b24:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_193acc; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_193acc; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_193acc; */
 
     goto L_193b68;
 
@@ -1181,7 +1181,7 @@ L_193bd4:;
 
     objc_retain(ret);
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_193cc8; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_193cc8; */
 
 L_193c38:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_193c54; */
@@ -1201,7 +1201,7 @@ L_193ca0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_193c38; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_193c38; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_193c38; */
 
 L_193cc8:;
     objc_release(ret);
@@ -1304,7 +1304,7 @@ L_1940a8:;
     /* [UNRESOLVED] [NSMutableArray unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_194314; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_194314; */
 
 L_194190:;
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -1316,14 +1316,14 @@ L_194190:;
     /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_194220; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_194220; */
 
     /* [UNRESOLVED] [objc_release unknownSelector]; */
 
 L_194220:;
     /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_1942b8; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_1942b8; */
 
 L_194268:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_194284; */
@@ -1333,13 +1333,13 @@ L_194284:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_194268; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_194268; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_194268; */
 
 L_1942b8:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_194190; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_194190; */
 
 L_194314:;
     objc_retain(Unwind_Resume);
@@ -1348,7 +1348,7 @@ L_194314:;
     objc_release(Unwind_Resume);
     objc_release(ret);
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_194414; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_194414; */
 
     /* [UNRESOLVED] [0 unknownSelector]; */
     objc_release(ret);
@@ -1811,7 +1811,7 @@ L_1944dc:;
 L_194c94:;
     /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_194d7c; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_194d7c; */
 
 L_194ce4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_194cfc; */
@@ -1834,7 +1834,7 @@ L_194cfc:;
 
 L_194d6c:;
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_194ce4; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_194ce4; */
 
 L_194d7c:;
     objc_release(ret);
@@ -1867,7 +1867,7 @@ L_194e04:;
 L_194e94:;
     /* [UNRESOLVED] [Unwind_Resume unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_194f34; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_194f34; */
 
 L_194ee0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_194ef4; */
@@ -1879,7 +1879,7 @@ L_194ef4:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_194ee0; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_194ee0; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_194ee0; */
 
 L_194f34:;
     objc_release(ret);

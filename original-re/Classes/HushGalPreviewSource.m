@@ -35,7 +35,7 @@
     [self files];
     [ret count];
     objc_release(ret);
-    return (long long)[ret count];;
+    return (long long)[ret count];
 }
 
 // @0x7a5ac  types=@32@0:8@16q24

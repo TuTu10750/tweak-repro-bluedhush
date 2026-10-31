@@ -586,7 +586,7 @@
     [ret addSubview:self->_map];
     objc_release(ret);
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")];
-    [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]; setMinimumPressDuration:0.5];
+    [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")] setMinimumPressDuration:0.5];
     [self->_map addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]];
     [UIFont systemFontOfSize:30];
     [NSDictionary dictionaryWithObjects:-0xa8 forKeys:-0xb0 count:1];
@@ -596,10 +596,10 @@
     [ret setOpaque:0];
     [[UIGraphicsImageRenderer alloc] initWithSize:ret format:12];
     objc_retain(ret);
-    [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]; imageWithActions:0];
+    [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12] imageWithActions:0];
     objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]);
     /* [UNRESOLVED] [objc_retainAutorelease CGImage]; */
-    /* [UNRESOLVED] if ([objc_retainAutorelease CGImage]; == 0) goto L_983b8; */
+    /* [UNRESOLVED] if ([objc_retainAutorelease CGImage] == 0) goto L_983b8; */
 
     /* [UNRESOLVED] CGImageGetWidth(); */
     /* [UNRESOLVED] CGImageGetHeight(); */
@@ -611,7 +611,7 @@
     /* [UNRESOLVED] CGColorSpaceRelease(); */
     if (CGBitmapContextCreate == 0) goto L_983d8;
 
-    /* [UNRESOLVED] CGContextDrawImage([objc_retainAutorelease CGImage];); */
+    /* [UNRESOLVED] CGContextDrawImage([objc_retainAutorelease CGImage]); */
     /* [UNRESOLVED] CGContextRelease(); */
     if (CGImageGetHeight == 0) goto L_98410;
 
@@ -707,7 +707,7 @@ L_98664:;
     [UIColor blackColor];
     /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_infoCard layer];
-    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor];]; */
+    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
     [self->_infoCard layer];
@@ -765,20 +765,20 @@ L_98664:;
     [NSArray arrayWithObjects:-0xe8 count:3];
     [[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setAxis:1];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:4];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:1];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:4];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
     [self->_infoCard addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; leadingAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] leadingAnchor];
     [self->_infoCard leadingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; trailingAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] trailingAnchor];
     [self->_infoCard trailingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; topAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] topAnchor];
     [self->_infoCard topAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; bottomAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
     [self->_infoCard bottomAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
     [NSArray arrayWithObjects:0 count:4];
@@ -826,7 +826,7 @@ L_98664:;
     [UIButton buttonWithType:1];
     objc_release(self->_mapTypeButton);
     [@"map" length];
-    if ([@"map" length]== 0) goto L_991d4;
+    if ([@"map" length] == 0) goto L_991d4;
 
     [UIImage systemImageNamed:@"map"];
     goto L_991d4;
@@ -866,16 +866,16 @@ L_991d4:;
     [NSArray arrayWithObjects:0 count:2];
     [[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setAxis:1];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:8];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:1];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:8];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
     [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     objc_release(self->_locationSwitch);
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
-    /* [UNRESOLVED] [self->_locationSwitch setOn:[ret isEnabled:0 / * func * /];]; */
+    /* [UNRESOLVED] [self->_locationSwitch setOn:[ret isEnabled:0 / * func * /]]; */
     objc_release(ret);
     [self->_locationSwitch addTarget:self action:sel_registerName("hushLocSwitchChanged:") forControlEvents:0x1000];
     [self hushLocSwitchLabelWithText:@"位置模拟" icon:@"location.fill"];
@@ -883,7 +883,7 @@ L_991d4:;
     objc_release(self->_altitudeSwitch);
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
-    /* [UNRESOLVED] [self->_altitudeSwitch setOn:[ret isEnabled:0 / * func * /];]; */
+    /* [UNRESOLVED] [self->_altitudeSwitch setOn:[ret isEnabled:0 / * func * /]]; */
     objc_release(ret);
     [self->_altitudeSwitch addTarget:self action:sel_registerName("hushLocSwitchChanged:") forControlEvents:0x1000];
     [self hushLocSwitchLabelWithText:@"海拔模拟" icon:@"barometer"];
@@ -895,26 +895,26 @@ L_991d4:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setAxis:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:24];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setTranslatesAutoresizingMaskIntoConstraints:0];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:0];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:24];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
     [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] [UIFont preferredFontForTextStyle:0x200640/ *+0x0* /]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setFont:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setAdjustsFontForContentSizeCategory:1]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setAdjustsFontForContentSizeCategory:1]; */
     [UIColor secondaryLabelColor];
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTextColor:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setNumberOfLines:2]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTextAlignment:1]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setText:@"长按地图选定位置（蓝点＝所选点，打开「位置模拟」即按它生效）；点「确认位置」存进历史"]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setTranslatesAutoresizingMaskIntoConstraints:0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setNumberOfLines:2]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTextAlignment:1]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setText:@"长按地图选定位置（蓝点＝所选点，打开「位置模拟」即按它生效）；点「确认位置」存进历史"]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setTranslatesAutoresizingMaskIntoConstraints:0]; */
     [self view];
-    /* [UNRESOLVED] [ret addSubview:[[UILabel alloc] initWithFrame:0 / * unk * /];]; */
+    /* [UNRESOLVED] [ret addSubview:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
     objc_release(ret);
     [UIButton buttonWithType:1];
     objc_release(self->_confirmButton);
@@ -1020,7 +1020,7 @@ L_991d4:;
     [ret trailingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
     [self->_map bottomAnchor];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; topAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] topAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
     [self->_centerPin centerXAnchor];
     [self->_map centerXAnchor];
@@ -1037,33 +1037,33 @@ L_991d4:;
     [self->_infoCard trailingAnchor];
     [self->_map trailingAnchor];
     [ret constraintLessThanOrEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; trailingAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] trailingAnchor];
     [self->_map trailingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; bottomAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
     [self->_map bottomAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; centerXAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] centerXAnchor];
     [self view];
     [ret centerXAnchor];
     [ret constraintEqualToAnchor:ret];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; leadingAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] leadingAnchor];
     [self view];
     [ret leadingAnchor];
     [ret constraintGreaterThanOrEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; bottomAnchor];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
     [self->_confirmButton topAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; centerXAnchor]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] centerXAnchor]; */
     [self view];
     [ret centerXAnchor];
     [ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; leadingAnchor]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] leadingAnchor]; */
     [self view];
     [ret leadingAnchor];
     [ret constraintGreaterThanOrEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; bottomAnchor]; */
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; topAnchor];
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] bottomAnchor]; */
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] topAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
     [self->_confirmButton leadingAnchor];
     [self view];
@@ -1190,7 +1190,7 @@ L_991d4:;
     objc_release(ret);
     [self refreshCenter:0];
     objc_release(ret);
-    /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0 / * unk * /];); */
+    /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0 / * unk * /]); */
     objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
     objc_release(ret);
     objc_release(ret);
@@ -1289,7 +1289,7 @@ L_991d4:;
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
     /* [UNRESOLVED] [self->_map setRegion:a0 animated:0]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9aea8; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9aea8; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 取景 → %.6f,%.6f（跨度 %.0f 米）"]; */
 
@@ -1943,24 +1943,24 @@ L_9b158:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; == 0) goto L_9b3a8; */
+    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] == 0) goto L_9b3a8; */
 
     /* [UNRESOLVED] sub_9b434(); */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9b3e4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9b3e4; */
 
     goto L_9b3d0;
 
 L_9b3a8:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9b3e4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9b3e4; */
 
 L_9b3d0:;
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 选定 %.6f,%.6f（已写成当前选择；打开位置模拟即按它生效）"]; */
     goto L_9b3ec;
 
 L_9b3e4:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 选定 %.6f,%.6f（已写成当前选择；打开位置模拟即按它生效）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 选定 %.6f,%.6f（已写成当前选择；打开位置模拟即按它生效）"] noteFiltered:3]; */
 
 L_9b3ec:;
     objc_release(0);
@@ -1984,7 +1984,7 @@ L_9b41c:;
     if (((sub_9aed0 >> 0) & 1) == 0) goto L_9b55c;
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9b64c; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9b64c; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[VLoc] 开 → 宿主：按 %.6f,%.6f 重新定位并刷新"]; */
     goto L_9b664;
@@ -1994,13 +1994,13 @@ L_9b544:;
 
 L_9b55c:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9b594; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9b594; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[VLoc] 开 → 宿主：配置里没有可用坐标 → 退回开关（先选点或输入经纬度）"]; */
     goto L_9b5ac;
 
 L_9b594:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[VLoc] 开 → 宿主：配置里没有可用坐标 → 退回开关（先选点或输入经纬度）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[VLoc] 开 → 宿主：配置里没有可用坐标 → 退回开关（先选点或输入经纬度）"] noteFiltered:3]; */
 
 L_9b5ac:;
     /* [UNRESOLVED] [@0x244888 unknownSelector]; */
@@ -2078,7 +2078,7 @@ L_9b664:;
     [self->_map removeAnnotation:self->_pickAnno];
     objc_release(self->_pickAnno);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9b7c4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9b7c4; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 已撤掉长按蓝点（改以 📍 中心为准）"]; */
 
@@ -2337,7 +2337,7 @@ L_9b8e8:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     [MKUserLocation class];
-    /* [UNRESOLVED] [a1 isKindOfClass:[MKUserLocation class];]; */
+    /* [UNRESOLVED] [a1 isKindOfClass:[MKUserLocation class]]; */
     /* [UNRESOLVED] if (((a1 >> 0) & 1) != 0) goto L_9b9b8; */
 
     /* [UNRESOLVED] if (cond / * eq * /) goto L_9b9f4; */
@@ -2354,16 +2354,16 @@ L_9b9f4:;
     [UIGraphicsImageRendererFormat defaultFormat];
     [ret setOpaque:0];
     [[UIGraphicsImageRenderer alloc] initWithSize:ret format:20];
-    /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:20]; imageWithActions:0x1a7e18]; */
+    /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:20] imageWithActions:0x1a7e18]; */
     objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:20]);
     objc_release(ret);
-    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; setImage:ret]; */
+    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"] setImage:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; setCanShowCallout:0]; */
-    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; setCenterOffset:0 / * unk * /]; */
+    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"] setCanShowCallout:0]; */
+    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"] setCenterOffset:0 / * unk * /]; */
 
 L_9bb44:;
-    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; setAnnotation:0 / * unk * /]; */
+    /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"] setAnnotation:0 / * unk * /]; */
     goto L_9b9b8;
 }
 
@@ -2526,7 +2526,7 @@ L_9bb44:;
 
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [a1 countByEnumeratingWithState:0 objects:0 count:0x10]; */
-    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10]; == 0) goto L_9bd34; */
+    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_9bd34; */
 
 L_9bc2c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_9bc48; */
@@ -2545,7 +2545,7 @@ L_9bd0c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9bc2c; */
 
     /* [UNRESOLVED] [a1 countByEnumeratingWithState:0 objects:0 count:0x10]; */
-    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10]; != 0) goto L_9bc2c; */
+    /* [UNRESOLVED] if ([a1 countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_9bc2c; */
 
 L_9bd34:;
     /* [UNRESOLVED] objc_release(a1); */
@@ -2850,7 +2850,7 @@ L_9bf90:;
 L_9c970:;
     [self->_map gestureRecognizers];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_9ca44;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_9ca44;
 
 L_9c9c4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_9c9e0; */
@@ -2865,7 +2865,7 @@ L_9c9e0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9c9c4; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_9c9c4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_9c9c4;
 
     goto L_9ca44;
 
@@ -2962,14 +2962,14 @@ L_9ca44:;
     id ret = nil;
 
     [self->_nameHint length];
-    if ([self->_nameHint length]== 0) goto L_9cbac;
+    if ([self->_nameHint length] == 0) goto L_9cbac;
 
     [self->_map centerCoordinate];
     /* [UNRESOLVED] cos(); */
     /* [UNRESOLVED] if (cond / * le * /) goto L_9cbac; */
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9cbb0; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9cbb0; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 离开搜索点 %.0f 米 → 摘掉地名「%@」"]; */
 
@@ -3107,7 +3107,7 @@ L_9cbac:;
     /* [UNRESOLVED] objc_release(a1); */
     objc_release(ret);
     [ret length];
-    if ([ret length]== 0) goto L_9cd5c;
+    if ([ret length] == 0) goto L_9cd5c;
 
     /* [UNRESOLVED] [a0 setShowsCancelButton:1]; */
     /* [UNRESOLVED] dispatch_time(0x1dcd); */
@@ -3332,7 +3332,7 @@ L_9cd6c:;
     [self->_addrLabel text];
     [ret hasPrefix:@"正在搜索"];
     objc_release(ret);
-    if ([ret hasPrefix:@"正在搜索"]== 0) goto L_9cff4;
+    if ([ret hasPrefix:@"正在搜索"] == 0) goto L_9cff4;
 
 L_9cff4:;
     return;
@@ -3544,7 +3544,7 @@ L_9cff4:;
     /* [UNRESOLVED] [a0 stringByTrimmingCharactersInSet:ret]; */
     objc_release(ret);
     [ret length];
-    if ([ret length]== 0) goto L_9d254;
+    if ([ret length] == 0) goto L_9d254;
 
     [self->_search cancel];
     [NSString stringWithFormat:@"正在搜索「%@」…"];
@@ -3554,20 +3554,20 @@ L_9cff4:;
     [self->_map region];
     /* [UNRESOLVED] [objc_alloc_init setRegion:0]; */
     [[MKLocalSearch alloc] initWithRequest:objc_alloc_init];
-    objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init];, [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
+    objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init], [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9d1a8; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9d1a8; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 搜索地名：%@"]; */
     goto L_9d1f8;
 
 L_9d1a8:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 搜索地名：%@"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 搜索地名：%@"] noteFiltered:3]; */
 
 L_9d1f8:;
     objc_retain([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     objc_retain(ret);
-    [[[MKLocalSearch alloc] initWithRequest:objc_alloc_init]; startWithCompletionHandler:0];
+    [[[MKLocalSearch alloc] initWithRequest:objc_alloc_init] startWithCompletionHandler:0];
     objc_release(ret);
     objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     objc_release([[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
@@ -3600,7 +3600,7 @@ L_9d254:;
     id ret = nil;
 
     [self->_results count];
-    return (long long)[self->_results count];;
+    return (long long)[self->_results count];
 }
 
 // @0x9d870  types=@32@0:8@16@24
@@ -3977,15 +3977,15 @@ L_9d254:;
 
 L_9d900:;
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] if ((([a1 row]; >> 63) & 1) != 0) goto L_9dbc8; */
+    /* [UNRESOLVED] if ((([a1 row] >> 63) & 1) != 0) goto L_9dbc8; */
 
     /* [UNRESOLVED] [a1 row]; */
     [self->_results count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_9dbc8; */
 
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] [self->_results objectAtIndexedSubscript:[a1 row];]; */
-    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; defaultContentConfiguration];
+    /* [UNRESOLVED] [self->_results objectAtIndexedSubscript:[a1 row]]; */
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] defaultContentConfiguration];
     /* [UNRESOLVED] sub_9dbec(); */
     [ret setText:ret];
     objc_release(ret);
@@ -4012,9 +4012,9 @@ L_9d900:;
     [ret secondaryTextProperties];
     [ret setNumberOfLines:1];
     objc_release(ret);
-    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; setContentConfiguration:ret];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] setContentConfiguration:ret];
     [UIColor clearColor];
-    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; setBackgroundColor:ret];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -4026,18 +4026,18 @@ L_9dbc8:;
     [ret name];
     [ret length];
     objc_release(ret);
-    if ([ret length]== 0) goto L_9dc6c;
+    if ([ret length] == 0) goto L_9dc6c;
 
-    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; name];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] name];
     goto L_9dcd0;
 
 L_9dc6c:;
-    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]; placemark];
+    [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] placemark];
     objc_release([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]);
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
     [ret length];
-    if ([ret length]== 0) goto L_9dcd0;
+    if ([ret length] == 0) goto L_9dcd0;
 
     objc_retain(ret);
     goto L_9dcd0;
@@ -4400,14 +4400,14 @@ L_9dcd0:;
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [a0 deselectRowAtIndexPath:a1 animated:1]; */
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] if ((([a1 row]; >> 63) & 1) != 0) goto L_9e158; */
+    /* [UNRESOLVED] if ((([a1 row] >> 63) & 1) != 0) goto L_9e158; */
 
     /* [UNRESOLVED] [a1 row]; */
     [self->_results count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_9e158; */
 
     /* [UNRESOLVED] [a1 row]; */
-    /* [UNRESOLVED] [self->_results objectAtIndexedSubscript:[a1 row];]; */
+    /* [UNRESOLVED] [self->_results objectAtIndexedSubscript:[a1 row]]; */
     [ret placemark];
     [ret location];
     objc_release(ret);
@@ -4594,7 +4594,7 @@ L_9e158:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret customLng];
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; == 0) goto L_9e2d8; */
+    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] == 0) goto L_9e2d8; */
 
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret hasCustomLocation];
@@ -4948,7 +4948,7 @@ L_9f01c:;
 
     /* [UNRESOLVED] [a0 gestureRecognizers]; */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_9f190;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_9f190;
 
 L_9f124:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_9f140; */
@@ -4963,7 +4963,7 @@ L_9f140:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9f124; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_9f124;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_9f124;
 
 L_9f190:;
     objc_release(ret);
@@ -5213,13 +5213,13 @@ L_9f300:;
     /* [UNRESOLVED] if (cond / * hi * /) goto L_9f450; */
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9f494; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9f494; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 定位权限被拒绝（status=%d）"]; */
 
 L_9f424:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9f468; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9f468; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 系统定位服务已禁用"]; */
 
@@ -5297,12 +5297,12 @@ L_9f450:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setText:a0]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setText:a0]; */
     /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] [UIFont preferredFontForTextStyle:0x200638/ *+0x0* /]; */
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setFont:ret]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /]; setAdjustsFontForContentSizeCategory:1]; */
+    /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:0 / * unk * /] setAdjustsFontForContentSizeCategory:1]; */
 }
 
 // @0x9f638  types=@40@0:8@16@24@32
@@ -5544,7 +5544,7 @@ L_9f450:;
     [NSMutableArray array];
     /* [UNRESOLVED] objc_retain(a0); */
     [ret length];
-    if ([ret length]== 0) goto L_9f84c;
+    if ([ret length] == 0) goto L_9f84c;
 
     /* [UNRESOLVED] [UIImage systemImageNamed:a0]; */
     /* [UNRESOLVED] objc_release(a0); */
@@ -5552,20 +5552,20 @@ L_9f450:;
 
     [[UIImageView alloc] initWithImage:ret];
     [UIColor secondaryLabelColor];
-    [[[UIImageView alloc] initWithImage:ret]; setTintColor:ret];
+    [[[UIImageView alloc] initWithImage:ret] setTintColor:ret];
     objc_release(ret);
-    [[[UIImageView alloc] initWithImage:ret]; setContentMode:1];
-    [[[UIImageView alloc] initWithImage:ret]; widthAnchor];
+    [[[UIImageView alloc] initWithImage:ret] setContentMode:1];
+    [[[UIImageView alloc] initWithImage:ret] widthAnchor];
     [ret constraintEqualToConstant:18];
     [ret setActive:1];
     objc_release(ret);
     objc_release(ret);
-    [[[UIImageView alloc] initWithImage:ret]; heightAnchor];
+    [[[UIImageView alloc] initWithImage:ret] heightAnchor];
     [ret constraintEqualToConstant:18];
     [ret setActive:1];
     objc_release(ret);
     objc_release(ret);
-    [[[UIImageView alloc] initWithImage:ret]; setContentHuggingPriority:0 forAxis:0];
+    [[[UIImageView alloc] initWithImage:ret] setContentHuggingPriority:0 forAxis:0];
     [ret addObject:[[UIImageView alloc] initWithImage:ret]];
     objc_release([[UIImageView alloc] initWithImage:ret]);
 
@@ -5577,9 +5577,9 @@ L_9f860:;
     /* [UNRESOLVED] [ret addObject:a2]; */
     /* [UNRESOLVED] objc_release(a2); */
     [[UIStackView alloc] initWithArrangedSubviews:ret];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setAxis:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setAlignment:3];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret]; setSpacing:6];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:0];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setAlignment:3];
+    [[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:6];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] objc_release(a0); */
@@ -5880,12 +5880,12 @@ L_9f860:;
     [ret length];
     objc_release(ret);
     objc_release(ret);
-    if ([ret length]== 0) goto L_9fc3c;
+    if ([ret length] == 0) goto L_9fc3c;
 
 L_9f9ec:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [a0 isOn]; */
-    /* [UNRESOLVED] [ret setEnabled:[a0 isOn]; forKey:0 / * func * /]; */
+    /* [UNRESOLVED] [ret setEnabled:[a0 isOn] forKey:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_9fba8;
@@ -5900,12 +5900,12 @@ L_9fa9c:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret hasCustomLocation];
     objc_release(ret);
-    if ((([ret hasCustomLocation]>> 0) & 1) == 0) goto L_9fbbc;
+    if ((([ret hasCustomLocation] >> 0) & 1) == 0) goto L_9fbbc;
 
 L_9faf0:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [a0 isOn]; */
-    /* [UNRESOLVED] [ret setEnabled:[a0 isOn]; forKey:0 / * func * /]; */
+    /* [UNRESOLVED] [ret setEnabled:[a0 isOn] forKey:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_9fba8;
@@ -5924,7 +5924,7 @@ L_9fbbc:;
     /* [UNRESOLVED] [@0x244978 refreshCenter:0]; */
     /* [UNRESOLVED] [@0x244978 hushLocAlert:@"未设置位置" msg:@"请先在地图上选择位置或手动输入坐标"]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9fca4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9fca4; */
 
     /* [UNRESOLVED] goto L_9fb94 (empty loop) */
 
@@ -5932,7 +5932,7 @@ L_9fc3c:;
     /* [UNRESOLVED] [a0 setOn:0]; */
     /* [UNRESOLVED] [0 / * adrp * / hushLocAlert:@"未设置海拔" msg:@"请先设置海拔高度"]; */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9fca4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9fca4; */
 
     /* [UNRESOLVED] goto L_9fb94 (empty loop) */
 
@@ -6039,13 +6039,13 @@ L_9fcc4:;
 
     [self hushLocPlacePickAt:0];
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9fdc4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9fdc4; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 长按 → 蓝点落在 %.6f,%.6f（镜头不动；保存以此点为准）"]; */
     goto L_9fde0;
 
 L_9fdc4:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 长按 → 蓝点落在 %.6f,%.6f（镜头不动；保存以此点为准）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 长按 → 蓝点落在 %.6f,%.6f（镜头不动；保存以此点为准）"] noteFiltered:3]; */
 
 L_9fde0:;
 }
@@ -6350,14 +6350,14 @@ L_9ffa0:;
     objc_release(ret);
     objc_retain(ret);
     [ret length];
-    if ([ret length]== 0) goto L_a0050;
+    if ([ret length] == 0) goto L_a0050;
 
     [UIImage systemImageNamed:ret];
     if (ret != 0) goto L_a00a0;
 
 L_a0050:;
     [@"map" length];
-    if ([@"map" length]== 0) goto L_a00a0;
+    if ([@"map" length] == 0) goto L_a00a0;
 
     [UIImage systemImageNamed:@"map"];
     goto L_a00a0;
@@ -6366,13 +6366,13 @@ L_a00a0:;
     [self->_mapTypeButton setImage:0 forState:0];
     [self->_mapTypeButton setImage:0 forState:1];
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_a0108; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_a0108; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 地图类型 → %ld（%@）"]; */
     goto L_a0110;
 
 L_a0108:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 地图类型 → %ld（%@）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 地图类型 → %ld（%@）"] noteFiltered:3]; */
 
 L_a0110:;
     objc_release(0);
@@ -6557,7 +6557,7 @@ L_a0110:;
 
     /* [UNRESOLVED] [[@0x2450f8 alloc] initWithMode:0]; */
     [self navigationController];
-    /* [UNRESOLVED] [ret pushViewController:[[@0x2450f8 alloc] initWithMode:0]; animated:1]; */
+    /* [UNRESOLVED] [ret pushViewController:[[@0x2450f8 alloc] initWithMode:0] animated:1]; */
     objc_release(ret);
 }
 
@@ -7563,7 +7563,7 @@ L_a08a8:;
     [NSUserDefaults standardUserDefaults];
     /* [UNRESOLVED] [ret arrayForKey:0 / * func * /]; */
     [ret mutableCopy];
-    if ([ret mutableCopy]== 0) goto L_a1498;
+    if ([ret mutableCopy] == 0) goto L_a1498;
 
     objc_retain([ret mutableCopy]);
     goto L_a14ac;
@@ -7578,7 +7578,7 @@ L_a14ac:;
     /* [UNRESOLVED] objc_release(0 / * unk * /); */
     objc_release(ret);
     [self->_centerAddr length];
-    if ([self->_centerAddr length]== 0) goto L_a1500;
+    if ([self->_centerAddr length] == 0) goto L_a1500;
 
     objc_retain(self->_centerAddr);
     goto L_a1524;
@@ -7613,7 +7613,7 @@ L_a15a0:;
     [ret length];
     objc_release(ret);
     objc_release(ret);
-    if ([ret length]== 0) goto L_a1724;
+    if ([ret length] == 0) goto L_a1724;
 
     [ret objectForKeyedSubscript:@"note"];
     goto L_a1724;
@@ -7649,10 +7649,10 @@ L_a1780:;
     objc_release(ret);
     if (0 == 0) goto L_a18b0;
 
-    [[ret mutableCopy]; setObject:0 forKeyedSubscript:@"note"];
+    [[ret mutableCopy] setObject:0 forKeyedSubscript:@"note"];
 
 L_a18b0:;
-    [ret insertObject:[ret mutableCopy]; atIndex:0];
+    [ret insertObject:[ret mutableCopy] atIndex:0];
     [ret count];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_a1908; */
 
@@ -7728,7 +7728,7 @@ L_a199c:;
 
     /* [UNRESOLVED] [[@0x2450f8 alloc] initWithMode:1]; */
     [self navigationController];
-    /* [UNRESOLVED] [ret pushViewController:[[@0x2450f8 alloc] initWithMode:1]; animated:1]; */
+    /* [UNRESOLVED] [ret pushViewController:[[@0x2450f8 alloc] initWithMode:1] animated:1]; */
     objc_release(ret);
 }
 
@@ -8262,7 +8262,7 @@ L_a199c:;
     if (((self >> 0) & 1) == 0) goto L_a1b98;
 
     [self->_centerAddr length];
-    if ([self->_centerAddr length]== 0) goto L_a1bec;
+    if ([self->_centerAddr length] == 0) goto L_a1bec;
 
     goto L_a1bec;
 
@@ -8292,19 +8292,19 @@ L_a1bec:;
     [ret synchronize];
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_a1df4; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_a1df4; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 已保存位置 %.6f,%.6f（%@；取点=%@）"]; */
     goto L_a1e00;
 
 L_a1df4:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 已保存位置 %.6f,%.6f（%@；取点=%@）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 已保存位置 %.6f,%.6f（%@；取点=%@）"] noteFiltered:3]; */
 
 L_a1e00:;
     [NSUserDefaults standardUserDefaults];
     /* [UNRESOLVED] [ret arrayForKey:0 / * func * /]; */
     [ret mutableCopy];
-    if ([ret mutableCopy]== 0) goto L_a1e74;
+    if ([ret mutableCopy] == 0) goto L_a1e74;
 
     objc_retain([ret mutableCopy]);
     goto L_a1e94;
@@ -8341,7 +8341,7 @@ L_a1f28:;
     [ret length];
     objc_release(ret);
     objc_release(ret);
-    if ([ret length]== 0) goto L_a2098;
+    if ([ret length] == 0) goto L_a2098;
 
     [ret objectForKeyedSubscript:@"note"];
     goto L_a2098;
@@ -8376,20 +8376,20 @@ L_a20f8:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [self->_nameHint unknownSelector]; */
-    /* [UNRESOLVED] if ([self->_nameHint unknownSelector]; == 0) goto L_a2240; */
+    /* [UNRESOLVED] if ([self->_nameHint unknownSelector] == 0) goto L_a2240; */
 
     [self->_nameHint isEqualToString:@"未知位置"];
     if (((ret >> 0) & 1) != 0) goto L_a2240;
 
-    [[ret mutableCopy]; setObject:self->_nameHint forKeyedSubscript:@"name"];
+    [[ret mutableCopy] setObject:self->_nameHint forKeyedSubscript:@"name"];
 
 L_a2240:;
     if (0 == 0) goto L_a2274;
 
-    [[ret mutableCopy]; setObject:0 forKeyedSubscript:@"note"];
+    [[ret mutableCopy] setObject:0 forKeyedSubscript:@"note"];
 
 L_a2274:;
-    /* [UNRESOLVED] [0 / * adrp * / insertObject:[ret mutableCopy]; atIndex:0]; */
+    /* [UNRESOLVED] [0 / * adrp * / insertObject:[ret mutableCopy] atIndex:0]; */
     /* [UNRESOLVED] [0 / * adrp * / count]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_a22c4; */
 
@@ -8404,24 +8404,24 @@ L_a22c4:;
 
     /* [UNRESOLVED] [0 / * adrp * / count]; */
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 已写入历史（共 %lu 条）"]; */
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; != 0) goto L_a2338; */
+    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] != 0) goto L_a2338; */
 
     goto L_a23cc;
 
 L_a2330:;
     /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; == 0) goto L_a23cc; */
+    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] == 0) goto L_a23cc; */
 
 L_a2338:;
     /* [UNRESOLVED] sub_9b434(); */
     /* [UNRESOLVED] [@0x244978 unknownSelector]; */
-    /* [UNRESOLVED] if ([@0x244978 unknownSelector]; == 0) goto L_a2380; */
+    /* [UNRESOLVED] if ([@0x244978 unknownSelector] == 0) goto L_a2380; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocPicker] 位置模拟开着 → 已按新坐标生效"]; */
     goto L_a23cc;
 
 L_a2380:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 位置模拟开着 → 已按新坐标生效"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocPicker] 位置模拟开着 → 已按新坐标生效"] noteFiltered:3]; */
 
 L_a23cc:;
     /* [UNRESOLVED] [0 / * unk * / dismissViewControllerAnimated:1 completion:0]; */

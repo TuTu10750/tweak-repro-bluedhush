@@ -564,10 +564,10 @@ L_20da8:;
     [[UIControl alloc] initWithFrame:CGRectZero];
     objc_release(ret);
     [UIColor colorWithWhite:0 alpha:0.45];
-    [[[UIControl alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIControl alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIControl alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
-    [[[UIControl alloc] initWithFrame:CGRectZero]; addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    [[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
+    [[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
     [self view];
     [ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -596,11 +596,11 @@ L_20da8:;
     objc_release(ret);
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setText:@"风险用户名单"];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setText:@"风险用户名单"];
     /* [UNRESOLVED] [UIFont systemFontOfSize:17 weight:0x200180]; */
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     [self cardView];
     [ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -644,7 +644,7 @@ L_20da8:;
     objc_release(ret);
     [self table];
     /* [UNRESOLVED] [@0x244a68 class]; */
-    /* [UNRESOLVED] [ret registerClass:[@0x244a68 class]; forCellReuseIdentifier:@"risk"]; */
+    /* [UNRESOLVED] [ret registerClass:[@0x244a68 class] forCellReuseIdentifier:@"risk"]; */
     objc_release(ret);
     [self cardView];
     [self table];
@@ -811,7 +811,7 @@ L_20da8:;
 
     /* [UNRESOLVED] sub_1eb6c(_cmd, a0, a1, a2, a3); */
     [ret mutableCopy];
-    if ([ret mutableCopy]!= 0) goto L_21714;
+    if ([ret mutableCopy] != 0) goto L_21714;
 
     [NSMutableArray array];
 
@@ -819,7 +819,7 @@ L_21714:;
     [ret mutableCopy];
     [self setItems:[ret mutableCopy]];
     objc_release([ret mutableCopy]);
-    if ([ret mutableCopy]!= 0) goto L_21748;
+    if ([ret mutableCopy] != 0) goto L_21748;
 
     objc_release(ret);
 
@@ -880,7 +880,7 @@ L_21748:;
     [self items];
     [ret count];
     objc_release(ret);
-    return (long long)[ret count];;
+    return (long long)[ret count];
 }
 
 // @0x21894  types=@32@0:8@16@24
@@ -1290,7 +1290,7 @@ L_21748:;
     [self items];
     /* [UNRESOLVED] [a1 row]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row];]; */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[a1 row]]; */
     objc_release(ret);
     [ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
@@ -1299,7 +1299,7 @@ L_21748:;
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret length];
-    if ([ret length]!= 0) goto L_21a34;
+    if ([ret length] != 0) goto L_21a34;
 
     [NSString stringWithFormat:@"用户 %@"];
 
@@ -1307,7 +1307,7 @@ L_21a34:;
     [ret name];
     [ret setText:ret];
     objc_release(ret);
-    if ([ret length]!= 0) goto L_21a7c;
+    if ([ret length] != 0) goto L_21a7c;
 
     objc_release(ret);
 
@@ -1660,13 +1660,13 @@ L_21f60:;
 
     /* [UNRESOLVED] [objc_loadWeakRetained items]; */
     /* [UNRESOLVED] [Unwind_Resume/ *+0x20* / row]; */
-    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[Unwind_Resume/ *+0x20* / row];]; */
+    /* [UNRESOLVED] [ret objectAtIndexedSubscript:[Unwind_Resume/ *+0x20* / row]]; */
     objc_release(ret);
     [ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
     [ret length];
-    if ([ret length]== 0) goto L_22050;
+    if ([ret length] == 0) goto L_22050;
 
     /* [UNRESOLVED] HushRiskUserUnmark(); */
 

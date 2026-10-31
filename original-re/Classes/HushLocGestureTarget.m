@@ -225,12 +225,12 @@
     /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [@0x244888 shared]; */
-    /* [UNRESOLVED] if ((([ret isEnabled:0 / * func * /]; >> 0) & 1) == 0) goto L_95ca0; */
+    /* [UNRESOLVED] if ((([ret isEnabled:0 / * func * /] >> 0) & 1) == 0) goto L_95ca0; */
 
     /* [UNRESOLVED] [ret setEnabled:0 / * func * / forKey:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_95d70; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_95d70; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocStatus] 关闭虚拟定位，收尾由开关观察者统一处理"]; */
     goto L_95d84;
@@ -257,21 +257,21 @@ L_95d70:;
 
 L_95d84:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_95dd8; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_95dd8; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocStatus] 单击切换虚拟定位 → %@"]; */
     goto L_95ddc;
 
 L_95dd8:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocStatus] 单击切换虚拟定位 → %@"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocStatus] 单击切换虚拟定位 → %@"] noteFiltered:3]; */
 
 L_95ddc:;
     /* [UNRESOLVED] sub_b3490(); */
-    /* [UNRESOLVED] objc_retain([ret isEnabled:0 / * func * /];); */
+    /* [UNRESOLVED] objc_retain([ret isEnabled:0 / * func * /]); */
     objc_retain(ret);
     /* [UNRESOLVED] dispatch_async(); */
-    /* [UNRESOLVED] objc_release([ret isEnabled:0 / * func * /];); */
-    /* [UNRESOLVED] objc_release([ret isEnabled:0 / * func * /];); */
+    /* [UNRESOLVED] objc_release([ret isEnabled:0 / * func * /]); */
+    /* [UNRESOLVED] objc_release([ret isEnabled:0 / * func * /]); */
     return;
 }
 
@@ -523,33 +523,33 @@ L_95ddc:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [0x257a70 length]; */
-    /* [UNRESOLVED] if ([0x257a70 length]; == 0) goto L_96048; */
+    /* [UNRESOLVED] if ([0x257a70 length] == 0) goto L_96048; */
 
     /* [UNRESOLVED] [0x257a70 isEqualToString:ret]; */
     if (ret == 0) goto L_96048;
 
     /* [UNRESOLVED] objc_release(0x257a70); */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_96098; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_96098; */
 
     goto L_96084;
 
 L_96048:;
     /* [UNRESOLVED] objc_storeStrong((id *)&0x257a70, ret); */
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_96098; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_96098; */
 
 L_96084:;
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocStatus] 状态行展开（显示完整地址）"]; */
     goto L_9609c;
 
 L_96098:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocStatus] 状态行展开（显示完整地址）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[LocStatus] 状态行展开（显示完整地址）"] noteFiltered:3]; */
 
 L_9609c:;
     /* [UNRESOLVED] sub_b38ac(); */
     /* [UNRESOLVED] [0x257a70 length]; */
-    /* [UNRESOLVED] if ([0x257a70 length]; == 0) goto L_961ac; */
+    /* [UNRESOLVED] if ([0x257a70 length] == 0) goto L_961ac; */
 
     /* [UNRESOLVED] if (0x257a58 == 0) goto L_960d8; */
 
@@ -568,7 +568,7 @@ L_960f4:;
 L_96128:;
     objc_release(ret);
     [0 length];
-    if ([0 length]!= 0) goto L_961a4;
+    if ([0 length] != 0) goto L_961a4;
 
     /* [UNRESOLVED] [@0x244888 shared]; */
     [ret customLat];
@@ -629,7 +629,7 @@ L_961ac:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_96258; */
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_9625c; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_9625c; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[LocStatus] 长按 → 打开地图选点"]; */
 

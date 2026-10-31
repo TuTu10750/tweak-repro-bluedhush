@@ -588,13 +588,13 @@ L_7ac04:;
     [[UIView alloc] initWithFrame:CGRectZero];
     /* [UNRESOLVED] HushIsDarkMode(); */
     [UIColor colorWithWhite:0.96 alpha:1];
-    [[[UIView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIView alloc] initWithFrame:CGRectZero]; layer];
+    [[[UIView alloc] initWithFrame:CGRectZero] layer];
     [ret setCornerRadius:14];
     objc_release(ret);
-    [[[UIView alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
-    [[[UIView alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x2d];
+    [[[UIView alloc] initWithFrame:CGRectZero] setClipsToBounds:1];
+    [[[UIView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x2d];
     [self view];
     [ret addSubview:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -615,11 +615,11 @@ L_7ac04:;
     objc_release(ret);
     [self addChildViewController:self->_pager];
     [self->_pager view];
-    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero] addSubview:ret];
     objc_release(ret);
     [self->_pager didMoveToParentViewController:self];
     [self index];
-    if ((([self index]>> 63) & 1) != 0) goto L_7b0c8;
+    if ((([self index] >> 63) & 1) != 0) goto L_7b0c8;
 
     [self index];
     [self files];
@@ -656,7 +656,7 @@ L_7b174:;
     [self->_savedAt setClipsToBounds:1];
     [self->_savedAt setTextAlignment:1];
     [self->_savedAt setUserInteractionEnabled:0];
-    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:self->_savedAt];
+    [[[UIView alloc] initWithFrame:CGRectZero] addSubview:self->_savedAt];
     [UIButton buttonWithType:1];
     [ret setFrame:CGRectZero];
     [ret setTitle:@"关闭" forState:0];
@@ -670,7 +670,7 @@ L_7b174:;
     objc_release(ret);
     [ret addTarget:self action:sel_registerName("closeTapped") forControlEvents:0x40];
     [ret setAutoresizingMask:0xa];
-    [[[UIView alloc] initWithFrame:CGRectZero]; addSubview:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero] addSubview:ret];
     [self refreshSavedAtLabel];
     objc_release(ret);
     objc_release(ret);
@@ -732,7 +732,7 @@ L_7b174:;
     [self files];
     [ret count];
     objc_release(ret);
-    if ([ret count]!= 0) goto L_7b4f0;
+    if ([ret count] != 0) goto L_7b4f0;
 
     [self closeTapped];
 
@@ -1045,7 +1045,7 @@ L_7b6e4:;
     [ret firstObject];
     objc_release(ret);
     /* [UNRESOLVED] [@0x244c98 class]; */
-    /* [UNRESOLVED] [ret isKindOfClass:[@0x244c98 class];]; */
+    /* [UNRESOLVED] [ret isKindOfClass:[@0x244c98 class]]; */
     if (ret == 0) goto L_7b828;
 
     [ret index];
@@ -1347,7 +1347,7 @@ L_7b82c:;
     id ret = nil;
 
     [self index];
-    if ((([self index]>> 63) & 1) != 0) goto L_7b8f8;
+    if ((([self index] >> 63) & 1) != 0) goto L_7b8f8;
 
     [self index];
     [self files];
@@ -1368,11 +1368,11 @@ L_7b904:;
 
 L_7b918:;
     [0 length];
-    if ([0 length]== 0) goto L_7b9a8;
+    if ([0 length] == 0) goto L_7b9a8;
 
     /* [UNRESOLVED] HushGalSourceTextOfFile(); */
     [ret length];
-    if ([ret length]== 0) goto L_7b9dc;
+    if ([ret length] == 0) goto L_7b9dc;
 
     /* [UNRESOLVED] sub_7ba74(); */
     [NSString stringWithFormat:@"%@  ·  来源：%@"];
@@ -1389,7 +1389,7 @@ L_7b9dc:;
 
 L_7ba04:;
     [self->_savedAt setText:ret];
-    if ([ret length]== 0) goto L_7ba1c;
+    if ([ret length] == 0) goto L_7ba1c;
 
     objc_release(ret);
 

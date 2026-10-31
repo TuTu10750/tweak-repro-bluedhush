@@ -559,7 +559,7 @@
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_17f698; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_17f698; */
 
 L_17f53c:;
     /* [UNRESOLVED] [self unknownSelector]; */
@@ -572,14 +572,14 @@ L_17f53c:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [self->/ *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] sub_17fa70(ret); */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector]); */
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
@@ -839,21 +839,21 @@ L_17f698:;
     objc_release(ret);
     /* [UNRESOLVED] HushAlbumHighResolutionURL(); */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_17feb4; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_17feb4; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
     if (((ret >> 0) & 1) != 0) goto L_17feb4;
 
     /* [UNRESOLVED] [self->/ *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_17fea4; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_17fea4; */
 
 L_17fe1c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_17fe38; */
 
 L_17fe38:;
     [UIImageView class];
-    /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class];]; */
+    /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_17fe64; */
 
     /* [UNRESOLVED] if (cond / * eq * /) goto L_17fe9c; */
@@ -862,7 +862,7 @@ L_17fe64:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_17fe1c; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; != 0) goto L_17fe1c; */
+    /* [UNRESOLVED] if ([ret unknownSelector] != 0) goto L_17fe1c; */
 
     goto L_17fea4;
 

@@ -211,13 +211,13 @@ L_3bbfc:;
 L_3bc14:;
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_3bc68; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_3bc68; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"]; */
     goto L_3bc70;
 
 L_3bc68:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Chat][后悔药] 手势未命中点击层，交还宿主（链：%@）"] noteFiltered:3]; */
 
 L_3bc70:;
     objc_release(ret);

@@ -542,7 +542,7 @@
     [self->_urls isKindOfClass:[NSArray class]];
     if (((self->_urls >> 0) & 1) != 0) goto L_e4b44;
 
-    /* [UNRESOLVED] objc_storeStrong((id *)&[self->_urls isKindOfClass:[NSArray class];];, 0x200130/ *+0x0* /); */
+    /* [UNRESOLVED] objc_storeStrong((id *)&[self->_urls isKindOfClass:[NSArray class]], 0x200130/ *+0x0* /); */
 
 L_e4b44:;
     [self->_urls count];
@@ -604,17 +604,17 @@ L_e4b44:;
     [ret addSubview:self->_pager];
     objc_release(ret);
     [self->_urls count];
-    if ([self->_urls count]== 0) goto L_e5200;
+    if ([self->_urls count] == 0) goto L_e5200;
 
 L_e50c8:;
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setContentMode:1]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setClipsToBounds:1]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; layer]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setContentMode:1]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setClipsToBounds:1]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] layer]; */
     [ret setCornerRadius:12];
     objc_release(ret);
-    /* [UNRESOLVED] [self->_pager addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
-    /* [UNRESOLVED] [self->_pages addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
+    /* [UNRESOLVED] [self->_pager addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [self->_pages addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     [self->_urls objectAtIndexedSubscript:0];
     [self->_urls objectAtIndexedSubscript:0];
     /* [UNRESOLVED] HushAlbumHighResolutionURL(); */
@@ -622,7 +622,7 @@ L_e50c8:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /];); */
+    /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /]); */
     [self->_urls count];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_e50c8; */
 
@@ -637,40 +637,40 @@ L_e5200:;
     [ret addSubview:self->_strip];
     objc_release(ret);
     [self->_urls count];
-    if ([self->_urls count]== 0) goto L_e5508;
+    if ([self->_urls count] == 0) goto L_e5508;
 
 L_e5318:;
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /]; setShowsHorizontalScrollIndicator:0]; */
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /]; setClipsToBounds:0]; */
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /]; setUserInteractionEnabled:1]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] setShowsHorizontalScrollIndicator:0]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] setClipsToBounds:0]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] setUserInteractionEnabled:1]; */
     /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:0 / * local * /]; */
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /]; addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:0 / * local * /];]; */
-    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:0 / * local * /];); */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:0 / * local * /]]; */
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:0 / * local * /]); */
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setContentMode:2]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setClipsToBounds:1]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; layer]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setContentMode:2]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setClipsToBounds:1]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] layer]; */
     [ret setCornerRadius:9];
     objc_release(ret);
     /* [UNRESOLVED] [UIColor colorWithWhite:0.5 alpha:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setBackgroundColor:ret]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /]; addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
-    /* [UNRESOLVED] [self->_strip addSubview:[[UIView alloc] initWithFrame:0 / * unk * /];]; */
-    /* [UNRESOLVED] [self->_thumbBoxes addObject:[[UIView alloc] initWithFrame:0 / * unk * /];]; */
-    /* [UNRESOLVED] [self->_thumbImgs addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [self->_strip addSubview:[[UIView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [self->_thumbBoxes addObject:[[UIView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [self->_thumbImgs addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     [self->_urls objectAtIndexedSubscript:0];
     /* [UNRESOLVED] sub_cf42c(ret); */
     objc_release(ret);
-    /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /];); */
-    /* [UNRESOLVED] objc_release([[UIView alloc] initWithFrame:0 / * unk * /];); */
+    /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /]); */
+    /* [UNRESOLVED] objc_release([[UIView alloc] initWithFrame:0 / * unk * /]); */
     [self->_urls count];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_e5318; */
 
 L_e5508:;
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];
-    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]; setDelegate:self];
+    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")] setDelegate:self];
     [self view];
     [ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]];
     objc_release(ret);
@@ -1075,7 +1075,7 @@ L_e5778:;
     /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_pager setContentSize:CGSizeZero];
     [self->_pages count];
-    if ([self->_pages count]== 0) goto L_e5990;
+    if ([self->_pages count] == 0) goto L_e5990;
 
 L_e5908:;
     [self->_pager bounds];
@@ -1570,7 +1570,7 @@ L_e5990:;
     id ret = nil;
 
     [self->_thumbBoxes count];
-    if ([self->_thumbBoxes count]== 0) goto L_e602c;
+    if ([self->_thumbBoxes count] == 0) goto L_e602c;
 
     [self->_strip bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
@@ -1621,7 +1621,7 @@ L_e5cbc:;
     [UIColor blackColor];
     /* [UNRESOLVED] [objc_retainAutorelease unknownSelector]; */
     [ret layer];
-    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease unknownSelector];]; */
+    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease unknownSelector]]; */
     objc_release(ret);
     objc_release(ret);
     [ret layer];
@@ -1809,7 +1809,7 @@ L_e61b8:;
     /* [UNRESOLVED] [a0 view]; */
     [ret tag];
     objc_release(ret);
-    if ((([ret tag]>> 63) & 1) != 0) goto L_e62c8;
+    if ((([ret tag] >> 63) & 1) != 0) goto L_e62c8;
 
     [self->_urls count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_e62c8; */
@@ -1999,7 +1999,7 @@ L_e6404:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     [UIPanGestureRecognizer class];
-    /* [UNRESOLVED] [a0 isKindOfClass:[UIPanGestureRecognizer class];]; */
+    /* [UNRESOLVED] [a0 isKindOfClass:[UIPanGestureRecognizer class]]; */
     /* [UNRESOLVED] if (a0 == 0) goto L_e64b0; */
 
     /* [UNRESOLVED] [a0 view]; */

@@ -289,7 +289,7 @@
     /* [UNRESOLVED] [@0x244888 unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_13f970; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_13f970; */
 
     /* [UNRESOLVED] [a0 unknownSelector]; */
     if (ret == 0) goto L_13f970;
@@ -301,7 +301,7 @@ L_13f6e8:;
     /* [UNRESOLVED] NSStringFromClass(); */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ((([ret unknownSelector]; >> 0) & 1) != 0) goto L_13f754; */
+    /* [UNRESOLVED] if ((([ret unknownSelector] >> 0) & 1) != 0) goto L_13f754; */
 
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
@@ -312,7 +312,7 @@ L_13f6e8:;
 L_13f754:;
     /* [UNRESOLVED] sub_13f9ac(); */
     /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_13f7e8; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_13f7e8; */
 
     /* [UNRESOLVED] sub_13fb48(); */
     if (ret == 0) goto L_13f808;
@@ -330,7 +330,7 @@ L_13f7e8:;
 
 L_13f808:;
     /* [UNRESOLVED] [[UIImpactFeedbackGenerator alloc] unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     if (ret == 0) goto L_13f8a4;
 
@@ -340,7 +340,7 @@ L_13f808:;
     goto L_13f8ac;
 
 L_13f88c:;
-    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImpactFeedbackGenerator alloc] unknownSelector] unknownSelector]; */
     goto L_13f960;
 
 L_13f8a4:;
@@ -351,7 +351,7 @@ L_13f8ac:;
     /* [UNRESOLVED] HushLoginUidStringOrEmpty(); */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_13f948; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_13f948; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13f994; */
 
@@ -367,7 +367,7 @@ L_13f950:;
     objc_release(ret);
 
 L_13f958:;
-    /* [UNRESOLVED] objc_release([[UIImpactFeedbackGenerator alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[UIImpactFeedbackGenerator alloc] unknownSelector]); */
 
 L_13f960:;
     objc_release(ret);

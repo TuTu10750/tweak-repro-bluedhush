@@ -520,7 +520,7 @@
 
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector]); */
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -543,7 +543,7 @@
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] objc_release([[UILabel alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[UILabel alloc] unknownSelector]); */
     /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -556,7 +556,7 @@
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] objc_release([[UILabel alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[UILabel alloc] unknownSelector]); */
     /* [UNRESOLVED] [UIFont unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */

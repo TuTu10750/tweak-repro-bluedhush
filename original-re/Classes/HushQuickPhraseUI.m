@@ -298,7 +298,7 @@ L_127e24:;
     objc_release(ret);
     objc_retain(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_127fe0;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_127fe0;
 
 L_127f48:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_127f60; */
@@ -310,7 +310,7 @@ L_127f60:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_127f48; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_127f48;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_127f48;
 
 L_127fe0:;
     objc_release(ret);
@@ -848,14 +848,14 @@ L_1284a4:;
     /* [UNRESOLVED] [a0 setBackgroundImage:0 forState:2]; */
     /* [UNRESOLVED] [a0 subviews]; */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_128660;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_128660;
 
 L_1285c8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_1285e4; */
 
 L_1285e4:;
     [UIImageView class];
-    /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class];]; */
+    /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_128638; */
 
     /* [UNRESOLVED] [a0 imageView]; */
@@ -868,7 +868,7 @@ L_128638:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1285c8; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_1285c8;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_1285c8;
 
 L_128660:;
     objc_release(ret);
@@ -1079,14 +1079,14 @@ L_1286c8:;
     /* [UNRESOLVED] [objc_loadWeakRetained setBackgroundImage:self->/ *+0x38* / forState:0]; */
     /* [UNRESOLVED] [objc_loadWeakRetained subviews]; */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_1288d4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_1288d4;
 
 L_12883c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_128858; */
 
 L_128858:;
     [UIImageView class];
-    /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class];]; */
+    /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_1288ac; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained imageView]; */
@@ -1099,18 +1099,18 @@ L_1288ac:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_12883c; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_12883c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_12883c;
 
 L_1288d4:;
     objc_release(ret);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_128924; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_128924; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:0x223ff8]; */
     goto L_12892c;
 
 L_128924:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:0x223ff8]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:0x223ff8] noteFiltered:3]; */
 
 L_12892c:;
     objc_release(objc_loadWeakRetained);
@@ -1871,7 +1871,7 @@ L_129150:;
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [ret isEnabled:0 / * unk * /]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ((([ret isEnabled:0 / * unk * /]; >> 0) & 1) == 0) goto L_129254; */
+    /* [UNRESOLVED] if ((([ret isEnabled:0 / * unk * /] >> 0) & 1) == 0) goto L_129254; */
 
     objc_release(objc_loadWeakRetained);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_129224; */
@@ -1927,7 +1927,7 @@ L_129344:;
 
     [ret isHidden];
     objc_release(ret);
-    if ((([ret isHidden]>> 0) & 1) != 0) goto L_12946c;
+    if ((([ret isHidden] >> 0) & 1) != 0) goto L_12946c;
 
     [ret frame];
     /* [UNRESOLVED] CGRectGetMinY(); */
@@ -2112,7 +2112,7 @@ L_1295c0:;
 L_1295d0:;
     [self hideBar];
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:4]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:4]; == 0) goto L_129620; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:4] == 0) goto L_129620; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:4 format:0x224098]; */
     goto L_1296ec;
@@ -2384,7 +2384,7 @@ L_1296ec:;
     [ret arrangedSubviews];
     objc_release(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_129840;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_129840;
 
 L_1297c4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_1297e0; */
@@ -2397,7 +2397,7 @@ L_1297e0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1297c4; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_1297c4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_1297c4;
 
 L_129840:;
     objc_release(ret);
@@ -2409,7 +2409,7 @@ L_129840:;
 L_129860:;
     /* [UNRESOLVED] sub_128df4(); */
     [ret count];
-    if ([ret count]== 0) goto L_129940;
+    if ([ret count] == 0) goto L_129940;
 
 L_1298ac:;
     /* [UNRESOLVED] [self->/ *+0x40* / stack]; */
@@ -2696,7 +2696,7 @@ L_1299c8:;
     /* [UNRESOLVED] [ret setTag:a1]; */
     [ret addTarget:self action:sel_registerName("chipTapped:") forControlEvents:0x40];
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];
-    /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]; setMinimumPressDuration:0 / * unk * /]; */
+    /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")] setMinimumPressDuration:0 / * unk * /]; */
     [ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]];
     objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]);
 }
@@ -3334,13 +3334,13 @@ L_12a018:;
     objc_retain(objc_loadWeakRetained);
     objc_retain(objc_loadWeakRetained);
     [ret length];
-    if ([ret length]== 0) goto L_12a370;
+    if ([ret length] == 0) goto L_12a370;
 
     objc_retain(objc_loadWeakRetained);
     if (objc_loadWeakRetained == 0) goto L_12a0b4;
 
     [UIViewController class];
-    /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[UIViewController class];]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[UIViewController class]]; */
     if (objc_loadWeakRetained == 0) goto L_12a0c4;
 
     objc_retain(objc_loadWeakRetained);
@@ -3369,7 +3369,7 @@ L_12a110:;
 
 L_12a15c:;
     [UIResponder class];
-    /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[UIResponder class];]; */
+    /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[UIResponder class]]; */
     if (objc_loadWeakRetained == 0) goto L_12a1f8;
 
     /* [UNRESOLVED] [objc_loadWeakRetained nextResponder]; */
@@ -3553,13 +3553,13 @@ L_12a3e4:;
 
 L_12a4b4:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_12a4ec; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_12a4ec; */
 
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:0x224138]; */
     goto L_12a4f4;
 
 L_12a4ec:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:0x224138]; noteFiltered:3]; */
+    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:0x224138] noteFiltered:3]; */
 
 L_12a4f4:;
     objc_release(ret);
@@ -4481,23 +4481,23 @@ L_12ad50:;
     objc_release(ret);
     /* [UNRESOLVED] if (((self->/ *+0x88* / >> 63) & 1) != 0) goto L_12aee8; */
 
-    [[ret mutableCopy]; count];
+    [[ret mutableCopy] count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_12af1c; */
 
     [ret length];
-    if ([ret length]== 0) goto L_12af14;
+    if ([ret length] == 0) goto L_12af14;
 
-    /* [UNRESOLVED] [[ret mutableCopy]; setObject:ret atIndexedSubscript:self->/ *+0x88* /]; */
+    /* [UNRESOLVED] [[ret mutableCopy] setObject:ret atIndexedSubscript:self->/ *+0x88* /]; */
     goto L_12af1c;
 
 L_12aee8:;
     [ret length];
-    if ([ret length]== 0) goto L_12af1c;
+    if ([ret length] == 0) goto L_12af1c;
 
     goto L_12af14;
 
 L_12af14:;
-    [[ret mutableCopy]; removeObjectAtIndex:0];
+    [[ret mutableCopy] removeObjectAtIndex:0];
 
 L_12af1c:;
     objc_retain([ret mutableCopy]);
@@ -4509,7 +4509,7 @@ L_12af1c:;
     if (ret == 0) goto L_12b008;
 
     [ret length];
-    [[ret mutableCopy]; count];
+    [[ret mutableCopy] count];
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:0x2241f8]; */
     goto L_12b018;
 
@@ -4657,11 +4657,11 @@ L_12b018:;
     objc_release(ret);
     /* [UNRESOLVED] if (((self->/ *+0x88* / >> 63) & 1) != 0) goto L_12b1b4; */
 
-    [[ret mutableCopy]; count];
+    [[ret mutableCopy] count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_12b1b4; */
 
-    /* [UNRESOLVED] [[ret mutableCopy]; objectAtIndexedSubscript:self->/ *+0x88* /]; */
-    /* [UNRESOLVED] [[ret mutableCopy]; removeObjectAtIndex:self->/ *+0x88* /]; */
+    /* [UNRESOLVED] [[ret mutableCopy] objectAtIndexedSubscript:self->/ *+0x88* /]; */
+    /* [UNRESOLVED] [[ret mutableCopy] removeObjectAtIndex:self->/ *+0x88* /]; */
     objc_retain([ret mutableCopy]);
     /* [UNRESOLVED] HushSharedDefaults(); */
     /* [UNRESOLVED] [ret setObject:0 forKey:0x223f38]; */
@@ -4670,7 +4670,7 @@ L_12b018:;
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_12b19c;
 
-    [[ret mutableCopy]; count];
+    [[ret mutableCopy] count];
     /* [UNRESOLVED] [@0x244978 logLevel:3 format:0x224278]; */
     goto L_12b1a4;
 
@@ -4768,7 +4768,7 @@ L_12b1b4:;
     [ret tag];
     objc_release(ret);
     /* [UNRESOLVED] sub_128df4(); */
-    if ((([ret tag]>> 63) & 1) != 0) goto L_12b294;
+    if ((([ret tag] >> 63) & 1) != 0) goto L_12b294;
 
     [ret count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_12b294; */

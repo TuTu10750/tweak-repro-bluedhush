@@ -36,7 +36,7 @@
     // 00136550  b       #0x1a72d8   ; _objc_msgSend
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_136550; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_136550; */
 
 L_136550:;
 }
@@ -107,7 +107,7 @@ L_136550:;
     // 001366a0  b       #0x1a72d8   ; _objc_msgSend
 
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3]; == 0) goto L_1366a0; */
+    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_1366a0; */
 
 L_1366a0:;
 }

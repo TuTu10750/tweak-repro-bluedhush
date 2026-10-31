@@ -578,7 +578,7 @@
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_chipBox layer];
-    /* [UNRESOLVED] [ret setBorderColor:[objc_retainAutorelease CGColor];]; */
+    /* [UNRESOLVED] [ret setBorderColor:[objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -626,7 +626,7 @@
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_bar layer];
-    /* [UNRESOLVED] [ret setBorderColor:[objc_retainAutorelease CGColor];]; */
+    /* [UNRESOLVED] [ret setBorderColor:[objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -967,7 +967,7 @@ L_ceef8:;
 L_cf0c8:;
     objc_retain(self->_photos);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_cf15c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_cf15c;
 
 L_cf110:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_cf128; */
@@ -977,7 +977,7 @@ L_cf128:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_cf110; */
 
     [self->_photos countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([self->_photos countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_cf110;
+    if ([self->_photos countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_cf110;
 
 L_cf15c:;
     objc_release(self->_photos);
@@ -985,30 +985,30 @@ L_cf15c:;
     [0 copy];
     objc_release(self->_builtPhotos);
     /* [UNRESOLVED] [0 unknownSelector]; */
-    /* [UNRESOLVED] if ([0 unknownSelector]; == 0) goto L_cf3e0; */
+    /* [UNRESOLVED] if ([0 unknownSelector] == 0) goto L_cf3e0; */
 
 L_cf278:;
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setClipsToBounds:1]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setClipsToBounds:1]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
     [ret setCornerRadius:11];
     objc_release(ret);
     /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setBackgroundColor:ret]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; setTag:0]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] setTag:0]; */
     /* [UNRESOLVED] [[UITapGestureRecognizer alloc] unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /]; addGestureRecognizer:[[UITapGestureRecognizer alloc] unknownSelector];]; */
-    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] unknownSelector];); */
-    /* [UNRESOLVED] [self addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
-    /* [UNRESOLVED] [self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
-    /* [UNRESOLVED] [self->_photos addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /];]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0 / * unk * /] addGestureRecognizer:[[UITapGestureRecognizer alloc] unknownSelector]]; */
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] unknownSelector]); */
+    /* [UNRESOLVED] [self addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [self->_photos addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     [0 objectAtIndexedSubscript:0];
     /* [UNRESOLVED] sub_cf42c(ret); */
     objc_release(ret);
-    /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /];); */
+    /* [UNRESOLVED] objc_release([[UIImageView alloc] initWithFrame:0 / * unk * /]); */
     /* [UNRESOLVED] [0 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * lo * /) goto L_cf278; */
 
@@ -1295,7 +1295,7 @@ L_cf3e0:;
 L_cf6a8:;
     objc_retain(self->_buttons);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_cf73c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_cf73c;
 
 L_cf6f0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_cf708; */
@@ -1305,7 +1305,7 @@ L_cf708:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_cf6f0; */
 
     [self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_cf6f0;
+    if ([self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_cf6f0;
 
 L_cf73c:;
     objc_release(self->_buttons);
@@ -1651,7 +1651,7 @@ L_cf968:;
 
     objc_retain(self->_buttons);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_cfd5c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_cfd5c;
 
 L_cfaf0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_cfb0c; */
@@ -1668,7 +1668,7 @@ L_cfb0c:;
     goto L_cfcd0;
 
 L_cfbb4:;
-    /* [UNRESOLVED] [[0 / * local * // *+0x0* / setTitleColor:ret forState:0]; unknownSelector]; */
+    /* [UNRESOLVED] [[0 / * local * // *+0x0* / setTitleColor:ret forState:0] unknownSelector]; */
     /* [UNRESOLVED] [UIColor colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [0 / * local * // *+0x0* / setBackgroundColor:ret]; */
@@ -1692,7 +1692,7 @@ L_cfcd0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_cfaf0; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_cfaf0;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_cfaf0;
 
 L_cfd5c:;
     objc_release(ret);
@@ -1789,7 +1789,7 @@ L_cfd5c:;
     /* [UNRESOLVED] [a0 view]; */
     [ret tag];
     objc_release(ret);
-    if ((([ret tag]>> 63) & 1) != 0) goto L_cfe9c;
+    if ((([ret tag] >> 63) & 1) != 0) goto L_cfe9c;
 
     [self photoURLs];
     [ret count];
@@ -1797,7 +1797,7 @@ L_cfd5c:;
     /* [UNRESOLVED] if (cond / * ge * /) goto L_cfe9c; */
 
     [self photoURLs];
-    /* [UNRESOLVED] HushUserAlbumShowPhotos([ret tag];); */
+    /* [UNRESOLVED] HushUserAlbumShowPhotos([ret tag]); */
     objc_release(ret);
 
 L_cfe9c:;
@@ -2301,14 +2301,14 @@ L_cfe9c:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [a0 tag]; */
-    /* [UNRESOLVED] if ((([a0 tag]; >> 63) & 1) != 0) goto L_d0600; */
+    /* [UNRESOLVED] if ((([a0 tag] >> 63) & 1) != 0) goto L_d0600; */
 
     /* [UNRESOLVED] [a0 tag]; */
     /* [UNRESOLVED] if (cond / * gt * /) goto L_d0600; */
 
     [self uid];
     [ret length];
-    if ([ret length]== 0) goto L_d05f8;
+    if ([ret length] == 0) goto L_d05f8;
 
     /* [UNRESOLVED] sub_d0640(); */
     /* [UNRESOLVED] [a0 tag]; */
@@ -2320,13 +2320,13 @@ L_cff70:;
     /* [UNRESOLVED] [a0 tag]; */
 
 L_cff80:;
-    /* [UNRESOLVED] sub_d0740([a0 tag];); */
-    /* [UNRESOLVED] [self setMarkIndex:[a0 tag];]; */
+    /* [UNRESOLVED] sub_d0740([a0 tag]); */
+    /* [UNRESOLVED] [self setMarkIndex:[a0 tag]]; */
     [self hushApplySelection];
     [self labels];
     objc_retain(0);
     objc_release(ret);
-    /* [UNRESOLVED] if ((([a0 tag]; >> 63) & 1) != 0) goto L_d00f4; */
+    /* [UNRESOLVED] if ((([a0 tag] >> 63) & 1) != 0) goto L_d00f4; */
 
     [0 count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_d00f4; */
@@ -2338,10 +2338,10 @@ L_cff80:;
 
     [ret description];
     [ret length];
-    if ([ret length]== 0) goto L_d02ac;
+    if ([ret length] == 0) goto L_d02ac;
 
     [ret length];
-    if ([ret length]== 0) goto L_d02c4;
+    if ([ret length] == 0) goto L_d02c4;
 
 L_d00b4:;
     [ret characterAtIndex:0];
@@ -2358,10 +2358,10 @@ L_d00f4:;
 
     [0x3e8 description];
     [ret length];
-    if ([ret length]== 0) goto L_d0204;
+    if ([ret length] == 0) goto L_d0204;
 
     [ret length];
-    if ([ret length]== 0) goto L_d0228;
+    if ([ret length] == 0) goto L_d0228;
 
 L_d0184:;
     [ret characterAtIndex:0];
@@ -2445,7 +2445,7 @@ L_d0444:;
 
     [ret visibleCells];
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_d05d4;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d05d4;
 
 L_d04dc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d04f8; */
@@ -2462,7 +2462,7 @@ L_d04f8:;
     [ret uid];
     [ret isEqualToString:0x3e8];
     objc_release(ret);
-    if ([ret isEqualToString:0x3e8]== 0) goto L_d05a0;
+    if ([ret isEqualToString:0x3e8] == 0) goto L_d05a0;
 
     /* [UNRESOLVED] [ret setMarkIndex:a0]; */
     [ret hushApplySelection];
@@ -2474,7 +2474,7 @@ L_d05ac:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d04dc; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_d04dc;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d04dc;
 
 L_d05d4:;
     objc_release(ret);
@@ -2886,7 +2886,7 @@ L_d0bd0:;
 L_d0c48:;
     [self hushApplySelection];
     [self->_photos count];
-    if ([self->_photos count]== 0) goto L_d0e54;
+    if ([self->_photos count] == 0) goto L_d0e54;
 
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d0d6c; */
 
@@ -2907,7 +2907,7 @@ L_d0e54:;
 L_d0e74:;
     [self->_chipText length];
     [self->_chipBox setHidden:1];
-    if ([self->_chipText length]== 0) goto L_d0f9c;
+    if ([self->_chipText length] == 0) goto L_d0f9c;
 
     [self->_chip setText:self->_chipText];
     [self->_chip sizeThatFits:CGSizeZero];

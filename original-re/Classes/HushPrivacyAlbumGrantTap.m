@@ -536,7 +536,7 @@
     /* [UNRESOLVED] [@0x244888 shared]; */
     /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /]; == 0) goto L_f93bc; */
+    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] == 0) goto L_f93bc; */
 
     /* [UNRESOLVED] [a0 view]; */
     if (ret == 0) goto L_f8bf4;
@@ -565,15 +565,15 @@ L_f8bf8:;
 
 L_f8c40:;
     [ret length];
-    if ([ret length]== 0) goto L_f8cd0;
+    if ([ret length] == 0) goto L_f8cd0;
 
     objc_retain(ret);
     [ret length];
-    if ([ret length]== 0) goto L_f8cdc;
+    if ([ret length] == 0) goto L_f8cdc;
 
     /* [UNRESOLVED] HushChatDBPath(); */
     [ret length];
-    if ([ret length]== 0) goto L_f8cc4;
+    if ([ret length] == 0) goto L_f8cc4;
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] sqlite3_open_v2(); */
@@ -596,11 +596,11 @@ L_f8cdc:;
 L_f8ce4:;
     /* [UNRESOLVED] sqlite3_busy_timeout(0x190); */
     [@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String];
-    /* [UNRESOLVED] sqlite3_prepare_v2([@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String];, -1); */
+    /* [UNRESOLVED] sqlite3_prepare_v2([@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String], -1); */
     if (0 != 0) goto L_f8db8;
 
     [ret longLongValue];
-    /* [UNRESOLVED] sqlite3_bind_int64(1, [ret longLongValue];); */
+    /* [UNRESOLVED] sqlite3_bind_int64(1, [ret longLongValue]); */
     /* [UNRESOLVED] sqlite3_step(); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f8da4; */
 
@@ -609,7 +609,7 @@ L_f8ce4:;
 
     [NSString stringWithUTF8String:sqlite3_column_text];
     [ret length];
-    if ([ret length]== 0) goto L_f8db0;
+    if ([ret length] == 0) goto L_f8db0;
 
     objc_retain(ret);
     goto L_f8db0;
@@ -685,10 +685,10 @@ L_f8dd8:;
 
     [ret description];
     [ret length];
-    if ([ret length]== 0) goto L_f92b8;
+    if ([ret length] == 0) goto L_f92b8;
 
     [ret length];
-    if ([ret length]== 0) goto L_f92d4;
+    if ([ret length] == 0) goto L_f92d4;
 
 L_f9244:;
     [ret characterAtIndex:0];

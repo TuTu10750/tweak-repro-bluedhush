@@ -631,15 +631,15 @@ L_c6544:;
     [ret bounds];
     [[UIScrollView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0x12];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
     [UIColor clearColor];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setPagingEnabled:1];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setBounces:1];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setShowsHorizontalScrollIndicator:0];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setShowsVerticalScrollIndicator:0];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setDelegate:self];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setPagingEnabled:1];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setBounces:1];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setShowsHorizontalScrollIndicator:0];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setShowsVerticalScrollIndicator:0];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setDelegate:self];
     [self view];
     [ret addSubview:[[UIScrollView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -680,30 +680,30 @@ L_c6544:;
     [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(ret);
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setAutoresizingMask:0xd];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setAutoresizingMask:0xd];
     [UIColor whiteColor];
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextAlignment:1];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setTextAlignment:1];
     [UIFont systemFontOfSize:14];
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
     /* [UNRESOLVED] [UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:CGRectZero]; layer];
+    [[[UILabel alloc] initWithFrame:CGRectZero] layer];
     [ret setCornerRadius:14];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
+    [[[UILabel alloc] initWithFrame:CGRectZero] setClipsToBounds:1];
     [self view];
     [ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [self setPageLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     [self bdh_buildPages];
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];
-    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; setMaximumNumberOfTouches:1];
-    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; setCancelsTouchesInView:0];
-    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; setDelegate:self];
+    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setMaximumNumberOfTouches:1];
+    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setCancelsTouchesInView:0];
+    [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setDelegate:self];
     [self view];
     [ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
     objc_release(ret);
@@ -1254,13 +1254,13 @@ L_c6544:;
     [self imageURLs];
     [ret count];
     objc_release(ret);
-    if ([ret count]== 0) goto L_c7490;
+    if ([ret count] == 0) goto L_c7490;
 
     [self pagingScrollView];
     [ret subviews];
     objc_release(ret);
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_c6e6c;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_c6e6c;
 
 L_c6e20:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c6e38; */
@@ -1270,7 +1270,7 @@ L_c6e38:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c6e20; */
 
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
-    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]!= 0) goto L_c6e20;
+    if ([ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_c6e20;
 
 L_c6e6c:;
     objc_release(ret);
@@ -1280,7 +1280,7 @@ L_c6e6c:;
     /* [UNRESOLVED] [self unknownSelector]; */
     [ret count];
     objc_release(ret);
-    if ([ret count]== 0) goto L_c7384;
+    if ([ret count] == 0) goto L_c7384;
 
 L_c6fb0:;
     /* [UNRESOLVED] [0 / * local * / unknownSelector]; */
@@ -1288,45 +1288,45 @@ L_c6fb0:;
     objc_release(ret);
     [[UIScrollView alloc] initWithFrame:CGRectZero];
     [UIColor clearColor];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; setDelegate:0 / * local * /]; */
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; unknownSelector]; */
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setMaximumZoomScale:4];
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; unknownSelector]; */
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setBouncesZoom:1];
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; unknownSelector]; */
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setShowsVerticalScrollIndicator:0];
-    [[[UIScrollView alloc] initWithFrame:CGRectZero]; setTag:0];
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] setDelegate:0 / * local * /]; */
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setMaximumZoomScale:4];
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setBouncesZoom:1];
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setShowsVerticalScrollIndicator:0];
+    [[[UIScrollView alloc] initWithFrame:CGRectZero] setTag:0];
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
     [ret setEnabled:0];
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
     [[UIView alloc] initWithFrame:CGRectZero];
     [UIColor clearColor];
-    [[[UIView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    [[[UIView alloc] initWithFrame:CGRectZero]; setTag:0];
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0]; unknownSelector]; */
+    [[[UIView alloc] initWithFrame:CGRectZero] setTag:0];
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0] unknownSelector]; */
     [[UIImageView alloc] initWithFrame:CGRectZero];
     [UIColor clearColor];
-    [[[UIImageView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0]; unknownSelector]; */
-    [[[UIImageView alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0] unknownSelector]; */
+    [[[UIImageView alloc] initWithFrame:CGRectZero] setClipsToBounds:1];
     /* [UNRESOLVED] sub_c74c0(ret); */
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0]; unknownSelector]; */
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0] unknownSelector]; */
     [[UIImageView alloc] initWithFrame:CGRectZero];
     [UIColor clearColor];
-    [[[UIImageView alloc] initWithFrame:CGRectZero]; setBackgroundColor:ret];
+    [[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0]; unknownSelector]; */
-    [[[UIImageView alloc] initWithFrame:CGRectZero]; setClipsToBounds:1];
-    [[[UIImageView alloc] initWithFrame:CGRectZero]; setTag:0];
-    [[[UIImageView alloc] initWithFrame:CGRectZero]; setUserInteractionEnabled:0];
-    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0]; unknownSelector]; */
-    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] initWithFrame:0] unknownSelector]; */
+    [[[UIImageView alloc] initWithFrame:CGRectZero] setClipsToBounds:1];
+    [[[UIImageView alloc] initWithFrame:CGRectZero] setTag:0];
+    [[[UIImageView alloc] initWithFrame:CGRectZero] setUserInteractionEnabled:0];
+    /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
     /* [UNRESOLVED] [0 / * local * / pagingScrollView]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
@@ -2037,7 +2037,7 @@ L_c7ae8:;
     [self imageURLs];
     [ret count];
     objc_release(ret);
-    if ([ret count]== 0) goto L_c7ef8;
+    if ([ret count] == 0) goto L_c7ef8;
 
     [self pagingScrollView];
     [ret bounds];

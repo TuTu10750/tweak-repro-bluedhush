@@ -696,16 +696,16 @@ L_19d548:;
     /* [UNRESOLVED] [ret unknownSelector]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret unknownSelector]; == 0) goto L_19d690; */
+    /* [UNRESOLVED] if ([ret unknownSelector] == 0) goto L_19d690; */
 
     /* [UNRESOLVED] [@0x244978 unknownSelector]; */
-    /* [UNRESOLVED] if ([@0x244978 unknownSelector]; == 0) goto L_19d660; */
+    /* [UNRESOLVED] if ([@0x244978 unknownSelector] == 0) goto L_19d660; */
 
     /* [UNRESOLVED] [@0x244978 unknownSelector]; */
     goto L_19d674;
 
 L_19d660:;
-    /* [UNRESOLVED] [[@0x244978 unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[@0x244978 unknownSelector] unknownSelector]; */
 
 L_19d674:;
     /* [UNRESOLVED] [ret unknownSelector]; */

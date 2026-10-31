@@ -663,7 +663,7 @@ L_c54e4:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     [NSArray class];
-    /* [UNRESOLVED] [a0 isKindOfClass:[NSArray class];]; */
+    /* [UNRESOLVED] [a0 isKindOfClass:[NSArray class]]; */
     objc_retain(0);
     [self urls];
     [ret count];
@@ -675,7 +675,7 @@ L_c54e4:;
     objc_release(ret);
     objc_release(ret);
     [self setUrls:0];
-    if ([ret isEqualToArray:0]== 0) goto L_c56e0;
+    if ([ret isEqualToArray:0] == 0) goto L_c56e0;
 
     [self scrollView];
     [ret subviews];
@@ -724,7 +724,7 @@ L_c56e0:;
     objc_release(ret);
     objc_release(ret);
     [0 count];
-    if ([0 count]== 0) goto L_c5cbc;
+    if ([0 count] == 0) goto L_c5cbc;
 
 L_c59d8:;
     [0 objectAtIndexedSubscript:0];
@@ -732,23 +732,23 @@ L_c59d8:;
     if (ret == 0) goto L_c5c80;
 
     /* [UNRESOLVED] [[UIImageView alloc] unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setContentMode:2]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; layer]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] setContentMode:2]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] layer]; */
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setUserInteractionEnabled:1]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] setUserInteractionEnabled:1]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [UIColor colorWithWhite:0.5 alpha:0 / * unk * /]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setBackgroundColor:ret]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] setBackgroundColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UITapGestureRecognizer alloc] unknownSelector]; */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; unknownSelector]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] unknownSelector]; */
     [self scrollView];
-    /* [UNRESOLVED] [ret addSubview:[[UIImageView alloc] unknownSelector];]; */
+    /* [UNRESOLVED] [ret addSubview:[[UIImageView alloc] unknownSelector]]; */
     objc_release(ret);
     /* [UNRESOLVED] CGAffineTransformMakeScale(); */
-    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector]; setTransform:0]; */
+    /* [UNRESOLVED] [[[UIImageView alloc] unknownSelector] setTransform:0]; */
     /* [UNRESOLVED] if (cond / * ls * /) goto L_c5c68; */
 
     [ret copy];
@@ -767,8 +767,8 @@ L_c5c68:;
     /* [UNRESOLVED] sub_c5e08(ret, ret); */
 
 L_c5c70:;
-    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] unknownSelector];); */
-    /* [UNRESOLVED] objc_release([[UIImageView alloc] unknownSelector];); */
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] unknownSelector]); */
+    /* [UNRESOLVED] objc_release([[UIImageView alloc] unknownSelector]); */
 
 L_c5c80:;
     objc_release(ret);
@@ -781,7 +781,7 @@ L_c5cbc:;
     /* [UNRESOLVED] [ret setContentOffset:0 / * unk * /]; */
     objc_release(ret);
     [0 count];
-    if ([0 count]== 0) goto L_c5d30;
+    if ([0 count] == 0) goto L_c5d30;
 
     [0 count];
 
@@ -791,7 +791,7 @@ L_c5d30:;
     [ret setContentSize:CGSizeZero];
     objc_release(ret);
     [0 count];
-    if ([0 count]!= 0) goto L_c5db8;
+    if ([0 count] != 0) goto L_c5db8;
 
     [self setHidden:1];
     [self setAlpha:1];
@@ -997,7 +997,7 @@ L_c5db8:;
     /* [UNRESOLVED] [a0 view]; */
     [ret tag];
     objc_release(ret);
-    if ((([ret tag]>> 63) & 1) != 0) goto L_c63d4;
+    if ((([ret tag] >> 63) & 1) != 0) goto L_c63d4;
 
     [self urls];
     [ret count];
@@ -1024,7 +1024,7 @@ L_c62e4:;
     if (ret == 0) goto L_c63c4;
 
     [ret count];
-    if ([ret count]== 0) goto L_c63c4;
+    if ([ret count] == 0) goto L_c63c4;
 
     objc_retain(ret);
     [NSThread isMainThread];

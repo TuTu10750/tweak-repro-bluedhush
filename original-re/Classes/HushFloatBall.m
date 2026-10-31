@@ -270,7 +270,7 @@
     [UIColor blackColor];
     /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_iconView layer];
-    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor];]; */
+    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
     [self->_iconView layer];
