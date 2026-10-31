@@ -5230,7 +5230,7 @@ L_da3bc:;
 L_da42c:;
     (void)[(id)ret copy];
     /* [UNRESOLVED] objc_release(self->_infoSig); */
-    objc_storeStrong((id *)&objc_release, ret);
+    /* [UNRESOLVED] objc_storeStrong((id *)&objc_release, ret); */
     (void)[(id)[NSMutableArray class] array];
     objc_retain(ret);
     /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */

@@ -236,7 +236,7 @@
     (void)[(id)self view];
     (void)[(id)ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero]);
+    /* [UNRESOLVED] objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:0]); */
     (void)[(id)self path];
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_7a924; */
