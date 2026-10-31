@@ -90,7 +90,7 @@
     /* [UNRESOLVED] [(id)self setImageURLs:a0]; */
     /* [UNRESOLVED] [(id)self setInitialIndex:a1]; */
     (void)[(id)self setModalPresentationStyle:0];
-    (void)[(id)[NSMutableSet class] set];
+    /* [UNRESOLVED] [(id)[NSMutableSet class] set]; */
     (void)[(id)self setLoadedHighResolutionIndexes:ret];
     objc_release(ret);
     objc_retain(self);
@@ -98,7 +98,7 @@
 L_c6544:;
     /* [UNRESOLVED] objc_release(a0); */
     objc_release(self);
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0xc6568  types=v16@0:8
@@ -2538,7 +2538,7 @@ L_c83c4:;
 L_c83e0:;
     (void)[(id)self interactiveDismissInProgress];
     /* [UNRESOLVED] objc_release(a0); */
-    return (BOOL)self;
+    return 0;  /* [UNRESOLVED] self */
 }
 
 // @0xc8548  types=B32@0:8@16@24
@@ -2643,7 +2643,7 @@ L_c8610:;
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] objc_release(a0); */
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0xc8644  types=v24@0:8@16
@@ -2895,7 +2895,7 @@ L_c88d8:;
     // 000c89c4  ret
     id ret = nil;
 
-    return (id)self->_imageURLs;
+    return nil;  /* [UNRESOLVED] self->_imageURLs */
 }
 
 // @0xc89c8  types=v24@0:8@16
@@ -2915,7 +2915,7 @@ L_c88d8:;
     // 000c89e0  ret
     id ret = nil;
 
-    return (long long)self->_initialIndex;
+    return 0;  /* [UNRESOLVED] self->_initialIndex */
 }
 
 // @0xc89e4  types=v24@0:8q16
@@ -2939,7 +2939,7 @@ L_c88d8:;
     // 000c8a00  ret
     id ret = nil;
 
-    return (id)self->_pagingScrollView;
+    return nil;  /* [UNRESOLVED] self->_pagingScrollView */
 }
 
 // @0xc8a04  types=v24@0:8@16
@@ -2961,7 +2961,7 @@ L_c88d8:;
     // 000c8a24  ret
     id ret = nil;
 
-    return (id)self->_pageLabel;
+    return nil;  /* [UNRESOLVED] self->_pageLabel */
 }
 
 // @0xc8a28  types=v24@0:8@16
@@ -2983,7 +2983,7 @@ L_c88d8:;
     // 000c8a48  ret
     id ret = nil;
 
-    return (id)self->_closeButton;
+    return nil;  /* [UNRESOLVED] self->_closeButton */
 }
 
 // @0xc8a4c  types=v24@0:8@16
@@ -3005,7 +3005,7 @@ L_c88d8:;
     // 000c8a6c  ret
     id ret = nil;
 
-    return (id)self->_dismissPanGesture;
+    return nil;  /* [UNRESOLVED] self->_dismissPanGesture */
 }
 
 // @0xc8a70  types=v24@0:8@16
@@ -3027,7 +3027,7 @@ L_c88d8:;
     // 000c8a90  ret
     id ret = nil;
 
-    return (id)self->_loadedHighResolutionIndexes;
+    return nil;  /* [UNRESOLVED] self->_loadedHighResolutionIndexes */
 }
 
 // @0xc8a94  types=v24@0:8@16

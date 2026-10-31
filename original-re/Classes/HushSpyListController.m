@@ -543,7 +543,7 @@
     (void)[(id)ret bounds];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    if (((HushIsDarkMode >> 0) & 1) == 0) goto L_13b070;
+    /* [UNRESOLVED] if (((HushIsDarkMode >> 0) & 1) == 0) goto L_13b070; */
 
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     (void)[(id)[UIColor class] whiteColor];
@@ -3504,7 +3504,7 @@ L_13e264:;
     // 0013e298  ret
     id ret = nil;
 
-    return (id)self->_cardView;
+    return nil;  /* [UNRESOLVED] self->_cardView */
 }
 
 // @0x13e29c  types=v24@0:8@16
@@ -3526,7 +3526,7 @@ L_13e264:;
     // 0013e2e0  ret
     id ret = nil;
 
-    return (id)self->_countLabel;
+    return nil;  /* [UNRESOLVED] self->_countLabel */
 }
 
 // @0x13e2e4  types=v24@0:8@16
@@ -3548,7 +3548,7 @@ L_13e264:;
     // 0013e304  ret
     id ret = nil;
 
-    return (id)self->_emptyLabel;
+    return nil;  /* [UNRESOLVED] self->_emptyLabel */
 }
 
 // @0x13e308  types=v24@0:8@16
@@ -3570,7 +3570,7 @@ L_13e264:;
     // 0013e328  ret
     id ret = nil;
 
-    return (id)self->_items;
+    return nil;  /* [UNRESOLVED] self->_items */
 }
 
 // @0x13e32c  types=v24@0:8@16

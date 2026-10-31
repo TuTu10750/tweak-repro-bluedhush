@@ -543,7 +543,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    if (((HushIsDarkMode >> 0) & 1) == 0) goto L_18954c;
+    /* [UNRESOLVED] if (((HushIsDarkMode >> 0) & 1) == 0) goto L_18954c; */
 
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     goto L_189580;

@@ -32,7 +32,7 @@
     // 0017f25c  ret
     id ret = nil;
 
-    return (UIEdgeInsets)self;
+    return UIEdgeInsetsZero;  /* [UNRESOLVED] self */
 }
 
 // @0x17f260  types=v48@0:8{UIEdgeInsets=dddd}16

@@ -262,7 +262,7 @@ L_7a924:;
     // 0007ab28  ret
     id ret = nil;
 
-    return (id)self->_path;
+    return nil;  /* [UNRESOLVED] self->_path */
 }
 
 // @0x7ab2c  types=v24@0:8@16
@@ -282,7 +282,7 @@ L_7a924:;
     // 0007ab44  ret
     id ret = nil;
 
-    return (long long)self->_index;
+    return 0;  /* [UNRESOLVED] self->_index */
 }
 
 // @0x7ab48  types=v24@0:8q16

@@ -624,7 +624,7 @@ L_14b124:;
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret unknownSelector] == 0) goto L_14b1b0; */
 
-    if (((sub_144658 >> 0) & 1) != 0) goto L_14b1b0;
+    /* [UNRESOLVED] if (((sub_144658 >> 0) & 1) != 0) goto L_14b1b0; */
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
 
@@ -1142,7 +1142,7 @@ L_14b930:;
     // 0014b938  ret
     id ret = nil;
 
-    return (long long)5;
+    return 0;  /* [UNRESOLVED] 5 */
 }
 
 // @0x14b93c  types=@32@0:8@16q24
@@ -2227,7 +2227,7 @@ L_14c3f8:;
 
 L_14c400:;
     objc_release(ret);
-    return (long long)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x14c420  types=d32@0:8@16@24
@@ -2238,7 +2238,7 @@ L_14c400:;
     // 0014c428  ret
     id ret = nil;
 
-    return (double)self;
+    return 0;  /* [UNRESOLVED] self */
 }
 
 // @0x14c42c  types=@32@0:8@16@24

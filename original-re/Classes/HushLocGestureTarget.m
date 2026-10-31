@@ -247,6 +247,7 @@ L_95ca0:;
 
     /* [UNRESOLVED] sub_9aed0(); */
     objc_release(ret);
+    /* [UNRESOLVED] if (((sub_9aed0 >> 0) & 1) == 0) goto L_95e78; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
     (void)[(id)ret setEnabled:3 forKey:sel_registerName("isEnabledForLevel:")];

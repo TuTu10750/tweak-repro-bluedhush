@@ -466,7 +466,7 @@ L_16ccd8:;
     // 0016d000  ret
     id ret = nil;
 
-    return (long long)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x16d004  types=q32@0:8@16q24
@@ -562,7 +562,7 @@ L_16ccd8:;
     // 0016d0d8  ret
     id ret = nil;
 
-    return (double)self;
+    return 0;  /* [UNRESOLVED] self */
 }
 
 // @0x16d0dc  types=@32@0:8@16@24

@@ -307,7 +307,7 @@
     objc_release(ret);
 
 L_88b18:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x88b1c  types=v16@0:8
@@ -422,7 +422,7 @@ L_88b18:;
     // 00088c44  ret
     id ret = nil;
 
-    return (id)self->_name;
+    return nil;  /* [UNRESOLVED] self->_name */
 }
 
 // @0x88c48  types=v24@0:8@16
@@ -444,7 +444,7 @@ L_88b18:;
     // 00088c68  ret
     id ret = nil;
 
-    return (id)self->_meta;
+    return nil;  /* [UNRESOLVED] self->_meta */
 }
 
 // @0x88c6c  types=v24@0:8@16

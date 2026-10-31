@@ -429,12 +429,12 @@
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_thumb);
     objc_release(ret);
-    (void)[(id)self->_thumb setAutoresizingMask:0x12];
-    (void)[(id)self->_thumb setContentMode:2];
-    (void)[(id)self->_thumb setClipsToBounds:1];
+    /* [UNRESOLVED] [(id)self->_thumb setAutoresizingMask:0x12]; */
+    /* [UNRESOLVED] [(id)self->_thumb setContentMode:2]; */
+    /* [UNRESOLVED] [(id)self->_thumb setClipsToBounds:1]; */
     /* [UNRESOLVED] HushIsDarkMode(); */
     (void)[(id)[UIColor class] colorWithWhite:0.96 alpha:1];
-    (void)[(id)self->_thumb setBackgroundColor:ret];
+    /* [UNRESOLVED] [(id)self->_thumb setBackgroundColor:ret]; */
     objc_release(ret);
     (void)[(id)self contentView];
     (void)[(id)ret addSubview:self->_thumb];
@@ -442,10 +442,10 @@
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_playBadge);
     (void)[(id)[UIImage class] systemImageNamed:@"play.circle.fill"];
-    (void)[(id)self->_playBadge setImage:ret];
+    /* [UNRESOLVED] [(id)self->_playBadge setImage:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] colorWithWhite:1 alpha:0.92];
-    (void)[(id)self->_playBadge setTintColor:ret];
+    /* [UNRESOLVED] [(id)self->_playBadge setTintColor:ret]; */
     objc_release(ret);
     (void)[(id)self contentView];
     (void)[(id)ret bounds];
@@ -453,41 +453,41 @@
     (void)[(id)self contentView];
     (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidY(); */
-    (void)[(id)self->_playBadge setCenter:CGPointZero];
+    /* [UNRESOLVED] [(id)self->_playBadge setCenter:0]; */
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)self->_playBadge setAutoresizingMask:0x2d];
+    /* [UNRESOLVED] [(id)self->_playBadge setAutoresizingMask:0x2d]; */
     (void)[(id)self contentView];
     (void)[(id)ret addSubview:self->_playBadge];
     objc_release(ret);
     objc_release(self->_flashTag);
-    (void)[(id)self->_flashTag setText:@"闪照"];
+    /* [UNRESOLVED] [(id)self->_flashTag setText:@"闪照"]; */
     (void)[(id)[UIFont class] systemFontOfSize:10];
-    (void)[(id)self->_flashTag setFont:ret];
+    /* [UNRESOLVED] [(id)self->_flashTag setFont:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] whiteColor];
-    (void)[(id)self->_flashTag setTextColor:ret];
+    /* [UNRESOLVED] [(id)self->_flashTag setTextColor:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
-    (void)[(id)self->_flashTag setBackgroundColor:ret];
+    /* [UNRESOLVED] [(id)self->_flashTag setBackgroundColor:ret]; */
     objc_release(ret);
-    (void)[(id)self->_flashTag setTextAlignment:1];
-    (void)[(id)self->_flashTag layer];
+    /* [UNRESOLVED] [(id)self->_flashTag setTextAlignment:1]; */
+    /* [UNRESOLVED] [(id)self->_flashTag layer]; */
     (void)[(id)ret setCornerRadius:4];
     objc_release(ret);
-    (void)[(id)self->_flashTag setClipsToBounds:1];
-    (void)[(id)self->_flashTag setHidden:1];
-    (void)[(id)self->_flashTag setUserInteractionEnabled:0];
-    (void)[(id)self->_flashTag sizeToFit];
-    (void)[(id)self->_flashTag bounds];
-    (void)[(id)self->_flashTag setFrame:CGRectZero];
-    (void)[(id)self->_flashTag setAutoresizingMask:0x24];
+    /* [UNRESOLVED] [(id)self->_flashTag setClipsToBounds:1]; */
+    /* [UNRESOLVED] [(id)self->_flashTag setHidden:1]; */
+    /* [UNRESOLVED] [(id)self->_flashTag setUserInteractionEnabled:0]; */
+    /* [UNRESOLVED] [(id)self->_flashTag sizeToFit]; */
+    /* [UNRESOLVED] [(id)self->_flashTag bounds]; */
+    /* [UNRESOLVED] [(id)self->_flashTag setFrame:4]; */
+    /* [UNRESOLVED] [(id)self->_flashTag setAutoresizingMask:0x24]; */
     (void)[(id)self contentView];
     (void)[(id)ret addSubview:self->_flashTag];
     objc_release(ret);
 
 L_7c1a0:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x7c1a4  types=@16@0:8
@@ -499,7 +499,7 @@ L_7c1a0:;
     // 0007c1b0  ret
     id ret = nil;
 
-    return (id)self->_thumb;
+    return nil;  /* [UNRESOLVED] self->_thumb */
 }
 
 // @0x7c1b4  types=v24@0:8@16
@@ -521,7 +521,7 @@ L_7c1a0:;
     // 0007c1d4  ret
     id ret = nil;
 
-    return (id)self->_playBadge;
+    return nil;  /* [UNRESOLVED] self->_playBadge */
 }
 
 // @0x7c1d8  types=v24@0:8@16
@@ -543,7 +543,7 @@ L_7c1a0:;
     // 0007c1f8  ret
     id ret = nil;
 
-    return (id)self->_flashTag;
+    return nil;  /* [UNRESOLVED] self->_flashTag */
 }
 
 // @0x7c1fc  types=v24@0:8@16

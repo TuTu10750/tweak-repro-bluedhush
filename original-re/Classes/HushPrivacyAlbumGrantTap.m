@@ -578,7 +578,7 @@ L_f8c40:;
 
     /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] sqlite3_open_v2(); */
-    if (sqlite3_open_v2 == 0) goto L_f8ce4;
+    /* [UNRESOLVED] if (sqlite3_open_v2 == 0) goto L_f8ce4; */
 
     if (0 == 0) goto L_f8cc4;
 
@@ -606,7 +606,7 @@ L_f8ce4:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f8da4; */
 
     /* [UNRESOLVED] sqlite3_column_text(0); */
-    if (sqlite3_column_text == 0) goto L_f8da4;
+    /* [UNRESOLVED] if (sqlite3_column_text == 0) goto L_f8da4; */
 
     (void)[(id)[NSString class] stringWithUTF8String:sqlite3_column_text];
     (void)[(id)ret length];

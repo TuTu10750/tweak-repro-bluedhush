@@ -543,7 +543,7 @@
     (void)[(id)ret bounds];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    if (((HushIsDarkMode >> 0) & 1) == 0) goto L_7c8a8;
+    /* [UNRESOLVED] if (((HushIsDarkMode >> 0) & 1) == 0) goto L_7c8a8; */
 
     (void)[(id)[UIColor class] colorWithWhite:0.11 alpha:1];
     goto L_7c8d8;
@@ -1866,9 +1866,9 @@ L_7e8c0:;
     objc_retain(ret);
     /* [UNRESOLVED] sub_7f600(); */
     /* [UNRESOLVED] sub_7f600(); */
-    if (((sub_7f600 >> 0) & 1) != 0) goto L_7ea6c;
+    /* [UNRESOLVED] if (((sub_7f600 >> 0) & 1) != 0) goto L_7ea6c; */
 
-    if (((sub_7f600 >> 0) & 1) != 0) goto L_7ea6c;
+    /* [UNRESOLVED] if (((sub_7f600 >> 0) & 1) != 0) goto L_7ea6c; */
 
     objc_retain(ret);
     goto L_7ec54;
@@ -1896,7 +1896,7 @@ L_7ea6c:;
     goto L_7eaa4;
 
 L_7ea90:;
-    (void)[(id)[NSSet class] set];
+    /* [UNRESOLVED] [(id)[NSSet class] set]; */
 
 L_7eaa4:;
     if (((ret >> 0) & 1) == 0) goto L_7eac8;
@@ -1905,7 +1905,7 @@ L_7eaa4:;
     goto L_7eae8;
 
 L_7eac8:;
-    (void)[(id)[NSSet class] set];
+    /* [UNRESOLVED] [(id)[NSSet class] set]; */
 
 L_7eae8:;
     (void)[(id)[NSMutableArray class] array];
@@ -2731,7 +2731,7 @@ L_7facc:;
 
     /* [UNRESOLVED] [(id)a0 resignFirstResponder]; */
     (void)[(id)self locate];
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x800d4  types=v16@0:8
@@ -3187,7 +3187,7 @@ L_7facc:;
     id ret = nil;
 
     (void)[(id)self searchField];
-    (void)[(id)ret text];
+    /* [UNRESOLVED] [(id)ret text]; */
     (void)[(id)[NSCharacterSet class] whitespaceCharacterSet];
     (void)[(id)ret stringByTrimmingCharactersInSet:ret];
     objc_release(ret);
@@ -3222,10 +3222,10 @@ L_802e4:;
     (void)[(id)self shown];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     /* [UNRESOLVED] HushGalNameForSid(); */
     objc_release(ret);
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     (void)[(id)ret isEqualToString:ret];
     if (((ret >> 0) & 1) != 0) goto L_80590;
 
@@ -3353,7 +3353,7 @@ L_8063c:;
     (void)[(id)self shown];
     (void)[(id)ret count];
     objc_release(ret);
-    return (long long)[(id)ret count];
+    return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
 
 // @0x806c8  types=q32@0:8@16q24
@@ -4057,10 +4057,10 @@ L_809d0:;
     /* [UNRESOLVED] [(id)a2 section]; */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a2 section]]; */
     objc_release(ret);
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     /* [UNRESOLVED] HushGalNameForSid(); */
     objc_release(ret);
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     /* [UNRESOLVED] HushGalShowIdForSid(); */
     objc_release(ret);
     /* [UNRESOLVED] HushGalNameForUser(); */
@@ -4083,7 +4083,7 @@ L_80b90:;
     (void)[(id)ret appendFormat:@"%@  "];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     (void)[(id)ret appendFormat:@"用户ID:%@  "];
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     (void)[(id)ret appendFormat:@"会话ID:%@"];
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / name]; */
@@ -5556,19 +5556,19 @@ L_819b8:;
     (void)[(id)[NSCharacterSet class] decimalDigitCharacterSet];
     (void)[(id)ret invertedSet];
     objc_release(ret);
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_81c48;
 
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     (void)[(id)ret rangeOfCharacterFromSet:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_81c54; */
 
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     /* [UNRESOLVED] HushGalOpenHome(); */
-    if (HushGalOpenHome == 0) goto L_81c70;
+    /* [UNRESOLVED] if (HushGalOpenHome == 0) goto L_81c70; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_81ddc; */
 
@@ -6112,7 +6112,7 @@ L_83488:;
 L_834b8:;
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a0); */
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x834d8  types=@40@0:8@16{CGPoint=dd}24
@@ -6657,7 +6657,7 @@ L_834b8:;
 
     (void)[(id)self shown];
     (void)[(id)ret objectAtIndexedSubscript:[(id)ret tag]];
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     objc_release(ret);
     objc_release(ret);
     goto L_83664;
@@ -7065,18 +7065,18 @@ L_83ce0:;
     (void)[(id)self shown];
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */
     objc_release(ret);
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     /* [UNRESOLVED] HushGalNameForSid(); */
     objc_release(ret);
     (void)[(id)ret length];
     if ([(id)ret length] != 0) goto L_83e94;
 
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     objc_release(ret);
 
 L_83e94:;
     /* [UNRESOLVED] sub_7fe6c(); */
-    (void)[(id)ret sid];
+    /* [UNRESOLVED] [(id)ret sid]; */
     (void)[(id)ret containsObject:ret];
     objc_release(ret);
     objc_release(ret);
@@ -7159,7 +7159,7 @@ L_840dc:;
     // 000842fc  ret
     id ret = nil;
 
-    return (id)self->_onlySid;
+    return nil;  /* [UNRESOLVED] self->_onlySid */
 }
 
 // @0x84300  types=v24@0:8@16
@@ -7179,7 +7179,7 @@ L_840dc:;
     // 00084318  ret
     id ret = nil;
 
-    return (id)self->_cardView;
+    return nil;  /* [UNRESOLVED] self->_cardView */
 }
 
 // @0x8431c  types=v24@0:8@16
@@ -7201,7 +7201,7 @@ L_840dc:;
     // 0008433c  ret
     id ret = nil;
 
-    return (id)self->_allSections;
+    return nil;  /* [UNRESOLVED] self->_allSections */
 }
 
 // @0x84340  types=v24@0:8@16
@@ -7223,7 +7223,7 @@ L_840dc:;
     // 00084360  ret
     id ret = nil;
 
-    return (id)self->_shown;
+    return nil;  /* [UNRESOLVED] self->_shown */
 }
 
 // @0x84364  types=v24@0:8@16
@@ -7245,7 +7245,7 @@ L_840dc:;
     // 00084384  ret
     id ret = nil;
 
-    return (id)self->_grid;
+    return nil;  /* [UNRESOLVED] self->_grid */
 }
 
 // @0x84388  types=v24@0:8@16
@@ -7267,7 +7267,7 @@ L_840dc:;
     // 000843a8  ret
     id ret = nil;
 
-    return (id)self->_searchField;
+    return nil;  /* [UNRESOLVED] self->_searchField */
 }
 
 // @0x843ac  types=v24@0:8@16
@@ -7289,7 +7289,7 @@ L_840dc:;
     // 000843cc  ret
     id ret = nil;
 
-    return (id)self->_filterBtn;
+    return nil;  /* [UNRESOLVED] self->_filterBtn */
 }
 
 // @0x843d0  types=v24@0:8@16
@@ -7311,7 +7311,7 @@ L_840dc:;
     // 000843f0  ret
     id ret = nil;
 
-    return (id)self->_emptyLabel;
+    return nil;  /* [UNRESOLVED] self->_emptyLabel */
 }
 
 // @0x843f4  types=v24@0:8@16
@@ -7333,7 +7333,7 @@ L_840dc:;
     // 00084414  ret
     id ret = nil;
 
-    return (id)self->_progressLabel;
+    return nil;  /* [UNRESOLVED] self->_progressLabel */
 }
 
 // @0x84418  types=v24@0:8@16
@@ -7379,7 +7379,7 @@ L_840dc:;
     // 00084458  ret
     id ret = nil;
 
-    return (id)self->_hushGalScanCache;
+    return nil;  /* [UNRESOLVED] self->_hushGalScanCache */
 }
 
 // @0x8445c  types=v24@0:8@16
@@ -7425,7 +7425,7 @@ L_840dc:;
     // 0008449c  ret
     id ret = nil;
 
-    return (id)self->_closeButton;
+    return nil;  /* [UNRESOLVED] self->_closeButton */
 }
 
 // @0x844a0  types=v24@0:8@16
@@ -7447,7 +7447,7 @@ L_840dc:;
     // 000844c0  ret
     id ret = nil;
 
-    return (id)self->_titleInfoLabel;
+    return nil;  /* [UNRESOLVED] self->_titleInfoLabel */
 }
 
 // @0x844c4  types=v24@0:8@16
@@ -7469,7 +7469,7 @@ L_840dc:;
     // 000844e4  ret
     id ret = nil;
 
-    return (id)self->_previewSource;
+    return nil;  /* [UNRESOLVED] self->_previewSource */
 }
 
 // @0x844e8  types=v24@0:8@16

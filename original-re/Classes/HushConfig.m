@@ -99,7 +99,7 @@
     objc_release(ret);
 
 L_e3f8:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0xe3fc  types=v16@0:8

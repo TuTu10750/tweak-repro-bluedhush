@@ -124,16 +124,16 @@
     (void)[(id)self bounds];
     (void)[[UIScrollView alloc] initWithFrame:CGRectZero];
     objc_release(self->_scrollView);
-    (void)[(id)self->_scrollView setAutoresizingMask:0x12];
-    (void)[(id)self->_scrollView setShowsHorizontalScrollIndicator:0];
-    (void)[(id)self->_scrollView setAlwaysBounceHorizontal:1];
-    (void)[(id)self->_scrollView setClipsToBounds:1];
+    /* [UNRESOLVED] [(id)self->_scrollView setAutoresizingMask:0x12]; */
+    /* [UNRESOLVED] [(id)self->_scrollView setShowsHorizontalScrollIndicator:0]; */
+    /* [UNRESOLVED] [(id)self->_scrollView setAlwaysBounceHorizontal:1]; */
+    /* [UNRESOLVED] [(id)self->_scrollView setClipsToBounds:1]; */
     (void)[(id)self addSubview:self->_scrollView];
     objc_retain(self);
 
 L_c54e4:;
     objc_release(self);
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0xc5500  types=v24@0:8@16
@@ -1037,7 +1037,7 @@ L_c63ac:;
     /* [UNRESOLVED] dispatch_async(objc_retainBlock); */
 
 L_c63b4:;
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     objc_release(ret);
 
 L_c63c4:;
@@ -1058,7 +1058,7 @@ L_c63d4:;
     // 000c6400  ret
     id ret = nil;
 
-    return (id)self->_urls;
+    return nil;  /* [UNRESOLVED] self->_urls */
 }
 
 // @0xc6404  types=v24@0:8@16
@@ -1078,7 +1078,7 @@ L_c63d4:;
     // 000c641c  ret
     id ret = nil;
 
-    return (id)self->_scrollView;
+    return nil;  /* [UNRESOLVED] self->_scrollView */
 }
 
 // @0xc6420  types=v24@0:8@16

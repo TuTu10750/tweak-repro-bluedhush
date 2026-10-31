@@ -265,12 +265,12 @@
     (void)[(id)self setUserInteractionEnabled:0];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_capText);
-    (void)[(id)self->_capText setText:@"隐私相册"];
+    /* [UNRESOLVED] [(id)self->_capText setText:@"隐私相册"]; */
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:10 weight:0x200180]; */
-    (void)[(id)self->_capText setFont:ret];
+    /* [UNRESOLVED] [(id)self->_capText setFont:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] whiteColor];
-    (void)[(id)self->_capText setTextColor:ret];
+    /* [UNRESOLVED] [(id)self->_capText setTextColor:ret]; */
     objc_release(ret);
     (void)[(id)self addSubview:self->_capText];
     (void)[(id)[UIImageSymbolConfiguration class] configurationWithPointSize:6 weight:0];
@@ -282,14 +282,14 @@
     objc_release(ret);
     (void)[[UIImageView alloc] initWithImage:ret];
     objc_release(self->_capIcon);
-    (void)[(id)self->_capIcon setContentMode:1];
+    /* [UNRESOLVED] [(id)self->_capIcon setContentMode:1]; */
     (void)[(id)self addSubview:self->_capIcon];
     objc_retain(self);
     objc_release(ret);
 
 L_cedc:;
     objc_release(self);
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0xcefc  types=v16@0:8
@@ -438,10 +438,10 @@ L_cedc:;
 
     (void)[super layoutSubviews];
     /* [UNRESOLVED] [(id)self->_capText sizeThatFits:0x7fefffffffffffff]; */
-    (void)[(id)self->_capIcon image];
+    /* [UNRESOLVED] [(id)self->_capIcon image]; */
     if (ret == 0) goto L_cfe4;
 
-    (void)[(id)self->_capIcon image];
+    /* [UNRESOLVED] [(id)self->_capIcon image]; */
     (void)[(id)ret size];
     objc_release(ret);
     goto L_cfe4;
@@ -450,13 +450,13 @@ L_cfe4:;
     objc_release(ret);
     (void)[(id)self bounds];
     (void)[(id)self bounds];
-    (void)[(id)self->_capText setFrame:CGRectZero];
+    /* [UNRESOLVED] [(id)self->_capText setFrame:0]; */
     /* [UNRESOLVED] if (cond / * le * /) goto L_d0e0; */
 
-    (void)[(id)self->_capText frame];
+    /* [UNRESOLVED] [(id)self->_capText frame]; */
     /* [UNRESOLVED] CGRectGetMaxX(); */
     (void)[(id)self bounds];
-    (void)[(id)self->_capIcon setFrame:CGRectZero];
+    /* [UNRESOLVED] [(id)self->_capIcon setFrame:0]; */
 
 L_d0e0:;
     return;
@@ -538,10 +538,10 @@ L_d0e0:;
     id ret = nil;
 
     /* [UNRESOLVED] [(id)self->_capText sizeThatFits:a0]; */
-    (void)[(id)self->_capIcon image];
+    /* [UNRESOLVED] [(id)self->_capIcon image]; */
     if (ret == 0) goto L_d194;
 
-    (void)[(id)self->_capIcon image];
+    /* [UNRESOLVED] [(id)self->_capIcon image]; */
     (void)[(id)ret size];
     objc_release(ret);
     goto L_d194;
@@ -560,7 +560,7 @@ L_d194:;
     // 0000d1e4  ret
     id ret = nil;
 
-    return (id)self->_capText;
+    return nil;  /* [UNRESOLVED] self->_capText */
 }
 
 // @0xd1e8  types=v24@0:8@16
@@ -582,7 +582,7 @@ L_d194:;
     // 0000d208  ret
     id ret = nil;
 
-    return (id)self->_capIcon;
+    return nil;  /* [UNRESOLVED] self->_capIcon */
 }
 
 // @0xd20c  types=v24@0:8@16

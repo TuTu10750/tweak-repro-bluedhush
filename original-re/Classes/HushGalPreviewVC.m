@@ -48,7 +48,7 @@
     (void)[(id)self setModalTransitionStyle:2];
 
 L_7ac04:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x7ac08  types=v16@0:8
@@ -601,24 +601,24 @@ L_7ac04:;
     objc_release(ret);
     (void)[[UIPageViewController alloc] initWithTransitionStyle:1 navigationOrientation:0 options:0];
     objc_release(self->_pager);
-    (void)[(id)self->_pager setDataSource:self];
-    (void)[(id)self->_pager setDelegate:self];
-    (void)[(id)self->_pager view];
+    /* [UNRESOLVED] [(id)self->_pager setDataSource:self]; */
+    /* [UNRESOLVED] [(id)self->_pager setDelegate:self]; */
+    /* [UNRESOLVED] [(id)self->_pager view]; */
     /* [UNRESOLVED] [(id)ret setFrame:0 / * unk * /]; */
     objc_release(ret);
-    (void)[(id)self->_pager view];
+    /* [UNRESOLVED] [(id)self->_pager view]; */
     (void)[(id)ret setAutoresizingMask:0x12];
     objc_release(ret);
     (void)[(id)[UIColor class] clearColor];
-    (void)[(id)self->_pager view];
+    /* [UNRESOLVED] [(id)self->_pager view]; */
     (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self addChildViewController:self->_pager];
-    (void)[(id)self->_pager view];
+    /* [UNRESOLVED] [(id)self->_pager view]; */
     (void)[(id)[[UIView alloc] initWithFrame:CGRectZero] addSubview:ret];
     objc_release(ret);
-    (void)[(id)self->_pager didMoveToParentViewController:self];
+    /* [UNRESOLVED] [(id)self->_pager didMoveToParentViewController:self]; */
     (void)[(id)self index];
     if ((([(id)self index] >> 63) & 1) != 0) goto L_7b0c8;
 
@@ -637,26 +637,26 @@ L_7b0d4:;
     if (ret == 0) goto L_7b174;
 
     (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
-    (void)[(id)self->_pager setViewControllers:ret direction:0 animated:0 completion:0];
+    /* [UNRESOLVED] [(id)self->_pager setViewControllers:ret direction:0 animated:0 completion:0]; */
     objc_release(ret);
 
 L_7b174:;
     objc_release(self->_savedAt);
     (void)[(id)[UIFont class] systemFontOfSize:12];
-    (void)[(id)self->_savedAt setFont:ret];
+    /* [UNRESOLVED] [(id)self->_savedAt setFont:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] whiteColor];
-    (void)[(id)self->_savedAt setTextColor:ret];
+    /* [UNRESOLVED] [(id)self->_savedAt setTextColor:ret]; */
     objc_release(ret);
     (void)[(id)[UIColor class] colorWithWhite:0 alpha:0.7];
-    (void)[(id)self->_savedAt setBackgroundColor:ret];
+    /* [UNRESOLVED] [(id)self->_savedAt setBackgroundColor:ret]; */
     objc_release(ret);
-    (void)[(id)self->_savedAt layer];
+    /* [UNRESOLVED] [(id)self->_savedAt layer]; */
     (void)[(id)ret setCornerRadius:4];
     objc_release(ret);
-    (void)[(id)self->_savedAt setClipsToBounds:1];
-    (void)[(id)self->_savedAt setTextAlignment:1];
-    (void)[(id)self->_savedAt setUserInteractionEnabled:0];
+    /* [UNRESOLVED] [(id)self->_savedAt setClipsToBounds:1]; */
+    /* [UNRESOLVED] [(id)self->_savedAt setTextAlignment:1]; */
+    /* [UNRESOLVED] [(id)self->_savedAt setUserInteractionEnabled:0]; */
     (void)[(id)[[UIView alloc] initWithFrame:CGRectZero] addSubview:self->_savedAt];
     (void)[(id)[UIButton class] buttonWithType:1];
     (void)[(id)ret setFrame:CGRectZero];
@@ -820,7 +820,7 @@ L_7b4f0:;
     /* [UNRESOLVED] [(id)self->_savedAt sizeThatFits:0x7fefffffffffffff]; */
     /* [UNRESOLVED] CGRectGetMinX(); */
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    (void)[(id)self->_savedAt setFrame:CGRectZero];
+    /* [UNRESOLVED] [(id)self->_savedAt setFrame:0]; */
     return;
 }
 
@@ -1389,7 +1389,7 @@ L_7b9dc:;
     /* [UNRESOLVED] sub_7ba74(); */
 
 L_7ba04:;
-    (void)[(id)self->_savedAt setText:ret];
+    /* [UNRESOLVED] [(id)self->_savedAt setText:ret]; */
     if ([(id)ret length] == 0) goto L_7ba1c;
 
     objc_release(ret);
@@ -1447,7 +1447,7 @@ L_7bbc4:;
     // 0007bbec  ret
     id ret = nil;
 
-    return (id)self->_files;
+    return nil;  /* [UNRESOLVED] self->_files */
 }
 
 // @0x7bbf0  types=v24@0:8@16
@@ -1467,7 +1467,7 @@ L_7bbc4:;
     // 0007bc08  ret
     id ret = nil;
 
-    return (long long)self->_index;
+    return 0;  /* [UNRESOLVED] self->_index */
 }
 
 // @0x7bc0c  types=v24@0:8q16

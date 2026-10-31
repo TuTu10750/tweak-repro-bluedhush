@@ -209,10 +209,10 @@
     if ([(id)ret serverTrust] == 0) goto L_12ed8;
 
     /* [UNRESOLVED] SecTrustGetCertificateAtIndex(0); */
-    if (SecTrustGetCertificateAtIndex == 0) goto L_12ed8;
+    /* [UNRESOLVED] if (SecTrustGetCertificateAtIndex == 0) goto L_12ed8; */
 
     /* [UNRESOLVED] SecCertificateCopyData(); */
-    if (SecCertificateCopyData == 0) goto L_12ed8;
+    /* [UNRESOLVED] if (SecCertificateCopyData == 0) goto L_12ed8; */
 
     /* [UNRESOLVED] CFDataGetBytePtr(); */
     /* [UNRESOLVED] CFDataGetLength(); */

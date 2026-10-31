@@ -891,7 +891,7 @@ L_141bec:;
     // 00141c80  ret
     id ret = nil;
 
-    return (id)self->_hushAvatar;
+    return nil;  /* [UNRESOLVED] self->_hushAvatar */
 }
 
 // @0x141c84  types=v24@0:8@16
@@ -913,7 +913,7 @@ L_141bec:;
     // 00141ca4  ret
     id ret = nil;
 
-    return (id)self->_hushName;
+    return nil;  /* [UNRESOLVED] self->_hushName */
 }
 
 // @0x141ca8  types=v24@0:8@16
@@ -935,7 +935,7 @@ L_141bec:;
     // 00141cc8  ret
     id ret = nil;
 
-    return (id)self->_hushLine2;
+    return nil;  /* [UNRESOLVED] self->_hushLine2 */
 }
 
 // @0x141ccc  types=v24@0:8@16
@@ -957,7 +957,7 @@ L_141bec:;
     // 00141cec  ret
     id ret = nil;
 
-    return (id)self->_hushLine3;
+    return nil;  /* [UNRESOLVED] self->_hushLine3 */
 }
 
 // @0x141cf0  types=v24@0:8@16
@@ -979,7 +979,7 @@ L_141bec:;
     // 00141d10  ret
     id ret = nil;
 
-    return (id)self->_hushCapsule;
+    return nil;  /* [UNRESOLVED] self->_hushCapsule */
 }
 
 // @0x141d14  types=v24@0:8@16
@@ -1001,7 +1001,7 @@ L_141bec:;
     // 00141d34  ret
     id ret = nil;
 
-    return (id)self->_hushSelfBadge;
+    return nil;  /* [UNRESOLVED] self->_hushSelfBadge */
 }
 
 // @0x141d38  types=v24@0:8@16

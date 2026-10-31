@@ -1056,11 +1056,11 @@ L_df654:;
     /* [UNRESOLVED] dispatch_time(0x4786); */
     /* [UNRESOLVED] dispatch_after(0x200010, 0x2074d8); */
     /* [UNRESOLVED] dispatch_time(0x9502); */
-    objc_retain(NSSelectorFromString);
+    /* [UNRESOLVED] objc_retain(NSSelectorFromString); */
     /* [UNRESOLVED] dispatch_after(0x200010); */
     /* [UNRESOLVED] objc_release(0x200010); */
-    objc_release(NSSelectorFromString);
-    objc_release(NSSelectorFromString);
+    /* [UNRESOLVED] objc_release(NSSelectorFromString); */
+    /* [UNRESOLVED] objc_release(NSSelectorFromString); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_df72c; */
 
     return;
@@ -1716,11 +1716,11 @@ L_e17f4:;
     if ([(id)0 length] == 0) goto L_e193c;
 
     /* [UNRESOLVED] object_getClass(); */
-    if (object_getClass == 0) goto L_e193c;
+    /* [UNRESOLVED] if (object_getClass == 0) goto L_e193c; */
 
     /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] class_getInstanceVariable([(id)objc_retainAutorelease UTF8String]); */
-    if (class_getInstanceVariable != 0) goto L_e18f4;
+    /* [UNRESOLVED] if (class_getInstanceVariable != 0) goto L_e18f4; */
 
     (void)[(id)0 hasPrefix:@"_"];
     if (((0 >> 0) & 1) == 0) goto L_e18b8;
@@ -1732,11 +1732,11 @@ L_e18b8:;
     /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] class_getInstanceVariable([(id)objc_retainAutorelease UTF8String]); */
     objc_release(ret);
-    if (class_getInstanceVariable == 0) goto L_e193c;
+    /* [UNRESOLVED] if (class_getInstanceVariable == 0) goto L_e193c; */
 
 L_e18f4:;
     /* [UNRESOLVED] ivar_getTypeEncoding(); */
-    if (ivar_getTypeEncoding == 0) goto L_e193c;
+    /* [UNRESOLVED] if (ivar_getTypeEncoding == 0) goto L_e193c; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e193c; */
 
@@ -2644,7 +2644,7 @@ L_e1f9c:;
 
     /* [UNRESOLVED] if (0x258088 != 0) goto L_e2004; */
 
-    (void)[(id)[NSMutableSet class] set];
+    /* [UNRESOLVED] [(id)[NSMutableSet class] set]; */
     /* [UNRESOLVED] objc_release(0x258088); */
 
 L_e2004:;
@@ -4490,13 +4490,13 @@ L_e35d0:;
     if (self == 0) goto L_e3738;
 
     (void)[(id)self view];
-    (void)[(id)ret frame];
+    /* [UNRESOLVED] [(id)ret frame]; */
     /* [UNRESOLVED] NSStringFromCGRect(); */
-    (void)[(id)ret frame];
+    /* [UNRESOLVED] [(id)ret frame]; */
     /* [UNRESOLVED] NSStringFromCGRect(); */
     (void)[(id)self view];
     (void)[(id)ret viewWithTag:0x2332];
-    (void)[(id)ret frame];
+    /* [UNRESOLVED] [(id)ret frame]; */
     /* [UNRESOLVED] NSStringFromCGRect(); */
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:4 format:@"[NearbyMark] 顶栏布局：view=%@ nav=%@ chip=%@"]; */
     objc_release(ret);
@@ -5290,7 +5290,7 @@ L_e4280:;
 L_e42b0:;
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a0); */
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0xe42d0  types=B16@0:8

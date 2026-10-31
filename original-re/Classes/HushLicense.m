@@ -1318,7 +1318,7 @@ L_14350:;
     objc_release(ret);
 
 L_143a8:;
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x143ac  types=@24@0:8@16
@@ -1606,7 +1606,7 @@ L_14598:;
     objc_release(ret);
 
 L_1468c:;
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x146bc  types=q16@0:8

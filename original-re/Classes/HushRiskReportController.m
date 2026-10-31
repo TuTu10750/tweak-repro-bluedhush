@@ -791,7 +791,7 @@ L_13558c:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_1356ac; */
 
-    (void)[(id)self->_sections count];
+    /* [UNRESOLVED] [(id)self->_sections count]; */
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1356ac; */
 
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */
@@ -906,7 +906,7 @@ L_1356d0:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_1357c8; */
 
-    (void)[(id)self->_sections count];
+    /* [UNRESOLVED] [(id)self->_sections count]; */
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1357c8; */
 
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */

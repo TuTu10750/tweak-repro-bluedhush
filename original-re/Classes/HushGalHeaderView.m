@@ -333,46 +333,46 @@
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_name);
     (void)[(id)[UIFont class] boldSystemFontOfSize:12];
-    (void)[(id)self->_name setFont:ret];
+    /* [UNRESOLVED] [(id)self->_name setFont:ret]; */
     objc_release(ret);
-    (void)[(id)self->_name setAdjustsFontSizeToFitWidth:1];
-    (void)[(id)self->_name setMinimumScaleFactor:0.72];
-    (void)[(id)self->_name setLineBreakMode:2];
+    /* [UNRESOLVED] [(id)self->_name setAdjustsFontSizeToFitWidth:1]; */
+    /* [UNRESOLVED] [(id)self->_name setMinimumScaleFactor:0.72]; */
+    /* [UNRESOLVED] [(id)self->_name setLineBreakMode:2]; */
     /* [UNRESOLVED] HushIsDarkMode(); */
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
-    (void)[(id)self->_name setTextColor:ret];
+    /* [UNRESOLVED] [(id)self->_name setTextColor:ret]; */
     objc_release(ret);
-    (void)[(id)self->_name setAutoresizingMask:0x12];
+    /* [UNRESOLVED] [(id)self->_name setAutoresizingMask:0x12]; */
     (void)[(id)self addSubview:self->_name];
     (void)[[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_count);
     (void)[(id)[UIFont class] systemFontOfSize:12];
-    (void)[(id)self->_count setFont:ret];
+    /* [UNRESOLVED] [(id)self->_count setFont:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
     (void)[(id)[UIColor class] colorWithWhite:0.42 alpha:1];
-    (void)[(id)self->_count setTextColor:ret];
+    /* [UNRESOLVED] [(id)self->_count setTextColor:ret]; */
     objc_release(ret);
-    (void)[(id)self->_count setTextAlignment:2];
-    (void)[(id)self->_count setAutoresizingMask:0x11];
+    /* [UNRESOLVED] [(id)self->_count setTextAlignment:2]; */
+    /* [UNRESOLVED] [(id)self->_count setAutoresizingMask:0x11]; */
     (void)[(id)self addSubview:self->_count];
     (void)[(id)[UIButton class] buttonWithType:1];
     objc_release(self->_home);
     /* [UNRESOLVED] [(id)self->_home setFrame:-0x3faf000000000000]; */
-    (void)[(id)self->_home setTitle:@"主页" forState:0];
+    /* [UNRESOLVED] [(id)self->_home setTitle:@"主页" forState:0]; */
     (void)[(id)[UIFont class] systemFontOfSize:14];
-    (void)[(id)self->_home titleLabel];
+    /* [UNRESOLVED] [(id)self->_home titleLabel]; */
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
-    (void)[(id)self->_home setTitleColor:ret forState:0];
+    /* [UNRESOLVED] [(id)self->_home setTitleColor:ret forState:0]; */
     objc_release(ret);
-    (void)[(id)self->_home setAutoresizingMask:0x11];
+    /* [UNRESOLVED] [(id)self->_home setAutoresizingMask:0x11]; */
     (void)[(id)self addSubview:self->_home];
 
 L_7c688:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x7c68c  types=@16@0:8
@@ -384,7 +384,7 @@ L_7c688:;
     // 0007c698  ret
     id ret = nil;
 
-    return (id)self->_name;
+    return nil;  /* [UNRESOLVED] self->_name */
 }
 
 // @0x7c69c  types=v24@0:8@16
@@ -406,7 +406,7 @@ L_7c688:;
     // 0007c6bc  ret
     id ret = nil;
 
-    return (id)self->_home;
+    return nil;  /* [UNRESOLVED] self->_home */
 }
 
 // @0x7c6c0  types=v24@0:8@16
@@ -428,7 +428,7 @@ L_7c688:;
     // 0007c6e0  ret
     id ret = nil;
 
-    return (id)self->_count;
+    return nil;  /* [UNRESOLVED] self->_count */
 }
 
 // @0x7c6e4  types=v24@0:8@16

@@ -36,7 +36,7 @@
     if (self == 0) goto L_962d8;
 
 L_962d8:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x962dc  types=B16@0:8
@@ -560,7 +560,7 @@ L_967d4:;
     (void)[(id)self hushItems];
     (void)[(id)ret count];
     objc_release(ret);
-    return (long long)[(id)ret count];
+    return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
 
 // @0x96824  types=@32@0:8@16@24
@@ -1419,7 +1419,7 @@ L_96eb0:;
 
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a1); */
-    (void)[(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"删除" handler:0];
+    /* [UNRESOLVED] [(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"删除" handler:0]; */
     (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
     (void)[(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
@@ -1601,7 +1601,7 @@ L_97174:;
 
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a1); */
-    (void)[(id)[UIContextualAction class] contextualActionWithStyle:0 title:@"备注" handler:0];
+    /* [UNRESOLVED] [(id)[UIContextualAction class] contextualActionWithStyle:0 title:@"备注" handler:0]; */
     (void)[(id)[UIColor class] systemBlueColor];
     (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);

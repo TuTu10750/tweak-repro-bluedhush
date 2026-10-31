@@ -543,7 +543,7 @@
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    if (((HushIsDarkMode >> 0) & 1) == 0) goto L_1625dc;
+    /* [UNRESOLVED] if (((HushIsDarkMode >> 0) & 1) == 0) goto L_1625dc; */
 
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     goto L_16260c;
@@ -627,7 +627,7 @@ L_16283c:;
     /* [UNRESOLVED] [(id)[[UILabel alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    if (((HushIsDarkMode >> 0) & 1) == 0) goto L_162c58;
+    /* [UNRESOLVED] if (((HushIsDarkMode >> 0) & 1) == 0) goto L_162c58; */
 
     goto L_162c58;
 

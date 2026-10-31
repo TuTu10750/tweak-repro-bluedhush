@@ -907,7 +907,7 @@ L_164570:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    if (HushIsDarkMode == 0) goto L_1659f8;
+    /* [UNRESOLVED] if (HushIsDarkMode == 0) goto L_1659f8; */
 
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     goto L_165a18;
@@ -984,11 +984,11 @@ L_165ca4:;
     /* [UNRESOLVED] [(id)self unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     objc_release(ret);
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     objc_release(ret);
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)self unknownSelector]; */
@@ -1159,7 +1159,7 @@ L_1671e8:;
     /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_167230; */
 
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x167234  types=v16@0:8

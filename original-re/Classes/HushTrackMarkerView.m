@@ -115,7 +115,7 @@ L_901fc:;
     // 00090224  ret
     id ret = nil;
 
-    return (id)self->_hushCaption;
+    return nil;  /* [UNRESOLVED] self->_hushCaption */
 }
 
 // @0x90228  types=v24@0:8@16

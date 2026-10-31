@@ -36,7 +36,7 @@
     (void)[(id)self files];
     (void)[(id)ret count];
     objc_release(ret);
-    return (long long)[(id)ret count];
+    return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
 
 // @0x7a5ac  types=@32@0:8@16q24

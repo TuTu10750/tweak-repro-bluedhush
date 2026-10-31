@@ -393,7 +393,7 @@ L_168ac:;
     id ret = nil;
 
     (void)[(id)[NSString class] stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
-    return (id)[(id)[NSString class] stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
+    return nil;  /* [UNRESOLVED] [(id)[NSString class] stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"] */
 }
 
 // @0x16a04  types=@16@0:8
@@ -968,7 +968,7 @@ L_170d4:;
     /* [UNRESOLVED] if ([(id)objc_retainAutorelease UTF8String] == 0) goto L_17244; */
 
     /* [UNRESOLVED] strlen(); */
-    if (strlen == 0) goto L_17244;
+    /* [UNRESOLVED] if (strlen == 0) goto L_17244; */
 
     /* [UNRESOLVED] if (0x256710 != 0) goto L_17194; */
 

@@ -629,7 +629,7 @@
     objc_release(ret);
 
 L_13abd8:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x13abdc  types=v16@0:8
@@ -810,7 +810,7 @@ L_13abd8:;
     // 0013add4  ret
     id ret = nil;
 
-    return (id)self->_uid;
+    return nil;  /* [UNRESOLVED] self->_uid */
 }
 
 // @0x13add8  types=v24@0:8@16
@@ -830,7 +830,7 @@ L_13abd8:;
     // 0013adf0  ret
     id ret = nil;
 
-    return (id)self->_avatar;
+    return nil;  /* [UNRESOLVED] self->_avatar */
 }
 
 // @0x13adf4  types=v24@0:8@16
@@ -852,7 +852,7 @@ L_13abd8:;
     // 0013ae14  ret
     id ret = nil;
 
-    return (id)self->_name;
+    return nil;  /* [UNRESOLVED] self->_name */
 }
 
 // @0x13ae18  types=v24@0:8@16
@@ -874,7 +874,7 @@ L_13abd8:;
     // 0013ae38  ret
     id ret = nil;
 
-    return (id)self->_detail;
+    return nil;  /* [UNRESOLVED] self->_detail */
 }
 
 // @0x13ae3c  types=v24@0:8@16
@@ -896,7 +896,7 @@ L_13abd8:;
     // 0013ae5c  ret
     id ret = nil;
 
-    return (id)self->_tagLabel;
+    return nil;  /* [UNRESOLVED] self->_tagLabel */
 }
 
 // @0x13ae60  types=v24@0:8@16

@@ -1173,7 +1173,7 @@ L_12892c:;
     (void)[(id)[UITableView class] class];
     (void)[(id)ret isKindOfClass:[(id)[UITableView class] class]];
     objc_release(ret);
-    return (id)objc_loadWeakRetained;
+    return nil;  /* [UNRESOLVED] objc_loadWeakRetained */
 }
 
 // @0x1289f4  types=v24@0:8d16
@@ -1429,12 +1429,12 @@ L_128d14:;
     (void)[(id)ret bounds];
     /* [UNRESOLVED] if (cond / * le * /) goto L_128dbc; */
 
-    (void)[(id)[UIView class] animateWithDuration:4 delay:objc_retainBlock options:0 animations:0 completion:0];
+    /* [UNRESOLVED] [(id)[UIView class] animateWithDuration:4 delay:objc_retainBlock options:0 animations:0 completion:0]; */
     goto L_128dbc;
 
 L_128dbc:;
     /* [UNRESOLVED] [(id)self setInsetExtra:0x4046000000000000]; */
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     objc_release(ret);
 
 L_128dd4:;
@@ -1930,7 +1930,7 @@ L_129344:;
     objc_release(ret);
     if ((([(id)ret isHidden] >> 0) & 1) != 0) goto L_12946c;
 
-    (void)[(id)ret frame];
+    /* [UNRESOLVED] [(id)ret frame]; */
     /* [UNRESOLVED] CGRectGetMinY(); */
 
 L_12946c:;
@@ -3326,7 +3326,7 @@ L_1299c8:;
 
 L_129fe4:;
     /* [UNRESOLVED] [(id)a0 titleLabel]; */
-    (void)[(id)ret text];
+    /* [UNRESOLVED] [(id)ret text]; */
     objc_release(ret);
 
 L_12a018:;
@@ -4471,7 +4471,7 @@ L_12ad50:;
     // 0012b040  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    (void)[(id)objc_loadWeakRetained text];
+    /* [UNRESOLVED] [(id)objc_loadWeakRetained text]; */
     (void)[(id)[NSCharacterSet class] whitespaceAndNewlineCharacterSet];
     (void)[(id)ret stringByTrimmingCharactersInSet:ret];
     objc_release(ret);

@@ -881,7 +881,7 @@ L_21748:;
     (void)[(id)self items];
     (void)[(id)ret count];
     objc_release(ret);
-    return (long long)[(id)ret count];
+    return 0;  /* [UNRESOLVED] [(id)ret count] */
 }
 
 // @0x21894  types=@32@0:8@16@24
@@ -1637,7 +1637,7 @@ L_21a7c:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a1); */
-    (void)[(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"取消标记" handler:0];
+    /* [UNRESOLVED] [(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"取消标记" handler:0]; */
     (void)[(id)[UIColor class] systemRedColor];
     (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -1692,7 +1692,7 @@ L_2208c:;
     // 0002210c  ret
     id ret = nil;
 
-    return (id)self->_cardView;
+    return nil;  /* [UNRESOLVED] self->_cardView */
 }
 
 // @0x22110  types=v24@0:8@16
@@ -1714,7 +1714,7 @@ L_2208c:;
     // 00022154  ret
     id ret = nil;
 
-    return (id)self->_countLabel;
+    return nil;  /* [UNRESOLVED] self->_countLabel */
 }
 
 // @0x22158  types=v24@0:8@16
@@ -1736,7 +1736,7 @@ L_2208c:;
     // 00022178  ret
     id ret = nil;
 
-    return (id)self->_items;
+    return nil;  /* [UNRESOLVED] self->_items */
 }
 
 // @0x2217c  types=v24@0:8@16

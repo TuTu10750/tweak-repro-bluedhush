@@ -565,16 +565,16 @@
     /* [UNRESOLVED] [(id)objc_alloc_init addSubview:ret]; */
     /* [UNRESOLVED] [[MKMapView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_map);
-    (void)[(id)self->_map setDelegate:self];
-    (void)[(id)self->_map setZoomEnabled:1];
-    (void)[(id)self->_map setScrollEnabled:1];
-    (void)[(id)self->_map setRotateEnabled:0];
-    (void)[(id)self->_map setPitchEnabled:0];
-    (void)[(id)self->_map setShowsCompass:0];
-    (void)[(id)self->_map setShowsScale:0];
-    (void)[(id)self->_map setShowsUserLocation:0];
-    (void)[(id)self->_map setAccessibilityIdentifier:@"hush_track_card_map"];
-    (void)[(id)self->_map setTranslatesAutoresizingMaskIntoConstraints:0];
+    /* [UNRESOLVED] [(id)self->_map setDelegate:self]; */
+    /* [UNRESOLVED] [(id)self->_map setZoomEnabled:1]; */
+    /* [UNRESOLVED] [(id)self->_map setScrollEnabled:1]; */
+    /* [UNRESOLVED] [(id)self->_map setRotateEnabled:0]; */
+    /* [UNRESOLVED] [(id)self->_map setPitchEnabled:0]; */
+    /* [UNRESOLVED] [(id)self->_map setShowsCompass:0]; */
+    /* [UNRESOLVED] [(id)self->_map setShowsScale:0]; */
+    /* [UNRESOLVED] [(id)self->_map setShowsUserLocation:0]; */
+    /* [UNRESOLVED] [(id)self->_map setAccessibilityIdentifier:@"hush_track_card_map"]; */
+    /* [UNRESOLVED] [(id)self->_map setTranslatesAutoresizingMaskIntoConstraints:0]; */
     (void)[(id)self view];
     (void)[(id)ret addSubview:self->_map];
     objc_release(ret);
@@ -582,17 +582,17 @@
     (void)[(id)self lat];
     (void)[(id)self lng];
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
-    (void)[(id)self->_anno setCoordinate:0];
-    (void)[(id)self->_anno setTitle:@"目标位置"];
+    /* [UNRESOLVED] [(id)self->_anno setCoordinate:0]; */
+    /* [UNRESOLVED] [(id)self->_anno setTitle:@"目标位置"]; */
     (void)[(id)self lat];
     (void)[(id)self lng];
     (void)[(id)[NSString class] stringWithFormat:@"%.6f, %.6f"];
-    (void)[(id)self->_anno setSubtitle:ret];
+    /* [UNRESOLVED] [(id)self->_anno setSubtitle:ret]; */
     objc_release(ret);
-    (void)[(id)self->_map addAnnotation:self->_anno];
-    (void)[(id)self->_anno coordinate];
+    /* [UNRESOLVED] [(id)self->_map addAnnotation:self->_anno]; */
+    /* [UNRESOLVED] [(id)self->_anno coordinate]; */
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
-    (void)[(id)self->_map setRegion:0 animated:0];
+    /* [UNRESOLVED] [(id)self->_map setRegion:0 animated:0]; */
     (void)[(id)[UIBlurEffect class] effectWithStyle:7];
     (void)[[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(ret);
@@ -609,14 +609,14 @@
     objc_release(ret);
     objc_release(self->_chipLabel);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:12 weight:0x200378]; */
-    (void)[(id)self->_chipLabel setFont:ret];
+    /* [UNRESOLVED] [(id)self->_chipLabel setFont:ret]; */
     objc_release(ret);
-    (void)[(id)self->_chipLabel setNumberOfLines:1];
-    (void)[(id)self->_chipLabel setLineBreakMode:4];
+    /* [UNRESOLVED] [(id)self->_chipLabel setNumberOfLines:1]; */
+    /* [UNRESOLVED] [(id)self->_chipLabel setLineBreakMode:4]; */
     (void)[(id)self hushChipText];
-    (void)[(id)self->_chipLabel setText:ret];
+    /* [UNRESOLVED] [(id)self->_chipLabel setText:ret]; */
     objc_release(ret);
-    (void)[(id)self->_chipLabel setTranslatesAutoresizingMaskIntoConstraints:0];
+    /* [UNRESOLVED] [(id)self->_chipLabel setTranslatesAutoresizingMaskIntoConstraints:0]; */
     (void)[(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
     (void)[(id)ret addSubview:self->_chipLabel];
     objc_release(ret);
@@ -701,18 +701,18 @@
     (void)[(id)ret centerYAnchor];
     /* [UNRESOLVED] [(id)objc_alloc_init centerYAnchor]; */
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_map topAnchor];
+    /* [UNRESOLVED] [(id)self->_map topAnchor]; */
     /* [UNRESOLVED] [(id)objc_alloc_init bottomAnchor]; */
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_map leadingAnchor];
+    /* [UNRESOLVED] [(id)self->_map leadingAnchor]; */
     (void)[(id)self view];
     (void)[(id)ret leadingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_map trailingAnchor];
+    /* [UNRESOLVED] [(id)self->_map trailingAnchor]; */
     (void)[(id)self view];
     (void)[(id)ret trailingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_map bottomAnchor];
+    /* [UNRESOLVED] [(id)self->_map bottomAnchor]; */
     (void)[(id)self view];
     (void)[(id)ret bottomAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
@@ -725,21 +725,21 @@
     (void)[(id)ret trailingAnchor];
     (void)[(id)ret constraintLessThanOrEqualToAnchor:ret constant:0];
     (void)[(id)[[UIVisualEffectView alloc] initWithEffect:ret] topAnchor];
-    (void)[(id)self->_map topAnchor];
+    /* [UNRESOLVED] [(id)self->_map topAnchor]; */
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_chipLabel leadingAnchor];
+    /* [UNRESOLVED] [(id)self->_chipLabel leadingAnchor]; */
     (void)[(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
     (void)[(id)ret leadingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_chipLabel trailingAnchor];
+    /* [UNRESOLVED] [(id)self->_chipLabel trailingAnchor]; */
     (void)[(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
     (void)[(id)ret trailingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_chipLabel topAnchor];
+    /* [UNRESOLVED] [(id)self->_chipLabel topAnchor]; */
     (void)[(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
     (void)[(id)ret topAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_chipLabel bottomAnchor];
+    /* [UNRESOLVED] [(id)self->_chipLabel bottomAnchor]; */
     (void)[(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
     (void)[(id)ret bottomAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
@@ -1950,9 +1950,9 @@ L_93230:;
     /* [UNRESOLVED] [super viewDidAppear:a0]; */
     if (0 != 0) goto L_93378;
 
-    (void)[(id)self->_anno coordinate];
+    /* [UNRESOLVED] [(id)self->_anno coordinate]; */
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
-    (void)[(id)self->_map setRegion:0 animated:0];
+    /* [UNRESOLVED] [(id)self->_map setRegion:0 animated:0]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (self->_map == 0) goto L_93364;
 
@@ -1978,7 +1978,7 @@ L_93378:;
     // 00093388  ret
     id ret = nil;
 
-    return (id)self->_uid;
+    return nil;  /* [UNRESOLVED] self->_uid */
 }
 
 // @0x9338c  types=v24@0:8@16
@@ -2002,7 +2002,7 @@ L_93378:;
     // 000933b4  ret
     id ret = nil;
 
-    return (void *)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x933b8  types=v64@0:8{?=BBBBBddddd}16
@@ -2030,7 +2030,7 @@ L_93378:;
     // 000933e4  ret
     id ret = nil;
 
-    return (double)self;
+    return 0;  /* [UNRESOLVED] self */
 }
 
 // @0x933e8  types=v24@0:8d16
@@ -2054,7 +2054,7 @@ L_93378:;
     // 00093404  ret
     id ret = nil;
 
-    return (double)self;
+    return 0;  /* [UNRESOLVED] self */
 }
 
 // @0x93408  types=v24@0:8d16

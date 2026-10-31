@@ -3966,7 +3966,7 @@ L_1a4ed4:;
     // 001a5240  ret
     id ret = nil;
 
-    return (long long)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x1a5244  types=@32@0:8@16q24
@@ -3998,7 +3998,7 @@ L_1a4ed4:;
     // 001a527c  ret
     id ret = nil;
 
-    return (double)self;
+    return 0;  /* [UNRESOLVED] self */
 }
 
 // @0x1a5280  types=@16@0:8
@@ -5496,7 +5496,7 @@ L_1a6324:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / key]; */
     /* [UNRESOLVED] HushKeyNeedsActivation(); */
     objc_release(ret);
-    if (((HushKeyNeedsActivation >> 0) & 1) != 0) goto L_1a63b0;
+    /* [UNRESOLVED] if (((HushKeyNeedsActivation >> 0) & 1) != 0) goto L_1a63b0; */
 
 L_1a6370:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1a6308; */

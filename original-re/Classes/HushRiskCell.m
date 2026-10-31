@@ -442,7 +442,7 @@
     objc_release(ret);
 
 L_208a0:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x208a4  types=v16@0:8
@@ -617,7 +617,7 @@ L_208a0:;
     (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     /* [UNRESOLVED] [(id)self name]; */
-    (void)[(id)ret frame];
+    /* [UNRESOLVED] [(id)ret frame]; */
     /* [UNRESOLVED] CGRectGetMaxX(); */
     (void)[(id)self source];
     (void)[(id)ret setFrame:CGRectZero];
@@ -638,7 +638,7 @@ L_208a0:;
     // 00020ab4  ret
     id ret = nil;
 
-    return (id)self->_name;
+    return nil;  /* [UNRESOLVED] self->_name */
 }
 
 // @0x20ab8  types=v24@0:8@16
@@ -660,7 +660,7 @@ L_208a0:;
     // 00020ad8  ret
     id ret = nil;
 
-    return (id)self->_source;
+    return nil;  /* [UNRESOLVED] self->_source */
 }
 
 // @0x20adc  types=v24@0:8@16
@@ -682,7 +682,7 @@ L_208a0:;
     // 00020afc  ret
     id ret = nil;
 
-    return (id)self->_time;
+    return nil;  /* [UNRESOLVED] self->_time */
 }
 
 // @0x20b00  types=v24@0:8@16

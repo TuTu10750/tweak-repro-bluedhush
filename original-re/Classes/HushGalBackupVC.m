@@ -969,7 +969,7 @@ L_895c0:;
     (void)[(id)self items];
     (void)[(id)ret count];
     objc_release(ret);
-    return (long long)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x89698  types=@32@0:8@16@24
@@ -2235,7 +2235,7 @@ L_8a244:;
     if ([(id)ret row] == 0) goto L_8a3f0;
 
     /* [UNRESOLVED] objc_retain(a1); */
-    (void)[(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"删除" handler:0];
+    /* [UNRESOLVED] [(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"删除" handler:0]; */
     (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
     (void)[(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
@@ -2694,7 +2694,7 @@ L_8ae14:;
     // 0008b160  ret
     id ret = nil;
 
-    return (id)self->_items;
+    return nil;  /* [UNRESOLVED] self->_items */
 }
 
 // @0x8b164  types=v24@0:8@16

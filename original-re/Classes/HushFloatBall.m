@@ -266,21 +266,21 @@
     (void)[(id)self bounds];
     (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_iconView);
-    (void)[(id)self->_iconView setContentMode:1];
-    (void)[(id)self->_iconView setUserInteractionEnabled:0];
+    /* [UNRESOLVED] [(id)self->_iconView setContentMode:1]; */
+    /* [UNRESOLVED] [(id)self->_iconView setUserInteractionEnabled:0]; */
     (void)[(id)[UIColor class] blackColor];
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
-    (void)[(id)self->_iconView layer];
+    /* [UNRESOLVED] [(id)self->_iconView layer]; */
     /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)self->_iconView layer];
+    /* [UNRESOLVED] [(id)self->_iconView layer]; */
     (void)[(id)ret setShadowOpacity:0];
     objc_release(ret);
-    (void)[(id)self->_iconView layer];
+    /* [UNRESOLVED] [(id)self->_iconView layer]; */
     (void)[(id)ret setShadowRadius:4];
     objc_release(ret);
-    (void)[(id)self->_iconView layer];
+    /* [UNRESOLVED] [(id)self->_iconView layer]; */
     (void)[(id)ret setShadowOffset:CGSizeZero];
     objc_release(ret);
     (void)[(id)self addSubview:self->_iconView];
@@ -296,7 +296,7 @@
     objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]);
 
 L_67678:;
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x6767c  types=v16@0:8
@@ -596,7 +596,7 @@ L_67950:;
     // 00067980  ret
     id ret = nil;
 
-    return (id)self->_iconView;
+    return nil;  /* [UNRESOLVED] self->_iconView */
 }
 
 // @0x67984  types=v24@0:8@16

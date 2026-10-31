@@ -13,7 +13,7 @@
     // 001411d4  ret
     id ret = nil;
 
-    return (id)self->_hushURL;
+    return nil;  /* [UNRESOLVED] self->_hushURL */
 }
 
 // @0x1411d8  types=v24@0:8@16

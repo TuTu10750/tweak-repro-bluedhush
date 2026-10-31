@@ -686,9 +686,9 @@ L_16aaa8:;
     /* [UNRESOLVED] [(id)self unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     objc_release(ret);
-    objc_release(objc_retainBlock);
+    /* [UNRESOLVED] objc_release(objc_retainBlock); */
     /* [UNRESOLVED] [super unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector]); */

@@ -11,7 +11,7 @@
     // 0015d5f0  ret
     id ret = nil;
 
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x15d5f4  types=v16@0:8
@@ -856,11 +856,11 @@ L_15e2e4:;
 
 L_15e308:;
 
-    objc_retain(objc_autoreleasePoolPush);
-    if (objc_autoreleasePoolPush == 0) goto L_15e8f4;
+    /* [UNRESOLVED] objc_retain(objc_autoreleasePoolPush); */
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e8f4; */
 
     /* [UNRESOLVED] sub_15e8f8(0x229cf8); */
-    if (objc_autoreleasePoolPush == 0) goto L_15e52c;
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e52c; */
 
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -876,7 +876,7 @@ L_15e308:;
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)objc_autoreleasePoolPush unknownSelector]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
-    if (objc_autoreleasePoolPush == 0) goto L_15e88c;
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e88c; */
 
     /* [UNRESOLVED] [(id)objc_autoreleasePoolPush unknownSelector]; */
     /* [UNRESOLVED] NSStringFromClass(); */
@@ -891,9 +891,9 @@ L_15e308:;
 
 L_15e52c:;
     /* [UNRESOLVED] sub_15e8f8(0x229d18); */
-    if (objc_autoreleasePoolPush == 0) goto L_15e8f4;
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e8f4; */
 
-    objc_retain(objc_autoreleasePoolPush);
+    /* [UNRESOLVED] objc_retain(objc_autoreleasePoolPush); */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -908,7 +908,7 @@ L_15e52c:;
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)objc_autoreleasePoolPush unknownSelector]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
-    if (objc_autoreleasePoolPush == 0) goto L_15e8bc;
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e8bc; */
 
     /* [UNRESOLVED] [(id)objc_autoreleasePoolPush unknownSelector]; */
     /* [UNRESOLVED] NSStringFromClass(); */
@@ -920,11 +920,11 @@ L_15e52c:;
     goto L_15e8c4;
 
 L_15e6e4:;
-    if (objc_autoreleasePoolPush == 0) goto L_15e8d4;
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e8d4; */
 
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)objc_autoreleasePoolPush unknownSelector]; */
-    if (objc_autoreleasePoolPush == 0) goto L_15e778;
+    /* [UNRESOLVED] if (objc_autoreleasePoolPush == 0) goto L_15e778; */
 
     /* [UNRESOLVED] [(id)objc_autoreleasePoolPush unknownSelector]; */
     if (ret == 0) goto L_15e74c;
@@ -987,13 +987,13 @@ L_15e8cc:;
     /* [UNRESOLVED] objc_release(0 / * adrp * /); */
 
 L_15e8d4:;
-    objc_release(objc_autoreleasePoolPush);
+    /* [UNRESOLVED] objc_release(objc_autoreleasePoolPush); */
 
 L_15e8f4:;
 
-    objc_retain(objc_autoreleasePoolPush);
+    /* [UNRESOLVED] objc_retain(objc_autoreleasePoolPush); */
     objc_retain(0);
-    objc_retain(objc_autoreleasePoolPush);
+    /* [UNRESOLVED] objc_retain(objc_autoreleasePoolPush); */
     /* [UNRESOLVED] HushKeyValue(0x22a218); */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -1017,7 +1017,7 @@ L_15e9ec:;
 
 L_15ea3c:;
     objc_release(ret);
-    objc_release(objc_autoreleasePoolPush);
+    /* [UNRESOLVED] objc_release(objc_autoreleasePoolPush); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if ([(id)ret unknownSelector] == 0) goto L_15ea88; */
 
@@ -1073,7 +1073,7 @@ L_15ec04:;
 L_15ec0c:;
     objc_release(ret);
     objc_release(0);
-    objc_release(objc_autoreleasePoolPush);
+    /* [UNRESOLVED] objc_release(objc_autoreleasePoolPush); */
     return;
 }
 

@@ -312,7 +312,7 @@ L_191ec:;
     if ([? class] == 0) goto L_1931c;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
-    if (class_getInstanceMethod == 0) goto L_19368;
+    /* [UNRESOLVED] if (class_getInstanceMethod == 0) goto L_19368; */
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
     /* [UNRESOLVED] method_getImplementation(); */
@@ -356,7 +356,7 @@ L_19400:;
 
 L_1942c:;
     /* [UNRESOLVED] objc_release(a0); */
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x194d4  types=B48@0:8@16:24^?32^^?40
@@ -553,7 +553,7 @@ L_1942c:;
     if ([? class] == 0) goto L_195f0;
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
-    if (class_getClassMethod == 0) goto L_1963c;
+    /* [UNRESOLVED] if (class_getClassMethod == 0) goto L_1963c; */
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
     /* [UNRESOLVED] method_getImplementation(); */
@@ -598,7 +598,7 @@ L_196d4:;
 
 L_19700:;
     /* [UNRESOLVED] objc_release(a0); */
-    return (BOOL)1;
+    return 0;  /* [UNRESOLVED] 1 */
 }
 
 // @0x19720  types=@48@0:8@16@24^?32^^?40
@@ -968,10 +968,10 @@ L_19810:;
 
 L_19828:;
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if (NSSelectorFromString == 0) goto L_1984c;
+    /* [UNRESOLVED] if (NSSelectorFromString == 0) goto L_1984c; */
 
     /* [UNRESOLVED] class_getInstanceMethod(NSSelectorFromString); */
-    if (class_getInstanceMethod != 0) goto L_19a6c;
+    /* [UNRESOLVED] if (class_getInstanceMethod != 0) goto L_19a6c; */
 
 L_1984c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19810; */
@@ -1496,7 +1496,7 @@ L_19e0c:;
     if ([? class] == 0) goto L_19fa4;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
-    if (class_getInstanceMethod == 0) goto L_19ff0;
+    /* [UNRESOLVED] if (class_getInstanceMethod == 0) goto L_19ff0; */
 
     /* [UNRESOLVED] method_getImplementation(); */
     /* [UNRESOLVED] method_getTypeEncoding(); */
@@ -1613,7 +1613,7 @@ L_1a058:;
     /* [UNRESOLVED] if (a2 == 0) goto L_1a130; */
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
-    if (class_getClassMethod == 0) goto L_1a140;
+    /* [UNRESOLVED] if (class_getClassMethod == 0) goto L_1a140; */
 
 L_1a11c:;
     /* [UNRESOLVED] method_getImplementation(); */
@@ -1622,7 +1622,7 @@ L_1a11c:;
 
 L_1a130:;
     /* [UNRESOLVED] class_getInstanceMethod(); */
-    if (class_getInstanceMethod != 0) goto L_1a11c;
+    /* [UNRESOLVED] if (class_getInstanceMethod != 0) goto L_1a11c; */
 
 L_1a140:;
     /* [UNRESOLVED] objc_release(a0); */

@@ -545,17 +545,17 @@
     /* [UNRESOLVED] [(id)self addSubview:[[UIView alloc] initWithFrame:0 / * unk * /]]; */
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_scroll);
-    (void)[(id)self->_scroll setShowsHorizontalScrollIndicator:0];
-    (void)[(id)self->_scroll setAlwaysBounceHorizontal:1];
-    (void)[(id)self->_scroll setTranslatesAutoresizingMaskIntoConstraints:0];
+    /* [UNRESOLVED] [(id)self->_scroll setShowsHorizontalScrollIndicator:0]; */
+    /* [UNRESOLVED] [(id)self->_scroll setAlwaysBounceHorizontal:1]; */
+    /* [UNRESOLVED] [(id)self->_scroll setTranslatesAutoresizingMaskIntoConstraints:0]; */
     (void)[(id)self addSubview:self->_scroll];
     /* [UNRESOLVED] [[UIStackView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_stack);
-    (void)[(id)self->_stack setAxis:0];
-    (void)[(id)self->_stack setSpacing:8];
-    (void)[(id)self->_stack setAlignment:3];
-    (void)[(id)self->_stack setTranslatesAutoresizingMaskIntoConstraints:0];
-    (void)[(id)self->_scroll addSubview:self->_stack];
+    /* [UNRESOLVED] [(id)self->_stack setAxis:0]; */
+    /* [UNRESOLVED] [(id)self->_stack setSpacing:8]; */
+    /* [UNRESOLVED] [(id)self->_stack setAlignment:3]; */
+    /* [UNRESOLVED] [(id)self->_stack setTranslatesAutoresizingMaskIntoConstraints:0]; */
+    /* [UNRESOLVED] [(id)self->_scroll addSubview:self->_stack]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] leadingAnchor]; */
     (void)[(id)self leadingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
@@ -567,36 +567,36 @@
     (void)[(id)ret constraintEqualToAnchor:ret];
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] heightAnchor]; */
     (void)[(id)ret constraintEqualToConstant:0.5];
-    (void)[(id)self->_scroll leadingAnchor];
+    /* [UNRESOLVED] [(id)self->_scroll leadingAnchor]; */
     (void)[(id)self leadingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_scroll trailingAnchor];
+    /* [UNRESOLVED] [(id)self->_scroll trailingAnchor]; */
     (void)[(id)self trailingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret constant:0];
-    (void)[(id)self->_scroll topAnchor];
+    /* [UNRESOLVED] [(id)self->_scroll topAnchor]; */
     (void)[(id)self topAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_scroll bottomAnchor];
+    /* [UNRESOLVED] [(id)self->_scroll bottomAnchor]; */
     (void)[(id)self bottomAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_stack leadingAnchor];
-    (void)[(id)self->_scroll contentLayoutGuide];
+    /* [UNRESOLVED] [(id)self->_stack leadingAnchor]; */
+    /* [UNRESOLVED] [(id)self->_scroll contentLayoutGuide]; */
     (void)[(id)ret leadingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_stack trailingAnchor];
-    (void)[(id)self->_scroll contentLayoutGuide];
+    /* [UNRESOLVED] [(id)self->_stack trailingAnchor]; */
+    /* [UNRESOLVED] [(id)self->_scroll contentLayoutGuide]; */
     (void)[(id)ret trailingAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_stack topAnchor];
-    (void)[(id)self->_scroll contentLayoutGuide];
+    /* [UNRESOLVED] [(id)self->_stack topAnchor]; */
+    /* [UNRESOLVED] [(id)self->_scroll contentLayoutGuide]; */
     (void)[(id)ret topAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_stack bottomAnchor];
-    (void)[(id)self->_scroll contentLayoutGuide];
+    /* [UNRESOLVED] [(id)self->_stack bottomAnchor]; */
+    /* [UNRESOLVED] [(id)self->_scroll contentLayoutGuide]; */
     (void)[(id)ret bottomAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
-    (void)[(id)self->_stack heightAnchor];
-    (void)[(id)self->_scroll frameLayoutGuide];
+    /* [UNRESOLVED] [(id)self->_stack heightAnchor]; */
+    /* [UNRESOLVED] [(id)self->_scroll frameLayoutGuide]; */
     (void)[(id)ret heightAnchor];
     (void)[(id)ret constraintEqualToAnchor:ret];
     (void)[(id)[NSArray class] arrayWithObjects:-0xe8 count:0xd];
@@ -650,7 +650,7 @@
 L_127c44:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_127c74; */
 
-    return (id)self;
+    return nil;  /* [UNRESOLVED] self */
 }
 
 // @0x127c78  types=@16@0:8
@@ -662,7 +662,7 @@ L_127c44:;
     // 00127c84  ret
     id ret = nil;
 
-    return (id)self->_scroll;
+    return nil;  /* [UNRESOLVED] self->_scroll */
 }
 
 // @0x127c88  types=v24@0:8@16
@@ -684,7 +684,7 @@ L_127c44:;
     // 00127ca8  ret
     id ret = nil;
 
-    return (id)self->_stack;
+    return nil;  /* [UNRESOLVED] self->_stack */
 }
 
 // @0x127cac  types=v24@0:8@16

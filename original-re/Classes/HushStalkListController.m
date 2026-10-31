@@ -346,7 +346,7 @@
     // 0014317c  ret
     id ret = nil;
 
-    return (long long)2;
+    return 0;  /* [UNRESOLVED] 2 */
 }
 
 // @0x143180  types=d32@0:8@16@24
@@ -384,7 +384,7 @@
 
     /* [UNRESOLVED] if (a1 == 0) goto L_1431c4; */
 
-    return (long long)4;
+    return 0;  /* [UNRESOLVED] 4 */
 }
 
 // @0x1431dc  types=@32@0:8@16q24
@@ -1329,7 +1329,7 @@ L_14462c:;
 
 L_144654:;
     /* [UNRESOLVED] Unwind_Resume(); */
-    objc_retain(Unwind_Resume);
+    /* [UNRESOLVED] objc_retain(Unwind_Resume); */
     /* [UNRESOLVED] HushLoginUidStringOrEmpty(); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if ([(id)ret unknownSelector] == 0) goto L_1446b4; */
@@ -1351,7 +1351,7 @@ L_14470c:;
 
 L_144718:;
     objc_release(ret);
-    objc_release(Unwind_Resume);
+    /* [UNRESOLVED] objc_release(Unwind_Resume); */
     return nil;
 }
 
