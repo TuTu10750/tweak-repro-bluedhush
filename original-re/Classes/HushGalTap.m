@@ -181,34 +181,34 @@
     id ret = nil;
 
     /* [UNRESOLVED] HushChatFlashCurrentSessionId(_cmd, a0, a1, a2, a3); */
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
     if (0 == 0) goto L_85e64;
 
-    [ret length];
-    if ([ret length] == 0) goto L_85e90;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_85e90;
 
     if (ret == 0) goto L_85ea0;
 
-    [ret description];
-    [ret length];
-    if ([ret length] == 0) goto L_85eac;
+    [(id)ret description];
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_85eac;
 
-    [ret length];
-    if ([ret length] == 0) goto L_85ec4;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_85ec4;
 
 L_85e20:;
-    [ret characterAtIndex:0];
-    [ret length];
+    [(id)ret characterAtIndex:0];
+    [(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_85e20; */
 
     goto L_85ec4;
 
 L_85e64:;
-    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
     goto L_85f54;
 
 L_85e90:;
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
     goto L_85f54;
 
 L_85ea0:;
@@ -218,14 +218,14 @@ L_85eac:;
     goto L_85ef4;
 
 L_85ec4:;
-    /* [UNRESOLVED] [ret unknownSelector]; */
-    [NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
+    [(id)NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_85ef4:;
     objc_release(ret);
 
 L_85f14:;
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
     objc_release(ret);
 
 L_85f54:;
@@ -459,54 +459,54 @@ L_85f54:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [a0 view]; */
-    [ret superview];
+    /* [UNRESOLVED] [(id)a0 view]; */
+    [(id)ret superview];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86124; */
 
-    /* [UNRESOLVED] [a0 state]; */
+    /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86048; */
 
-    /* [UNRESOLVED] [a0 state]; */
+    /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_86160; */
 
 L_86048:;
-    /* [UNRESOLVED] [a0 translationInView:ret]; */
-    [ret center];
-    [ret bounds];
-    [ret bounds];
-    [ret bounds];
-    [ret setCenter:CGPointZero];
-    /* [UNRESOLVED] [a0 setTranslation:ret inView:0]; */
+    /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
+    [(id)ret center];
+    [(id)ret bounds];
+    [(id)ret bounds];
+    [(id)ret bounds];
+    [(id)ret setCenter:CGPointZero];
+    /* [UNRESOLVED] [(id)a0 setTranslation:ret inView:0]; */
 
 L_86124:;
     objc_release(ret);
     objc_release(ret);
 
 L_86160:;
-    /* [UNRESOLVED] [a0 unknownSelector]; */
+    /* [UNRESOLVED] [(id)a0 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86190; */
 
-    /* [UNRESOLVED] [a0 unknownSelector]; */
+    /* [UNRESOLVED] [(id)a0 unknownSelector]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_86124; */
 
 L_86190:;
-    /* [UNRESOLVED] [@0x244888 shared]; */
-    /* [UNRESOLVED] [0 / * unk * / center]; */
+    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)0 / * unk * / center]; */
     /* [UNRESOLVED] NSStringFromCGPoint(); */
-    /* [UNRESOLVED] [ret setString:ret forKey:0 / * func * /]; */
+    /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_8626c;
 
-    /* [UNRESOLVED] [0 / * unk * / center]; */
+    /* [UNRESOLVED] [(id)0 / * unk * / center]; */
     /* [UNRESOLVED] NSStringFromCGPoint(); */
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"]; */
     objc_release(ret);
     goto L_86124;
 
 L_8626c:;
-    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
     goto L_86124;
 }
 

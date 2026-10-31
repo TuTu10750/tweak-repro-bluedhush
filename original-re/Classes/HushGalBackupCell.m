@@ -271,37 +271,37 @@
     [[UILabel alloc] initWithFrame:CGRectZero];
     [self setName:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0x200378]; */
     [self name];
-    [ret setFont:ret];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [UIColor labelColor];
+    [(id)UIColor labelColor];
     [self name];
-    [ret setTextColor:ret];
+    [(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self name];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
     [self setMeta:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    [UIFont systemFontOfSize:12];
+    [(id)UIFont systemFontOfSize:12];
     [self meta];
-    [ret setFont:ret];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [UIColor secondaryLabelColor];
+    [(id)UIColor secondaryLabelColor];
     [self meta];
-    [ret setTextColor:ret];
+    [(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self meta];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -401,13 +401,13 @@ L_88b18:;
 
     [super layoutSubviews];
     [self contentView];
-    [ret bounds];
+    [(id)ret bounds];
     objc_release(ret);
     [self name];
-    [ret setFrame:CGRectZero];
+    [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     [self meta];
-    [ret setFrame:CGRectZero];
+    [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

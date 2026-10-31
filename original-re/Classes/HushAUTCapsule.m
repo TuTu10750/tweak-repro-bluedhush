@@ -254,34 +254,34 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_cedc;
 
-    [UIColor colorWithRed:0.039 green:0.518 blue:1 alpha:1];
+    [(id)UIColor colorWithRed:0.039 green:0.518 blue:1 alpha:1];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self layer];
-    [ret setCornerRadius:9];
+    [(id)ret setCornerRadius:9];
     objc_release(ret);
     [self setClipsToBounds:1];
     [self setUserInteractionEnabled:0];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_capText);
-    [self->_capText setText:@"隐私相册"];
-    /* [UNRESOLVED] [UIFont systemFontOfSize:10 weight:0x200180]; */
-    [self->_capText setFont:ret];
+    [(id)self->_capText setText:@"隐私相册"];
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:10 weight:0x200180]; */
+    [(id)self->_capText setFont:ret];
     objc_release(ret);
-    [UIColor whiteColor];
-    [self->_capText setTextColor:ret];
+    [(id)UIColor whiteColor];
+    [(id)self->_capText setTextColor:ret];
     objc_release(ret);
     [self addSubview:self->_capText];
-    [UIImageSymbolConfiguration configurationWithPointSize:6 weight:0];
-    [UIImage systemImageNamed:@"lock.open.fill" withConfiguration:ret];
+    [(id)UIImageSymbolConfiguration configurationWithPointSize:6 weight:0];
+    [(id)UIImage systemImageNamed:@"lock.open.fill" withConfiguration:ret];
     objc_release(ret);
-    [UIColor whiteColor];
-    [ret imageWithTintColor:ret renderingMode:1];
+    [(id)UIColor whiteColor];
+    [(id)ret imageWithTintColor:ret renderingMode:1];
     objc_release(ret);
     objc_release(ret);
     [[UIImageView alloc] initWithImage:ret];
     objc_release(self->_capIcon);
-    [self->_capIcon setContentMode:1];
+    [(id)self->_capIcon setContentMode:1];
     [self addSubview:self->_capIcon];
     objc_retain(self);
     objc_release(ret);
@@ -436,12 +436,12 @@ L_cedc:;
     id ret = nil;
 
     [super layoutSubviews];
-    /* [UNRESOLVED] [self->_capText sizeThatFits:0x7fefffffffffffff]; */
-    [self->_capIcon image];
+    /* [UNRESOLVED] [(id)self->_capText sizeThatFits:0x7fefffffffffffff]; */
+    [(id)self->_capIcon image];
     if (ret == 0) goto L_cfe4;
 
-    [self->_capIcon image];
-    [ret size];
+    [(id)self->_capIcon image];
+    [(id)ret size];
     objc_release(ret);
     goto L_cfe4;
 
@@ -449,13 +449,13 @@ L_cfe4:;
     objc_release(ret);
     [self bounds];
     [self bounds];
-    [self->_capText setFrame:CGRectZero];
+    [(id)self->_capText setFrame:CGRectZero];
     /* [UNRESOLVED] if (cond / * le * /) goto L_d0e0; */
 
-    [self->_capText frame];
+    [(id)self->_capText frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
     [self bounds];
-    [self->_capIcon setFrame:CGRectZero];
+    [(id)self->_capIcon setFrame:CGRectZero];
 
 L_d0e0:;
     return;
@@ -536,12 +536,12 @@ L_d0e0:;
     // 0000d1d4  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [self->_capText sizeThatFits:a0]; */
-    [self->_capIcon image];
+    /* [UNRESOLVED] [(id)self->_capText sizeThatFits:a0]; */
+    [(id)self->_capIcon image];
     if (ret == 0) goto L_d194;
 
-    [self->_capIcon image];
-    [ret size];
+    [(id)self->_capIcon image];
+    [(id)ret size];
     objc_release(ret);
     goto L_d194;
 

@@ -530,258 +530,258 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [UIColor systemBackgroundColor];
+    [(id)UIColor systemBackgroundColor];
     [self view];
-    [ret setBackgroundColor:ret];
+    [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
+    [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:objc_alloc_init];
+    [(id)ret addSubview:objc_alloc_init];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init setText:@"🎯"]; */
-    [UIFont systemFontOfSize:24];
-    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
+    [(id)objc_alloc_init setText:@"🎯"];
+    [(id)UIFont systemFontOfSize:24];
+    [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    /* [UNRESOLVED] [objc_alloc_init addSubview:objc_alloc_init]; */
-    /* [UNRESOLVED] [objc_alloc_init setText:@"对方位置"]; */
-    /* [UNRESOLVED] [UIFont systemFontOfSize:22 weight:0x200180]; */
-    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
+    [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)objc_alloc_init addSubview:objc_alloc_init];
+    [(id)objc_alloc_init setText:@"对方位置"];
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:22 weight:0x200180]; */
+    [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    /* [UNRESOLVED] [objc_alloc_init addSubview:objc_alloc_init]; */
-    [UIButton buttonWithType:1];
-    [ret setTitle:@"关闭" forState:0];
-    [UIFont systemFontOfSize:19];
-    [ret titleLabel];
-    [ret setFont:ret];
+    [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)objc_alloc_init addSubview:objc_alloc_init];
+    [(id)UIButton buttonWithType:1];
+    [(id)ret setTitle:@"关闭" forState:0];
+    [(id)UIFont systemFontOfSize:19];
+    [(id)ret titleLabel];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [ret setAccessibilityIdentifier:@"hush_track_card_close"];
-    [ret addTarget:self action:sel_registerName("hushClose:") forControlEvents:0x40];
-    [ret setTranslatesAutoresizingMaskIntoConstraints:0];
-    /* [UNRESOLVED] [objc_alloc_init addSubview:ret]; */
+    [(id)ret setAccessibilityIdentifier:@"hush_track_card_close"];
+    [(id)ret addTarget:self action:sel_registerName("hushClose:") forControlEvents:0x40];
+    [(id)ret setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)objc_alloc_init addSubview:ret];
     /* [UNRESOLVED] [[MKMapView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_map);
-    [self->_map setDelegate:self];
-    [self->_map setZoomEnabled:1];
-    [self->_map setScrollEnabled:1];
-    [self->_map setRotateEnabled:0];
-    [self->_map setPitchEnabled:0];
-    [self->_map setShowsCompass:0];
-    [self->_map setShowsScale:0];
-    [self->_map setShowsUserLocation:0];
-    [self->_map setAccessibilityIdentifier:@"hush_track_card_map"];
-    [self->_map setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)self->_map setDelegate:self];
+    [(id)self->_map setZoomEnabled:1];
+    [(id)self->_map setScrollEnabled:1];
+    [(id)self->_map setRotateEnabled:0];
+    [(id)self->_map setPitchEnabled:0];
+    [(id)self->_map setShowsCompass:0];
+    [(id)self->_map setShowsScale:0];
+    [(id)self->_map setShowsUserLocation:0];
+    [(id)self->_map setAccessibilityIdentifier:@"hush_track_card_map"];
+    [(id)self->_map setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:self->_map];
+    [(id)ret addSubview:self->_map];
     objc_release(ret);
     objc_release(self->_anno);
     [self lat];
     [self lng];
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
-    [self->_anno setCoordinate:0];
-    [self->_anno setTitle:@"目标位置"];
+    [(id)self->_anno setCoordinate:0];
+    [(id)self->_anno setTitle:@"目标位置"];
     [self lat];
     [self lng];
-    [NSString stringWithFormat:@"%.6f, %.6f"];
-    [self->_anno setSubtitle:ret];
+    [(id)NSString stringWithFormat:@"%.6f, %.6f"];
+    [(id)self->_anno setSubtitle:ret];
     objc_release(ret);
-    [self->_map addAnnotation:self->_anno];
-    [self->_anno coordinate];
+    [(id)self->_map addAnnotation:self->_anno];
+    [(id)self->_anno coordinate];
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
-    [self->_map setRegion:0 animated:0];
-    [UIBlurEffect effectWithStyle:7];
+    [(id)self->_map setRegion:0 animated:0];
+    [(id)UIBlurEffect effectWithStyle:7];
     [[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(ret);
-    [[[UIVisualEffectView alloc] initWithEffect:ret] layer];
-    [ret setCornerRadius:10];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] layer];
+    [(id)ret setCornerRadius:10];
     objc_release(ret);
-    [[[UIVisualEffectView alloc] initWithEffect:ret] layer];
-    /* [UNRESOLVED] [ret setCornerCurve:0x200618/ *+0x0* /]; */
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] layer];
+    /* [UNRESOLVED] [(id)ret setCornerCurve:0x200618/ *+0x0* /]; */
     objc_release(ret);
-    [[[UIVisualEffectView alloc] initWithEffect:ret] setClipsToBounds:1];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setClipsToBounds:1];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
+    [(id)ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     objc_release(self->_chipLabel);
-    /* [UNRESOLVED] [UIFont systemFontOfSize:12 weight:0x200378]; */
-    [self->_chipLabel setFont:ret];
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:12 weight:0x200378]; */
+    [(id)self->_chipLabel setFont:ret];
     objc_release(ret);
-    [self->_chipLabel setNumberOfLines:1];
-    [self->_chipLabel setLineBreakMode:4];
+    [(id)self->_chipLabel setNumberOfLines:1];
+    [(id)self->_chipLabel setLineBreakMode:4];
     [self hushChipText];
-    [self->_chipLabel setText:ret];
+    [(id)self->_chipLabel setText:ret];
     objc_release(ret);
-    [self->_chipLabel setTranslatesAutoresizingMaskIntoConstraints:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret addSubview:self->_chipLabel];
+    [(id)self->_chipLabel setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret addSubview:self->_chipLabel];
     objc_release(ret);
-    [UIBlurEffect effectWithStyle:7];
+    [(id)UIBlurEffect effectWithStyle:7];
     [[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(ret);
-    [[[UIVisualEffectView alloc] initWithEffect:ret] layer];
-    [ret setCornerRadius:10];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] layer];
+    [(id)ret setCornerRadius:10];
     objc_release(ret);
-    [[[UIVisualEffectView alloc] initWithEffect:ret] layer];
-    /* [UNRESOLVED] [ret setCornerCurve:0x200618/ *+0x0* /]; */
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] layer];
+    /* [UNRESOLVED] [(id)ret setCornerCurve:0x200618/ *+0x0* /]; */
     objc_release(ret);
-    [[[UIVisualEffectView alloc] initWithEffect:ret] setClipsToBounds:1];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] setUserInteractionEnabled:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] setAccessibilityIdentifier:@"hush_track_card_coord"];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setClipsToBounds:1];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setUserInteractionEnabled:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setAccessibilityIdentifier:@"hush_track_card_coord"];
     [self view];
-    [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
+    [(id)ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
-    /* [UNRESOLVED] [UIFont monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
-    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
+    /* [UNRESOLVED] [(id)UIFont monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
+    [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     [self lat];
     [self lng];
-    [NSString stringWithFormat:@"%.6f, %.6f"];
-    /* [UNRESOLVED] [objc_alloc_init setText:ret]; */
+    [(id)NSString stringWithFormat:@"%.6f, %.6f"];
+    [(id)objc_alloc_init setText:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret addSubview:objc_alloc_init];
+    [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret addSubview:objc_alloc_init];
     objc_release(ret);
     /* [UNRESOLVED] sub_91f78(1); */
-    [ret setAccessibilityIdentifier:@"hush_track_card_locate"];
-    [ret addTarget:self action:sel_registerName("hushLocateHere:") forControlEvents:0x40];
+    [(id)ret setAccessibilityIdentifier:@"hush_track_card_locate"];
+    [(id)ret addTarget:self action:sel_registerName("hushLocateHere:") forControlEvents:0x40];
     /* [UNRESOLVED] sub_91f78(0); */
-    [ret setAccessibilityIdentifier:@"hush_track_card_bigmap"];
-    [ret addTarget:self action:sel_registerName("hushOpenBigMap:") forControlEvents:0x40];
+    [(id)ret setAccessibilityIdentifier:@"hush_track_card_bigmap"];
+    [(id)ret addTarget:self action:sel_registerName("hushOpenBigMap:") forControlEvents:0x40];
     /* [UNRESOLVED] sub_91f78(0); */
-    [ret setAccessibilityIdentifier:@"hush_track_card_redo"];
-    [ret addTarget:self action:sel_registerName("hushRedo:") forControlEvents:0x40];
-    [NSArray arrayWithObjects:-0x88 count:3];
+    [(id)ret setAccessibilityIdentifier:@"hush_track_card_redo"];
+    [(id)ret addTarget:self action:sel_registerName("hushRedo:") forControlEvents:0x40];
+    [(id)NSArray arrayWithObjects:-0x88 count:3];
     [[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] setDistribution:1];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:8];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:0];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setDistribution:1];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:8];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
-    [ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
+    [(id)ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     [self view];
-    [ret safeAreaLayoutGuide];
+    [(id)ret safeAreaLayoutGuide];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init topAnchor]; */
-    [ret topAnchor];
-    [ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
+    [(id)objc_alloc_init topAnchor];
+    [(id)ret topAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)objc_alloc_init leadingAnchor];
     [self view];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)objc_alloc_init trailingAnchor];
     [self view];
-    [ret trailingAnchor];
-    [ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [objc_alloc_init heightAnchor]; */
-    /* [UNRESOLVED] [ret constraintEqualToConstant:0x404b000000000000]; */
-    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
-    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
-    [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
-    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
-    [ret constraintEqualToAnchor:ret];
-    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
-    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
-    [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
-    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
-    [ret constraintEqualToAnchor:ret];
-    [ret trailingAnchor];
-    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
-    [ret constraintEqualToAnchor:ret constant:0];
-    [ret centerYAnchor];
-    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
-    [ret constraintEqualToAnchor:ret];
-    [self->_map topAnchor];
-    /* [UNRESOLVED] [objc_alloc_init bottomAnchor]; */
-    [ret constraintEqualToAnchor:ret constant:0];
-    [self->_map leadingAnchor];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)objc_alloc_init heightAnchor];
+    /* [UNRESOLVED] [(id)ret constraintEqualToConstant:0x404b000000000000]; */
+    [(id)objc_alloc_init leadingAnchor];
+    [(id)objc_alloc_init leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)objc_alloc_init centerYAnchor];
+    [(id)objc_alloc_init centerYAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)objc_alloc_init leadingAnchor];
+    [(id)objc_alloc_init trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)objc_alloc_init centerYAnchor];
+    [(id)objc_alloc_init centerYAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)ret trailingAnchor];
+    [(id)objc_alloc_init trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)ret centerYAnchor];
+    [(id)objc_alloc_init centerYAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)self->_map topAnchor];
+    [(id)objc_alloc_init bottomAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)self->_map leadingAnchor];
     [self view];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret];
-    [self->_map trailingAnchor];
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)self->_map trailingAnchor];
     [self view];
-    [ret trailingAnchor];
-    [ret constraintEqualToAnchor:ret];
-    [self->_map bottomAnchor];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)self->_map bottomAnchor];
     [self view];
-    [ret bottomAnchor];
-    [ret constraintEqualToAnchor:ret];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] leadingAnchor];
+    [(id)ret bottomAnchor];
+    [(id)ret constraintEqualToAnchor:ret];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] leadingAnchor];
     [self view];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] trailingAnchor];
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] trailingAnchor];
     [self view];
-    [ret trailingAnchor];
-    [ret constraintLessThanOrEqualToAnchor:ret constant:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] topAnchor];
-    [self->_map topAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [self->_chipLabel leadingAnchor];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [self->_chipLabel trailingAnchor];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret trailingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [self->_chipLabel topAnchor];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret topAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [self->_chipLabel bottomAnchor];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret bottomAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] leadingAnchor];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintLessThanOrEqualToAnchor:ret constant:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] topAnchor];
+    [(id)self->_map topAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)self->_chipLabel leadingAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)self->_chipLabel trailingAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)self->_chipLabel topAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret topAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)self->_chipLabel bottomAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret bottomAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] leadingAnchor];
     [self view];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] trailingAnchor];
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] trailingAnchor];
     [self view];
-    [ret trailingAnchor];
-    [ret constraintLessThanOrEqualToAnchor:ret constant:0];
-    [[[UIVisualEffectView alloc] initWithEffect:ret] bottomAnchor];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] topAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret trailingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [objc_alloc_init topAnchor]; */
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret topAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    /* [UNRESOLVED] [objc_alloc_init bottomAnchor]; */
-    [[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
-    [ret bottomAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] leadingAnchor];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintLessThanOrEqualToAnchor:ret constant:0];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] bottomAnchor];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] topAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)objc_alloc_init leadingAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)objc_alloc_init trailingAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)objc_alloc_init topAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret topAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)objc_alloc_init bottomAnchor];
+    [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
+    [(id)ret bottomAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] leadingAnchor];
     [self view];
-    [ret leadingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] trailingAnchor];
+    [(id)ret leadingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] trailingAnchor];
     [self view];
-    [ret trailingAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
-    [ret bottomAnchor];
-    [ret constraintEqualToAnchor:ret constant:0];
-    [NSArray arrayWithObjects:0 count:0x1f];
-    [NSLayoutConstraint activateConstraints:ret];
+    [(id)ret trailingAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
+    [(id)ret bottomAnchor];
+    [(id)ret constraintEqualToAnchor:ret constant:0];
+    [(id)NSArray arrayWithObjects:0 count:0x1f];
+    [(id)NSLayoutConstraint activateConstraints:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1180,11 +1180,11 @@
     id ret = nil;
 
     [self ctx];
-    [NSMutableArray array];
+    [(id)NSMutableArray array];
     if (0 == 0) goto L_922a8;
 
 L_92294:;
-    [ret addObject:@"🎯 就在当前位置附近"];
+    [(id)ret addObject:@"🎯 就在当前位置附近"];
     goto L_923a8;
 
 L_922a8:;
@@ -1205,8 +1205,8 @@ L_92314:;
     goto L_92340;
 
 L_92340:;
-    [NSString stringWithFormat:@"✅ 精确收敛 · 残余%.0f米"];
-    [ret addObject:ret];
+    [(id)NSString stringWithFormat:@"✅ 精确收敛 · 残余%.0f米"];
+    [(id)ret addObject:ret];
     objc_release(ret);
 
 L_923a8:;
@@ -1217,8 +1217,8 @@ L_923a8:;
     /* [UNRESOLVED] cos(); */
     /* [UNRESOLVED] sub_9256c(); */
     /* [UNRESOLVED] sub_9256c(); */
-    [NSString stringWithFormat:@"%@%@ %@%@"];
-    [ret addObject:ret];
+    [(id)NSString stringWithFormat:@"%@%@ %@%@"];
+    [(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1234,15 +1234,15 @@ L_924c4:;
     /* [UNRESOLVED] if (cond / * pl * /) goto L_924ec; */
 
 L_924e4:;
-    [ret addObject:@"⚡未实测"];
+    [(id)ret addObject:@"⚡未实测"];
 
 L_924ec:;
     if (0 == 0) goto L_92518;
 
-    [ret addObject:@"🔒仅供参考"];
+    [(id)ret addObject:@"🔒仅供参考"];
 
 L_92518:;
-    [ret componentsJoinedByString:@" · "];
+    [(id)ret componentsJoinedByString:@" · "];
     objc_release(ret);
 
 L_92568:;
@@ -1253,7 +1253,7 @@ L_92568:;
     goto L_925b8;
 
 L_925b8:;
-    [NSString stringWithFormat:@"%.1fkm"];
+    [(id)NSString stringWithFormat:@"%.1fkm"];
 }
 
 // @0x925d0  types=v24@0:8@16
@@ -1339,14 +1339,14 @@ L_925b8:;
 
     [self lat];
     [self lng];
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_92670; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_92670; */
 
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"]; */
     goto L_926b8;
 
 L_92670:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"] noteFiltered:3]; */
 
 L_926b8:;
     [self dismissViewControllerAnimated:1 completion:0];
@@ -1426,14 +1426,14 @@ L_926b8:;
 
     [self lat];
     [self lng];
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_92c20; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_92c20; */
 
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"]; */
     goto L_92c68;
 
 L_92c20:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"] noteFiltered:3]; */
 
 L_92c68:;
     [self dismissViewControllerAnimated:1 completion:0];
@@ -1795,8 +1795,8 @@ L_92c68:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
-    [MKUserLocation class];
-    /* [UNRESOLVED] [a1 isKindOfClass:[MKUserLocation class]]; */
+    [(id)MKUserLocation class];
+    /* [UNRESOLVED] [(id)a1 isKindOfClass:[(id)MKUserLocation class]]; */
     /* [UNRESOLVED] if (((a1 >> 0) & 1) != 0) goto L_92f18; */
 
     /* [UNRESOLVED] if (cond / * eq * /) goto L_92f58; */
@@ -1806,46 +1806,46 @@ L_92f18:;
     /* [UNRESOLVED] objc_release(a0); */
 
 L_92f58:;
-    /* [UNRESOLVED] [a0 dequeueReusableAnnotationViewWithIdentifier:@"hush_track_target"]; */
+    /* [UNRESOLVED] [(id)a0 dequeueReusableAnnotationViewWithIdentifier:@"hush_track_target"]; */
     if (ret != 0) goto L_93230;
 
     /* [UNRESOLVED] [[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; */
-    [UIColor systemRedColor];
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setMarkerTintColor:ret]; */
+    [(id)UIColor systemRedColor];
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setMarkerTintColor:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setCanShowCallout:1]; */
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setTitleVisibility:1]; */
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setAnimatesWhenAdded:0]; */
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setClipsToBounds:0]; */
-    /* [UNRESOLVED] [objc_alloc_init setText:@"目标位置"]; */
-    /* [UNRESOLVED] [UIFont systemFontOfSize:13 weight:0x200180]; */
-    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setCanShowCallout:1]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setTitleVisibility:1]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setAnimatesWhenAdded:0]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setClipsToBounds:0]; */
+    [(id)objc_alloc_init setText:@"目标位置"];
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:13 weight:0x200180]; */
+    [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    [UIColor whiteColor];
-    /* [UNRESOLVED] [objc_alloc_init setTextColor:ret]; */
+    [(id)UIColor whiteColor];
+    [(id)objc_alloc_init setTextColor:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init setTextAlignment:1]; */
-    [UIColor blackColor];
-    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
-    /* [UNRESOLVED] [objc_alloc_init layer]; */
-    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor]]; */
+    [(id)objc_alloc_init setTextAlignment:1];
+    [(id)UIColor blackColor];
+    /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
+    [(id)objc_alloc_init layer];
+    /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init layer]; */
-    [ret setShadowOpacity:0];
+    [(id)objc_alloc_init layer];
+    [(id)ret setShadowOpacity:0];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init layer]; */
-    [ret setShadowRadius:2];
+    [(id)objc_alloc_init layer];
+    [(id)ret setShadowRadius:2];
     objc_release(ret);
-    /* [UNRESOLVED] [objc_alloc_init layer]; */
-    /* [UNRESOLVED] [ret setShadowOffset:0 / * unk * /]; */
+    [(id)objc_alloc_init layer];
+    /* [UNRESOLVED] [(id)ret setShadowOffset:0 / * unk * /]; */
     objc_release(ret);
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setHushCaption:objc_alloc_init]; */
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] addSubview:objc_alloc_init]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setHushCaption:objc_alloc_init]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] addSubview:objc_alloc_init]; */
     objc_release(objc_alloc_init);
 
 L_93230:;
-    /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setAnnotation:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setAnnotation:0 / * unk * /]; */
     goto L_92f18;
 }
 
@@ -1949,20 +1949,20 @@ L_93230:;
     /* [UNRESOLVED] [super viewDidAppear:a0]; */
     if (0 != 0) goto L_93378;
 
-    [self->_anno coordinate];
+    [(id)self->_anno coordinate];
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
-    [self->_map setRegion:0 animated:0];
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    [(id)self->_map setRegion:0 animated:0];
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
     if (self->_map == 0) goto L_93364;
 
     [self lat];
     [self lng];
     [self ctx];
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Track][位置卡片] 已打开：目标 %.6f,%.6f 残余 %.3f km（地图可缩放）"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 已打开：目标 %.6f,%.6f 残余 %.3f km（地图可缩放）"]; */
     goto L_93378;
 
 L_93364:;
-    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
 
 L_93378:;
     return;

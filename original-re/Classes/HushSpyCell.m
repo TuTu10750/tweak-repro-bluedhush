@@ -532,98 +532,98 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_13abd8;
 
-    [UIColor clearColor];
+    [(id)UIColor clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [[UIImageView alloc] initWithFrame:CGRectZero];
     [self setAvatar:[[UIImageView alloc] initWithFrame:CGRectZero]];
     objc_release([[UIImageView alloc] initWithFrame:CGRectZero]);
     [self avatar];
-    [ret layer];
-    [ret setCornerRadius:22];
+    [(id)ret layer];
+    [(id)ret setCornerRadius:22];
     objc_release(ret);
     objc_release(ret);
     [self avatar];
-    [ret layer];
-    [ret setMasksToBounds:1];
+    [(id)ret layer];
+    [(id)ret setMasksToBounds:1];
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
     [self avatar];
-    [ret setBackgroundColor:ret];
+    [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self avatar];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0x4052000000000000]; */
     /* [UNRESOLVED] [self setName:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
-    /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0 / * unk * // *+0x0* /]; */
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0 / * unk * // *+0x0* /]; */
     [self name];
-    [ret setFont:ret];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self name];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0x4052000000000000]; */
     /* [UNRESOLVED] [self setDetail:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
-    [UIFont systemFontOfSize:12];
+    [(id)UIFont systemFontOfSize:12];
     [self detail];
-    [ret setFont:ret];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [UIColor secondaryLabelColor];
+    [(id)UIColor secondaryLabelColor];
     [self detail];
-    [ret setTextColor:ret];
+    [(id)ret setTextColor:ret];
     objc_release(ret);
-    objc_release(ret);
-    [self detail];
-    [ret setAdjustsFontSizeToFitWidth:1];
     objc_release(ret);
     [self detail];
-    /* [UNRESOLVED] [ret setMinimumScaleFactor:0 / * unk * /]; */
+    [(id)ret setAdjustsFontSizeToFitWidth:1];
     objc_release(ret);
     [self detail];
-    [ret setLineBreakMode:2];
+    /* [UNRESOLVED] [(id)ret setMinimumScaleFactor:0 / * unk * /]; */
+    objc_release(ret);
+    [self detail];
+    [(id)ret setLineBreakMode:2];
     objc_release(ret);
     [self contentView];
     [self detail];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     [self setTagLabel:objc_alloc_init];
     objc_release(objc_alloc_init);
-    /* [UNRESOLVED] [UIFont systemFontOfSize:11 weight:0 / * unk * // *+0x0* /]; */
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:11 weight:0 / * unk * // *+0x0* /]; */
     [self tagLabel];
-    [ret setFont:ret];
-    objc_release(ret);
-    objc_release(ret);
-    [self tagLabel];
-    [ret setTextAlignment:1];
-    objc_release(ret);
-    [self tagLabel];
-    [ret layer];
-    [ret setCornerRadius:3];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     [self tagLabel];
-    [ret layer];
-    [ret setMasksToBounds:1];
+    [(id)ret setTextAlignment:1];
+    objc_release(ret);
+    [self tagLabel];
+    [(id)ret layer];
+    [(id)ret setCornerRadius:3];
     objc_release(ret);
     objc_release(ret);
     [self tagLabel];
-    [ret setHidden:1];
+    [(id)ret layer];
+    [(id)ret setMasksToBounds:1];
+    objc_release(ret);
+    objc_release(ret);
+    [self tagLabel];
+    [(id)ret setHidden:1];
     objc_release(ret);
     [self contentView];
     [self tagLabel];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -783,19 +783,19 @@ L_13abd8:;
 
     [super layoutSubviews];
     [self contentView];
-    [ret bounds];
+    [(id)ret bounds];
     objc_release(ret);
     [self tagLabel];
-    /* [UNRESOLVED] [ret sizeThatFits:0x7fefffffffffffff]; */
+    /* [UNRESOLVED] [(id)ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
     [self name];
-    /* [UNRESOLVED] [ret setFrame:0x4052000000000000]; */
+    /* [UNRESOLVED] [(id)ret setFrame:0x4052000000000000]; */
     objc_release(ret);
     [self detail];
-    /* [UNRESOLVED] [ret setFrame:0x4052000000000000]; */
+    /* [UNRESOLVED] [(id)ret setFrame:0x4052000000000000]; */
     objc_release(ret);
     [self tagLabel];
-    [ret setFrame:CGRectZero];
+    [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

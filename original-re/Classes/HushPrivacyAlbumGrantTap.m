@@ -530,27 +530,27 @@
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [a0 state]; */
+    /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f93bc; */
 
-    /* [UNRESOLVED] [@0x244888 shared]; */
-    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
+    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] == 0) goto L_f93bc; */
+    /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_f93bc; */
 
-    /* [UNRESOLVED] [a0 view]; */
+    /* [UNRESOLVED] [(id)a0 view]; */
     if (ret == 0) goto L_f8bf4;
 
 L_f8b84:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_f8bf4; */
 
-    [ret class];
+    [(id)ret class];
     /* [UNRESOLVED] NSStringFromClass(); */
-    [ret rangeOfString:@"NewKeyBoard"];
+    [(id)ret rangeOfString:@"NewKeyBoard"];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f8bf8; */
 
-    [ret superview];
+    [(id)ret superview];
     objc_release(ret);
     if (ret != 0) goto L_f8b84;
 
@@ -564,18 +564,18 @@ L_f8bf8:;
     objc_release(ret);
 
 L_f8c40:;
-    [ret length];
-    if ([ret length] == 0) goto L_f8cd0;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_f8cd0;
 
     objc_retain(ret);
-    [ret length];
-    if ([ret length] == 0) goto L_f8cdc;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_f8cdc;
 
     /* [UNRESOLVED] HushChatDBPath(); */
-    [ret length];
-    if ([ret length] == 0) goto L_f8cc4;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_f8cc4;
 
-    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
+    /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] sqlite3_open_v2(); */
     if (sqlite3_open_v2 == 0) goto L_f8ce4;
 
@@ -595,21 +595,21 @@ L_f8cdc:;
 
 L_f8ce4:;
     /* [UNRESOLVED] sqlite3_busy_timeout(0x190); */
-    [@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String];
-    /* [UNRESOLVED] sqlite3_prepare_v2([@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String], -1); */
+    [(id)@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String];
+    /* [UNRESOLVED] sqlite3_prepare_v2([(id)@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String], -1); */
     if (0 != 0) goto L_f8db8;
 
-    [ret longLongValue];
-    /* [UNRESOLVED] sqlite3_bind_int64(1, [ret longLongValue]); */
+    [(id)ret longLongValue];
+    /* [UNRESOLVED] sqlite3_bind_int64(1, [(id)ret longLongValue]); */
     /* [UNRESOLVED] sqlite3_step(); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f8da4; */
 
     /* [UNRESOLVED] sqlite3_column_text(0); */
     if (sqlite3_column_text == 0) goto L_f8da4;
 
-    [NSString stringWithUTF8String:sqlite3_column_text];
-    [ret length];
-    if ([ret length] == 0) goto L_f8db0;
+    [(id)NSString stringWithUTF8String:sqlite3_column_text];
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_f8db0;
 
     objc_retain(ret);
     goto L_f8db0;
@@ -635,70 +635,70 @@ L_f8dd8:;
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [ret length];
+    [(id)ret length];
     objc_retain(sel_registerName("length"));
-    [NSString stringWithFormat:@"一键开放相册给 %@"];
-    [NSString stringWithFormat:@"一键关闭相册给 %@"];
-    [NSString stringWithFormat:@"管理对 %@ 的相册授权（改的是你的私密相册可见名单）"];
-    [UIAlertController alertControllerWithTitle:@"隐私相册" message:ret preferredStyle:0];
+    [(id)NSString stringWithFormat:@"一键开放相册给 %@"];
+    [(id)NSString stringWithFormat:@"一键关闭相册给 %@"];
+    [(id)NSString stringWithFormat:@"管理对 %@ 的相册授权（改的是你的私密相册可见名单）"];
+    [(id)UIAlertController alertControllerWithTitle:@"隐私相册" message:ret preferredStyle:0];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [UIAlertAction actionWithTitle:ret style:0 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:ret style:0 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [UIAlertAction actionWithTitle:ret style:0 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:ret style:0 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [UIAlertAction actionWithTitle:@"清空全部可见用户" style:2 handler:0x207aa8]; */
-    [ret addAction:ret];
+    /* [UNRESOLVED] [(id)UIAlertAction actionWithTitle:@"清空全部可见用户" style:2 handler:0x207aa8]; */
+    [(id)ret addAction:ret];
     objc_release(ret);
-    [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushTopViewController(); */
     if (ret == 0) goto L_f9344;
 
-    [ret view];
-    [ret popoverPresentationController];
-    [ret setSourceView:ret];
+    [(id)ret view];
+    [(id)ret popoverPresentationController];
+    [(id)ret setSourceView:ret];
     objc_release(ret);
     objc_release(ret);
-    [ret view];
-    [ret bounds];
+    [(id)ret view];
+    [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
-    [ret view];
-    [ret bounds];
+    [(id)ret view];
+    [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    [ret popoverPresentationController];
-    [ret setSourceRect:0];
+    [(id)ret popoverPresentationController];
+    [(id)ret setSourceRect:0];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [ret presentViewController:ret animated:1 completion:0];
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    [(id)ret presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
     if (ret == 0) goto L_f9288;
 
     if (ret == 0) goto L_f92a8;
 
-    [ret description];
-    [ret length];
-    if ([ret length] == 0) goto L_f92b8;
+    [(id)ret description];
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_f92b8;
 
-    [ret length];
-    if ([ret length] == 0) goto L_f92d4;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_f92d4;
 
 L_f9244:;
-    [ret characterAtIndex:0];
-    [ret length];
+    [(id)ret characterAtIndex:0];
+    [(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_f9244; */
 
     goto L_f92d4;
 
 L_f9288:;
-    /* [UNRESOLVED] [@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
     goto L_f9344;
 
 L_f92a8:;
@@ -708,14 +708,14 @@ L_f92b8:;
     goto L_f930c;
 
 L_f92d4:;
-    [ret length];
-    [NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+    [(id)ret length];
+    [(id)NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_f930c:;
     objc_release(ret);
 
 L_f9334:;
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Privacy][相册授权] 已对 %@ 弹出授权菜单"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Privacy][相册授权] 已对 %@ 弹出授权菜单"]; */
     objc_release(ret);
 
 L_f9344:;

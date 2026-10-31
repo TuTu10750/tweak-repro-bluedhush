@@ -53,14 +53,14 @@
     // 0008d0d8  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_8d09c; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_8d09c; */
 
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"]; */
     goto L_8d0b0;
 
 L_8d09c:;
-    /* [UNRESOLVED] [[@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"] noteFiltered:3]; */
 
 L_8d0b0:;
     /* [UNRESOLVED] if (0x2579e8 == 0) goto L_8d0d8; */
@@ -208,19 +208,19 @@ L_8d0d8:;
     // 0008d2dc  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [@0x244888 shared]; */
-    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
+    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     if (0 == 0) goto L_8d190;
 
     objc_release(ret);
     goto L_8d1d8;
 
 L_8d190:;
-    /* [UNRESOLVED] [@0x244888 shared]; */
-    /* [UNRESOLVED] [ret isEnabled:0 / * func * /]; */
+    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] if ([ret isEnabled:0 / * func * /] == 0) goto L_8d2dc; */
+    /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_8d2dc; */
 
 L_8d1d8:;
     /* [UNRESOLVED] objc_retain(0x257a08); */
@@ -230,19 +230,19 @@ L_8d1d8:;
     /* [UNRESOLVED] sub_8d460(); */
 
 L_8d204:;
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
     /* [UNRESOLVED] if (0x257a08 == 0) goto L_8d2e0; */
 
     /* [UNRESOLVED] if (0x257a08 == 0) goto L_8d2f8; */
 
-    /* [UNRESOLVED] [0x257a08 description]; */
-    [ret length];
+    /* [UNRESOLVED] [(id)0x257a08 description]; */
+    [(id)ret length];
 
-    [ret length];
+    [(id)ret length];
 
 L_8d28c:;
-    [ret characterAtIndex:0];
-    [ret length];
+    [(id)ret characterAtIndex:0];
+    [(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_8d28c; */
 
 L_8d2dc:;
@@ -373,31 +373,31 @@ L_8d2dc:;
     // 0008e4cc  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [a0 state]; */
+    /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_8e4cc; */
 
     /* [UNRESOLVED] sub_8d3b0(); */
-    /* [UNRESOLVED] if ([a0 state] == 0) goto L_8e4cc; */
+    /* [UNRESOLVED] if ([(id)a0 state] == 0) goto L_8e4cc; */
 
     /* [UNRESOLVED] objc_retain(0x257a08); */
-    [ret length];
+    [(id)ret length];
 
     /* [UNRESOLVED] sub_8e5c4(); */
 
-    [ret objectForKeyedSubscript:@"success"];
-    [ret boolValue];
+    [(id)ret objectForKeyedSubscript:@"success"];
+    [(id)ret boolValue];
     objc_release(ret);
 
-    [ret objectForKeyedSubscript:@"lat"];
-    [ret doubleValue];
+    [(id)ret objectForKeyedSubscript:@"lat"];
+    [(id)ret doubleValue];
     objc_release(ret);
-    [ret objectForKeyedSubscript:@"lng"];
-    [ret doubleValue];
+    [(id)ret objectForKeyedSubscript:@"lng"];
+    [(id)ret doubleValue];
     objc_release(ret);
-    /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([@0x244978 isEnabledForLevel:3] == 0) goto L_8e57c; */
+    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_8e57c; */
 
-    /* [UNRESOLVED] [@0x244978 logLevel:3 format:@"[PreTrack] 长按按钮 → 打开地图（缓存目标 %.6f,%.6f）"]; */
+    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[PreTrack] 长按按钮 → 打开地图（缓存目标 %.6f,%.6f）"]; */
 
 L_8e4cc:;
     return;

@@ -92,13 +92,13 @@
     [self hushCaption];
     if (ret == 0) goto L_901fc;
 
-    [ret sizeThatFits:CGSizeZero];
-    [ret setBounds:CGRectZero];
+    [(id)ret sizeThatFits:CGSizeZero];
+    [(id)ret setBounds:CGRectZero];
     [self bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
     [self bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    [ret setCenter:CGPointZero];
+    [(id)ret setCenter:CGPointZero];
 
 L_901fc:;
     objc_release(ret);

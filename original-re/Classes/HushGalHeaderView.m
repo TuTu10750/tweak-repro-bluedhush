@@ -331,43 +331,43 @@
 
     [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_name);
-    [UIFont boldSystemFontOfSize:12];
-    [self->_name setFont:ret];
+    [(id)UIFont boldSystemFontOfSize:12];
+    [(id)self->_name setFont:ret];
     objc_release(ret);
-    [self->_name setAdjustsFontSizeToFitWidth:1];
-    [self->_name setMinimumScaleFactor:0.72];
-    [self->_name setLineBreakMode:2];
+    [(id)self->_name setAdjustsFontSizeToFitWidth:1];
+    [(id)self->_name setMinimumScaleFactor:0.72];
+    [(id)self->_name setLineBreakMode:2];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    [self->_name setTextColor:ret];
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    [(id)self->_name setTextColor:ret];
     objc_release(ret);
-    [self->_name setAutoresizingMask:0x12];
+    [(id)self->_name setAutoresizingMask:0x12];
     [self addSubview:self->_name];
     [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_count);
-    [UIFont systemFontOfSize:12];
-    [self->_count setFont:ret];
+    [(id)UIFont systemFontOfSize:12];
+    [(id)self->_count setFont:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [UIColor colorWithWhite:0.42 alpha:1];
-    [self->_count setTextColor:ret];
+    [(id)UIColor colorWithWhite:0.42 alpha:1];
+    [(id)self->_count setTextColor:ret];
     objc_release(ret);
-    [self->_count setTextAlignment:2];
-    [self->_count setAutoresizingMask:0x11];
+    [(id)self->_count setTextAlignment:2];
+    [(id)self->_count setAutoresizingMask:0x11];
     [self addSubview:self->_count];
-    [UIButton buttonWithType:1];
+    [(id)UIButton buttonWithType:1];
     objc_release(self->_home);
-    /* [UNRESOLVED] [self->_home setFrame:-0x3faf000000000000]; */
-    [self->_home setTitle:@"主页" forState:0];
-    [UIFont systemFontOfSize:14];
-    [self->_home titleLabel];
-    [ret setFont:ret];
+    /* [UNRESOLVED] [(id)self->_home setFrame:-0x3faf000000000000]; */
+    [(id)self->_home setTitle:@"主页" forState:0];
+    [(id)UIFont systemFontOfSize:14];
+    [(id)self->_home titleLabel];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
-    [self->_home setTitleColor:ret forState:0];
+    [(id)UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    [(id)self->_home setTitleColor:ret forState:0];
     objc_release(ret);
-    [self->_home setAutoresizingMask:0x11];
+    [(id)self->_home setAutoresizingMask:0x11];
     [self addSubview:self->_home];
 
 L_7c688:;

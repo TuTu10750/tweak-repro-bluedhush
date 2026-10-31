@@ -525,86 +525,86 @@
     /* [UNRESOLVED] if (super == 0) goto L_141938; */
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[@0x2456c0 alloc] unknownSelector]; */
     objc_release(self->_hushAvatar);
-    /* [UNRESOLVED] [self->_hushAvatar unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushAvatar unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushAvatar unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushAvatar unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
     objc_release(self->_hushName);
-    /* [UNRESOLVED] [UIFont unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushName unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushName unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushName unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UIView alloc] unknownSelector]; */
     objc_release(self->_hushSelfBadge);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushSelfBadge unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushSelfBadge unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushSelfBadge unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
     objc_release(self->_hushLine2);
-    /* [UNRESOLVED] [UIFont unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushLine2 unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine2 unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushLine2 unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine2 unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
     objc_release(self->_hushLine3);
-    /* [UNRESOLVED] [UIFont unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushLine3 unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine3 unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushLine3 unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine3 unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] unknownSelector]; */
     objc_release(self->_hushCapsule);
-    /* [UNRESOLVED] [UIFont unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] objc_retain(super); */
 
@@ -845,39 +845,39 @@ L_141938:;
 
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self->_hushAvatar unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushAvatar unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushAvatar unknownSelector]; */
     /* [UNRESOLVED] CGRectGetMaxX(); */
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     if (((ret >> 0) & 1) != 0) goto L_141b18;
 
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushCapsule unknownSelector]; */
     /* [UNRESOLVED] CGRectGetMinX(); */
 
 L_141b18:;
-    /* [UNRESOLVED] [self->_hushName unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushName unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushName unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushSelfBadge unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushName unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
     if (((ret >> 0) & 1) != 0) goto L_141bec;
 
     /* [UNRESOLVED] CGRectGetMaxX(); */
     /* [UNRESOLVED] CGRectGetMidY(); */
-    /* [UNRESOLVED] [self->_hushSelfBadge unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushSelfBadge unknownSelector]; */
 
 L_141bec:;
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    /* [UNRESOLVED] [self->_hushLine2 unknownSelector]; */
-    /* [UNRESOLVED] [self->_hushLine2 unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine2 unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine2 unknownSelector]; */
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    /* [UNRESOLVED] [self->_hushLine3 unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->_hushLine3 unknownSelector]; */
     return;
 }
 

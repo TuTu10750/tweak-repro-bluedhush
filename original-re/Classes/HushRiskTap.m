@@ -453,83 +453,83 @@
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [a0 accessibilityValue]; */
+    /* [UNRESOLVED] [(id)a0 accessibilityValue]; */
     objc_retain(ret);
     objc_retain(ret);
     /* [UNRESOLVED] objc_retain(a0); */
-    [ret length];
-    if ([ret length] == 0) goto L_203cc;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_203cc;
 
     /* [UNRESOLVED] sub_222dc(); */
     if (ret == 0) goto L_203c4;
 
     /* [UNRESOLVED] HushRiskUserSource(); */
-    [ret length];
-    if ([ret length] == 0) goto L_1ff84;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_1ff84;
 
     objc_retain(ret);
     goto L_1ffb0;
 
 L_1ff84:;
-    [NSString stringWithFormat:@"用户 %@"];
+    [(id)NSString stringWithFormat:@"用户 %@"];
 
 L_1ffb0:;
-    [NSMutableString stringWithFormat:@"UID %@"];
-    [ret length];
-    if ([ret length] == 0) goto L_2000c;
+    [(id)NSMutableString stringWithFormat:@"UID %@"];
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_2000c;
 
-    [ret appendFormat:@" · 已标记：%@"];
+    [(id)ret appendFormat:@" · 已标记：%@"];
 
 L_2000c:;
-    [UIAlertController alertControllerWithTitle:ret message:ret preferredStyle:0];
+    [(id)UIAlertController alertControllerWithTitle:ret message:ret preferredStyle:0];
     objc_retain(ret);
     objc_retain(ret);
-    [UIAlertAction actionWithTitle:@"标记为风险用户" style:2 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:@"标记为风险用户" style:2 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    [UIAlertAction actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
-    [ret length];
-    if ([ret length] == 0) goto L_20208;
+    [(id)ret length];
+    if ([(id)ret length] == 0) goto L_20208;
 
     objc_retain(ret);
-    [UIAlertAction actionWithTitle:@"取消标记" style:0 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:@"取消标记" style:0 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release(ret);
 
 L_20208:;
-    /* [UNRESOLVED] [UIAlertAction actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
-    [ret addAction:ret];
+    /* [UNRESOLVED] [(id)UIAlertAction actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
+    [(id)ret addAction:ret];
     objc_release(ret);
-    [UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
-    [ret addAction:ret];
+    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (a0 != 0) goto L_202a8; */
 
-    [ret view];
+    [(id)ret view];
 
 L_202a8:;
-    [ret popoverPresentationController];
-    [ret setSourceView:ret];
+    [(id)ret popoverPresentationController];
+    [(id)ret setSourceView:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (a0 == 0) goto L_20300; */
 
-    /* [UNRESOLVED] [a0 bounds]; */
+    /* [UNRESOLVED] [(id)a0 bounds]; */
     goto L_20320;
 
 L_20300:;
     objc_release(ret);
 
 L_20320:;
-    [ret popoverPresentationController];
-    /* [UNRESOLVED] [ret setSourceRect:0 / * unk * /]; */
+    [(id)ret popoverPresentationController];
+    /* [UNRESOLVED] [(id)ret setSourceRect:0 / * unk * /]; */
     objc_release(ret);
-    [ret presentViewController:ret animated:1 completion:0];
+    [(id)ret presentViewController:ret animated:1 completion:0];
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release(ret);
     objc_release(ret);

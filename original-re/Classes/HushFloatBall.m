@@ -258,34 +258,34 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_67678;
 
-    [UIColor clearColor];
+    [(id)UIColor clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self setUserInteractionEnabled:1];
     [self bounds];
     [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_iconView);
-    [self->_iconView setContentMode:1];
-    [self->_iconView setUserInteractionEnabled:0];
-    [UIColor blackColor];
-    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
-    [self->_iconView layer];
-    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor]]; */
+    [(id)self->_iconView setContentMode:1];
+    [(id)self->_iconView setUserInteractionEnabled:0];
+    [(id)UIColor blackColor];
+    /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
+    [(id)self->_iconView layer];
+    /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
-    [self->_iconView layer];
-    [ret setShadowOpacity:0];
+    [(id)self->_iconView layer];
+    [(id)ret setShadowOpacity:0];
     objc_release(ret);
-    [self->_iconView layer];
-    [ret setShadowRadius:4];
+    [(id)self->_iconView layer];
+    [(id)ret setShadowRadius:4];
     objc_release(ret);
-    [self->_iconView layer];
-    [ret setShadowOffset:CGSizeZero];
+    [(id)self->_iconView layer];
+    [(id)ret setShadowOffset:CGSizeZero];
     objc_release(ret);
     [self addSubview:self->_iconView];
     [self refreshIcon];
-    [NSNotificationCenter defaultCenter];
-    /* [UNRESOLVED] [ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
+    [(id)NSNotificationCenter defaultCenter];
+    /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
@@ -339,8 +339,8 @@ L_67678:;
     // 000676f0  ret
     id ret = nil;
 
-    [NSNotificationCenter defaultCenter];
-    [ret removeObserver:self];
+    [(id)NSNotificationCenter defaultCenter];
+    [(id)ret removeObserver:self];
     objc_release(ret);
     /* [UNRESOLVED] [super dealloc] (ARC) */
     return;
@@ -397,7 +397,7 @@ L_67678:;
     [self bounds];
     /* [UNRESOLVED] HushBallIconImage(); */
     [self iconView];
-    [ret setImage:ret];
+    [(id)ret setImage:ret];
     objc_release(ret);
 }
 
@@ -564,21 +564,21 @@ L_67678:;
     [self superview];
     if (ret == 0) goto L_67950;
 
-    /* [UNRESOLVED] [a0 translationInView:ret]; */
+    /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
     [self center];
     [self bounds];
     [self bounds];
-    [ret bounds];
-    [ret bounds];
+    [(id)ret bounds];
+    [(id)ret bounds];
     [self setCenter:CGPointZero];
-    /* [UNRESOLVED] [a0 setTranslation:ret inView:0]; */
-    /* [UNRESOLVED] [a0 state]; */
+    /* [UNRESOLVED] [(id)a0 setTranslation:ret inView:0]; */
+    /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_67950; */
 
-    /* [UNRESOLVED] [@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)@0x244888 shared]; */
     [self center];
     /* [UNRESOLVED] NSStringFromCGPoint(); */
-    /* [UNRESOLVED] [ret setString:ret forKey:0 / * func * /]; */
+    /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
 

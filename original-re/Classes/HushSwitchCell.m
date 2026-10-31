@@ -64,7 +64,7 @@
     /* [UNRESOLVED] if (super == 0) goto L_19c858; */
 
     /* [UNRESOLVED] objc_release(super/ *+0x0* /); */
-    /* [UNRESOLVED] [super/ *+0x0* / unknownSelector]; */
+    /* [UNRESOLVED] [(id)super/ *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
 
@@ -362,18 +362,18 @@ L_19c858:;
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [a2 unknownSelector]; */
-    /* [UNRESOLVED] if ([a2 unknownSelector] == 0) goto L_19c950; */
+    /* [UNRESOLVED] [(id)a2 unknownSelector]; */
+    /* [UNRESOLVED] if ([(id)a2 unknownSelector] == 0) goto L_19c950; */
 
-    /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     goto L_19c958;
 
 L_19c950:;
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
 
 L_19c958:;
     /* [UNRESOLVED] HushEffectTint(); */
@@ -382,8 +382,8 @@ L_19c958:;
     /* [UNRESOLVED] [self unknownSelector]; */
 
 L_19c998:;
-    /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     if (ret != 0) goto L_19c9d0;
 
@@ -396,32 +396,32 @@ L_19c9d0:;
     goto L_19ca00;
 
 L_19ca00:;
-    /* [UNRESOLVED] [a1 unknownSelector]; */
-    /* [UNRESOLVED] if ([a1 unknownSelector] == 0) goto L_19ca64; */
+    /* [UNRESOLVED] [(id)a1 unknownSelector]; */
+    /* [UNRESOLVED] if ([(id)a1 unknownSelector] == 0) goto L_19ca64; */
 
-    /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     goto L_19ca74;
 
 L_19ca64:;
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
 
 L_19ca74:;
-    /* [UNRESOLVED] [ret unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
+    /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] HushApplyHostStyleToContent(ret); */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     if (ret == 0) goto L_19cb24;
 
     /* [UNRESOLVED] [self unknownSelector]; */
     goto L_19cb54;
 
 L_19cb24:;
-    /* [UNRESOLVED] [0 / * unk * / unknownSelector]; */
+    /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
     objc_release(ret);
 
@@ -430,7 +430,7 @@ L_19cb54:;
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [self->/ *+0x0* / unknownSelector]; */
+    /* [UNRESOLVED] [(id)self->/ *+0x0* / unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a2); */
@@ -502,7 +502,7 @@ L_19cb54:;
 
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
 
 L_19cc9c:;

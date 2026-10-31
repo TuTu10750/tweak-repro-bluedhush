@@ -382,61 +382,61 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_208a0;
 
-    [UIColor clearColor];
+    [(id)UIColor clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self setName:objc_alloc_init];
     objc_release(objc_alloc_init);
-    /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0x200378]; */
     [self name];
-    [ret setFont:ret];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self name];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     [self setSource:objc_alloc_init];
     objc_release(objc_alloc_init);
-    /* [UNRESOLVED] [UIFont systemFontOfSize:11 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:11 weight:0x200378]; */
     [self source];
-    [ret setFont:ret];
-    objc_release(ret);
-    objc_release(ret);
-    [self source];
-    [ret setTextAlignment:1];
-    objc_release(ret);
-    [self source];
-    [ret layer];
-    [ret setCornerRadius:3];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     [self source];
-    [ret layer];
-    [ret setMasksToBounds:1];
+    [(id)ret setTextAlignment:1];
+    objc_release(ret);
+    [self source];
+    [(id)ret layer];
+    [(id)ret setCornerRadius:3];
+    objc_release(ret);
+    objc_release(ret);
+    [self source];
+    [(id)ret layer];
+    [(id)ret setMasksToBounds:1];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self source];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     [self setTime:objc_alloc_init];
     objc_release(objc_alloc_init);
-    [UIFont systemFontOfSize:12];
+    [(id)UIFont systemFontOfSize:12];
     [self time];
-    [ret setFont:ret];
+    [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [UIColor secondaryLabelColor];
+    [(id)UIColor secondaryLabelColor];
     [self time];
-    [ret setTextColor:ret];
+    [(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     [self contentView];
     [self time];
-    [ret addSubview:ret];
+    [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -607,23 +607,23 @@ L_208a0:;
 
     [super layoutSubviews];
     [self contentView];
-    [ret bounds];
+    [(id)ret bounds];
     objc_release(ret);
     [self source];
-    /* [UNRESOLVED] [ret sizeThatFits:0x7fefffffffffffff]; */
+    /* [UNRESOLVED] [(id)ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
     [self name];
-    [ret setFrame:CGRectZero];
+    [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     [self name];
-    [ret frame];
+    [(id)ret frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
     [self source];
-    [ret setFrame:CGRectZero];
+    [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     objc_release(ret);
     [self time];
-    [ret setFrame:CGRectZero];
+    [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

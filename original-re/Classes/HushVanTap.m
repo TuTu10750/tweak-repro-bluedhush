@@ -80,14 +80,14 @@
     id ret = nil;
 
     /* [UNRESOLVED] HushTopViewController(0x208e78, a0, a1, a2, a3); */
-    /* [UNRESOLVED] [@0x245be8 unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)@0x245be8 unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     if (((ret >> 0) & 1) != 0) goto L_18dc10;
 
-    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
-    /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
+    /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] sub_18af04(); */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(objc_alloc_init);
 
 L_18dc10:;

@@ -132,20 +132,20 @@
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] if (super == 0) goto L_141f5c; */
 
-    /* [UNRESOLVED] [UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [ret unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
     /* [UNRESOLVED] [super unknownSelector]; */
     objc_release(ret);
 

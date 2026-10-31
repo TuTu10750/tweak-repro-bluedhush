@@ -33,9 +33,9 @@
     id ret = nil;
 
     [self files];
-    [ret count];
+    [(id)ret count];
     objc_release(ret);
-    return (long long)[ret count];
+    return (long long)[(id)ret count];
 }
 
 // @0x7a5ac  types=@32@0:8@16q24
@@ -117,13 +117,13 @@
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_7a690; */
 
     [self files];
-    [ret count];
+    [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_7a690; */
 
     [self files];
-    /* [UNRESOLVED] [ret objectAtIndexedSubscript:a1]; */
-    [NSURL fileURLWithPath:ret];
+    /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a1]; */
+    [(id)NSURL fileURLWithPath:ret];
     objc_release(ret);
     objc_release(ret);
     goto L_7a690;
