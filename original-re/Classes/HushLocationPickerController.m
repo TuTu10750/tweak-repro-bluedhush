@@ -1920,7 +1920,7 @@ L_9b124:;
 L_9b158:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret setCustomLat:0 lng:0];
+    /* [UNRESOLVED] [(id)ret setCustomLat:0 lng:0]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     (void)[(id)ret setString:ret forKey:@"hush_loc_saved_coord_key"];
@@ -1935,7 +1935,7 @@ L_9b158:;
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
     (void)[(id)[NSDate class] date];
     (void)[(id)ret timeIntervalSince1970];
-    (void)[(id)ret setDouble:@"hush_loc_master_timestamp" forKey:0];
+    /* [UNRESOLVED] [(id)ret setDouble:@"hush_loc_master_timestamp" forKey:0]; */
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
@@ -2016,10 +2016,10 @@ L_9b64c:;
 
 L_9b664:;
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
-    (void)[(id)ret setDouble:@"runtime_vloc_applied_lat" forKey:0];
+    /* [UNRESOLVED] [(id)ret setDouble:@"runtime_vloc_applied_lat" forKey:0]; */
     objc_release(ret);
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
-    (void)[(id)ret setDouble:@"runtime_vloc_applied_lng" forKey:0];
+    /* [UNRESOLVED] [(id)ret setDouble:@"runtime_vloc_applied_lng" forKey:0]; */
     objc_release(ret);
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
     (void)[(id)ret synchronize];
@@ -4410,7 +4410,7 @@ L_9dcd0:;
     /* [UNRESOLVED] [(id)a1 row]; */
     /* [UNRESOLVED] [(id)self->_results objectAtIndexedSubscript:[(id)a1 row]]; */
     /* [UNRESOLVED] [(id)ret placemark]; */
-    (void)[(id)ret location];
+    /* [UNRESOLVED] [(id)ret location]; */
     objc_release(ret);
     if (ret == 0) goto L_9e148;
 
@@ -6038,7 +6038,7 @@ L_9fcc4:;
     /* [UNRESOLVED] sub_9aed0(); */
     /* [UNRESOLVED] if (self->_map == 0) goto L_9fde0; */
 
-    (void)[(id)self hushLocPlacePickAt:0];
+    /* [UNRESOLVED] [(id)self hushLocPlacePickAt:0]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_9fdc4; */
 
@@ -7658,7 +7658,7 @@ L_a18b0:;
     /* [UNRESOLVED] if (cond / * lo * /) goto L_a1908; */
 
     /* [UNRESOLVED] [(id)ret count]; */
-    (void)[(id)ret removeObjectsInRange:0x32];
+    (void)[(id)ret removeObjectsInRange:NSMakeRange(0, 0)];
 
 L_a1908:;
     /* [UNRESOLVED] [(id)0 / * unk * / setObject:ret forKey:0 / * func * /]; */
@@ -8286,7 +8286,7 @@ L_a1bec:;
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
     (void)[(id)[NSDate class] date];
     (void)[(id)ret timeIntervalSince1970];
-    (void)[(id)ret setDouble:@"hush_loc_master_timestamp" forKey:0];
+    /* [UNRESOLVED] [(id)ret setDouble:@"hush_loc_master_timestamp" forKey:0]; */
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[NSUserDefaults class] standardUserDefaults];
