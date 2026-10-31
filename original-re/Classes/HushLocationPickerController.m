@@ -595,10 +595,10 @@
     (void)[(id)@"📍" sizeWithAttributes:ret];
     (void)[(id)[UIGraphicsImageRendererFormat class] defaultFormat];
     (void)[(id)ret setOpaque:0];
-    (void)[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:12];
+    (void)[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:nil];
     objc_retain(ret);
     /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12] imageWithActions:0]; */
-    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:12]);
+    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:nil]);
     /* [UNRESOLVED] [objc_retainAutorelease CGImage]; */
     /* [UNRESOLVED] if ([objc_retainAutorelease CGImage] == 0) goto L_983b8; */
 
@@ -653,7 +653,7 @@ L_98410:;
     /* [UNRESOLVED] CGImageCreateWithImageInRect(); */
     /* [UNRESOLVED] if (CGImageCreateWithImageInRect == 0) goto L_984a0; */
 
-    (void)[(id)ret scale];
+    /* [UNRESOLVED] [(id)ret scale]; */
     /* [UNRESOLVED] [(id)[UIImage class] imageWithCGImage:CGImageCreateWithImageInRect scale:0 orientation:0]; */
     /* [UNRESOLVED] CGImageRelease(); */
     goto L_984bc;
@@ -2354,9 +2354,9 @@ L_9b9f4:;
     /* [UNRESOLVED] [[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"]; */
     (void)[(id)[UIGraphicsImageRendererFormat class] defaultFormat];
     (void)[(id)ret setOpaque:0];
-    (void)[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:20];
+    (void)[[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:nil];
     /* [UNRESOLVED] [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:20] imageWithActions:0x1a7e18]; */
-    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:20]);
+    objc_release([[UIGraphicsImageRenderer alloc] initWithSize:CGSizeZero format:nil]);
     objc_release(ret);
     /* [UNRESOLVED] [[[MKAnnotationView alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_loc_pickdot"] setImage:ret]; */
     objc_release(ret);
@@ -2694,7 +2694,7 @@ L_9bd34:;
     /* [UNRESOLVED] [(id)self->_coordLabel setText:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customAltitude];
+    /* [UNRESOLVED] [(id)ret customAltitude]; */
     (void)[(id)[NSString class] stringWithFormat:@"海拔: %.2f米"];
     /* [UNRESOLVED] [(id)self->_altitudeLabel setText:ret]; */
     objc_release(ret);
@@ -3990,7 +3990,7 @@ L_9d900:;
     /* [UNRESOLVED] sub_9dbec(); */
     (void)[(id)ret setText:ret];
     objc_release(ret);
-    (void)[(id)ret placemark];
+    /* [UNRESOLVED] [(id)ret placemark]; */
     /* [UNRESOLVED] sub_9c224(); */
     (void)[(id)ret setSecondaryText:0];
     objc_release(ret);
@@ -4033,7 +4033,7 @@ L_9dbc8:;
     goto L_9dcd0;
 
 L_9dc6c:;
-    (void)[[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] placemark];
+    /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"] placemark]; */
     objc_release([[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hush_loc_search"]);
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -4409,7 +4409,7 @@ L_9dcd0:;
 
     /* [UNRESOLVED] [(id)a1 row]; */
     /* [UNRESOLVED] [(id)self->_results objectAtIndexedSubscript:[(id)a1 row]]; */
-    (void)[(id)ret placemark];
+    /* [UNRESOLVED] [(id)ret placemark]; */
     (void)[(id)ret location];
     objc_release(ret);
     if (ret == 0) goto L_9e148;
@@ -4417,7 +4417,7 @@ L_9dcd0:;
     /* [UNRESOLVED] sub_9dbec(); */
     (void)[(id)ret isEqualToString:@"(无名地点)"];
     objc_storeStrong((id *)&ret, 0);
-    (void)[(id)ret placemark];
+    /* [UNRESOLVED] [(id)ret placemark]; */
     (void)[(id)ret coordinate];
     objc_release(ret);
     /* [UNRESOLVED] [(id)self hushLocAdoptTarget:self->_nameHint name:0]; */
@@ -4446,7 +4446,7 @@ L_9e08c:;
     goto L_9e140;
 
 L_9e0a4:;
-    (void)[(id)ret placemark];
+    /* [UNRESOLVED] [(id)ret placemark]; */
     /* [UNRESOLVED] [(id)ret name]; */
     (void)[(id)[NSString class] stringWithFormat:@"(无名 / placemark=%@)"];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[LocPicker] 选中搜索结果：%@ (%.6f,%.6f)"]; */
