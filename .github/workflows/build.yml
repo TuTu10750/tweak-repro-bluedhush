@@ -330,15 +330,21 @@ jobs:
           test "$(ls original-re/Headers/*.h | wc -l)" = "76"
           test "$(ls original-re/Classes/*.m | wc -l)" = "76"
 
-      - name: Toolchain shim (Theos expects toolchain/linux/iphone/bin/clang)
+      - name: Toolchain shim (ld64 for Mach-O linking)
         run: |
-          mkdir -p "$THEOS/toolchain/linux/iphone/bin"
+          sudo apt-get install -y lld || true
+          ls -l /usr/bin/ld64.lld /usr/bin/ld.lld 2>/dev/null || true
+          mkdir -p "$THEOS/toolchain/linux/iphone/bin" /tmp/ldbin
           ln -sf "$(command -v clang)"   "$THEOS/toolchain/linux/iphone/bin/clang"
           ln -sf "$(command -v clang++)" "$THEOS/toolchain/linux/iphone/bin/clang++" || true
-          for l in ld64.lld ld.lld lld; do
-            if command -v $l >/dev/null 2>&1; then ln -sf "$(command -v $l)" "$THEOS/toolchain/linux/iphone/bin/ld"; break; fi
-          done
-          ls -l "$THEOS/toolchain/linux/iphone/bin/" || true
+          LD64="$(command -v ld64.lld || command -v ld64.lld-18 || true)"
+          echo "LD64=$LD64"
+          if [ -n "$LD64" ]; then
+            ln -sf "$LD64" "$THEOS/toolchain/linux/iphone/bin/ld"
+            ln -sf "$LD64" /tmp/ldbin/ld
+          fi
+          echo "=== Theos Linux target definition ==="
+          cat "$THEOS/makefiles/targets/Linux/iphone.mk" 2>/dev/null | head -40 || echo "(no such file)"
 
       - name: Syntax check (clang per-file, the real signal)
         run: |
@@ -358,24 +364,13 @@ jobs:
             fi
           done
           echo "=== syntax: ok=$ok fail=$fail ==="
-          echo "=== logos preprocess (hook layer) ==="
-          perl "$THEOS/bin/logos.pl" -x mm -o /tmp/Hooks.xm.mm original-re/Hooks/Hooks.generated.xm 2> logos.log || true
-          head -30 logos.log
-          if [ -f /tmp/Hooks.xm.mm ]; then
-            if clang -x objective-c++ -target arm64-apple-ios14.0 -isysroot "$SDK" \
-                 -fobjc-arc -fobjc-runtime=ios-14.0 -I original-re/Headers -I "$THEOS/include" \
-                 -Wno-everything -c /tmp/Hooks.xm.mm -o /tmp/obj/Hooks.o 2>>syntax.log; then
-              echo "hooks: OK"
-            else
-              echo "hooks: FAIL"
-            fi
-          fi
 
       - name: Build original-re (Theos, best effort)
         continue-on-error: true
         run: |
           set -o pipefail
           make -C original-re clean || true
+          export PATH=/tmp/ldbin:$PATH
           make -C original-re ARCHS=arm64 2>&1 | tee build-original-re-linux.log || true
           echo "--- outputs ---"
           find original-re/.theos/obj -name '*.dylib' 2>/dev/null | sort
