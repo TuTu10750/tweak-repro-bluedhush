@@ -977,7 +977,7 @@ L_13bf0:;
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_13e2c; */
 
 L_13da4:;
-    (void)[(id)ret substringWithRange:0];
+    (void)[(id)ret substringWithRange:NSMakeRange(0, 0)];
     (void)[(id)[NSScanner class] scannerWithString:ret];
     objc_release(ret);
     (void)[(id)ret scanHexInt:0];
