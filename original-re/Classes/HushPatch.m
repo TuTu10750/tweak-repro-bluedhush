@@ -110,7 +110,7 @@ L_19164:;
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_191ec; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
-    if ([? class] == 0) goto L_191ec;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_191ec; */
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
     goto L_191ec;
@@ -309,7 +309,7 @@ L_191ec:;
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_1942c; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
-    if ([? class] == 0) goto L_1931c;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_1931c; */
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
     /* [UNRESOLVED] if (class_getInstanceMethod == 0) goto L_19368; */
@@ -550,7 +550,7 @@ L_1942c:;
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_19700; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
-    if ([? class] == 0) goto L_195f0;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_195f0; */
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
     /* [UNRESOLVED] if (class_getClassMethod == 0) goto L_1963c; */
@@ -957,7 +957,7 @@ L_19700:;
     /* [UNRESOLVED] if ([(id)a1 count] == 0) goto L_19a24; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
-    if ([? class] == 0) goto L_199b0;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_199b0; */
 
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10]; */
@@ -1493,7 +1493,7 @@ L_19e0c:;
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_1a058; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
-    if ([? class] == 0) goto L_19fa4;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_19fa4; */
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
     /* [UNRESOLVED] if (class_getInstanceMethod == 0) goto L_19ff0; */
@@ -1501,7 +1501,7 @@ L_19e0c:;
     /* [UNRESOLVED] method_getImplementation(); */
     /* [UNRESOLVED] method_getTypeEncoding(); */
     /* [UNRESOLVED] class_addMethod(a1, a2, method_getTypeEncoding); */
-    if ((([? class] >> 0) & 1) != 0) goto L_19f24;
+    /* [UNRESOLVED] if ((([? class] >> 0) & 1) != 0) goto L_19f24; */
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
     /* [UNRESOLVED] method_getImplementation(); */
@@ -1608,7 +1608,7 @@ L_1a058:;
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_1a140; */
 
     /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
-    if ([? class] == 0) goto L_1a140;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_1a140; */
 
     /* [UNRESOLVED] if (a2 == 0) goto L_1a130; */
 

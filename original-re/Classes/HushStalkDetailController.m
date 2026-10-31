@@ -4819,10 +4819,10 @@ L_14ed14:;
 L_14eda8:;
     /* [UNRESOLVED] NSClassFromString(_cmd, a0, a1, a2, a3); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_14eea4;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_14eea4; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ((([? class] >> 0) & 1) == 0) goto L_14eea4;
+    /* [UNRESOLVED] if ((([? class] >> 0) & 1) == 0) goto L_14eea4; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */

@@ -3678,7 +3678,7 @@ L_d6e40:;
     (void)[(id)ret substringFromIndex:0];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
-    (void)[(id)ret substringToIndex:[(id)ret rangeOfString:@"Ta的特点有"]];
+    /* [UNRESOLVED] [(id)ret substringToIndex:[(id)ret rangeOfString:@"Ta的特点有"]]; */
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
@@ -3821,7 +3821,7 @@ L_d759c:;
     (void)[(id)ret rangeOfString:@" · "];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d78e8; */
 
-    (void)[(id)ret substringToIndex:[(id)ret rangeOfString:@" · "]];
+    /* [UNRESOLVED] [(id)ret substringToIndex:[(id)ret rangeOfString:@" · "]]; */
     (void)[(id)ret substringFromIndex:0];
     (void)[(id)ret isEqualToString:@"星座"];
     if (ret == 0) goto L_d7818;
@@ -4116,7 +4116,7 @@ L_d835c:;
 
 L_d8394:;
     /* [UNRESOLVED] sub_d17fc(); */
-    if (((@"不喜欢" >> 63) & 1) != 0) goto L_d83e8;
+    /* [UNRESOLVED] if (((@"不喜欢" >> 63) & 1) != 0) goto L_d83e8; */
 
     /* [UNRESOLVED] [(id)ret count]; */
     /* [UNRESOLVED] if (cond / * ge * /) goto L_d83e8; */
@@ -6136,10 +6136,10 @@ L_db718:;
 L_db7f4:;
     /* [UNRESOLVED] NSClassFromString(); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_db8a8;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_db8a8; */
 
     /* [UNRESOLVED] [(id)[? class] respondsToSelector:NSSelectorFromString]; */
-    if ([? class] == 0) goto L_db8a8;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_db8a8; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
     (void)[(id)[UIImage class] class];

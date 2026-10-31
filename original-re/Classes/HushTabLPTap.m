@@ -778,10 +778,10 @@ L_15df50:;
 L_15df68:;
     /* [UNRESOLVED] NSClassFromString(); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_15dfc4;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15dfc4; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ([? class] == 0) goto L_15dfc4;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15dfc4; */
 
 L_15dfc4:;
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
@@ -804,10 +804,10 @@ L_15e030:;
 
     /* [UNRESOLVED] NSClassFromString(); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_15e100;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15e100; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ([? class] == 0) goto L_15e100;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15e100; */
 
 L_15e0cc:;
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
@@ -830,7 +830,7 @@ L_15e124:;
     goto L_15e030;
 
     /* [UNRESOLVED] HushClassExists(); */
-    if ([? class] == 0) goto L_15e2ac;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15e2ac; */
 
     /* [UNRESOLVED] MSHookMessageEx(0 / * unk * /, 0x15e30c, 0x259410); */
     /* [UNRESOLVED] sub_15d358(); */
@@ -1032,10 +1032,10 @@ L_15ea88:;
 
     /* [UNRESOLVED] NSClassFromString(); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_15ebf8;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15ebf8; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ([? class] == 0) goto L_15ebf8;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_15ebf8; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */

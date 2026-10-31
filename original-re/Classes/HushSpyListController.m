@@ -2877,11 +2877,11 @@ L_13d708:;
     /* [UNRESOLVED] if ([(id)ret unknownSelector] == 0) goto L_13dca0; */
 
     /* [UNRESOLVED] NSClassFromString(); */
-    if ([? class] == 0) goto L_13da4c;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_13da4c; */
 
     /* [UNRESOLVED] NSSelectorFromString(); */
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ([? class] == 0) goto L_13d8a0;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_13d8a0; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
     if (ret == 0) goto L_13d8a0;

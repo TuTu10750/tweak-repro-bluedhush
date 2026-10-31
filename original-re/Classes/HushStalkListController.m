@@ -1553,10 +1553,10 @@ L_144a74:;
 
     /* [UNRESOLVED] NSClassFromString(); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_144b80;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_144b80; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ([? class] == 0) goto L_144b80;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_144b80; */
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] HushSafeStr(); */
@@ -3145,10 +3145,10 @@ L_1462d8:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] NSClassFromString(); */
     /* [UNRESOLVED] NSSelectorFromString(); */
-    if ([? class] == 0) goto L_1463ec;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_1463ec; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    if ((([? class] >> 0) & 1) == 0) goto L_1463ec;
+    /* [UNRESOLVED] if ((([? class] >> 0) & 1) == 0) goto L_1463ec; */
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
@@ -3368,10 +3368,10 @@ L_14640c:;
     // 0014678c  b       #0x32718   ; HushToast
 
     /* [UNRESOLVED] NSClassFromString(_cmd, a0, a1, a2, a3); */
-    if ([? class] != 0) goto L_1466e4;
+    /* [UNRESOLVED] if ([? class] != 0) goto L_1466e4; */
 
     /* [UNRESOLVED] NSClassFromString(); */
-    if ([? class] == 0) goto L_14678c;
+    /* [UNRESOLVED] if ([? class] == 0) goto L_14678c; */
 
 L_1466e4:;
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
