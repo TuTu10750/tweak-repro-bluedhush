@@ -684,10 +684,10 @@ L_19d548:;
     /* [UNRESOLVED] [(id)self->/ *+0x0* / unknownSelector]; */
     objc_retain(self);
     /* [UNRESOLVED] NSSelectorFromString(); */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     if (self == 0) goto L_19d6a0;
 
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     if (ret == 0) goto L_19d698;

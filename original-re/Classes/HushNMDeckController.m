@@ -516,14 +516,14 @@
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
-    [self view];
+    [(id)self view];
     /* [UNRESOLVED] [(id)ret addSubview:[[UIView alloc] initWithFrame:0 / * unk * /]]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setTag:0x2329]; */
@@ -539,8 +539,8 @@
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTag:0x232a]; */
-    [self embedded];
-    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setHidden:[self embedded]]; */
+    [(id)self embedded];
+    /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setHidden:[(id)self embedded]]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
     [(id)[UIButton class] buttonWithType:1];
     [(id)ret setTitle:@"✕" forState:0];
@@ -558,7 +558,7 @@ L_ded64:;
     [(id)ret setTag:0x2332];
     [(id)ret setTitle:0 forState:0];
     /* [UNRESOLVED] sub_d34c8(0); */
-    [self embedded];
+    [(id)self embedded];
     [(id)ret setHidden:0];
     [(id)ret addTarget:self action:sel_registerName("filterChipTap:") forControlEvents:0x40];
     [(id)ret setSelected:self];
@@ -566,7 +566,7 @@ L_ded64:;
     objc_release(ret);
     if (0 != 0) goto L_ded64;
 
-    [self applyFilterChipStyle];
+    [(id)self applyFilterChipStyle];
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setPagingEnabled:1]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setShowsVerticalScrollIndicator:0]; */
@@ -578,7 +578,7 @@ L_ded64:;
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setAlwaysBounceVertical:1]; */
     [(id)objc_alloc_init addTarget:self action:sel_registerName("pullRefresh:") forControlEvents:0x1000];
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setRefreshControl:objc_alloc_init]; */
-    [self view];
+    [(id)self view];
     /* [UNRESOLVED] [(id)ret addSubview:[[UIScrollView alloc] initWithFrame:0 / * unk * /]]; */
     objc_release(ret);
     /* [UNRESOLVED] sub_df09c(); */
@@ -594,7 +594,7 @@ L_defe4:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_defe4; */
 
 L_df028:;
-    [self view];
+    [(id)self view];
     [(id)ret setTag:ret];
     objc_release(ret);
     objc_release(objc_alloc_init);
@@ -1571,7 +1571,7 @@ L_df654:;
     // 000e17c4  mov     x0, x19
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x2329];
     objc_release(ret);
     if (ret == 0) goto L_e17f4;
@@ -1595,7 +1595,7 @@ L_e133c:;
     [(id)ret addSubview:ret];
 
 L_e13ac:;
-    [self embedded];
+    [(id)self embedded];
     [(id)ret setHidden:ret];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     if (((ret >> 0) & 1) != 0) goto L_e1410;
@@ -1703,7 +1703,7 @@ L_e17b0:;
     objc_release(ret);
 
 L_e17c8:;
-    [self applyFilterChipStyle];
+    [(id)self applyFilterChipStyle];
 
 L_e17f4:;
 
@@ -2042,7 +2042,7 @@ L_e1960:;
     // 000e1d04  ret
     id ret = nil;
 L_e1a50:;
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x2332];
     objc_release(ret);
     if (ret == 0) goto L_e1cc8;
@@ -2580,7 +2580,7 @@ L_e1cc8:;
     // 000e233c  ret
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x232c];
     objc_release(ret);
     if (ret == 0) goto L_e2314;
@@ -2854,7 +2854,7 @@ L_e2314:;
     // 000e2778  ret
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x232c];
     objc_release(ret);
     if (ret == 0) goto L_e2740;
@@ -2980,20 +2980,20 @@ L_e2740:;
     // 000e2888  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret superview];
     objc_release(ret);
     if (ret == 0) goto L_e2888;
 
     [(id)ret subviews];
     [(id)ret lastObject];
-    [self view];
+    [(id)self view];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e2888; */
 
-    [self view];
+    [(id)self view];
     [(id)ret bringSubviewToFront:ret];
     objc_release(ret);
 
@@ -3303,11 +3303,11 @@ L_e2888:;
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
-    [self hushKeepOnTop];
+    [(id)self hushKeepOnTop];
     goto L_e2b28;
 
 L_e2990:;
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0];
     objc_release(ret);
     if (ret == 0) goto L_e2a2c;
@@ -3321,7 +3321,7 @@ L_e2990:;
 
 L_e2a2c:;
     /* [UNRESOLVED] [(id)a0 setSelected:1]; */
-    [self applyFilterChipStyle];
+    [(id)self applyFilterChipStyle];
     /* [UNRESOLVED] sub_e2b2c(); */
     /* [UNRESOLVED] sub_e2c44(); */
     /* [UNRESOLVED] sub_df09c(); */
@@ -3330,7 +3330,7 @@ L_e2a2c:;
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
-    [self hushKeepOnTop];
+    [(id)self hushKeepOnTop];
     objc_release(ret);
 
 L_e2b28:;
@@ -3531,7 +3531,7 @@ L_e2c1c:;
     // 000e2f88  ret
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x232c];
     objc_release(ret);
     [(id)ret subviews];
@@ -3550,14 +3550,14 @@ L_e2e70:;
 
 L_e2ea4:;
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret setTag:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret setContentOffset:0 / * unk * /]; */
-    [self view];
+    [(id)self view];
     [(id)ret setNeedsLayout];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret layoutIfNeeded];
     objc_release(ret);
     objc_release(ret);
@@ -3591,7 +3591,7 @@ L_e2ea4:;
     // 000e2fcc  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret setNeedsLayout];
 }
 
@@ -3850,15 +3850,15 @@ L_e2ea4:;
     // 000e3320  ret
     id ret = nil;
 
-    [self embedded];
+    [(id)self embedded];
     if (((0 >> 0) & 1) == 0) goto L_e329c;
 
-    [self parentViewController];
-    [self willMoveToParentViewController:0];
-    [self view];
+    [(id)self parentViewController];
+    [(id)self willMoveToParentViewController:0];
+    [(id)self view];
     [(id)ret removeFromSuperview];
     objc_release(ret);
-    [self removeFromParentViewController];
+    [(id)self removeFromParentViewController];
     if (ret == 0) goto L_e31f4;
 
     [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
@@ -3880,8 +3880,8 @@ L_e317c:;
     if (ret == 0) goto L_e31e0;
 
     [(id)ret navigationController];
-    [self navBarWasHidden];
-    [(id)ret setNavigationBarHidden:[self navBarWasHidden] animated:0];
+    [(id)self navBarWasHidden];
+    [(id)ret setNavigationBarHidden:[(id)self navBarWasHidden] animated:0];
     objc_release(ret);
 
 L_e31e0:;
@@ -4441,38 +4441,38 @@ L_e32e8:;
     id ret = nil;
 
     [super viewDidLayoutSubviews];
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x2329];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x232a];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x232b];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x232c];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret safeAreaInsets];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * pl * /) goto L_e35d0; */
 
-    [self view];
+    [(id)self view];
     [(id)ret window];
     objc_release(ret);
     objc_release(ret);
     if (ret == 0) goto L_e35d0;
 
-    [self view];
+    [(id)self view];
     [(id)ret window];
     [(id)ret safeAreaInsets];
     objc_release(ret);
@@ -4480,7 +4480,7 @@ L_e32e8:;
 
 L_e35d0:;
     [(id)ret setFrame:CGRectZero];
-    [self embedded];
+    [(id)self embedded];
     if (self == 0) goto L_e3770;
 
     /* [UNRESOLVED] if (cond / * gt * /) goto L_e3770; */
@@ -4488,12 +4488,12 @@ L_e35d0:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
     if (self == 0) goto L_e3738;
 
-    [self view];
+    [(id)self view];
     [(id)ret frame];
     /* [UNRESOLVED] NSStringFromCGRect(); */
     [(id)ret frame];
     /* [UNRESOLVED] NSStringFromCGRect(); */
-    [self view];
+    [(id)self view];
     [(id)ret viewWithTag:0x2332];
     [(id)ret frame];
     /* [UNRESOLVED] NSStringFromCGRect(); */
@@ -5033,7 +5033,7 @@ L_e3b2c:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self embedded];
+    [(id)self embedded];
     if (self == 0) goto L_e3c80;
 
     /* [UNRESOLVED] [(id)a0 bounds]; */
@@ -5041,7 +5041,7 @@ L_e3b2c:;
     /* [UNRESOLVED] [(id)a0 contentOffset]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e3c6c; */
 
-    [self view];
+    [(id)self view];
     [(id)ret setNeedsLayout];
     objc_release(ret);
 
@@ -5192,8 +5192,8 @@ L_e4150:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self hushEnsurePhotosForVisibleCard];
-    [self embedded];
+    [(id)self hushEnsurePhotosForVisibleCard];
+    [(id)self embedded];
     if (self == 0) goto L_e4200;
 
     /* [UNRESOLVED] sub_e3c84(); */
@@ -5271,7 +5271,7 @@ L_e4200:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self navigationController];
+    [(id)self navigationController];
     if (ret == 0) goto L_e4270;
 
     [(id)ret interactivePopGestureRecognizer];

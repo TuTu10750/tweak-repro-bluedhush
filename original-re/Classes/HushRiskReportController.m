@@ -103,16 +103,16 @@
     id ret = nil;
 
     [super viewDidLoad];
-    /* [UNRESOLVED] [self setTitle:0x225c98]; */
-    [self tableView];
+    /* [UNRESOLVED] [(id)self setTitle:0x225c98]; */
+    [(id)self tableView];
     /* [UNRESOLVED] [(id)ret setRowHeight:0 / * unk * // *+0x0* /]; */
     objc_release(ret);
-    [self tableView];
+    [(id)self tableView];
     /* [UNRESOLVED] [(id)ret setEstimatedRowHeight:0x4050000000000000]; */
     objc_release(ret);
     [(id)objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
-    [self setRefreshControl:objc_alloc_init];
-    [self hushRefresh];
+    [(id)self setRefreshControl:objc_alloc_init];
+    [(id)self hushRefresh];
     objc_release(objc_alloc_init);
     return;
 }
@@ -182,10 +182,10 @@
 
     /* [UNRESOLVED] [super viewWillAppear:a0]; */
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
-    [self navigationItem];
+    [(id)self navigationItem];
     [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]];
     objc_release(ret);
-    [self hushRefresh];
+    [(id)self hushRefresh];
     objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]);
     return;
 }
@@ -439,7 +439,7 @@
     objc_release(ret);
     if ([(id)ret boolValue] == 0) goto L_1351ac;
 
-    [self hushRefresh];
+    [(id)self hushRefresh];
 
 L_1351ac:;
 
@@ -582,15 +582,15 @@ L_1353c0:;
 
     /* [UNRESOLVED] HushRiskReportSections(_cmd, a0, a1, a2, a3); */
     objc_release(self->_sections);
-    [self tableView];
+    [(id)self tableView];
     [(id)ret reloadData];
     objc_release(ret);
-    [self refreshControl];
+    [(id)self refreshControl];
     [(id)ret isRefreshing];
     objc_release(ret);
     if ([(id)ret isRefreshing] == 0) goto L_1354d4;
 
-    [self refreshControl];
+    [(id)self refreshControl];
     [(id)ret endRefreshing];
 
 L_1354d4:;
@@ -658,7 +658,7 @@ L_1354d4:;
     // 0013558c  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [self navigationController];
+    [(id)self navigationController];
     if (ret == 0) goto L_135578;
 
     [(id)ret viewControllers];
@@ -670,7 +670,7 @@ L_1354d4:;
     goto L_13558c;
 
 L_135578:;
-    [self dismissViewControllerAnimated:1 completion:0];
+    [(id)self dismissViewControllerAnimated:1 completion:0];
 
 L_13558c:;
 }
@@ -1360,7 +1360,7 @@ L_135874:;
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret tintColor];
     [(id)objc_alloc_init setTextColor:ret];
     objc_release(ret);

@@ -259,10 +259,10 @@
     if (self == 0) goto L_67678;
 
     [(id)[UIColor class] clearColor];
-    [self setBackgroundColor:ret];
+    [(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [self setUserInteractionEnabled:1];
-    [self bounds];
+    [(id)self setUserInteractionEnabled:1];
+    [(id)self bounds];
     [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_iconView);
     [(id)self->_iconView setContentMode:1];
@@ -282,15 +282,15 @@
     [(id)self->_iconView layer];
     [(id)ret setShadowOffset:CGSizeZero];
     objc_release(ret);
-    [self addSubview:self->_iconView];
-    [self refreshIcon];
+    [(id)self addSubview:self->_iconView];
+    [(id)self refreshIcon];
     [(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
-    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
+    [(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];
-    [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]];
+    [(id)self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]];
     objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]);
     objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]);
 
@@ -394,9 +394,9 @@ L_67678:;
     id ret = nil;
 
     /* [UNRESOLVED] HushBallIconCurrentStyle(_cmd, a0, a1, a2, a3); */
-    [self bounds];
+    [(id)self bounds];
     /* [UNRESOLVED] HushBallIconImage(); */
-    [self iconView];
+    [(id)self iconView];
     [(id)ret setImage:ret];
     objc_release(ret);
 }
@@ -561,22 +561,22 @@ L_67678:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self superview];
+    [(id)self superview];
     if (ret == 0) goto L_67950;
 
     /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
-    [self center];
-    [self bounds];
-    [self bounds];
+    [(id)self center];
+    [(id)self bounds];
+    [(id)self bounds];
     [(id)ret bounds];
     [(id)ret bounds];
-    [self setCenter:CGPointZero];
+    [(id)self setCenter:CGPointZero];
     /* [UNRESOLVED] [(id)a0 setTranslation:ret inView:0]; */
     /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_67950; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    [self center];
+    [(id)self center];
     /* [UNRESOLVED] NSStringFromCGPoint(); */
     /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);

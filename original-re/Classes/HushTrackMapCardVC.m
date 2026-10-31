@@ -531,12 +531,12 @@
 
     [super viewDidLoad];
     [(id)[UIColor class] systemBackgroundColor];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:objc_alloc_init];
     objc_release(ret);
     [(id)objc_alloc_init setText:@"🎯"];
@@ -574,17 +574,17 @@
     [(id)self->_map setShowsUserLocation:0];
     [(id)self->_map setAccessibilityIdentifier:@"hush_track_card_map"];
     [(id)self->_map setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_map];
     objc_release(ret);
     objc_release(self->_anno);
-    [self lat];
-    [self lng];
+    [(id)self lat];
+    [(id)self lng];
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
     [(id)self->_anno setCoordinate:0];
     [(id)self->_anno setTitle:@"目标位置"];
-    [self lat];
-    [self lng];
+    [(id)self lat];
+    [(id)self lng];
     [(id)[NSString class] stringWithFormat:@"%.6f, %.6f"];
     [(id)self->_anno setSubtitle:ret];
     objc_release(ret);
@@ -603,7 +603,7 @@
     objc_release(ret);
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setClipsToBounds:1];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     objc_release(self->_chipLabel);
@@ -612,7 +612,7 @@
     objc_release(ret);
     [(id)self->_chipLabel setNumberOfLines:1];
     [(id)self->_chipLabel setLineBreakMode:4];
-    [self hushChipText];
+    [(id)self hushChipText];
     [(id)self->_chipLabel setText:ret];
     objc_release(ret);
     [(id)self->_chipLabel setTranslatesAutoresizingMaskIntoConstraints:0];
@@ -632,14 +632,14 @@
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setUserInteractionEnabled:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] setAccessibilityIdentifier:@"hush_track_card_coord"];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    [self lat];
-    [self lng];
+    [(id)self lat];
+    [(id)self lng];
     [(id)[NSString class] stringWithFormat:@"%.6f, %.6f"];
     [(id)objc_alloc_init setText:ret];
     objc_release(ret);
@@ -663,21 +663,21 @@
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setDistribution:1];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:8];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret safeAreaLayoutGuide];
     objc_release(ret);
     [(id)objc_alloc_init topAnchor];
     [(id)ret topAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)objc_alloc_init leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)objc_alloc_init trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)objc_alloc_init heightAnchor];
@@ -704,23 +704,23 @@
     [(id)objc_alloc_init bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_map leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)self->_map trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)self->_map bottomAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintLessThanOrEqualToAnchor:ret constant:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] topAnchor];
@@ -743,11 +743,11 @@
     [(id)ret bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintLessThanOrEqualToAnchor:ret constant:0];
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] bottomAnchor];
@@ -770,11 +770,11 @@
     [(id)ret bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
@@ -1179,7 +1179,7 @@
     // 000925cc  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    [self ctx];
+    [(id)self ctx];
     [(id)[NSMutableArray class] array];
     if (0 == 0) goto L_922a8;
 
@@ -1337,8 +1337,8 @@ L_925b8:;
     // 000926cc  ret
     id ret = nil;
 
-    [self lat];
-    [self lng];
+    [(id)self lat];
+    [(id)self lng];
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_92670; */
 
@@ -1349,7 +1349,7 @@ L_92670:;
     /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"] noteFiltered:3]; */
 
 L_926b8:;
-    [self dismissViewControllerAnimated:1 completion:0];
+    [(id)self dismissViewControllerAnimated:1 completion:0];
     return;
 }
 
@@ -1424,8 +1424,8 @@ L_926b8:;
     // 00092c7c  ret
     id ret = nil;
 
-    [self lat];
-    [self lng];
+    [(id)self lat];
+    [(id)self lng];
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_92c20; */
 
@@ -1436,7 +1436,7 @@ L_92c20:;
     /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"] noteFiltered:3]; */
 
 L_92c68:;
-    [self dismissViewControllerAnimated:1 completion:0];
+    [(id)self dismissViewControllerAnimated:1 completion:0];
     return;
 }
 
@@ -1493,9 +1493,9 @@ L_92c68:;
     // 00092da4  ret
     id ret = nil;
 
-    [self uid];
+    [(id)self uid];
     objc_retain(ret);
-    [self dismissViewControllerAnimated:1 completion:0];
+    [(id)self dismissViewControllerAnimated:1 completion:0];
     objc_release(ret);
     objc_release(ret);
     return;
@@ -1955,9 +1955,9 @@ L_93230:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (self->_map == 0) goto L_93364;
 
-    [self lat];
-    [self lng];
-    [self ctx];
+    [(id)self lat];
+    [(id)self lng];
+    [(id)self ctx];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 已打开：目标 %.6f,%.6f 残余 %.3f km（地图可缩放）"]; */
     goto L_93378;
 

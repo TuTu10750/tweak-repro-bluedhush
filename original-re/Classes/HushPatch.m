@@ -1257,7 +1257,7 @@ L_19c0c:;
     // 00019e44  ret
     id ret = nil;
 
-    [self records];
+    [(id)self records];
     [(id)ret count];
     if ([(id)ret count] == 0) goto L_19d78;
 

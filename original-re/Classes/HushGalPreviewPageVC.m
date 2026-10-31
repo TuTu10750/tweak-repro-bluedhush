@@ -218,11 +218,11 @@
 
     [super viewDidLoad];
     [(id)[UIColor class] clearColor];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
@@ -232,11 +232,11 @@
     objc_release(ret);
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAccessibilityIdentifier:@"hushgal_preview_image"];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero]);
-    [self path];
+    [(id)self path];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_7a924;
 

@@ -89,14 +89,14 @@
     id ret = nil;
 
     [super layoutSubviews];
-    [self hushCaption];
+    [(id)self hushCaption];
     if (ret == 0) goto L_901fc;
 
     [(id)ret sizeThatFits:CGSizeZero];
     [(id)ret setBounds:CGRectZero];
-    [self bounds];
+    [(id)self bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
-    [self bounds];
+    [(id)self bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
     [(id)ret setCenter:CGPointZero];
 

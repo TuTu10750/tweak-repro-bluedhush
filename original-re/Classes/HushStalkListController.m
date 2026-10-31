@@ -289,7 +289,7 @@
 
     /* [UNRESOLVED] [super unknownSelector]; */
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
@@ -319,7 +319,7 @@
     /* [UNRESOLVED] sub_142d14(self->_card, ret, ret); */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     objc_release(0);
     /* [UNRESOLVED] objc_release([[UILongPressGestureRecognizer alloc] unknownSelector]); */
     /* [UNRESOLVED] objc_release(0 / * local * /); */
@@ -1578,7 +1578,7 @@ L_144ba4:;
     goto L_144bd0;
 
 L_144bd0:;
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
 
 L_144bec:;
 }
@@ -2108,7 +2108,7 @@ L_144bec:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] sub_144d00(0); */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
 
@@ -2811,7 +2811,7 @@ L_1457f0:;
     /* [UNRESOLVED] if ((([(id)ret unknownSelector] >> 0) & 1) == 0) goto L_145954; */
 
     /* [UNRESOLVED] sub_145fc4(0); */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] HushToast(); */
     goto L_14596c;
 
@@ -3027,7 +3027,7 @@ L_146298:;
     /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
 
 L_1462ac:;
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
 
 L_1462b4:;
     objc_release(ret);
@@ -3155,7 +3155,7 @@ L_1462d8:;
     if (((ret >> 0) & 1) == 0) goto L_1463fc;
 
     objc_retain(ret);
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     objc_release(ret);
     goto L_146404;
 
@@ -3283,7 +3283,7 @@ L_14640c:;
     /* [UNRESOLVED] [(id)[UIAlertAction class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     objc_release(ret);
     return;
 }
@@ -3379,7 +3379,7 @@ L_1466e4:;
 
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] objc_release([[NSObject alloc] unknownSelector]); */
     goto L_146774;
 

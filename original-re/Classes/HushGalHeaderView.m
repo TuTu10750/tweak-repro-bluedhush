@@ -342,7 +342,7 @@
     [(id)self->_name setTextColor:ret];
     objc_release(ret);
     [(id)self->_name setAutoresizingMask:0x12];
-    [self addSubview:self->_name];
+    [(id)self addSubview:self->_name];
     [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_count);
     [(id)[UIFont class] systemFontOfSize:12];
@@ -354,7 +354,7 @@
     objc_release(ret);
     [(id)self->_count setTextAlignment:2];
     [(id)self->_count setAutoresizingMask:0x11];
-    [self addSubview:self->_count];
+    [(id)self addSubview:self->_count];
     [(id)[UIButton class] buttonWithType:1];
     objc_release(self->_home);
     /* [UNRESOLVED] [(id)self->_home setFrame:-0x3faf000000000000]; */
@@ -368,7 +368,7 @@
     [(id)self->_home setTitleColor:ret forState:0];
     objc_release(ret);
     [(id)self->_home setAutoresizingMask:0x11];
-    [self addSubview:self->_home];
+    [(id)self addSubview:self->_home];
 
 L_7c688:;
     return (id)self;

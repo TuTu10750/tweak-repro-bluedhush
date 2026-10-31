@@ -531,14 +531,14 @@
 
     [super viewDidLoad];
     [(id)[UIColor class] clearColor];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     objc_release(ret);
     [(id)[UIScreen class] mainScreen];
@@ -559,7 +559,7 @@ L_20d50:;
     [(id)[UIColor class] blackColor];
 
 L_20da8:;
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [[UIControl alloc] initWithFrame:CGRectZero];
     objc_release(ret);
@@ -568,30 +568,30 @@ L_20da8:;
     objc_release(ret);
     [(id)[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
     [(id)[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UIView alloc] initWithFrame:CGRectZero];
-    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [(id)self setCardView:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release([[UIView alloc] initWithFrame:CGRectZero]);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret layer];
     [(id)ret setCornerRadius:18];
     objc_release(ret);
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret layer];
     [(id)ret setMasksToBounds:1];
     objc_release(ret);
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret setAutoresizingMask:0x2d];
     objc_release(ret);
-    [self view];
-    [self cardView];
+    [(id)self view];
+    [(id)self cardView];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -601,53 +601,53 @@ L_20da8:;
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
-    [self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    [(id)self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [(id)[UIFont class] systemFontOfSize:12];
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     [(id)[UIColor class] secondaryLabelColor];
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self cardView];
-    [self countLabel];
+    [(id)self cardView];
+    [(id)self countLabel];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     [[UITableView alloc] initWithFrame:CGRectZero style:66];
-    [self setTable:[[UITableView alloc] initWithFrame:CGRectZero style:66]];
+    [(id)self setTable:[[UITableView alloc] initWithFrame:CGRectZero style:66]];
     objc_release([[UITableView alloc] initWithFrame:CGRectZero style:66]);
     [(id)[UIColor class] clearColor];
-    [self table];
+    [(id)self table];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret setSeparatorInset:0];
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret setDataSource:self];
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret setDelegate:self];
     objc_release(ret);
-    [self table];
+    [(id)self table];
     /* [UNRESOLVED] [(id)ret setRowHeight:0x404e000000000000]; */
     objc_release(ret);
-    [self table];
+    [(id)self table];
     /* [UNRESOLVED] [(id)[@0x244a68 class] class]; */
     /* [UNRESOLVED] [(id)ret registerClass:[(id)[@0x244a68 class] class] forCellReuseIdentifier:@"risk"]; */
     objc_release(ret);
-    [self cardView];
-    [self table];
+    [(id)self cardView];
+    [(id)self table];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -666,10 +666,10 @@ L_20da8:;
     [(id)ret setCornerRadius:12];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:ret];
     objc_release(ret);
-    [self reload];
+    [(id)self reload];
     objc_release(ret);
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release([[UIControl alloc] initWithFrame:CGRectZero]);
@@ -817,7 +817,7 @@ L_20da8:;
 
 L_21714:;
     [(id)ret mutableCopy];
-    [self setItems:[(id)ret mutableCopy]];
+    [(id)self setItems:[(id)ret mutableCopy]];
     objc_release([(id)ret mutableCopy]);
     if ([(id)ret mutableCopy] != 0) goto L_21748;
 
@@ -826,15 +826,15 @@ L_21714:;
 L_21748:;
     objc_release([(id)ret mutableCopy]);
     objc_release(ret);
-    [self items];
+    [(id)self items];
     [(id)ret count];
     [(id)[NSString class] stringWithFormat:@"共 %lu 人 · 左滑可取消标记"];
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret reloadData];
 }
 
@@ -877,7 +877,7 @@ L_21748:;
     // 00021890  ret
     id ret = nil;
 
-    [self items];
+    [(id)self items];
     [(id)ret count];
     objc_release(ret);
     return (long long)[(id)ret count];
@@ -1287,7 +1287,7 @@ L_21748:;
 
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [(id)a0 dequeueReusableCellWithIdentifier:@"risk" forIndexPath:a1]; */
-    [self items];
+    [(id)self items];
     /* [UNRESOLVED] [(id)a1 row]; */
     /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a1 row]]; */

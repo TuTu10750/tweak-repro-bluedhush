@@ -531,14 +531,14 @@
 
     [super viewDidLoad];
     [(id)[UIColor class] clearColor];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
@@ -554,7 +554,7 @@ L_13b070:;
 
 L_13b0c0:;
     [(id)[UIColor class] systemOrangeColor];
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [[UIControl alloc] initWithFrame:CGRectZero];
     objc_release(ret);
@@ -563,30 +563,30 @@ L_13b0c0:;
     objc_release(ret);
     [(id)[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
     [(id)[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UIView alloc] initWithFrame:CGRectZero];
-    [self setCardView:[[UIView alloc] initWithFrame:CGRectZero]];
+    [(id)self setCardView:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release([[UIView alloc] initWithFrame:CGRectZero]);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret layer];
     [(id)ret setCornerRadius:18];
     objc_release(ret);
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret layer];
     [(id)ret setMasksToBounds:1];
     objc_release(ret);
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret setAutoresizingMask:0x2d];
     objc_release(ret);
-    [self view];
-    [self cardView];
+    [(id)self view];
+    [(id)self cardView];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -595,7 +595,7 @@ L_13b0c0:;
     [(id)[[UIView alloc] initWithFrame:CGRectZero] layer];
     [(id)ret setCornerRadius:1.5];
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
@@ -604,25 +604,25 @@ L_13b0c0:;
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
-    [self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    [(id)self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [(id)[UIFont class] systemFontOfSize:13];
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setTextColor:ret];
     objc_release(ret);
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setTextAlignment:2];
     objc_release(ret);
-    [self cardView];
-    [self countLabel];
+    [(id)self cardView];
+    [(id)self countLabel];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -635,62 +635,62 @@ L_13b0c0:;
     [(id)[UIColor class] secondaryLabelColor];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     objc_release(ret);
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     /* [UNRESOLVED] [[UITableView alloc] initWithFrame:0 style:0x4056000000000000]; */
-    /* [UNRESOLVED] [self setTable:[[UITableView alloc] initWithFrame:0 style:0x4056000000000000]]; */
+    /* [UNRESOLVED] [(id)self setTable:[[UITableView alloc] initWithFrame:0 style:0x4056000000000000]]; */
     /* [UNRESOLVED] objc_release([[UITableView alloc] initWithFrame:0 style:0x4056000000000000]); */
     [(id)[UIColor class] clearColor];
-    [self table];
+    [(id)self table];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret setSeparatorInset:0];
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret setDataSource:self];
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret setDelegate:self];
     objc_release(ret);
-    [self table];
+    [(id)self table];
     /* [UNRESOLVED] [(id)ret setRowHeight:0x4050000000000000]; */
     objc_release(ret);
-    [self table];
+    [(id)self table];
     /* [UNRESOLVED] [(id)[@0x245558 class] class]; */
     /* [UNRESOLVED] [(id)ret registerClass:[(id)[@0x245558 class] class] forCellReuseIdentifier:0x226338]; */
     objc_release(ret);
-    [self cardView];
-    [self table];
+    [(id)self cardView];
+    [(id)self table];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
-    [self setEmptyLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    [(id)self setEmptyLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    [self emptyLabel];
+    [(id)self emptyLabel];
     [(id)ret setNumberOfLines:0];
     objc_release(ret);
-    [self emptyLabel];
+    [(id)self emptyLabel];
     [(id)ret setTextAlignment:1];
     objc_release(ret);
     [(id)[UIFont class] systemFontOfSize:13];
-    [self emptyLabel];
+    [(id)self emptyLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     [(id)[UIColor class] secondaryLabelColor];
-    [self emptyLabel];
+    [(id)self emptyLabel];
     [(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self emptyLabel];
+    [(id)self emptyLabel];
     /* [UNRESOLVED] [(id)ret setText:0x226358]; */
     objc_release(ret);
-    [self table];
-    [self emptyLabel];
+    [(id)self table];
+    [(id)self emptyLabel];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -711,7 +711,7 @@ L_13b0c0:;
     [(id)ret setCornerRadius:12];
     objc_release(ret);
     [(id)ret addTarget:self action:sel_registerName("clearTapped") forControlEvents:0x40];
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:ret];
     objc_release(ret);
     [(id)[UIButton class] buttonWithType:1];
@@ -727,10 +727,10 @@ L_13b0c0:;
     [(id)ret setCornerRadius:12];
     objc_release(ret);
     [(id)ret addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
-    [self cardView];
+    [(id)self cardView];
     [(id)ret addSubview:ret];
     objc_release(ret);
-    [self reload];
+    [(id)self reload];
     objc_release(ret);
     objc_release(ret);
     objc_release(sel_registerName("setFrame:"));
@@ -1404,18 +1404,18 @@ L_13c694:;
     [(id)ret mutableCopy];
     if ([(id)ret mutableCopy] == 0) goto L_13c6fc;
 
-    [self setItems:[(id)ret mutableCopy]];
+    [(id)self setItems:[(id)ret mutableCopy]];
     goto L_13c730;
 
 L_13c6fc:;
     [(id)[NSMutableArray class] array];
-    [self setItems:ret];
+    [(id)self setItems:ret];
     objc_release(ret);
 
 L_13c730:;
     objc_release([(id)ret mutableCopy]);
     objc_release(ret);
-    [self items];
+    [(id)self items];
     [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_13c838;
 
@@ -1435,27 +1435,27 @@ L_13c7d4:;
 
 L_13c838:;
     objc_release(ret);
-    [self items];
+    [(id)self items];
     [(id)ret count];
     /* [UNRESOLVED] [(id)[NSString class] stringWithFormat:0x2263d8]; */
-    [self countLabel];
+    [(id)self countLabel];
     [(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [self items];
+    [(id)self items];
     [(id)ret count];
-    [self emptyLabel];
+    [(id)self emptyLabel];
     [(id)ret setHidden:ret];
     objc_release(ret);
     objc_release(ret);
-    [self table];
+    [(id)self table];
     [(id)ret reloadData];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_13c9f0;
 
-    [self items];
+    [(id)self items];
     [(id)ret count];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:0x2263f8]; */
     objc_release(ret);
@@ -1604,7 +1604,7 @@ L_13ca08:;
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:0x226478 style:2 handler:0]; */
     [(id)ret addAction:ret];
     objc_release(ret);
-    [self presentViewController:ret animated:1 completion:0];
+    [(id)self presentViewController:ret animated:1 completion:0];
     objc_release(ret);
     return;
 }
@@ -1638,7 +1638,7 @@ L_13ca08:;
     // 0013cc94  ret
     id ret = nil;
 
-    [self items];
+    [(id)self items];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     return 0;  /* [UNRESOLVED] [(id)ret unknownSelector] */
@@ -2173,7 +2173,7 @@ L_13ca08:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [(id)a0 dequeueReusableCellWithIdentifier:0x226338 forIndexPath:a1]; */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)a1 row]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -2865,7 +2865,7 @@ L_13d708:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)a1 unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);

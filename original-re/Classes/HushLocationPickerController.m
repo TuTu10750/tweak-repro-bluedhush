@@ -530,9 +530,9 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [self setTitle:@"选择位置"];
+    [(id)self setTitle:@"选择位置"];
     [(id)[UIColor class] systemBackgroundColor];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
@@ -540,12 +540,12 @@
     [(id)ret addObserver:self selector:sel_registerName("hushLocHistoryPicked:") name:@"HushLocationHistoryPick" object:0];
     objc_release(ret);
     [[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")];
-    [self navigationItem];
+    [(id)self navigationItem];
     [(id)ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]];
     objc_release(ret);
     objc_release([[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]);
     [[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")];
-    [self navigationItem];
+    [(id)self navigationItem];
     [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]];
     objc_release(ret);
     objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]);
@@ -555,7 +555,7 @@
     [(id)self->_searchBar setPlaceholder:@"搜索地址或地点"];
     [(id)self->_searchBar setSearchBarStyle:2];
     [(id)self->_searchBar setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_searchBar];
     objc_release(ret);
     [(id)[NSArray class] arrayWithObjects:-0xd0 count:4];
@@ -566,7 +566,7 @@
     [(id)self->_actionControl addTarget:self action:sel_registerName("hushLocActionSegment:") forControlEvents:0x1000];
     [(id)self->_actionControl setTranslatesAutoresizingMaskIntoConstraints:0];
     [(id)self->_actionControl setAccessibilityIdentifier:@"hush_loc_action"];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_actionControl];
     objc_release(ret);
     /* [UNRESOLVED] [[MKMapView alloc] initWithFrame:0 / * unk * /]; */
@@ -582,7 +582,7 @@
     objc_release(ret);
     [(id)self->_map setClipsToBounds:1];
     [(id)self->_map setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_map];
     objc_release(ret);
     [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")];
@@ -672,7 +672,7 @@ L_984bc:;
     [(id)self->_centerPin setUserInteractionEnabled:0];
     [(id)self->_centerPin setAccessibilityIdentifier:@"hush_loc_pin"];
     [(id)self->_centerPin setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_centerPin];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
@@ -720,7 +720,7 @@ L_98664:;
     [(id)ret setShadowOffset:CGSizeZero];
     objc_release(ret);
     [(id)self->_infoCard setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_infoCard];
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
@@ -869,7 +869,7 @@ L_991d4:;
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:1];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:8];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     objc_release(self->_locationSwitch);
@@ -878,7 +878,7 @@ L_991d4:;
     /* [UNRESOLVED] [(id)self->_locationSwitch setOn:[(id)ret isEnabled:0 / * func * /]]; */
     objc_release(ret);
     [(id)self->_locationSwitch addTarget:self action:sel_registerName("hushLocSwitchChanged:") forControlEvents:0x1000];
-    [self hushLocSwitchLabelWithText:@"位置模拟" icon:@"location.fill"];
+    [(id)self hushLocSwitchLabelWithText:@"位置模拟" icon:@"location.fill"];
     [(id)self->_locationSwitch setAccessibilityIdentifier:@"hush_loc_switch_location"];
     objc_release(self->_altitudeSwitch);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
@@ -886,10 +886,10 @@ L_991d4:;
     /* [UNRESOLVED] [(id)self->_altitudeSwitch setOn:[(id)ret isEnabled:0 / * func * /]]; */
     objc_release(ret);
     [(id)self->_altitudeSwitch addTarget:self action:sel_registerName("hushLocSwitchChanged:") forControlEvents:0x1000];
-    [self hushLocSwitchLabelWithText:@"海拔模拟" icon:@"barometer"];
+    [(id)self hushLocSwitchLabelWithText:@"海拔模拟" icon:@"barometer"];
     [(id)self->_altitudeSwitch setAccessibilityIdentifier:@"hush_loc_switch_altitude"];
-    [self hushLocSwitchItemWithIcon:@"location.fill" title:ret control:self->_locationSwitch];
-    [self hushLocSwitchItemWithIcon:@"barometer" title:ret control:self->_altitudeSwitch];
+    [(id)self hushLocSwitchItemWithIcon:@"location.fill" title:ret control:self->_locationSwitch];
+    [(id)self hushLocSwitchItemWithIcon:@"barometer" title:ret control:self->_altitudeSwitch];
     [(id)[NSArray class] arrayWithObjects:0 count:2];
     [[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
@@ -898,7 +898,7 @@ L_991d4:;
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:0];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setSpacing:24];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIStackView alloc] initWithArrangedSubviews:ret]];
     objc_release(ret);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
@@ -913,7 +913,7 @@ L_991d4:;
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTextAlignment:1]; */
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setText:@"长按地图选定位置（蓝点＝所选点，打开「位置模拟」即按它生效）；点「确认位置」存进历史"]; */
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    [self view];
+    [(id)self view];
     /* [UNRESOLVED] [(id)ret addSubview:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
     objc_release(ret);
     [(id)[UIButton class] buttonWithType:1];
@@ -939,7 +939,7 @@ L_991d4:;
     [(id)self->_confirmButton setAccessibilityIdentifier:@"hush_loc_confirm"];
     [(id)self->_confirmButton addTarget:self action:sel_registerName("actConfirm") forControlEvents:0x40];
     [(id)self->_confirmButton setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_confirmButton];
     objc_release(ret);
     [[UITableView alloc] initWithFrame:CGRectZero style:0];
@@ -961,10 +961,10 @@ L_991d4:;
     [(id)self->_resultTable setClipsToBounds:1];
     [(id)self->_resultTable setHidden:1];
     [(id)self->_resultTable setTranslatesAutoresizingMaskIntoConstraints:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_resultTable];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret safeAreaLayoutGuide];
     objc_release(ret);
     [(id)self->_resultTable heightAnchor];
@@ -975,48 +975,48 @@ L_991d4:;
     [(id)ret topAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_searchBar leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_searchBar trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_actionControl topAnchor];
     [(id)self->_searchBar bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_actionControl centerXAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret centerXAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)self->_actionControl leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintGreaterThanOrEqualToAnchor:ret constant:0];
     [(id)self->_actionControl trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintLessThanOrEqualToAnchor:ret constant:0];
     [(id)self->_resultTable topAnchor];
     [(id)self->_searchBar bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)self->_resultTable leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_resultTable trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_map topAnchor];
     [(id)self->_actionControl bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_map leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_map trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_map bottomAnchor];
@@ -1044,33 +1044,33 @@ L_991d4:;
     [(id)self->_map bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] centerXAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret centerXAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintGreaterThanOrEqualToAnchor:ret constant:0];
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
     [(id)self->_confirmButton topAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] centerXAnchor]; */
-    [self view];
+    [(id)self view];
     [(id)ret centerXAnchor];
     [(id)ret constraintEqualToAnchor:ret];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] leadingAnchor]; */
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintGreaterThanOrEqualToAnchor:ret constant:0];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] bottomAnchor]; */
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] topAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_confirmButton leadingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret leadingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_confirmButton trailingAnchor];
-    [self view];
+    [(id)self view];
     [(id)ret trailingAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
     [(id)self->_confirmButton bottomAnchor];
@@ -1188,7 +1188,7 @@ L_991d4:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [self refreshCenter:0];
+    [(id)self refreshCenter:0];
     objc_release(ret);
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0 / * unk * /]); */
     objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
@@ -1285,7 +1285,7 @@ L_991d4:;
     /* [UNRESOLVED] sub_9aed0(_cmd, a0, a1, a2, a3); */
     if (0 == 0) goto L_9aea4;
 
-    [self hushLocClearPick];
+    [(id)self hushLocClearPick];
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
     /* [UNRESOLVED] [(id)self->_map setRegion:a0 animated:0]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
@@ -1392,7 +1392,7 @@ L_9aff8:;
     objc_release(self->_pickAnno);
     [(id)self->_pickAnno setCoordinate:0];
     [(id)self->_map addAnnotation:self->_pickAnno];
-    [self hushLocAdoptTarget:0 name:0];
+    [(id)self hushLocAdoptTarget:0 name:0];
 }
 
 // @0x9b06c  types=v40@0:8{CLLocationCoordinate2D=dd}16@32
@@ -2688,7 +2688,7 @@ L_9bd34:;
     // 0009bf90  ret
     id ret = nil;
 
-    [self hushLocEffectiveCoord];
+    [(id)self hushLocEffectiveCoord];
     [(id)[NSString class] stringWithFormat:@"位置: %.4f, %.4f"];
     [(id)self->_coordLabel setText:ret];
     objc_release(ret);
@@ -2839,13 +2839,13 @@ L_9bf90:;
     // 0009ca90  ret
     id ret = nil;
 
-    [self hushLocPinLift:0];
-    [self dropNameHintIfFar];
+    [(id)self hushLocPinLift:0];
+    [(id)self dropNameHintIfFar];
     if (0 != 0) goto L_9c970;
 
     if (0 != 0) goto L_9c970;
 
-    [self hushLocInitialAim];
+    [(id)self hushLocInitialAim];
 
 L_9c970:;
     [(id)self->_map gestureRecognizers];
@@ -2874,7 +2874,7 @@ L_9ca38:;
 
 L_9ca44:;
     objc_release(ret);
-    [self refreshCenter:1];
+    [(id)self refreshCenter:1];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9ca94; */
 
     return;
@@ -3117,7 +3117,7 @@ L_9cbac:;
     goto L_9cd64;
 
 L_9cd5c:;
-    [self clearSearchResults];
+    [(id)self clearSearchResults];
 
 L_9cd64:;
     objc_release(ret);
@@ -3181,7 +3181,7 @@ L_9cd6c:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)a0 text]; */
-    [self runSearch:0];
+    [(id)self runSearch:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 resignFirstResponder]; */
 }
@@ -4419,7 +4419,7 @@ L_9dcd0:;
     [(id)ret placemark];
     [(id)ret coordinate];
     objc_release(ret);
-    [self hushLocAdoptTarget:self->_nameHint name:0];
+    [(id)self hushLocAdoptTarget:self->_nameHint name:0];
     [(id)self->_searchBar setShowsCancelButton:0];
     [(id)self->_searchBar setText:0];
     [(id)self->_searchBar resignFirstResponder];
@@ -4429,9 +4429,9 @@ L_9dcd0:;
     [(id)[NSString class] stringWithFormat:@"%@ · 正在解析地址…"];
     [(id)self->_addrLabel setText:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [self moveTo:1 spanMeters:0 animated:0x4089000000000000]; */
-    [self refreshCenter:0];
-    [self clearSearchResults];
+    /* [UNRESOLVED] [(id)self moveTo:1 spanMeters:0 animated:0x4089000000000000]; */
+    [(id)self refreshCenter:0];
+    [(id)self clearSearchResults];
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (self == 0) goto L_9e08c;
 
@@ -4788,11 +4788,11 @@ L_9ee80:;
     id ret = nil;
 
     /* [UNRESOLVED] [super viewDidAppear:a0]; */
-    [self hushLocCheckLocationAuthorization];
+    [(id)self hushLocCheckLocationAuthorization];
     if (0 != 0) goto L_9efc8;
 
-    [self hushLocAimIfPossible];
-    [self hushLocScheduleRecenter:0];
+    [(id)self hushLocAimIfPossible];
+    [(id)self hushLocScheduleRecenter:0];
 
 L_9efc8:;
     return;
@@ -4827,10 +4827,10 @@ L_9efc8:;
     // 0009f01c  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [self hushLocRegionChangeIsUserDriven:a0 animated:a1]; */
+    /* [UNRESOLVED] [(id)self hushLocRegionChangeIsUserDriven:a0 animated:a1]; */
     if (0 == 0) goto L_9f01c;
 
-    [self hushLocPinLift:1];
+    [(id)self hushLocPinLift:1];
 
 L_9f01c:;
     return;
@@ -5064,10 +5064,10 @@ L_9f1d8:;
     id ret = nil;
 
     /* [UNRESOLVED] [super viewDidDisappear:a0]; */
-    [self isBeingDismissed];
+    [(id)self isBeingDismissed];
     if (((self >> 0) & 1) != 0) goto L_9f2c4;
 
-    [self navigationController];
+    [(id)self navigationController];
     [(id)ret isBeingDismissed];
     if (self == 0) goto L_9f28c;
 
@@ -5075,13 +5075,13 @@ L_9f1d8:;
     goto L_9f2c4;
 
 L_9f28c:;
-    [self presentingViewController];
+    [(id)self presentingViewController];
     objc_release(ret);
     objc_release(ret);
     if (ret != 0) goto L_9f300;
 
 L_9f2c4:;
-    [self clearSearchResults];
+    [(id)self clearSearchResults];
 
 L_9f300:;
     return;
@@ -6037,7 +6037,7 @@ L_9fcc4:;
     /* [UNRESOLVED] sub_9aed0(); */
     if (self->_map == 0) goto L_9fde0;
 
-    [self hushLocPlacePickAt:0];
+    [(id)self hushLocPlacePickAt:0];
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_9fdc4; */
 
@@ -6507,7 +6507,7 @@ L_a0110:;
     [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
-    [self presentViewController:ret animated:1 completion:0];
+    [(id)self presentViewController:ret animated:1 completion:0];
     objc_release(ret);
     objc_release(ret);
     return;
@@ -6556,7 +6556,7 @@ L_a0110:;
     id ret = nil;
 
     /* [UNRESOLVED] [[@0x2450f8 alloc] initWithMode:0]; */
-    [self navigationController];
+    [(id)self navigationController];
     /* [UNRESOLVED] [(id)ret pushViewController:[[@0x2450f8 alloc] initWithMode:0] animated:1]; */
     objc_release(ret);
 }
@@ -6715,10 +6715,10 @@ L_a0110:;
     objc_release(ret);
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
-    [self hushLocAdoptTarget:self->_nameHint name:0];
+    [(id)self hushLocAdoptTarget:self->_nameHint name:0];
     /* [UNRESOLVED] CLLocationCoordinate2DMake(); */
-    [self moveTo:1 spanMeters:0 animated:1500];
-    [self refreshCenter:1];
+    [(id)self moveTo:1 spanMeters:0 animated:1500];
+    [(id)self refreshCenter:1];
 
 L_a0848:;
 }
@@ -6770,7 +6770,7 @@ L_a0848:;
     // 000a08d0  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [self presentingViewController];
+    [(id)self presentingViewController];
     if (ret == 0) goto L_a0894;
 
     objc_retain(ret);
@@ -6916,7 +6916,7 @@ L_a08a8:;
     [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
-    [self presentViewController:ret animated:1 completion:0];
+    [(id)self presentViewController:ret animated:1 completion:0];
     objc_release(ret);
     objc_release(ret);
     return;
@@ -7556,7 +7556,7 @@ L_a08a8:;
     // 000a19a0  mov     x0, x19
     id ret = nil;
 
-    [self hushLocEffectiveCoord];
+    [(id)self hushLocEffectiveCoord];
     /* [UNRESOLVED] sub_9aed0(); */
     if (((0 >> 0) & 1) == 0) goto L_a1440;
 
@@ -7727,7 +7727,7 @@ L_a199c:;
     id ret = nil;
 
     /* [UNRESOLVED] [[@0x2450f8 alloc] initWithMode:1]; */
-    [self navigationController];
+    [(id)self navigationController];
     /* [UNRESOLVED] [(id)ret pushViewController:[[@0x2450f8 alloc] initWithMode:1] animated:1]; */
     objc_release(ret);
 }
@@ -8257,7 +8257,7 @@ L_a199c:;
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
-    [self hushLocEffectiveCoord];
+    [(id)self hushLocEffectiveCoord];
     /* [UNRESOLVED] sub_9aed0(); */
     if (((self >> 0) & 1) == 0) goto L_a1b98;
 

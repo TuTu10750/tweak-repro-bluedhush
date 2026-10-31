@@ -32,7 +32,7 @@
     // 0007a5a8  ret
     id ret = nil;
 
-    [self files];
+    [(id)self files];
     [(id)ret count];
     objc_release(ret);
     return (long long)[(id)ret count];
@@ -116,12 +116,12 @@
 
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_7a690; */
 
-    [self files];
+    [(id)self files];
     [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_7a690; */
 
-    [self files];
+    [(id)self files];
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a1]; */
     [(id)[NSURL class] fileURLWithPath:ret];
     objc_release(ret);

@@ -163,14 +163,14 @@
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
 }
 
 // @0x19c1a4  types=@48@0:8@16@24@32q40
@@ -246,14 +246,14 @@
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
 }
 
 // @0x19c278  types=@48@0:8@16@24@32@40
@@ -342,16 +342,16 @@
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a3); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
 }
 
 // @0x19c370  types=@56@0:8@16@24@32@40q48
@@ -443,16 +443,16 @@
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [self unknownSelector]; */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a0); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a1); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a2); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] objc_release(a3); */
-    /* [UNRESOLVED] [(id)[self unknownSelector] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[(id)self unknownSelector] unknownSelector]; */
 }
 
 @end

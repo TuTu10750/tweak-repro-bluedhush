@@ -533,9 +533,9 @@
     if (self == 0) goto L_ceef8;
 
     [(id)[UIColor class] clearColor];
-    [self setBackgroundColor:ret];
+    [(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [self setUserInteractionEnabled:1];
+    [(id)self setUserInteractionEnabled:1];
     [(id)[NSMutableArray class] arrayWithCapacity:9];
     objc_release(self->_photos);
     [(id)[NSMutableArray class] arrayWithCapacity:4];
@@ -557,7 +557,7 @@
     [(id)ret setCornerRadius:12.5];
     objc_release(ret);
     [(id)self->_badge setClipsToBounds:1];
-    [self addSubview:self->_badge];
+    [(id)self addSubview:self->_badge];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipBox);
     [(id)[UIColor class] whiteColor];
@@ -583,7 +583,7 @@
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [self addSubview:self->_chipBox];
+    [(id)self addSubview:self->_chipBox];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipDot);
     /* [UNRESOLVED] [(id)[UIColor class] colorWithRed:0 / * unk * / green:0 / * unk * / blue:0 / * unk * / alpha:1]; */
@@ -631,7 +631,7 @@
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [self addSubview:self->_bar];
+    [(id)self addSubview:self->_bar];
     objc_retain(self);
 
 L_ceef8:;
@@ -1002,8 +1002,8 @@ L_cf278:;
     /* [UNRESOLVED] [[UITapGestureRecognizer alloc] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0 / * unk * /] addGestureRecognizer:[[UITapGestureRecognizer alloc] unknownSelector]]; */
     /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] unknownSelector]); */
-    /* [UNRESOLVED] [self addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
-    /* [UNRESOLVED] [self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [(id)self addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
+    /* [UNRESOLVED] [(id)self sendSubviewToBack:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     /* [UNRESOLVED] [(id)self->_photos addObject:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
     [(id)0 objectAtIndexedSubscript:0];
     /* [UNRESOLVED] sub_cf42c(ret); */
@@ -1791,12 +1791,12 @@ L_cfd5c:;
     objc_release(ret);
     if ((([(id)ret tag] >> 63) & 1) != 0) goto L_cfe9c;
 
-    [self photoURLs];
+    [(id)self photoURLs];
     [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_cfe9c; */
 
-    [self photoURLs];
+    [(id)self photoURLs];
     /* [UNRESOLVED] HushUserAlbumShowPhotos([(id)ret tag]); */
     objc_release(ret);
 
@@ -2306,7 +2306,7 @@ L_cfe9c:;
     /* [UNRESOLVED] [(id)a0 tag]; */
     /* [UNRESOLVED] if (cond / * gt * /) goto L_d0600; */
 
-    [self uid];
+    [(id)self uid];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_d05f8;
 
@@ -2321,9 +2321,9 @@ L_cff70:;
 
 L_cff80:;
     /* [UNRESOLVED] sub_d0740([(id)a0 tag]); */
-    /* [UNRESOLVED] [self setMarkIndex:[(id)a0 tag]]; */
-    [self hushApplySelection];
-    [self labels];
+    /* [UNRESOLVED] [(id)self setMarkIndex:[(id)a0 tag]]; */
+    [(id)self hushApplySelection];
+    [(id)self labels];
     objc_retain(0);
     objc_release(ret);
     /* [UNRESOLVED] if ((([(id)a0 tag] >> 63) & 1) != 0) goto L_d00f4; */
@@ -2426,7 +2426,7 @@ L_d0370:;
     objc_release(ret);
 
 L_d03cc:;
-    [self superview];
+    [(id)self superview];
     if (ret == 0) goto L_d0444;
 
 L_d03fc:;
@@ -2451,7 +2451,7 @@ L_d04dc:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d04f8; */
 
 L_d04f8:;
-    [self superview];
+    [(id)self superview];
     [(id)ret superview];
     objc_release(ret);
     objc_release(ret);
@@ -2869,8 +2869,8 @@ L_d0600:;
     // 000d106c  ret
     id ret = nil;
 
-    [self hushEnsurePhotos];
-    [self hushEnsureButtons];
+    [(id)self hushEnsurePhotos];
+    [(id)self hushEnsureButtons];
     [(id)self->_buttons count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d0c48; */
 
@@ -2884,7 +2884,7 @@ L_d0bd0:;
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d0bd0; */
 
 L_d0c48:;
-    [self hushApplySelection];
+    [(id)self hushApplySelection];
     [(id)self->_photos count];
     if ([(id)self->_photos count] == 0) goto L_d0e54;
 

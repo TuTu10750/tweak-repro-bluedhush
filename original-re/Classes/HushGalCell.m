@@ -423,7 +423,7 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_7c1a0;
 
-    [self contentView];
+    [(id)self contentView];
     [(id)ret bounds];
     [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_thumb);
@@ -435,7 +435,7 @@
     [(id)[UIColor class] colorWithWhite:0.96 alpha:1];
     [(id)self->_thumb setBackgroundColor:ret];
     objc_release(ret);
-    [self contentView];
+    [(id)self contentView];
     [(id)ret addSubview:self->_thumb];
     objc_release(ret);
     [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -446,17 +446,17 @@
     [(id)[UIColor class] colorWithWhite:1 alpha:0.92];
     [(id)self->_playBadge setTintColor:ret];
     objc_release(ret);
-    [self contentView];
+    [(id)self contentView];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
-    [self contentView];
+    [(id)self contentView];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidY(); */
     [(id)self->_playBadge setCenter:CGPointZero];
     objc_release(ret);
     objc_release(ret);
     [(id)self->_playBadge setAutoresizingMask:0x2d];
-    [self contentView];
+    [(id)self contentView];
     [(id)ret addSubview:self->_playBadge];
     objc_release(ret);
     objc_release(self->_flashTag);
@@ -481,7 +481,7 @@
     [(id)self->_flashTag bounds];
     [(id)self->_flashTag setFrame:CGRectZero];
     [(id)self->_flashTag setAutoresizingMask:0x24];
-    [self contentView];
+    [(id)self contentView];
     [(id)ret addSubview:self->_flashTag];
     objc_release(ret);
 

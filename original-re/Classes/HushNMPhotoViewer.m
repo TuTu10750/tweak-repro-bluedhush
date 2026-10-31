@@ -535,7 +535,7 @@
     /* [UNRESOLVED] sub_cef28(ret); */
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     [(id)[NSArray class] class];
@@ -556,14 +556,14 @@ L_e4b44:;
     objc_release(self->_backdrop);
     [(id)self->_backdrop setContentMode:2];
     [(id)self->_backdrop setClipsToBounds:1];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_backdrop];
     objc_release(ret);
     [(id)[UIBlurEffect class] effectWithStyle:6];
     [[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(self->_blur);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_blur];
     objc_release(ret);
     [(id)[CAGradientLayer class] layer];
@@ -590,7 +590,7 @@ L_e4b44:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret layer];
     [(id)ret addSublayer:self->_veil];
     objc_release(ret);
@@ -600,7 +600,7 @@ L_e4b44:;
     [(id)self->_pager setPagingEnabled:1];
     [(id)self->_pager setShowsHorizontalScrollIndicator:0];
     [(id)self->_pager setDelegate:self];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_pager];
     objc_release(ret);
     [(id)self->_urls count];
@@ -633,7 +633,7 @@ L_e5200:;
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_strip);
     [(id)self->_strip setShowsHorizontalScrollIndicator:0];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:self->_strip];
     objc_release(ret);
     [(id)self->_urls count];
@@ -671,7 +671,7 @@ L_e5318:;
 L_e5508:;
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];
     [(id)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")] setDelegate:self];
-    [self view];
+    [(id)self view];
     [(id)ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]];
     objc_release(ret);
     objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]);
@@ -1030,26 +1030,26 @@ L_e5508:;
     id ret = nil;
 
     [super viewDidLayoutSubviews];
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret safeAreaInsets];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * pl * /) goto L_e5778; */
 
-    [self view];
+    [(id)self view];
     [(id)ret window];
     objc_release(ret);
     objc_release(ret);
     if (ret == 0) goto L_e5778;
 
-    [self view];
+    [(id)self view];
     [(id)ret window];
     [(id)ret safeAreaInsets];
     objc_release(ret);
@@ -1057,15 +1057,15 @@ L_e5508:;
 
 L_e5778:;
     [(id)self->_strip isHidden];
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [(id)self->_backdrop setFrame:CGRectZero];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [(id)self->_blur setFrame:CGRectZero];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [(id)self->_veil setFrame:CGRectZero];
     objc_release(ret);
@@ -1089,8 +1089,8 @@ L_e5908:;
 L_e5990:;
     [(id)self->_pager setContentOffset:self->_cur];
     [(id)self->_strip setFrame:CGRectZero];
-    [self p_layoutThumbs];
-    [self p_updateBackdrop];
+    [(id)self p_layoutThumbs];
+    [(id)self p_updateBackdrop];
     return;
 }
 
@@ -1814,8 +1814,8 @@ L_e61b8:;
     [(id)self->_urls count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_e62c8; */
 
-    [self p_layoutThumbs];
-    [self p_updateBackdrop];
+    [(id)self p_layoutThumbs];
+    [(id)self p_updateBackdrop];
     [(id)self->_pager bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     [(id)self->_pager setContentOffset:1 animated:0];
@@ -2003,7 +2003,7 @@ L_e6404:;
     /* [UNRESOLVED] if (a0 == 0) goto L_e64b0; */
 
     /* [UNRESOLVED] [(id)a0 view]; */
-    [self view];
+    [(id)self view];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e64d0; */
@@ -2166,7 +2166,7 @@ L_e64b0:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self view];
+    [(id)self view];
     /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 state]; */
@@ -2175,7 +2175,7 @@ L_e64b0:;
     /* [UNRESOLVED] if (cond / * le * /) goto L_e670c; */
 
     /* [UNRESOLVED] CGAffineTransformMakeTranslation(); */
-    [self view];
+    [(id)self view];
     [(id)ret setTransform:0];
     objc_release(ret);
     goto L_e670c;

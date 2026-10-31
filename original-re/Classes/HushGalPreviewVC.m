@@ -43,8 +43,8 @@
     self = [super init];
     if (self == 0) goto L_7ac04;
 
-    [self setModalPresentationStyle:5];
-    [self setModalTransitionStyle:2];
+    [(id)self setModalPresentationStyle:5];
+    [(id)self setModalTransitionStyle:2];
 
 L_7ac04:;
     return (id)self;
@@ -575,14 +575,14 @@ L_7ac04:;
 
     [super viewDidLoad];
     [(id)[UIColor class] colorWithWhite:0 alpha:0.55];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     objc_release(ret);
     [[UIView alloc] initWithFrame:CGRectZero];
@@ -595,7 +595,7 @@ L_7ac04:;
     objc_release(ret);
     [(id)[[UIView alloc] initWithFrame:CGRectZero] setClipsToBounds:1];
     [(id)[[UIView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x2d];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [[UIPageViewController alloc] initWithTransitionStyle:1 navigationOrientation:0 options:0];
@@ -613,26 +613,26 @@ L_7ac04:;
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self addChildViewController:self->_pager];
+    [(id)self addChildViewController:self->_pager];
     [(id)self->_pager view];
     [(id)[[UIView alloc] initWithFrame:CGRectZero] addSubview:ret];
     objc_release(ret);
     [(id)self->_pager didMoveToParentViewController:self];
-    [self index];
-    if ((([self index] >> 63) & 1) != 0) goto L_7b0c8;
+    [(id)self index];
+    if ((([(id)self index] >> 63) & 1) != 0) goto L_7b0c8;
 
-    [self index];
-    [self files];
+    [(id)self index];
+    [(id)self files];
     [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lt * /) goto L_7b0d4; */
 
 L_7b0c8:;
-    [self setIndex:0];
+    [(id)self setIndex:0];
 
 L_7b0d4:;
-    [self index];
-    [self pageAtIndex:[self index]];
+    [(id)self index];
+    [(id)self pageAtIndex:[(id)self index]];
     if (ret == 0) goto L_7b174;
 
     [(id)[NSArray class] arrayWithObjects:0 count:1];
@@ -671,7 +671,7 @@ L_7b174:;
     [(id)ret addTarget:self action:sel_registerName("closeTapped") forControlEvents:0x40];
     [(id)ret setAutoresizingMask:0xa];
     [(id)[[UIView alloc] initWithFrame:CGRectZero] addSubview:ret];
-    [self refreshSavedAtLabel];
+    [(id)self refreshSavedAtLabel];
     objc_release(ret);
     objc_release(ret);
     objc_release([[UIView alloc] initWithFrame:CGRectZero]);
@@ -729,12 +729,12 @@ L_7b174:;
     id ret = nil;
 
     /* [UNRESOLVED] [super viewDidAppear:a0]; */
-    [self files];
+    [(id)self files];
     [(id)ret count];
     objc_release(ret);
     if ([(id)ret count] != 0) goto L_7b4f0;
 
-    [self closeTapped];
+    [(id)self closeTapped];
 
 L_7b4f0:;
     return;
@@ -905,13 +905,13 @@ L_7b4f0:;
 
     /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_7b6e4; */
 
-    [self files];
+    [(id)self files];
     [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_7b6e4; */
 
     /* [UNRESOLVED] [(id)objc_alloc_init setIndex:a0]; */
-    [self files];
+    [(id)self files];
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */
     [(id)objc_alloc_init setPath:ret];
     objc_release(ret);
@@ -1049,8 +1049,8 @@ L_7b6e4:;
     if (ret == 0) goto L_7b828;
 
     [(id)ret index];
-    [self setIndex:[(id)ret index]];
-    [self refreshSavedAtLabel];
+    [(id)self setIndex:[(id)ret index]];
+    [(id)self refreshSavedAtLabel];
 
 L_7b828:;
 
@@ -1346,17 +1346,17 @@ L_7b82c:;
     // 0007bbc8  b       #0x7bb24   ; sub_7bb24
     id ret = nil;
 
-    [self index];
-    if ((([self index] >> 63) & 1) != 0) goto L_7b8f8;
+    [(id)self index];
+    if ((([(id)self index] >> 63) & 1) != 0) goto L_7b8f8;
 
-    [self index];
-    [self files];
+    [(id)self index];
+    [(id)self files];
     [(id)ret count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_7b904; */
 
-    [self files];
-    [self index];
-    [(id)ret objectAtIndexedSubscript:[self index]];
+    [(id)self files];
+    [(id)self index];
+    [(id)ret objectAtIndexedSubscript:[(id)self index]];
     objc_release(ret);
     goto L_7b904;
 
@@ -1380,7 +1380,7 @@ L_7b918:;
 
 L_7b9a8:;
     /* [UNRESOLVED] [(id)self->_savedAt setText:0x209f58]; */
-    [self view];
+    [(id)self view];
     [(id)ret setNeedsLayout];
     goto L_7ba54;
 
@@ -1395,7 +1395,7 @@ L_7ba04:;
 
 L_7ba1c:;
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret setNeedsLayout];
     objc_release(ret);
 

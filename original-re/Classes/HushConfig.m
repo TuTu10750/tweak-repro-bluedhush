@@ -92,7 +92,7 @@
     /* [UNRESOLVED] objc_release(self->/ *+0x8* /); */
     [(id)[NSMutableDictionary class] dictionary];
     /* [UNRESOLVED] objc_release(self->/ *+0x10* /); */
-    [self registerDefaults];
+    [(id)self registerDefaults];
     [(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("hush_clearFlagCache") name:0x2001c8/ *+0x0* / object:0]; */
     objc_release(ret);
@@ -146,7 +146,7 @@ L_e3f8:;
     id ret = nil;
 
     objc_retain(self);
-    [self flagCache];
+    [(id)self flagCache];
     [(id)ret removeAllObjects];
     objc_release(ret);
 
@@ -383,11 +383,11 @@ L_e3f8:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e750; */
 
     /* [UNRESOLVED] objc_retain(0x2565c8); */
-    [self defaults];
+    [(id)self defaults];
     [(id)ret dictionaryRepresentation];
     objc_release(ret);
     objc_retain(self);
-    [self setPrefsSnapshot:ret];
+    [(id)self setPrefsSnapshot:ret];
     objc_release(self);
     /* [UNRESOLVED] objc_retain(0x2565c8); */
     [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
@@ -402,12 +402,12 @@ L_e5c8:;
 
     /* [UNRESOLVED] [(id)0x2565c8 objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     [(id)ret boolValue];
-    /* [UNRESOLVED] [self isEnabled:0 / * local * // *+0x0* / default:[(id)ret boolValue]]; */
+    /* [UNRESOLVED] [(id)self isEnabled:0 / * local * // *+0x0* / default:[(id)ret boolValue]]; */
     objc_release(ret);
     goto L_e638;
 
 L_e630:;
-    /* [UNRESOLVED] [self isEnabled:0 / * local * // *+0x0* / default:0]; */
+    /* [UNRESOLVED] [(id)self isEnabled:0 / * local * // *+0x0* / default:0]; */
 
 L_e638:;
     objc_release(ret);
@@ -419,7 +419,7 @@ L_e638:;
 L_e66c:;
     /* [UNRESOLVED] objc_release(0x2565c8); */
     objc_retain(self);
-    [self setPrefsSnapshot:0];
+    [(id)self setPrefsSnapshot:0];
     objc_release(self);
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
     if (self == 0) goto L_e704;
@@ -478,7 +478,7 @@ L_e70c:;
     // 0000e7fc  b       #0xe7c0   ; sub_e7c0
     id ret = nil;
 
-    [self defaults];
+    [(id)self defaults];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e7f8; */
 
     /* [UNRESOLVED] [(id)ret registerDefaults:0x2565c8]; */
@@ -894,7 +894,7 @@ L_e8b4:;
 
 L_e950:;
     objc_retain(self);
-    [self flagCache];
+    [(id)self flagCache];
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:a0]; */
     objc_release(ret);
     if (ret == 0) goto L_e9c8;
@@ -915,14 +915,14 @@ L_e9c8:;
 
     objc_retain(self);
     [(id)[NSNumber class] numberWithBool:0];
-    [self flagCache];
+    [(id)self flagCache];
     /* [UNRESOLVED] [(id)ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
     objc_release(ret);
     goto L_ec74;
 
 L_ea74:;
-    [self prefsSnapshot];
+    [(id)self prefsSnapshot];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_ece0; */
 
     /* [UNRESOLVED] [(id)0x2565d8 containsObject:a0]; */
@@ -948,7 +948,7 @@ L_eb10:;
     goto L_ebf0;
 
 L_eb38:;
-    [self defaults];
+    [(id)self defaults];
     [(id)ret boolForKey:@"purify_master"];
     objc_release(ret);
     if ((([(id)ret boolForKey:@"purify_master"] >> 0) & 1) != 0) goto L_eb84;
@@ -957,7 +957,7 @@ L_eb70:;
     goto L_ebfc;
 
 L_eb84:;
-    [self defaults];
+    [(id)self defaults];
     /* [UNRESOLVED] [(id)ret objectForKey:a0]; */
     objc_release(ret);
     if (ret == 0) goto L_ebf0;
@@ -974,7 +974,7 @@ L_ebf0:;
 L_ebfc:;
     objc_retain(self);
     [(id)[NSNumber class] numberWithBool:[(id)ret boolValue]];
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
     objc_release(ret);
@@ -1147,18 +1147,18 @@ L_edf0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_ee44; */
 
 L_ee10:;
-    [self defaults];
+    [(id)self defaults];
     [(id)ret setBool:0 forKey:@"switch_device_empty"];
     objc_release(ret);
 
 L_ee44:;
-    [self defaults];
+    [(id)self defaults];
     /* [UNRESOLVED] [(id)ret setBool:a0 forKey:a1]; */
     objc_release(ret);
-    [self defaults];
+    [(id)self defaults];
     [(id)ret synchronize];
     objc_release(ret);
-    [self hush_clearFlagCache];
+    [(id)self hush_clearFlagCache];
 
 L_eec4:;
 }
@@ -1252,7 +1252,7 @@ L_eec4:;
     /* [UNRESOLVED] [(id)a0 length]; */
     /* [UNRESOLVED] if ([(id)a0 length] == 0) goto L_ef7c; */
 
-    [self defaults];
+    [(id)self defaults];
     /* [UNRESOLVED] [(id)ret objectForKey:a0]; */
     objc_release(ret);
     [(id)[NSString class] class];
@@ -1360,7 +1360,7 @@ L_efb4:;
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_f098;
 
-    [self defaults];
+    [(id)self defaults];
     /* [UNRESOLVED] if (a0 == 0) goto L_f05c; */
 
     /* [UNRESOLVED] [(id)ret setObject:a0 forKey:a1]; */
@@ -1371,7 +1371,7 @@ L_f05c:;
 
 L_f064:;
     objc_release(ret);
-    [self defaults];
+    [(id)self defaults];
     [(id)ret synchronize];
     objc_release(ret);
 
@@ -1530,10 +1530,10 @@ L_f098:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f33c; */
 
     /* [UNRESOLVED] [(id)0x2565c8 enumerateKeysAndObjectsUsingBlock:a0]; */
-    [self defaults];
+    [(id)self defaults];
     [(id)ret removeObjectForKey:@"switch_log_level"];
     objc_release(ret);
-    [self defaults];
+    [(id)self defaults];
     [(id)ret synchronize];
     objc_release(ret);
     return;
@@ -1571,7 +1571,7 @@ L_f098:;
     // 0000f444  ret
     id ret = nil;
 
-    [self stringForKey:@"runtime_custom_lat"];
+    [(id)self stringForKey:@"runtime_custom_lat"];
     [(id)ret length];
     objc_release(ret);
     return 0;
@@ -1619,7 +1619,7 @@ L_f098:;
     // 0000f4c0  ret
     id ret = nil;
 
-    [self stringForKey:@"runtime_custom_lat"];
+    [(id)self stringForKey:@"runtime_custom_lat"];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_f4ac;
 
@@ -1673,7 +1673,7 @@ L_f4ac:;
     // 0000f53c  ret
     id ret = nil;
 
-    [self stringForKey:@"runtime_custom_lng"];
+    [(id)self stringForKey:@"runtime_custom_lng"];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_f528;
 
@@ -1753,10 +1753,10 @@ L_f528:;
     id ret = nil;
 
     [(id)[NSString class] stringWithFormat:@"%.6f"];
-    [self setString:ret forKey:@"runtime_custom_lat"];
+    [(id)self setString:ret forKey:@"runtime_custom_lat"];
     objc_release(ret);
     [(id)[NSString class] stringWithFormat:@"%.6f"];
-    [self setString:ret forKey:@"runtime_custom_lng"];
+    [(id)self setString:ret forKey:@"runtime_custom_lng"];
 }
 
 // @0xf618  types=d16@0:8
@@ -1800,7 +1800,7 @@ L_f528:;
     // 0000f68c  ret
     id ret = nil;
 
-    [self stringForKey:@"runtime_custom_altitude"];
+    [(id)self stringForKey:@"runtime_custom_altitude"];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_f678;
 
@@ -1850,7 +1850,7 @@ L_f678:;
     id ret = nil;
 
     [(id)[NSString class] stringWithFormat:@"%.2f"];
-    [self setString:ret forKey:@"runtime_custom_altitude"];
+    [(id)self setString:ret forKey:@"runtime_custom_altitude"];
 }
 
 // @0xf700  types=@16@0:8
@@ -1888,7 +1888,7 @@ L_f678:;
     // 0000f75c  ret
     id ret = nil;
 
-    [self stringForKey:@"runtime_auth_token"];
+    [(id)self stringForKey:@"runtime_auth_token"];
     [(id)ret length];
     objc_release(ret);
     return nil;
@@ -1939,7 +1939,7 @@ L_f678:;
     // 0000f7d0  ret
     id ret = nil;
 
-    [self stringForKey:@"runtime_user_agent"];
+    [(id)self stringForKey:@"runtime_user_agent"];
     [(id)ret length];
     objc_release(ret);
     return nil;
@@ -2042,7 +2042,7 @@ L_f678:;
     // 0000f8e4  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    [self stringForKey:@"runtime_backup_dir"];
+    [(id)self stringForKey:@"runtime_backup_dir"];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_f844;
 

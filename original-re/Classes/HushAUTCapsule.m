@@ -255,13 +255,13 @@
     if (self == 0) goto L_cedc;
 
     [(id)[UIColor class] colorWithRed:0.039 green:0.518 blue:1 alpha:1];
-    [self setBackgroundColor:ret];
+    [(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [self layer];
+    [(id)self layer];
     [(id)ret setCornerRadius:9];
     objc_release(ret);
-    [self setClipsToBounds:1];
-    [self setUserInteractionEnabled:0];
+    [(id)self setClipsToBounds:1];
+    [(id)self setUserInteractionEnabled:0];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_capText);
     [(id)self->_capText setText:@"隐私相册"];
@@ -271,7 +271,7 @@
     [(id)[UIColor class] whiteColor];
     [(id)self->_capText setTextColor:ret];
     objc_release(ret);
-    [self addSubview:self->_capText];
+    [(id)self addSubview:self->_capText];
     [(id)[UIImageSymbolConfiguration class] configurationWithPointSize:6 weight:0];
     [(id)[UIImage class] systemImageNamed:@"lock.open.fill" withConfiguration:ret];
     objc_release(ret);
@@ -282,7 +282,7 @@
     [[UIImageView alloc] initWithImage:ret];
     objc_release(self->_capIcon);
     [(id)self->_capIcon setContentMode:1];
-    [self addSubview:self->_capIcon];
+    [(id)self addSubview:self->_capIcon];
     objc_retain(self);
     objc_release(ret);
 
@@ -447,14 +447,14 @@ L_cedc:;
 
 L_cfe4:;
     objc_release(ret);
-    [self bounds];
-    [self bounds];
+    [(id)self bounds];
+    [(id)self bounds];
     [(id)self->_capText setFrame:CGRectZero];
     /* [UNRESOLVED] if (cond / * le * /) goto L_d0e0; */
 
     [(id)self->_capText frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
-    [self bounds];
+    [(id)self bounds];
     [(id)self->_capIcon setFrame:CGRectZero];
 
 L_d0e0:;

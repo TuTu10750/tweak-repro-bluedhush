@@ -86,11 +86,11 @@
     self = [super init];
     if (self == 0) goto L_c6544;
 
-    /* [UNRESOLVED] [self setImageURLs:a0]; */
-    /* [UNRESOLVED] [self setInitialIndex:a1]; */
-    [self setModalPresentationStyle:0];
+    /* [UNRESOLVED] [(id)self setImageURLs:a0]; */
+    /* [UNRESOLVED] [(id)self setInitialIndex:a1]; */
+    [(id)self setModalPresentationStyle:0];
     [(id)[NSMutableSet class] set];
-    [self setLoadedHighResolutionIndexes:ret];
+    [(id)self setLoadedHighResolutionIndexes:ret];
     objc_release(ret);
     objc_retain(self);
 
@@ -623,11 +623,11 @@ L_c6544:;
 
     [super viewDidLoad];
     [(id)[UIColor class] blackColor];
-    [self view];
+    [(id)self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     [[UIScrollView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
@@ -640,12 +640,12 @@ L_c6544:;
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setShowsHorizontalScrollIndicator:0];
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setShowsVerticalScrollIndicator:0];
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setDelegate:self];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UIScrollView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    [self setPagingScrollView:[[UIScrollView alloc] initWithFrame:CGRectZero]];
+    [(id)self setPagingScrollView:[[UIScrollView alloc] initWithFrame:CGRectZero]];
     [(id)[UIButton class] buttonWithType:1];
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     [(id)ret setFrame:CGRectZero];
@@ -667,14 +667,14 @@ L_c6544:;
     objc_release(ret);
     objc_release(ret);
     [(id)ret addTarget:self action:sel_registerName("bdh_close") forControlEvents:0x40];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:ret];
     objc_release(ret);
-    [self setCloseButton:ret];
-    [self view];
+    [(id)self setCloseButton:ret];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     [[UILabel alloc] initWithFrame:CGRectZero];
@@ -695,19 +695,19 @@ L_c6544:;
     [(id)ret setCornerRadius:14];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setClipsToBounds:1];
-    [self view];
+    [(id)self view];
     [(id)ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    [self setPageLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
-    [self bdh_buildPages];
+    [(id)self setPageLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    [(id)self bdh_buildPages];
     [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];
     [(id)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setMaximumNumberOfTouches:1];
     [(id)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setCancelsTouchesInView:0];
     [(id)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setDelegate:self];
-    [self view];
+    [(id)self view];
     [(id)ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
     objc_release(ret);
-    [self setDismissPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
+    [(id)self setDismissPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
     objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]);
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
@@ -1239,11 +1239,11 @@ L_c6544:;
     // 000c72d0  mov     x0, x22
     id ret = nil;
 
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
@@ -1251,12 +1251,12 @@ L_c6544:;
 
     /* [UNRESOLVED] if (cond / * ls * /) goto L_c7490; */
 
-    [self imageURLs];
+    [(id)self imageURLs];
     [(id)ret count];
     objc_release(ret);
     if ([(id)ret count] == 0) goto L_c7490;
 
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret subviews];
     objc_release(ret);
     [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
@@ -1274,10 +1274,10 @@ L_c6e38:;
 
 L_c6e6c:;
     objc_release(ret);
-    [self loadedHighResolutionIndexes];
+    [(id)self loadedHighResolutionIndexes];
     [(id)ret removeAllObjects];
     objc_release(ret);
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     [(id)ret count];
     objc_release(ret);
     if ([(id)ret count] == 0) goto L_c7384;
@@ -1444,12 +1444,12 @@ L_c7490:;
 
     /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_c76d8; */
 
-    [self imageURLs];
+    [(id)self imageURLs];
     [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_c76d8; */
 
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret viewWithTag:0];
     objc_release(ret);
     [(id)[UIScrollView class] class];
@@ -1546,19 +1546,19 @@ L_c76d8:;
     // 000c77d8  b       #0x1a72cc   ; _objc_autoreleaseReturnValue
     id ret = nil;
 
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ls * /) goto L_c77d8; */
 
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret contentOffset];
     objc_release(ret);
-    [self imageURLs];
+    [(id)self imageURLs];
     [(id)ret count];
     objc_release(ret);
-    [self bdh_zoomScrollViewForIndex:0];
+    [(id)self bdh_zoomScrollViewForIndex:0];
     goto L_c77d8;
 
 L_c77d8:;
@@ -1810,17 +1810,17 @@ L_c77d8:;
 
     /* [UNRESOLVED] if (((a0 >> 63) & 1) != 0) goto L_c7ae8; */
 
-    [self imageURLs];
+    [(id)self imageURLs];
     [(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_c7ae8; */
 
     /* [UNRESOLVED] [(id)[NSNumber class] numberWithInteger:a0]; */
-    [self loadedHighResolutionIndexes];
+    [(id)self loadedHighResolutionIndexes];
     [(id)ret containsObject:ret];
     objc_release(ret);
 
-    [self imageURLs];
+    [(id)self imageURLs];
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */
     objc_release(ret);
     objc_retain(ret);
@@ -2034,31 +2034,31 @@ L_c7ae8:;
     // 000c7f50  ret
     id ret = nil;
 
-    [self imageURLs];
+    [(id)self imageURLs];
     [(id)ret count];
     objc_release(ret);
     if ([(id)ret count] == 0) goto L_c7ef8;
 
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ls * /) goto L_c7f50; */
 
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret contentOffset];
     objc_release(ret);
-    [self pageLabel];
+    [(id)self pageLabel];
     [(id)ret setHidden:0];
     objc_release(ret);
     [(id)[NSString class] stringWithFormat:@"%ld / %lu"];
-    [self pageLabel];
+    [(id)self pageLabel];
     [(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
 
 L_c7ef8:;
-    [self pageLabel];
+    [(id)self pageLabel];
     [(id)ret setHidden:1];
 
 L_c7f50:;
@@ -2113,7 +2113,7 @@ L_c7f50:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     /* [UNRESOLVED] objc_release(a0); */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c7fd0; */
@@ -2173,7 +2173,7 @@ L_c7f50:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c806c; */
 
@@ -2324,11 +2324,11 @@ L_c806c:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c8230; */
 
-    /* [UNRESOLVED] [self viewForZoomingInScrollView:a0]; */
+    /* [UNRESOLVED] [(id)self viewForZoomingInScrollView:a0]; */
     if (ret == 0) goto L_c8210;
 
     /* [UNRESOLVED] [(id)a0 bounds]; */
@@ -2338,10 +2338,10 @@ L_c806c:;
     /* [UNRESOLVED] [(id)a0 panGestureRecognizer]; */
     [(id)ret setEnabled:0];
     objc_release(ret);
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret setScrollEnabled:0];
     objc_release(ret);
-    [self dismissPanGesture];
+    [(id)self dismissPanGesture];
     [(id)ret setEnabled:0];
     objc_release(ret);
 
@@ -2448,17 +2448,17 @@ L_c8230:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c8358; */
 
     /* [UNRESOLVED] [(id)a0 panGestureRecognizer]; */
     [(id)ret setEnabled:0];
     objc_release(ret);
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret setScrollEnabled:ret];
     objc_release(ret);
-    [self dismissPanGesture];
+    [(id)self dismissPanGesture];
     [(id)ret setEnabled:ret];
     objc_release(ret);
 
@@ -2524,18 +2524,18 @@ L_c8358:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self dismissPanGesture];
+    [(id)self dismissPanGesture];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c83c4; */
 
     objc_release(ret);
     goto L_c83e0;
 
 L_c83c4:;
-    [self interactiveDismissInProgress];
+    [(id)self interactiveDismissInProgress];
     /* [UNRESOLVED] objc_release(a0); */
 
 L_c83e0:;
-    [self interactiveDismissInProgress];
+    [(id)self interactiveDismissInProgress];
     /* [UNRESOLVED] objc_release(a0); */
     return (BOOL)self;
 }
@@ -2627,13 +2627,13 @@ L_c83e0:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
-    [self pagingScrollView];
+    [(id)self pagingScrollView];
     [(id)ret panGestureRecognizer];
     objc_release(ret);
-    [self dismissPanGesture];
+    [(id)self dismissPanGesture];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c8610; */
 
-    [self dismissPanGesture];
+    [(id)self dismissPanGesture];
     objc_release(ret);
     goto L_c8610;
 
@@ -2845,13 +2845,13 @@ L_c8610:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [self view];
+    [(id)self view];
     /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     /* [UNRESOLVED] [(id)a0 velocityInView:ret]; */
     objc_release(ret);
-    [self view];
+    [(id)self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     objc_release(ret);
@@ -2864,7 +2864,7 @@ L_c8610:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c88d8; */
 
 L_c87b8:;
-    [self setInteractiveDismissInProgress:0];
+    [(id)self setInteractiveDismissInProgress:0];
     /* [UNRESOLVED] if (cond / * gt * /) goto L_c88dc; */
 
     /* [UNRESOLVED] if (cond / * gt * /) goto L_c88dc; */
@@ -2874,10 +2874,10 @@ L_c87b8:;
 
 L_c883c:;
     /* [UNRESOLVED] CGAffineTransformMakeTranslation(); */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     [(id)ret setTransform:0];
     objc_release(ret);
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     [(id)ret setAlpha:0];
     objc_release(ret);
 

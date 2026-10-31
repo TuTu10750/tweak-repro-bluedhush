@@ -240,22 +240,22 @@ L_136c4:;
     // 00013828  ret
     id ret = nil;
 
-    [self storedCode];
+    [(id)self storedCode];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_137a8;
 
-    [self _parseCode:ret];
+    [(id)self _parseCode:ret];
     if (ret == 0) goto L_137c4;
 
-    [self _verifySignature:ret];
+    [(id)self _verifySignature:ret];
     if (self == 0) goto L_137b0;
 
-    [self _verifyDevice:ret];
+    [(id)self _verifyDevice:ret];
     if (self == 0) goto L_137b0;
 
     [(id)ret objectForKeyedSubscript:@"duration"];
     [(id)ret unsignedIntValue];
-    [self _withinUsageDuration:[(id)ret unsignedIntValue]];
+    [(id)self _withinUsageDuration:[(id)ret unsignedIntValue]];
     goto L_13804;
 
 L_137a8:;
@@ -592,11 +592,11 @@ L_13814:;
     goto L_13bf0;
 
 L_13930:;
-    [self _parseCode:ret];
+    [(id)self _parseCode:ret];
     [(id)[NSUserDefaults class] standardUserDefaults];
     if (ret == 0) goto L_139b0;
 
-    [self _failureReason:ret];
+    [(id)self _failureReason:ret];
     if (ret == 0) goto L_13a90;
 
     /* [UNRESOLVED] if (a1 == 0) goto L_13bd8; */
@@ -616,7 +616,7 @@ L_139b0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13c4c; */
 
     /* [UNRESOLVED] [(id)ret setBool:0 forKey:0x256690]; */
-    [self _recheckRemoteAsync:ret];
+    [(id)self _recheckRemoteAsync:ret];
     /* [UNRESOLVED] if (a1 == 0) goto L_13be0; */
 
     goto L_13be0;
@@ -634,7 +634,7 @@ L_13a90:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_13c9c; */
 
     /* [UNRESOLVED] [(id)ret setBool:1 forKey:0x256690]; */
-    [self _recheckRemoteAsync:ret];
+    [(id)self _recheckRemoteAsync:ret];
     [(id)[NSNotificationCenter class] defaultCenter];
     [(id)ret postNotificationName:@"HushActivationDidChange" object:0];
     objc_release(ret);
@@ -1295,7 +1295,7 @@ L_140bc:;
     objc_release(ret);
     if ([(id)ret unsignedShortValue] == 0) goto L_14328;
 
-    [self deviceCode];
+    [(id)self deviceCode];
     [(id)ret length];
     /* [UNRESOLVED] if (cond / * ls * /) goto L_14330; */
 
@@ -1481,10 +1481,10 @@ L_143a8:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    /* [UNRESOLVED] [self _verifySignature:a0]; */
+    /* [UNRESOLVED] [(id)self _verifySignature:a0]; */
     if (self == 0) goto L_1449c;
 
-    /* [UNRESOLVED] [self _verifyDevice:a0]; */
+    /* [UNRESOLVED] [(id)self _verifyDevice:a0]; */
     if (self == 0) goto L_144a8;
 
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"window"]; */
@@ -1708,11 +1708,11 @@ L_1468c:;
     // 000147f4  ret
     id ret = nil;
 
-    [self storedCode];
+    [(id)self storedCode];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_147dc;
 
-    [self _parseCode:ret];
+    [(id)self _parseCode:ret];
     if (ret == 0) goto L_147cc;
 
     [(id)ret objectForKeyedSubscript:@"duration"];
@@ -1850,7 +1850,7 @@ L_147dc:;
     // 0001497c  ret
     id ret = nil;
 
-    [self expiryTimestamp];
+    [(id)self expiryTimestamp];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_148b4; */
 
     [(id)[NSDate class] date];
@@ -2120,7 +2120,7 @@ L_1497c:;
     [(id)ret setHTTPMethod:@"POST"];
     [(id)ret setTimeoutInterval:8];
     [(id)ret setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [self deviceCode];
+    [(id)self deviceCode];
     [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
     objc_release(ret);
     [(id)[NSJSONSerialization class] dataWithJSONObject:ret options:0 error:0];

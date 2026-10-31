@@ -984,7 +984,7 @@ L_199aa8:;
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
 }
 
 // @0x199b64  types=v24@0:8@16

@@ -189,7 +189,7 @@ L_163eac:;
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
-    /* [UNRESOLVED] [self unknownSelector]; */
+    /* [UNRESOLVED] [(id)self unknownSelector]; */
     if (ret == 0) goto L_163f88;
 
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
