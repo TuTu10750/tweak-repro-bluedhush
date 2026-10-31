@@ -376,6 +376,10 @@ jobs:
           echo "--- outputs ---"
           find original-re/.theos/obj -name '*.dylib' 2>/dev/null | sort
 
+      - name: Verify deployability (no substrate, metadata intact)
+        run: |
+          python3 ci/check_dylib.py original-re/.theos/obj/debug/arm64/BluedHushRE.dylib 76 | tee dylib-check.txt
+
       - name: Upload dylib + build log
         if: always()
         uses: actions/upload-artifact@v4
