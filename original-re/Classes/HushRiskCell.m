@@ -427,17 +427,17 @@
     /* [UNRESOLVED] [(id)self setTime:objc_alloc_init]; */
     /* [UNRESOLVED] objc_release(objc_alloc_init); */
     (void)[(id)[UIFont class] systemFontOfSize:12];
-    (void)[(id)self time];
+    /* [UNRESOLVED] [(id)self time]; */
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[UIColor class] secondaryLabelColor];
-    (void)[(id)self time];
+    /* [UNRESOLVED] [(id)self time]; */
     (void)[(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self contentView];
-    (void)[(id)self time];
+    /* [UNRESOLVED] [(id)self time]; */
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
@@ -624,7 +624,7 @@ L_208a0:;
     (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)self time];
+    /* [UNRESOLVED] [(id)self time]; */
     (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;

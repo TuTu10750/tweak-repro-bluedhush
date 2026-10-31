@@ -23,7 +23,7 @@
     // 0008d020  ret
     id ret = nil;
 
-    return 0;  /* [UNRESOLVED] self */
+    return CLLocationCoordinate2DMake(0, 0);  /* [UNRESOLVED] self */
 }
 
 // @0x8d024  types=v32@0:8{CLLocationCoordinate2D=dd}16

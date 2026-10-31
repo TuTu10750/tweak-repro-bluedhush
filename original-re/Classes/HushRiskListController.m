@@ -1344,7 +1344,7 @@ L_21a7c:;
     (void)[(id)[NSDate class] dateWithTimeIntervalSince1970:0];
     /* [UNRESOLVED] [objc_alloc_init stringFromDate:ret]; */
     (void)[(id)[NSString class] stringWithFormat:@"UID %@ · %@ 标记"];
-    (void)[(id)ret time];
+    /* [UNRESOLVED] [(id)ret time]; */
     (void)[(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
