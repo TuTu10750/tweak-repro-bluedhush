@@ -1,5 +1,6 @@
 // Recovered implementation for HushAuthorFooterView (from BluedHush_5.19.dylib)
 #import "HushAuthorFooterView.h"
+#import <objc/runtime.h>
 
 @implementation HushAuthorFooterView
 

@@ -1,5 +1,6 @@
 // Recovered implementation for HushLocGestureTarget (from BluedHush_5.19.dylib)
 #import "HushLocGestureTarget.h"
+#import <objc/runtime.h>
 
 @implementation HushLocGestureTarget
 
@@ -236,24 +237,24 @@
     goto L_95d84;
 
 L_95ca0:;
-    [(id)ret customLat];
+    (void)[(id)ret customLat];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
-    [(id)ret customLng];
+    (void)[(id)ret customLng];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
-    [(id)ret hasCustomLocation];
+    (void)[(id)ret hasCustomLocation];
 
     /* [UNRESOLVED] sub_9aed0(); */
     objc_release(ret);
 
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
-    [(id)ret setEnabled:3 forKey:sel_registerName("isEnabledForLevel:")];
+    (void)[(id)ret setEnabled:3 forKey:sel_registerName("isEnabledForLevel:")];
     objc_release(ret);
     goto L_95d84;
 
 L_95d70:;
-    [(id)objc_release noteFiltered:3];
+    (void)[(id)objc_release noteFiltered:3];
 
 L_95d84:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
@@ -516,10 +517,10 @@ L_95ddc:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    [(id)ret customLat];
+    (void)[(id)ret customLat];
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    [(id)ret customLng];
-    [(id)[NSString class] stringWithFormat:@"%.6f,%.6f"];
+    (void)[(id)ret customLng];
+    (void)[(id)[NSString class] stringWithFormat:@"%.6f,%.6f"];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)0x257a70 length]; */
@@ -557,7 +558,7 @@ L_9609c:;
     goto L_960f4;
 
 L_960d8:;
-    [(id)[NSNull class] null];
+    (void)[(id)[NSNull class] null];
 
 L_960f4:;
     /* [UNRESOLVED] if (0x257a58 == 0) goto L_96128; */
@@ -567,13 +568,13 @@ L_960f4:;
 
 L_96128:;
     objc_release(ret);
-    [(id)0 length];
+    (void)[(id)0 length];
     if ([(id)0 length] != 0) goto L_961a4;
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    [(id)ret customLat];
+    (void)[(id)ret customLat];
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    [(id)ret customLng];
+    (void)[(id)ret customLng];
     /* [UNRESOLVED] sub_b4e10(); */
     objc_release(ret);
     objc_release(ret);

@@ -1,5 +1,6 @@
 // Recovered implementation for HushStalkTargetCell (from BluedHush_5.19.dylib)
 #import "HushStalkTargetCell.h"
+#import <objc/runtime.h>
 
 @implementation HushStalkTargetCell
 

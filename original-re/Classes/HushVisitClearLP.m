@@ -1,5 +1,6 @@
 // Recovered implementation for HushVisitClearLP (from BluedHush_5.19.dylib)
 #import "HushVisitClearLP.h"
+#import <objc/runtime.h>
 
 @implementation HushVisitClearLP
 

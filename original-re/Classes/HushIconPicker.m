@@ -1,5 +1,6 @@
 // Recovered implementation for HushIconPicker (from BluedHush_5.19.dylib)
 #import "HushIconPicker.h"
+#import <objc/runtime.h>
 
 @implementation HushIconPicker
 
@@ -733,7 +734,7 @@ L_199540:;
 L_199558:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret setActive:1];
+    (void)[(id)ret setActive:1];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_199540; */

@@ -1,5 +1,6 @@
 // Recovered implementation for HushNTFanPaiController (from BluedHush_5.19.dylib)
 #import "HushNTFanPaiController.h"
+#import <objc/runtime.h>
 
 @implementation HushNTFanPaiController
 
@@ -1708,7 +1709,7 @@ L_1673a8:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    [(id)ret count];
+    (void)[(id)ret count];
     objc_release(ret);
     if ([(id)ret count] == 0) goto L_167a24;
 
@@ -1782,7 +1783,7 @@ L_16799c:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    [(id)ret count];
+    (void)[(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lo * /) goto L_16759c; */
 

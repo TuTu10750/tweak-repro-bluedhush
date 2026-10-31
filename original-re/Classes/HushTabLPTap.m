@@ -1,5 +1,6 @@
 // Recovered implementation for HushTabLPTap (from BluedHush_5.19.dylib)
 #import "HushTabLPTap.h"
+#import <objc/runtime.h>
 
 @implementation HushTabLPTap
 

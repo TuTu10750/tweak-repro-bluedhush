@@ -1,5 +1,6 @@
 // Recovered implementation for HushStalkMaintCell (from BluedHush_5.19.dylib)
 #import "HushStalkMaintCell.h"
+#import <objc/runtime.h>
 
 @implementation HushStalkMaintCell
 

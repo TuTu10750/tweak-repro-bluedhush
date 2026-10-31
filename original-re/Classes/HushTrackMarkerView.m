@@ -1,5 +1,6 @@
 // Recovered implementation for HushTrackMarkerView (from BluedHush_5.19.dylib)
 #import "HushTrackMarkerView.h"
+#import <objc/runtime.h>
 
 @implementation HushTrackMarkerView
 
@@ -88,17 +89,17 @@
     // 00090214  ret
     id ret = nil;
 
-    [super layoutSubviews];
-    [(id)self hushCaption];
+    (void)[super layoutSubviews];
+    (void)[(id)self hushCaption];
     if (ret == 0) goto L_901fc;
 
-    [(id)ret sizeThatFits:CGSizeZero];
-    [(id)ret setBounds:CGRectZero];
-    [(id)self bounds];
+    (void)[(id)ret sizeThatFits:CGSizeZero];
+    (void)[(id)ret setBounds:CGRectZero];
+    (void)[(id)self bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
-    [(id)self bounds];
+    (void)[(id)self bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    [(id)ret setCenter:CGPointZero];
+    (void)[(id)ret setCenter:CGPointZero];
 
 L_901fc:;
     objc_release(ret);

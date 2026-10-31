@@ -1,5 +1,6 @@
 // Recovered implementation for HushStalkAvatarView (from BluedHush_5.19.dylib)
 #import "HushStalkAvatarView.h"
+#import <objc/runtime.h>
 
 @implementation HushStalkAvatarView
 

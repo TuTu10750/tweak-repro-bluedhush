@@ -1,5 +1,6 @@
 // Recovered implementation for HushLicenseSessionDelegate (from BluedHush_5.19.dylib)
 #import "HushLicenseSessionDelegate.h"
+#import <objc/runtime.h>
 
 @implementation HushLicenseSessionDelegate
 
@@ -196,14 +197,14 @@
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] [(id)a1 protectionSpace]; */
-    [(id)ret authenticationMethod];
+    (void)[(id)ret authenticationMethod];
     /* [UNRESOLVED] [(id)ret isEqualToString:0x200248/ *+0x0* /]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret isEqualToString:0x200248/ *+0x0* /] == 0) goto L_12ebc; */
 
     /* [UNRESOLVED] [(id)a1 protectionSpace]; */
-    [(id)ret serverTrust];
+    (void)[(id)ret serverTrust];
     objc_release(ret);
     if ([(id)ret serverTrust] == 0) goto L_12ed8;
 
@@ -216,10 +217,10 @@
     /* [UNRESOLVED] CFDataGetBytePtr(); */
     /* [UNRESOLVED] CFDataGetLength(); */
     /* [UNRESOLVED] CC_SHA256(CFDataGetLength); */
-    [(id)[NSMutableString class] string];
+    (void)[(id)[NSMutableString class] string];
 
 L_12e20:;
-    [(id)ret appendFormat:@"%02X"];
+    (void)[(id)ret appendFormat:@"%02X"];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_12e20; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_12f1c; */
@@ -229,7 +230,7 @@ L_12e20:;
     objc_release(ret);
     /* [UNRESOLVED] if ((([(id)ret isEqualToString:0x256650] >> 0) & 1) == 0) goto L_12ed8; */
 
-    [(id)[NSURLCredential class] credentialForTrust:[(id)ret serverTrust]];
+    (void)[(id)[NSURLCredential class] credentialForTrust:[(id)ret serverTrust]];
     objc_release(ret);
     goto L_12ed8;
 

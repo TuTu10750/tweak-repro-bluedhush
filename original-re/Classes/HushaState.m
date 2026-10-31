@@ -1,5 +1,6 @@
 // Recovered implementation for HushaState (from BluedHush_5.19.dylib)
 #import "HushaState.h"
+#import <objc/runtime.h>
 
 @implementation HushaState
 

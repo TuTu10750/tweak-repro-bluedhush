@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalCell (from BluedHush_5.19.dylib)
 #import "HushGalCell.h"
+#import <objc/runtime.h>
 
 @implementation HushGalCell
 
@@ -423,66 +424,66 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_7c1a0;
 
-    [(id)self contentView];
-    [(id)ret bounds];
-    [[UIImageView alloc] initWithFrame:CGRectZero];
+    (void)[(id)self contentView];
+    (void)[(id)ret bounds];
+    (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_thumb);
     objc_release(ret);
-    [(id)self->_thumb setAutoresizingMask:0x12];
-    [(id)self->_thumb setContentMode:2];
-    [(id)self->_thumb setClipsToBounds:1];
+    (void)[(id)self->_thumb setAutoresizingMask:0x12];
+    (void)[(id)self->_thumb setContentMode:2];
+    (void)[(id)self->_thumb setClipsToBounds:1];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [(id)[UIColor class] colorWithWhite:0.96 alpha:1];
-    [(id)self->_thumb setBackgroundColor:ret];
+    (void)[(id)[UIColor class] colorWithWhite:0.96 alpha:1];
+    (void)[(id)self->_thumb setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self contentView];
-    [(id)ret addSubview:self->_thumb];
+    (void)[(id)self contentView];
+    (void)[(id)ret addSubview:self->_thumb];
     objc_release(ret);
-    [[UIImageView alloc] initWithFrame:CGRectZero];
+    (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_playBadge);
-    [(id)[UIImage class] systemImageNamed:@"play.circle.fill"];
-    [(id)self->_playBadge setImage:ret];
+    (void)[(id)[UIImage class] systemImageNamed:@"play.circle.fill"];
+    (void)[(id)self->_playBadge setImage:ret];
     objc_release(ret);
-    [(id)[UIColor class] colorWithWhite:1 alpha:0.92];
-    [(id)self->_playBadge setTintColor:ret];
+    (void)[(id)[UIColor class] colorWithWhite:1 alpha:0.92];
+    (void)[(id)self->_playBadge setTintColor:ret];
     objc_release(ret);
-    [(id)self contentView];
-    [(id)ret bounds];
+    (void)[(id)self contentView];
+    (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
-    [(id)self contentView];
-    [(id)ret bounds];
+    (void)[(id)self contentView];
+    (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidY(); */
-    [(id)self->_playBadge setCenter:CGPointZero];
+    (void)[(id)self->_playBadge setCenter:CGPointZero];
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_playBadge setAutoresizingMask:0x2d];
-    [(id)self contentView];
-    [(id)ret addSubview:self->_playBadge];
+    (void)[(id)self->_playBadge setAutoresizingMask:0x2d];
+    (void)[(id)self contentView];
+    (void)[(id)ret addSubview:self->_playBadge];
     objc_release(ret);
     objc_release(self->_flashTag);
-    [(id)self->_flashTag setText:@"闪照"];
-    [(id)[UIFont class] systemFontOfSize:10];
-    [(id)self->_flashTag setFont:ret];
+    (void)[(id)self->_flashTag setText:@"闪照"];
+    (void)[(id)[UIFont class] systemFontOfSize:10];
+    (void)[(id)self->_flashTag setFont:ret];
     objc_release(ret);
-    [(id)[UIColor class] whiteColor];
-    [(id)self->_flashTag setTextColor:ret];
+    (void)[(id)[UIColor class] whiteColor];
+    (void)[(id)self->_flashTag setTextColor:ret];
     objc_release(ret);
-    [(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
-    [(id)self->_flashTag setBackgroundColor:ret];
+    (void)[(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    (void)[(id)self->_flashTag setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self->_flashTag setTextAlignment:1];
-    [(id)self->_flashTag layer];
-    [(id)ret setCornerRadius:4];
+    (void)[(id)self->_flashTag setTextAlignment:1];
+    (void)[(id)self->_flashTag layer];
+    (void)[(id)ret setCornerRadius:4];
     objc_release(ret);
-    [(id)self->_flashTag setClipsToBounds:1];
-    [(id)self->_flashTag setHidden:1];
-    [(id)self->_flashTag setUserInteractionEnabled:0];
-    [(id)self->_flashTag sizeToFit];
-    [(id)self->_flashTag bounds];
-    [(id)self->_flashTag setFrame:CGRectZero];
-    [(id)self->_flashTag setAutoresizingMask:0x24];
-    [(id)self contentView];
-    [(id)ret addSubview:self->_flashTag];
+    (void)[(id)self->_flashTag setClipsToBounds:1];
+    (void)[(id)self->_flashTag setHidden:1];
+    (void)[(id)self->_flashTag setUserInteractionEnabled:0];
+    (void)[(id)self->_flashTag sizeToFit];
+    (void)[(id)self->_flashTag bounds];
+    (void)[(id)self->_flashTag setFrame:CGRectZero];
+    (void)[(id)self->_flashTag setAutoresizingMask:0x24];
+    (void)[(id)self contentView];
+    (void)[(id)ret addSubview:self->_flashTag];
     objc_release(ret);
 
 L_7c1a0:;

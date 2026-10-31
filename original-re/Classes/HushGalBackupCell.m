@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalBackupCell (from BluedHush_5.19.dylib)
 #import "HushGalBackupCell.h"
+#import <objc/runtime.h>
 
 @implementation HushGalBackupCell
 
@@ -268,40 +269,40 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_88b18;
 
-    [[UILabel alloc] initWithFrame:CGRectZero];
-    [(id)self setName:[[UILabel alloc] initWithFrame:CGRectZero]];
+    (void)[[UILabel alloc] initWithFrame:CGRectZero];
+    (void)[(id)self setName:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
-    [(id)self name];
-    [(id)ret setFont:ret];
+    (void)[(id)self name];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[UIColor class] labelColor];
-    [(id)self name];
-    [(id)ret setTextColor:ret];
+    (void)[(id)[UIColor class] labelColor];
+    (void)[(id)self name];
+    (void)[(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self contentView];
-    [(id)self name];
-    [(id)ret addSubview:ret];
+    (void)[(id)self contentView];
+    (void)[(id)self name];
+    (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    [[UILabel alloc] initWithFrame:CGRectZero];
-    [(id)self setMeta:[[UILabel alloc] initWithFrame:CGRectZero]];
+    (void)[[UILabel alloc] initWithFrame:CGRectZero];
+    (void)[(id)self setMeta:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    [(id)[UIFont class] systemFontOfSize:12];
-    [(id)self meta];
-    [(id)ret setFont:ret];
+    (void)[(id)[UIFont class] systemFontOfSize:12];
+    (void)[(id)self meta];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[UIColor class] secondaryLabelColor];
-    [(id)self meta];
-    [(id)ret setTextColor:ret];
+    (void)[(id)[UIColor class] secondaryLabelColor];
+    (void)[(id)self meta];
+    (void)[(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self contentView];
-    [(id)self meta];
-    [(id)ret addSubview:ret];
+    (void)[(id)self contentView];
+    (void)[(id)self meta];
+    (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -399,15 +400,15 @@ L_88b18:;
     // 00088c34  ret
     id ret = nil;
 
-    [super layoutSubviews];
-    [(id)self contentView];
-    [(id)ret bounds];
+    (void)[super layoutSubviews];
+    (void)[(id)self contentView];
+    (void)[(id)ret bounds];
     objc_release(ret);
-    [(id)self name];
-    [(id)ret setFrame:CGRectZero];
+    (void)[(id)self name];
+    (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
-    [(id)self meta];
-    [(id)ret setFrame:CGRectZero];
+    (void)[(id)self meta];
+    (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

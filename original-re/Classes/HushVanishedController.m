@@ -1,5 +1,6 @@
 // Recovered implementation for HushVanishedController (from BluedHush_5.19.dylib)
 #import "HushVanishedController.h"
+#import <objc/runtime.h>
 
 @implementation HushVanishedController
 
@@ -2503,7 +2504,7 @@ L_18cb40:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_18cc54; */
 
-    [(id)ret state];
+    (void)[(id)ret state];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */

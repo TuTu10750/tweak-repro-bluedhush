@@ -1,5 +1,6 @@
 // Recovered implementation for HushStalkTapProxy (from BluedHush_5.19.dylib)
 #import "HushStalkTapProxy.h"
+#import <objc/runtime.h>
 
 @implementation HushStalkTapProxy
 

@@ -1,5 +1,6 @@
 // Recovered implementation for HushStalkDetailController (from BluedHush_5.19.dylib)
 #import "HushStalkDetailController.h"
+#import <objc/runtime.h>
 
 @implementation HushStalkDetailController
 
@@ -5269,7 +5270,7 @@ L_14f0e0:;
 L_14f180:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0x227c98); */
@@ -5298,7 +5299,7 @@ L_14f254:;
 
     /* [UNRESOLVED] [(id)0 / * unk * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 

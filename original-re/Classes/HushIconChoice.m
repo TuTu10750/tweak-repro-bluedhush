@@ -1,5 +1,6 @@
 // Recovered implementation for HushIconChoice (from BluedHush_5.19.dylib)
 #import "HushIconChoice.h"
+#import <objc/runtime.h>
 
 @implementation HushIconChoice
 

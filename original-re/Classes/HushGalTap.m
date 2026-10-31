@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalTap (from BluedHush_5.19.dylib)
 #import "HushGalTap.h"
+#import <objc/runtime.h>
 
 @implementation HushGalTap
 
@@ -184,21 +185,21 @@
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (0 == 0) goto L_85e64;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_85e90;
 
     if (ret == 0) goto L_85ea0;
 
-    [(id)ret description];
-    [(id)ret length];
+    (void)[(id)ret description];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_85eac;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_85ec4;
 
 L_85e20:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_85e20; */
 
     goto L_85ec4;
@@ -219,7 +220,7 @@ L_85eac:;
 
 L_85ec4:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
+    (void)[(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_85ef4:;
     objc_release(ret);
@@ -460,7 +461,7 @@ L_85f54:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)a0 view]; */
-    [(id)ret superview];
+    (void)[(id)ret superview];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_86124; */
 
     /* [UNRESOLVED] [(id)a0 state]; */
@@ -471,11 +472,11 @@ L_85f54:;
 
 L_86048:;
     /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
-    [(id)ret center];
-    [(id)ret bounds];
-    [(id)ret bounds];
-    [(id)ret bounds];
-    [(id)ret setCenter:CGPointZero];
+    (void)[(id)ret center];
+    (void)[(id)ret bounds];
+    (void)[(id)ret bounds];
+    (void)[(id)ret bounds];
+    (void)[(id)ret setCenter:CGPointZero];
     /* [UNRESOLVED] [(id)a0 setTranslation:ret inView:0]; */
 
 L_86124:;

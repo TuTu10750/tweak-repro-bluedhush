@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalSection (from BluedHush_5.19.dylib)
 #import "HushGalSection.h"
+#import <objc/runtime.h>
 
 @implementation HushGalSection
 

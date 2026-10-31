@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalZipPickBridge (from BluedHush_5.19.dylib)
 #import "HushGalZipPickBridge.h"
+#import <objc/runtime.h>
 
 @implementation HushGalZipPickBridge
 
@@ -389,25 +390,25 @@
     /* [UNRESOLVED] objc_release(a1); */
     if (ret == 0) goto L_87c8c;
 
-    [(id)ret path];
-    [(id)ret length];
+    (void)[(id)ret path];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_879dc;
 
     /* [UNRESOLVED] NSTemporaryDirectory(); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_879c0;
 
-    [(id)ret hasPrefix:ret];
+    (void)[(id)ret hasPrefix:ret];
     if (((ret >> 0) & 1) == 0) goto L_879c0;
 
-    [(id)[NSDate class] date];
-    [(id)ret timeIntervalSince1970];
-    [(id)[NSString class] stringWithFormat:@"hush_gal_pick_%lld.zip"];
-    [(id)ret stringByAppendingPathComponent:ret];
+    (void)[(id)[NSDate class] date];
+    (void)[(id)ret timeIntervalSince1970];
+    (void)[(id)[NSString class] stringWithFormat:@"hush_gal_pick_%lld.zip"];
+    (void)[(id)ret stringByAppendingPathComponent:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[NSFileManager class] defaultManager];
-    [(id)ret moveItemAtPath:ret toPath:ret error:0];
+    (void)[(id)[NSFileManager class] defaultManager];
+    (void)[(id)ret moveItemAtPath:ret toPath:ret error:0];
     objc_release(ret);
     objc_retain(ret);
     objc_release(ret);
@@ -425,8 +426,8 @@ L_879dc:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_87a80;
 
-    [(id)ret lastPathComponent];
-    [(id)0 lastPathComponent];
+    (void)[(id)ret lastPathComponent];
+    (void)[(id)0 lastPathComponent];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选择完成：%@ → %@"]; */
     objc_release(ret);
     objc_release(ret);
@@ -436,16 +437,16 @@ L_87a80:;
     /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_87a8c:;
-    [(id)0 length];
+    (void)[(id)0 length];
     if ([(id)0 length] == 0) goto L_87c84;
 
     objc_retain(0);
-    [(id)ret lastPathComponent];
-    [(id)[NSFileManager class] defaultManager];
-    [(id)ret attributesOfItemAtPath:0 error:0];
+    (void)[(id)ret lastPathComponent];
+    (void)[(id)[NSFileManager class] defaultManager];
+    (void)[(id)ret attributesOfItemAtPath:0 error:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x200488/ *+0x0* /]; */
-    [(id)ret unsignedLongLongValue];
+    (void)[(id)ret unsignedLongLongValue];
     objc_release(ret);
     if ([(id)ret unsignedLongLongValue] == 0) goto L_87b84;
 
@@ -475,7 +476,7 @@ L_87bd0:;
     goto L_87c6c;
 
 L_87c50:;
-    [(id)objc_release noteFiltered:1];
+    (void)[(id)objc_release noteFiltered:1];
 
 L_87c58:;
     /* [UNRESOLVED] sub_8b39c(); */

@@ -1,5 +1,6 @@
 // Recovered implementation for HushNTSkipListController (from BluedHush_5.19.dylib)
 #import "HushNTSkipListController.h"
+#import <objc/runtime.h>
 
 @implementation HushNTSkipListController
 

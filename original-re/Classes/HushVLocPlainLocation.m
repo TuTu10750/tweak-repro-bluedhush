@@ -1,5 +1,6 @@
 // Recovered implementation for HushVLocPlainLocation (from BluedHush_5.19.dylib)
 #import "HushVLocPlainLocation.h"
+#import <objc/runtime.h>
 
 @implementation HushVLocPlainLocation
 

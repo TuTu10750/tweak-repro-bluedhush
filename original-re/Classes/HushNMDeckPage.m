@@ -1,5 +1,6 @@
 // Recovered implementation for HushNMDeckPage (from BluedHush_5.19.dylib)
 #import "HushNMDeckPage.h"
+#import <objc/runtime.h>
 
 @implementation HushNMDeckPage
 
@@ -532,120 +533,120 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_d32f8;
 
-    [(id)[UIColor class] clearColor];
-    [(id)self setBackgroundColor:ret];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_tiles);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_thumbs);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_buttons);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_infoRowViews);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_infoActionButtons);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_chips);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_release(self->_tagChips);
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_infoCard);
-    [(id)[UIColor class] whiteColor];
+    (void)[(id)[UIColor class] whiteColor];
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self->_infoCard setBackgroundColor:ret];
+    (void)[(id)self->_infoCard setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_infoCard layer];
-    [(id)ret setCornerRadius:16];
+    (void)[(id)self->_infoCard layer];
+    (void)[(id)ret setCornerRadius:16];
     objc_release(ret);
     /* [UNRESOLVED] sub_d3330(); */
-    [(id)self addSubview:self->_infoCard];
+    (void)[(id)self addSubview:self->_infoCard];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_badgeBox);
     /* [UNRESOLVED] sub_d34c8(2); */
     /* [UNRESOLVED] sub_d3330(); */
-    [(id)self addSubview:self->_badgeBox];
+    (void)[(id)self addSubview:self->_badgeBox];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_badge);
-    [(id)self->_badge setText:@"隐私相册"];
+    (void)[(id)self->_badge setText:@"隐私相册"];
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:11.5 weight:0x200180]; */
-    [(id)self->_badge setFont:ret];
+    (void)[(id)self->_badge setFont:ret];
     objc_release(ret);
-    [(id)[UIColor class] whiteColor];
-    [(id)self->_badge setTextColor:ret];
+    (void)[(id)[UIColor class] whiteColor];
+    (void)[(id)self->_badge setTextColor:ret];
     objc_release(ret);
-    [(id)self->_badge setTextAlignment:1];
-    [(id)self->_badgeBox addSubview:self->_badge];
-    [(id)self->_badgeBox setUserInteractionEnabled:1];
-    [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")];
-    [(id)self->_badgeBox addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]];
+    (void)[(id)self->_badge setTextAlignment:1];
+    (void)[(id)self->_badgeBox addSubview:self->_badge];
+    (void)[(id)self->_badgeBox setUserInteractionEnabled:1];
+    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")];
+    (void)[(id)self->_badgeBox addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]];
     objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]);
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipBox);
     /* [UNRESOLVED] sub_d34c8(0); */
     /* [UNRESOLVED] sub_d3330(); */
-    [(id)self addSubview:self->_chipBox];
+    (void)[(id)self addSubview:self->_chipBox];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipDot);
     /* [UNRESOLVED] [(id)[UIColor class] colorWithRed:0 / * unk * / green:0 / * unk * / blue:0 / * unk * / alpha:1]; */
-    [(id)self->_chipDot setBackgroundColor:ret];
+    (void)[(id)self->_chipDot setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self->_chipDot layer];
-    [(id)ret setCornerRadius:4];
+    (void)[(id)self->_chipDot layer];
+    (void)[(id)ret setCornerRadius:4];
     objc_release(ret);
-    [(id)self->_chipBox addSubview:self->_chipDot];
+    (void)[(id)self->_chipBox addSubview:self->_chipDot];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chip);
-    [(id)[UIFont class] systemFontOfSize:13];
-    [(id)self->_chip setFont:ret];
+    (void)[(id)[UIFont class] systemFontOfSize:13];
+    (void)[(id)self->_chip setFont:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self->_chip setTextColor:ret];
+    (void)[(id)self->_chip setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_chipBox addSubview:self->_chip];
+    (void)[(id)self->_chipBox addSubview:self->_chip];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_bar);
     /* [UNRESOLVED] sub_d34c8(0); */
     /* [UNRESOLVED] sub_d3330(); */
-    [(id)self addSubview:self->_bar];
+    (void)[(id)self addSubview:self->_bar];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_card);
-    [(id)[UIColor class] whiteColor];
+    (void)[(id)[UIColor class] whiteColor];
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self->_card setBackgroundColor:ret];
+    (void)[(id)self->_card setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_card layer];
-    [(id)ret setCornerRadius:16];
+    (void)[(id)self->_card layer];
+    (void)[(id)ret setCornerRadius:16];
     objc_release(ret);
     /* [UNRESOLVED] sub_d3330(); */
-    [(id)self addSubview:self->_card];
+    (void)[(id)self addSubview:self->_card];
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_avatar);
-    [(id)self->_avatar setContentMode:2];
-    [(id)self->_avatar setClipsToBounds:1];
+    (void)[(id)self->_avatar setContentMode:2];
+    (void)[(id)self->_avatar setClipsToBounds:1];
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0.5 alpha:0 / * unk * /]; */
-    [(id)self->_avatar setBackgroundColor:ret];
+    (void)[(id)self->_avatar setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self->_card addSubview:self->_avatar];
+    (void)[(id)self->_card addSubview:self->_avatar];
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_vipView);
-    [(id)self->_vipView setContentMode:1];
-    [(id)self->_vipView setHidden:1];
-    [(id)self->_card addSubview:self->_vipView];
+    (void)[(id)self->_vipView setContentMode:1];
+    (void)[(id)self->_vipView setHidden:1];
+    (void)[(id)self->_card addSubview:self->_vipView];
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
-    [(id)[UIColor class] whiteColor];
+    (void)[(id)[UIColor class] whiteColor];
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self label:self->_card weight:ret inView:0 color:0];
+    (void)[(id)self label:self->_card weight:ret inView:0 color:0];
     objc_release(self->_nick);
     objc_release(ret);
     objc_release(ret);
@@ -653,7 +654,7 @@
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self label:self->_card weight:ret inView:0 color:0];
+    (void)[(id)self label:self->_card weight:ret inView:0 color:0];
     objc_release(self->_online);
     objc_release(ret);
     objc_release(ret);
@@ -661,7 +662,7 @@
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self label:self->_card weight:ret inView:0 color:0];
+    (void)[(id)self label:self->_card weight:ret inView:0 color:0];
     objc_release(self->_sub);
     objc_release(ret);
     objc_release(ret);
@@ -669,22 +670,22 @@
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self label:self->_card weight:ret inView:0 color:0];
+    (void)[(id)self label:self->_card weight:ret inView:0 color:0];
     objc_release(self->_dist);
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_dist setTextAlignment:2];
+    (void)[(id)self->_dist setTextAlignment:2];
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [(id)self label:self->_card weight:ret inView:0 color:0];
+    (void)[(id)self label:self->_card weight:ret inView:0 color:0];
     objc_release(self->_sig);
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")];
-    [(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]];
+    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")];
+    (void)[(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]];
     objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]);
     objc_retain(self);
 
@@ -776,7 +777,7 @@ L_d32f8:;
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
-    [(id)[UIFont class] systemFontOfSize:0 weight:0];
+    (void)[(id)[UIFont class] systemFontOfSize:0 weight:0];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:a1]; */
@@ -1313,21 +1314,21 @@ L_d32f8:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"uid"]; */
-    [(id)[NSMutableString class] string];
+    (void)[(id)[NSMutableString class] string];
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"nick"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"sub"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"dist"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"online"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"sig"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"avatar"]; */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d3a08;
 
     /* [UNRESOLVED] sub_d0640(); */
     goto L_d3a08;
 
 L_d3a08:;
-    [(id)ret appendFormat:@"%@|%@|%@|%@|%@|%@|%@|%ld|"];
+    (void)[(id)ret appendFormat:@"%@|%@|%@|%@|%@|%@|%@|%ld|"];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1337,17 +1338,17 @@ L_d3a08:;
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"photos"]; */
     objc_retain(ret);
     objc_release(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d3b3c;
 
 L_d3ae0:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d3b04; */
 
 L_d3b04:;
-    [(id)ret appendFormat:@"%@,"];
+    (void)[(id)ret appendFormat:@"%@,"];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d3ae0; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d3ae0;
 
 L_d3b3c:;
@@ -1357,21 +1358,21 @@ L_d3b3c:;
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"ip"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"job"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"reltxt"]; */
-    [(id)[NSArray class] class];
-    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    (void)[(id)[NSArray class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_d3c98;
 
-    [(id)ret componentsJoinedByString:@","];
+    (void)[(id)ret componentsJoinedByString:@","];
     goto L_d3c98;
 
 L_d3c98:;
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"vipg"]; */
-    [(id)ret integerValue];
+    (void)[(id)ret integerValue];
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"vipa"]; */
-    [(id)ret boolValue];
+    (void)[(id)ret boolValue];
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"vipl"]; */
-    [(id)ret integerValue];
-    [(id)ret appendFormat:@"%@|%@|%@|%@|%@|%ld|%d|%ld|"];
+    (void)[(id)ret integerValue];
+    (void)[(id)ret appendFormat:@"%@|%@|%@|%@|%@|%ld|%d|%ld|"];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1385,8 +1386,8 @@ L_d3d68:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"tagmap"]; */
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_d3e00;
 
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"tagmap"]; */
@@ -1394,12 +1395,12 @@ L_d3d68:;
 
 L_d3e00:;
     objc_release(ret);
-    [(id)0 allKeys];
-    [(id)ret sortedArrayUsingSelector:sel_registerName("compare:")];
+    (void)[(id)0 allKeys];
+    (void)[(id)ret sortedArrayUsingSelector:sel_registerName("compare:")];
     objc_release(ret);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d3f70;
 
 L_d3ed0:;
@@ -1407,8 +1408,8 @@ L_d3ed0:;
 
 L_d3ef4:;
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
-    [(id)[NSString class] stringWithFormat:@"%@=%@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"%@=%@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d3ed0; */
@@ -1422,7 +1423,7 @@ L_d3f70:;
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"mtstar"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"mtmbti"]; */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"starastro"]; */
-    [(id)ret componentsJoinedByString:@","];
+    (void)[(id)ret componentsJoinedByString:@","];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
@@ -1434,69 +1435,69 @@ L_d3f70:;
     objc_release(0);
     if (self->_snapSig == 0) goto L_d40ec;
 
-    [(id)self->_snapSig isEqualToString:ret];
+    (void)[(id)self->_snapSig isEqualToString:ret];
     if (((ret >> 0) & 1) != 0) goto L_d4d90;
 
 L_d40ec:;
-    [(id)ret copy];
+    (void)[(id)ret copy];
     objc_release(self->_snapSig);
     /* [UNRESOLVED] [(id)a0 copy]; */
     objc_release(self->_snap);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"nick"]; */
-    [(id)self->_nick setText:ret];
+    (void)[(id)self->_nick setText:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"online"]; */
-    [(id)self->_online setText:ret];
+    (void)[(id)self->_online setText:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"sub"]; */
-    [(id)self->_sub setText:ret];
+    (void)[(id)self->_sub setText:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"dist"]; */
-    [(id)self->_dist setText:ret];
+    (void)[(id)self->_dist setText:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"sig"]; */
-    [(id)self->_sig setText:ret];
+    (void)[(id)self->_sig setText:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"uid"]; */
     /* [UNRESOLVED] HushRelStateForUid(); */
     if (HushRelStateForUid == 0) goto L_d42ec;
 
     /* [UNRESOLVED] HushRelStateText(); */
-    [(id)self->_chip setText:0];
+    (void)[(id)self->_chip setText:0];
     objc_release(ret);
     goto L_d4300;
 
 L_d42ec:;
-    [(id)self->_chip setText:@"从未聊过"];
+    (void)[(id)self->_chip setText:@"从未聊过"];
 
 L_d4300:;
     /* [UNRESOLVED] HushAlbumCountFor(); */
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"photos"]; */
-    [(id)ret count];
+    (void)[(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_d43c4; */
 
-    [(id)[NSString class] stringWithFormat:@"隐私相册 · %ld 张"];
-    [(id)self->_badge setText:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"隐私相册 · %ld 张"];
+    (void)[(id)self->_badge setText:ret];
     objc_release(ret);
     goto L_d43d4;
 
 L_d43c4:;
-    [(id)self->_badge setText:@"隐私相册"];
+    (void)[(id)self->_badge setText:@"隐私相册"];
 
 L_d43d4:;
-    [(id)self hushApplyProfileExtras];
-    [(id)self hushApplyIntelRows];
+    (void)[(id)self hushApplyProfileExtras];
+    (void)[(id)self hushApplyIntelRows];
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"avatar"]; */
     objc_retain(ret);
     objc_release(ret);
-    [(id)self->_avatarBuilt isEqualToString:ret];
+    (void)[(id)self->_avatarBuilt isEqualToString:ret];
     if (((ret >> 0) & 1) != 0) goto L_d44ac;
 
-    [(id)ret copy];
+    (void)[(id)ret copy];
     objc_release(self->_avatarBuilt);
-    [(id)self->_avatar setImage:0];
-    [(id)ret length];
+    (void)[(id)self->_avatar setImage:0];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d44ac;
 
     /* [UNRESOLVED] sub_cf42c(ret); */
@@ -1505,7 +1506,7 @@ L_d44ac:;
     /* [UNRESOLVED] [(id)a0 objectForKeyedSubscript:@"photos"]; */
     /* [UNRESOLVED] objc_retain(0 / * adrp * /); */
     objc_release(ret);
-    [(id)self->_photosBuilt count];
+    (void)[(id)self->_photosBuilt count];
     /* [UNRESOLVED] [(id)0 / * adrp * / count]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d4550; */
 
@@ -1514,7 +1515,7 @@ L_d44ac:;
 
 L_d4550:;
     objc_retain(self->_tiles);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d45e0;
 
 L_d4594:;
@@ -1524,13 +1525,13 @@ L_d45ac:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / removeFromSuperview]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d4594; */
 
-    [(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d4594;
 
 L_d45e0:;
     objc_release(self->_tiles);
-    [(id)self->_tiles removeAllObjects];
-    [(id)self->_thumbs removeAllObjects];
+    (void)[(id)self->_tiles removeAllObjects];
+    (void)[(id)self->_thumbs removeAllObjects];
     /* [UNRESOLVED] [(id)0 / * adrp * / copy]; */
     objc_release(self->_photosBuilt);
     /* [UNRESOLVED] [(id)0 / * adrp * / count]; */
@@ -1598,11 +1599,11 @@ L_d4a80:;
     /* [UNRESOLVED] if (cond / * lo * /) goto L_d4770; */
 
 L_d4aec:;
-    [(id)self->_buttons count];
+    (void)[(id)self->_buttons count];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d4d6c; */
 
     objc_retain(self->_buttons);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d4b9c;
 
 L_d4b50:;
@@ -1612,36 +1613,36 @@ L_d4b68:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / removeFromSuperview]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d4b50; */
 
-    [(id)self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_buttons countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d4b50;
 
 L_d4b9c:;
     objc_release(self->_buttons);
-    [(id)self->_buttons removeAllObjects];
+    (void)[(id)self->_buttons removeAllObjects];
 
 L_d4c34:;
-    [(id)[UIButton class] count];
-    [(id)ret setTag:0];
-    [(id)[UIFont class] systemFontOfSize:14];
-    [(id)ret titleLabel];
+    (void)[(id)[UIButton class] count];
+    (void)[(id)ret setTag:0];
+    (void)[(id)[UIFont class] systemFontOfSize:14];
+    (void)[(id)ret titleLabel];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret titleLabel];
-    [(id)ret setAdjustsFontSizeToFitWidth:1];
+    (void)[(id)ret titleLabel];
+    (void)[(id)ret setAdjustsFontSizeToFitWidth:1];
     objc_release(ret);
-    [(id)ret titleLabel];
+    (void)[(id)ret titleLabel];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] sub_d34c8(1); */
-    [(id)ret addTarget:self action:sel_registerName("markTap:") forControlEvents:0x40];
-    [(id)self->_bar addSubview:ret];
-    [(id)self->_buttons addObject:ret];
+    (void)[(id)ret addTarget:self action:sel_registerName("markTap:") forControlEvents:0x40];
+    (void)[(id)self->_bar addSubview:ret];
+    (void)[(id)self->_buttons addObject:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d4c34; */
 
 L_d4d6c:;
-    [(id)self layoutSubviews];
+    (void)[(id)self layoutSubviews];
     /* [UNRESOLVED] objc_release(0 / * adrp * /); */
     objc_release(ret);
     objc_release(ret);
@@ -1752,17 +1753,17 @@ L_d4d90:;
     /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d5148; */
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"photos"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"photos"];
     objc_retain(self);
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)a0 view]; */
-    [(id)ret tag];
+    (void)[(id)ret tag];
     objc_release(ret);
     if ((([(id)ret tag] >> 63) & 1) != 0) goto L_d5134;
 
-    [(id)self count];
+    (void)[(id)self count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_d5134; */
 
     /* [UNRESOLVED] HushNMShowPhotos([(id)ret tag]); */
@@ -1916,10 +1917,10 @@ L_d5148:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d53e4;
 
     /* [UNRESOLVED] sub_d0640(); */
@@ -1933,16 +1934,16 @@ L_d5304:;
 
 L_d5314:;
     /* [UNRESOLVED] sub_d0740([(id)a0 unknownSelector]); */
-    [(id)self applySelection];
-    [(id)self hushApplyIntelRows];
+    (void)[(id)self applySelection];
+    (void)[(id)self hushApplyIntelRows];
     /* [UNRESOLVED] sub_d17fc(); */
     /* [UNRESOLVED] if ((([(id)a0 unknownSelector] >> 63) & 1) != 0) goto L_d53d4; */
 
-    [(id)ret count];
+    (void)[(id)ret count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_d53d4; */
 
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:[(id)a0 unknownSelector]]; */
-    [(id)[NSString class] stringWithFormat:@"已评价：%@"];
+    (void)[(id)[NSString class] stringWithFormat:@"已评价：%@"];
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
@@ -2243,14 +2244,14 @@ L_d53e4:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d5790; */
 
     /* [UNRESOLVED] [(id)a0 locationInView:self]; */
-    [(id)self->_card frame];
+    (void)[(id)self->_card frame];
     /* [UNRESOLVED] CGRectContainsPoint(); */
     /* [UNRESOLVED] if (a0 == 0) goto L_d5790; */
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d5768;
 
     /* [UNRESOLVED] HushGalOpenHome(); */
@@ -2259,22 +2260,22 @@ L_d53e4:;
 
     if (ret == 0) goto L_d55e8;
 
-    [(id)ret description];
-    [(id)ret length];
+    (void)[(id)ret description];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d55f4;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d560c;
 
 L_d5594:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_d5594; */
 
     goto L_d560c;
 
 L_d55d8:;
-    [(id)0x3e8 noteFiltered:3];
+    (void)[(id)0x3e8 noteFiltered:3];
     goto L_d5670;
 
 L_d55e8:;
@@ -2285,7 +2286,7 @@ L_d55f4:;
 
 L_d560c:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
+    (void)[(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_d5640:;
     objc_release(ret);
@@ -2303,23 +2304,23 @@ L_d5670:;
     goto L_d5768;
 
 L_d5694:;
-    [(id)self window];
-    [(id)ret rootViewController];
+    (void)[(id)self window];
+    (void)[(id)ret rootViewController];
     objc_release(ret);
     objc_retain(ret);
-    [(id)ret presentedViewController];
+    (void)[(id)ret presentedViewController];
     objc_release(ret);
     if (ret == 0) goto L_d5750;
 
 L_d5700:;
-    [(id)ret presentedViewController];
+    (void)[(id)ret presentedViewController];
     objc_release(ret);
-    [(id)ret presentedViewController];
+    (void)[(id)ret presentedViewController];
     objc_release(ret);
     if (ret != 0) goto L_d5700;
 
 L_d5750:;
-    [(id)ret dismissViewControllerAnimated:1 completion:0];
+    (void)[(id)ret dismissViewControllerAnimated:1 completion:0];
     objc_release(ret);
     objc_release(ret);
 
@@ -2715,14 +2716,14 @@ L_d5790:;
     // 000d5c98  ret
     id ret = nil;
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] sub_d0640(); */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] sub_d17fc(); */
     objc_retain(self->_buttons);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d5c48;
 
 L_d5968:;
@@ -2772,12 +2773,12 @@ L_d5bb8:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:14 weight:0x200348]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / titleLabel]; */
-    [(id)ret setFont:ret];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d5968; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d5968;
 
 L_d5c48:;
@@ -3314,34 +3315,34 @@ L_d5c48:;
     // 000d62dc  adrp    x8, #0x21d000
     id ret = nil;
 
-    [(id)[NSMutableArray class] array];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)[NSMutableArray class] array];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d60bc;
 
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (((ret >> 0) & 1) != 0) goto L_d5dd0;
 
     objc_release(ret);
 
 L_d5dd0:;
-    [(id)0 objectForKeyedSubscript:@"last_operate"];
-    [(id)[NSNumber class] class];
-    [(id)ret isKindOfClass:[(id)[NSNumber class] class]];
+    (void)[(id)0 objectForKeyedSubscript:@"last_operate"];
+    (void)[(id)[NSNumber class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSNumber class] class]];
     if (ret == 0) goto L_d5e44;
 
-    [(id)ret doubleValue];
+    (void)[(id)ret doubleValue];
 
 L_d5e44:;
     /* [UNRESOLVED] if (cond / * gt * /) goto L_d5ed0; */
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"lastop"];
-    [(id)ret doubleValue];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"lastop"];
+    (void)[(id)ret doubleValue];
     objc_release(ret);
     objc_release(ret);
 
@@ -3351,15 +3352,15 @@ L_d5ed0:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d95ec; */
 
 L_d5f00:;
-    [(id)[NSDate class] dateWithTimeIntervalSince1970:0];
+    (void)[(id)[NSDate class] dateWithTimeIntervalSince1970:0];
     /* [UNRESOLVED] [(id)0x257ff0 stringFromDate:ret]; */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d5fdc;
 
-    [(id)[NSString class] stringWithFormat:@"最后活跃 · %@"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"最后活跃 · %@"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -3368,17 +3369,17 @@ L_d5fdc:;
 
 L_d5fe4:;
     objc_release(ret);
-    [(id)[NSMutableArray class] array];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"dist"];
+    (void)[(id)[NSMutableArray class] array];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"dist"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d60cc;
 
-    [(id)[NSString class] stringWithFormat:@"距离 %@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"距离 %@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     goto L_d6134;
 
@@ -3388,32 +3389,32 @@ L_d60bc:;
 
 L_d60cc:;
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    [(id)ret objectForKeyedSubscript:@"hidedist"];
+    (void)[(id)ret objectForKeyedSubscript:@"hidedist"];
     /* [UNRESOLVED] sub_d971c(); */
     objc_release(ret);
     objc_release(ret);
     if (sub_d971c == 0) goto L_d6134;
 
-    [(id)ret addObject:@"距离保密"];
+    (void)[(id)ret addObject:@"距离保密"];
 
 L_d6134:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"online"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"online"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d61b8;
 
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
 
 L_d61b8:;
-    [(id)ret count];
+    (void)[(id)ret count];
     if ([(id)ret count] == 0) goto L_d623c;
 
-    [(id)ret componentsJoinedByString:@" · "];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
-    [(id)ret addObject:ret];
+    (void)[(id)ret componentsJoinedByString:@" · "];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -3424,8 +3425,8 @@ L_d623c:;
     /* [UNRESOLVED] HushTrackCachedResultForUid(); */
     if (ret == 0) goto L_d62d8;
 
-    [(id)ret objectForKeyedSubscript:@"success"];
-    [(id)ret boolValue];
+    (void)[(id)ret objectForKeyedSubscript:@"success"];
+    (void)[(id)ret boolValue];
     objc_release(ret);
     if ([(id)ret boolValue] == 0) goto L_d6348;
 
@@ -3435,19 +3436,19 @@ L_d62d8:;
     goto L_d6348;
 
 L_d6348:;
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:4];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:4];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[NSMutableDictionary class] dictionary];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"tagmap"];
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSMutableDictionary class] dictionary];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"tagmap"];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_d6450;
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"tagmap"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"tagmap"];
     objc_retain(ret);
     objc_release(ret);
     objc_release(ret);
@@ -3457,19 +3458,19 @@ L_d6450:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (((ret >> 0) & 1) != 0) goto L_d64b4;
 
     objc_release(ret);
 
 L_d64b4:;
-    [(id)0 objectForKeyedSubscript:@"tags"];
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)0 objectForKeyedSubscript:@"tags"];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_d6520;
 
-    [(id)0 objectForKeyedSubscript:@"tags"];
+    (void)[(id)0 objectForKeyedSubscript:@"tags"];
     objc_retain(ret);
     objc_release(ret);
     goto L_d6520;
@@ -3478,8 +3479,8 @@ L_d6520:;
     objc_release(ret);
     objc_retain(0);
     objc_retain(0);
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"mtstar"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"mtstar"];
     /* [UNRESOLVED] sub_d9644(); */
     if (ret == 0) goto L_d65dc;
 
@@ -3488,7 +3489,7 @@ L_d6520:;
 
 L_d65dc:;
     /* [UNRESOLVED] [(id)self unknownSelector]; */
-    [(id)ret objectForKeyedSubscript:@"starastro"];
+    (void)[(id)ret objectForKeyedSubscript:@"starastro"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_retain(ret);
     objc_release(ret);
@@ -3499,41 +3500,41 @@ L_d6634:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if (0 == 0) goto L_d66c4;
 
     if ([(id)ret length] != 0) goto L_d66c4;
 
-    [(id)0 objectForKeyedSubscript:@"astro"];
+    (void)[(id)0 objectForKeyedSubscript:@"astro"];
     /* [UNRESOLVED] sub_d9a74(); */
     objc_release(ret);
     objc_release(ret);
     goto L_d66c4;
 
 L_d66c4:;
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6720;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"星座"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"星座"];
 
 L_d6720:;
-    [(id)[NSArray class] arrayWithObjects:0 count:2];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:2];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d67a0;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"特征"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"特征"];
 
 L_d67a0:;
-    [(id)[NSArray class] arrayWithObjects:0 count:1];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
     if (ret == 0) goto L_d67ec;
 
     objc_retain(ret);
     goto L_d684c;
 
 L_d67ec:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"mtmbti"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"mtmbti"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_retain(ret);
     objc_release(ret);
@@ -3543,47 +3544,47 @@ L_d67ec:;
 L_d684c:;
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d68b0;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"MBTI"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"MBTI"];
 
 L_d68b0:;
-    [(id)[NSArray class] arrayWithObjects:0 count:2];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:2];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6944;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"想找"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"想找"];
 
 L_d6944:;
-    [(id)[NSArray class] arrayWithObjects:0 count:2];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:2];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d69c8;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"喜欢"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"喜欢"];
 
 L_d69c8:;
-    [(id)[NSArray class] arrayWithObjects:0 count:1];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:1];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6a58;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"职业"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"职业"];
 
 L_d6a58:;
-    [(id)[NSArray class] arrayWithObjects:0 count:2];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:2];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6abc;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"性格"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"性格"];
 
 L_d6abc:;
     if (0 == 0) goto L_d6d70;
 
-    [(id)0 objectForKeyedSubscript:@"hometown"];
+    (void)[(id)0 objectForKeyedSubscript:@"hometown"];
     /* [UNRESOLVED] HushRoleRegionText(); */
     if (ret == 0) goto L_d6b18;
 
@@ -3591,7 +3592,7 @@ L_d6abc:;
     goto L_d6b4c;
 
 L_d6b18:;
-    [(id)ret objectForKeyedSubscript:@"hometown_name"];
+    (void)[(id)ret objectForKeyedSubscript:@"hometown_name"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_retain(ret);
     objc_release(ret);
@@ -3600,24 +3601,24 @@ L_d6b18:;
 L_d6b4c:;
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6b88;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"故乡"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"故乡"];
 
 L_d6b88:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"city"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"city"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] != 0) goto L_d6c54;
 
-    [(id)0 objectForKeyedSubscript:@"city_settled"];
+    (void)[(id)0 objectForKeyedSubscript:@"city_settled"];
     /* [UNRESOLVED] HushRoleRegionText(); */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6c48;
 
     objc_retain(ret);
@@ -3627,28 +3628,28 @@ L_d6c48:;
     objc_release(ret);
 
 L_d6c54:;
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6c84;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"定居"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"定居"];
 
 L_d6c84:;
-    [(id)0 objectForKeyedSubscript:@"ip_location"];
+    (void)[(id)0 objectForKeyedSubscript:@"ip_location"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6ce4;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"IP"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"IP"];
 
 L_d6ce4:;
-    [(id)0 objectForKeyedSubscript:@"self_tags"];
+    (void)[(id)0 objectForKeyedSubscript:@"self_tags"];
     /* [UNRESOLVED] sub_d9c40(); */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6d38;
 
-    [(id)ret setObject:ret forKeyedSubscript:@"标签"];
+    (void)[(id)ret setObject:ret forKeyedSubscript:@"标签"];
 
 L_d6d38:;
     objc_release(ret);
@@ -3657,15 +3658,15 @@ L_d6d38:;
     objc_release(ret);
 
 L_d6d70:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"imprint"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"imprint"];
     objc_retain(ret);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     /* [UNRESOLVED] sub_d9644(); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6e24;
 
-    [(id)ret rangeOfString:@"Ta的特点有"];
+    (void)[(id)ret rangeOfString:@"Ta的特点有"];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d6e40; */
 
     goto L_d6ebc;
@@ -3674,45 +3675,45 @@ L_d6e24:;
     goto L_d74ac;
 
 L_d6e40:;
-    [(id)ret substringFromIndex:0];
+    (void)[(id)ret substringFromIndex:0];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
-    [(id)ret substringToIndex:[(id)ret rangeOfString:@"Ta的特点有"]];
+    (void)[(id)ret substringToIndex:[(id)ret rangeOfString:@"Ta的特点有"]];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
 
 L_d6ebc:;
-    [(id)[NSMutableArray class] array];
-    [(id)ret componentsSeparatedByString:@"Ta是"];
-    [(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
+    (void)[(id)[NSMutableArray class] array];
+    (void)[(id)ret componentsSeparatedByString:@"Ta是"];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10] == 0) goto L_d7020;
 
 L_d6f54:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d6f78; */
 
 L_d6f78:;
-    [(id)[NSCharacterSet class] characterSetWithCharactersInString:@"、，,。 "];
+    (void)[(id)[NSCharacterSet class] characterSetWithCharactersInString:@"、，,。 "];
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / stringByTrimmingCharactersInSet:ret]; */
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d6fe8;
 
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
 
 L_d6fe8:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d6f54; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10] != 0) goto L_d6f54;
 
 L_d7020:;
     objc_release(ret);
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d73d4;
 
 L_d709c:;
@@ -3729,42 +3730,42 @@ L_d70c0:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / substringToIndex:-2]; */
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (((0 / * local * // *+0x0* / >> 0) & 1) == 0) goto L_d7320; */
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d73ac;
 
-    [(id)[NSString class] stringWithFormat:@"类型 · %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"类型 · %@"];
     goto L_d7354;
 
 L_d71e8:;
-    [(id)[NSString class] stringWithFormat:@"星座 · %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"星座 · %@"];
 
 L_d7218:;
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
-    [(id)sel_registerName("length") addObject:ret];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
+    (void)[(id)sel_registerName("length") addObject:ret];
     goto L_d7388;
 
 L_d724c:;
-    [(id)ret rangeOfString:@"："];
+    (void)[(id)ret rangeOfString:@"："];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d73a0; */
 
-    [(id)ret rangeOfString:@":"];
+    (void)[(id)ret rangeOfString:@":"];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d73a0; */
 
-    [(id)ret rangeOfString:@"Ta的动态"];
+    (void)[(id)ret rangeOfString:@"Ta的动态"];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d73a0; */
 
-    [(id)[NSString class] stringWithFormat:@"特征 · %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"特征 · %@"];
     goto L_d7218;
 
 L_d7320:;
-    [(id)[NSString class] stringWithFormat:@"特征 · %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"特征 · %@"];
 
 L_d7354:;
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
 
 L_d7388:;
@@ -3782,17 +3783,17 @@ L_d73ac:;
     goto L_d7390;
 
 L_d73c4:;
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d709c;
 
 L_d73d4:;
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d748c;
 
-    [(id)[NSString class] stringWithFormat:@"特点 · %@"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"特点 · %@"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -3805,7 +3806,7 @@ L_d74ac:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d7924;
 
 L_d757c:;
@@ -3813,48 +3814,48 @@ L_d757c:;
 
 L_d759c:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
-    [(id)[NSString class] class];
-    [(id)ret isKindOfClass:[(id)[NSString class] class]];
+    (void)[(id)[NSString class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
     if (ret == 0) goto L_d78e8;
 
-    [(id)ret rangeOfString:@" · "];
+    (void)[(id)ret rangeOfString:@" · "];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d78e8; */
 
-    [(id)ret substringToIndex:[(id)ret rangeOfString:@" · "]];
-    [(id)ret substringFromIndex:0];
-    [(id)ret isEqualToString:@"星座"];
+    (void)[(id)ret substringToIndex:[(id)ret rangeOfString:@" · "]];
+    (void)[(id)ret substringFromIndex:0];
+    (void)[(id)ret isEqualToString:@"星座"];
     if (ret == 0) goto L_d7818;
 
-    [(id)0 objectForKeyedSubscript:@"astro"];
+    (void)[(id)0 objectForKeyedSubscript:@"astro"];
     if (ret == 0) goto L_d789c;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     objc_release(ret);
     if ([(id)ret length] == 0) goto L_d789c;
 
-    [(id)0 objectForKeyedSubscript:@"astro"];
-    [(id)ret description];
+    (void)[(id)0 objectForKeyedSubscript:@"astro"];
+    (void)[(id)ret description];
     objc_retain(ret);
     objc_retain(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d786c;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d786c;
 
     /* [UNRESOLVED] sub_e7670(); */
     /* [UNRESOLVED] [(id)0x257fd0 objectForKeyedSubscript:ret]; */
-    [(id)ret isEqualToString:ret];
+    (void)[(id)ret isEqualToString:ret];
     objc_release(ret);
     if ((([(id)ret isEqualToString:ret] >> 0) & 1) != 0) goto L_d786c;
 
     /* [UNRESOLVED] [(id)0x257fd0 rangeOfString:ret]; */
     /* [UNRESOLVED] HushStorePath(); */
     /* [UNRESOLVED] [(id)[NSJSONSerialization class] unknownSelector]; */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d77cc;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d77cc;
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -3888,12 +3889,12 @@ L_d786c:;
     objc_release(ret);
 
 L_d789c:;
-    [(id)ret objectForKeyedSubscript:@"星座"];
+    (void)[(id)ret objectForKeyedSubscript:@"星座"];
     objc_release(ret);
     if (ret != 0) goto L_d78d4;
 
 L_d78cc:;
-    [(id)ret rangeOfString:ret];
+    (void)[(id)ret rangeOfString:ret];
 
 L_d78d4:;
     objc_release(ret);
@@ -3903,15 +3904,15 @@ L_d78e8:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d757c; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d757c;
 
 L_d7924:;
     objc_release(ret);
-    [(id)ret allKeys];
-    [(id)ret copy];
+    (void)[(id)ret allKeys];
+    (void)[(id)ret copy];
     objc_release(ret);
-    [(id)[(id)ret copy] countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)[(id)ret copy] countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)[(id)ret copy] countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d7ae8;
 
 L_d79d4:;
@@ -3920,12 +3921,12 @@ L_d79d4:;
 L_d79f4:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
     objc_retain(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d7a98;
 
-    [(id)[NSCharacterSet class] isEqualToString:@"0123456789_. -"];
-    [(id)ret invertedSet];
-    [(id)ret rangeOfCharacterFromSet:ret];
+    (void)[(id)[NSCharacterSet class] isEqualToString:@"0123456789_. -"];
+    (void)[(id)ret invertedSet];
+    (void)[(id)ret rangeOfCharacterFromSet:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -3944,15 +3945,15 @@ L_d7ab0:;
 L_d7abc:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d79d4; */
 
-    [(id)[(id)ret copy] countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)[(id)ret copy] countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)[(id)ret copy] countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d79d4;
 
 L_d7ae8:;
     objc_release([(id)ret copy]);
-    [(id)[NSMutableArray class] array];
-    [(id)[NSMutableArray class] array];
-    [(id)[NSArray class] arrayWithObjects:0 count:4];
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:4];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d7cb4;
 
 L_d7bc8:;
@@ -3960,26 +3961,26 @@ L_d7bc8:;
 
 L_d7be8:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
-    [(id)ret length];
+    (void)[(id)ret length];
     objc_release(ret);
     if ([(id)ret length] == 0) goto L_d7c88;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
-    [(id)[NSString class] stringWithFormat:@"%@ · %@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"%@ · %@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
 L_d7c88:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d7bc8; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d7bc8;
 
 L_d7cb4:;
     objc_release(ret);
-    [(id)[NSArray class] arrayWithObjects:0 count:8];
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)[NSArray class] arrayWithObjects:0 count:8];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_d7e70;
 
 L_d7d88:;
@@ -3987,40 +3988,40 @@ L_d7d88:;
 
 L_d7da8:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
-    [(id)ret length];
+    (void)[(id)ret length];
     objc_release(ret);
     if ([(id)ret length] == 0) goto L_d7e48;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0 / * local * // *+0x0* /]; */
-    [(id)[NSString class] stringWithFormat:@"%@ · %@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"%@ · %@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
 L_d7e48:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d7d88; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_d7d88;
 
 L_d7e70:;
     objc_release(ret);
-    [(id)ret count];
+    (void)[(id)ret count];
     if ([(id)ret count] == 0) goto L_d7f28;
 
-    [(id)ret componentsJoinedByString:@"  "];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
-    [(id)ret addObject:ret];
+    (void)[(id)ret componentsJoinedByString:@"  "];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
 L_d7f28:;
-    [(id)ret count];
+    (void)[(id)ret count];
     if ([(id)ret count] == 0) goto L_d7fd0;
 
-    [(id)ret componentsJoinedByString:@"  "];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)ret componentsJoinedByString:@"  "];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -4041,16 +4042,16 @@ L_d7fd0:;
     objc_release(0);
     objc_release(0);
     objc_release(ret);
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"feed"];
-    [(id)ret integerValue];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"feed"];
+    (void)[(id)ret integerValue];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d8130; */
 
-    [(id)[NSString class] stringWithFormat:@"动态 · %ld 条"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"动态 · %ld 条"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:1];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -4059,10 +4060,10 @@ L_d8130:;
     if (ret == 0) goto L_d8200;
 
     /* [UNRESOLVED] HushRiskUserSource(); */
-    [(id)ret length];
-    [(id)[NSString class] stringWithFormat:@"%@ · 你手动标记过"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)ret length];
+    (void)[(id)[NSString class] stringWithFormat:@"%@ · 你手动标记过"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -4071,8 +4072,8 @@ L_d8200:;
     /* [UNRESOLVED] HushVanHasMark(); */
     if (ret == 0) goto L_d826c;
 
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
 
 L_d826c:;
@@ -4080,20 +4081,20 @@ L_d826c:;
     if (((sub_d0640 >> 63) & 1) != 0) goto L_d84c4;
 
     objc_retain(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d8340;
 
     /* [UNRESOLVED] sub_e7034(); */
-    [(id)ret objectForKeyedSubscript:ret];
+    (void)[(id)ret objectForKeyedSubscript:ret];
     objc_release(ret);
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_d8348;
 
-    [(id)ret objectForKeyedSubscript:@"s"];
+    (void)[(id)ret objectForKeyedSubscript:@"s"];
     /* [UNRESOLVED] HushSafeStrOrNil(); */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d835c;
 
     objc_retain(ret);
@@ -4106,8 +4107,8 @@ L_d8348:;
     goto L_d83fc;
 
 L_d835c:;
-    [(id)ret objectForKeyedSubscript:@"i"];
-    [(id)ret integerValue];
+    (void)[(id)ret objectForKeyedSubscript:@"i"];
+    (void)[(id)ret integerValue];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_d8394; */
 
@@ -4117,10 +4118,10 @@ L_d8394:;
     /* [UNRESOLVED] sub_d17fc(); */
     if (((@"不喜欢" >> 63) & 1) != 0) goto L_d83e8;
 
-    [(id)ret count];
+    (void)[(id)ret count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_d83e8; */
 
-    [(id)ret objectAtIndexedSubscript:@"不喜欢"];
+    (void)[(id)ret objectAtIndexedSubscript:@"不喜欢"];
     goto L_d83e8;
 
 L_d83e8:;
@@ -4134,17 +4135,17 @@ L_d83fc:;
 
 L_d8404:;
     objc_release(ret);
-    [(id)0 length];
-    [(id)[NSString class] stringWithFormat:@"你标记过「%@」"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)0 length];
+    (void)[(id)[NSString class] stringWithFormat:@"你标记过「%@」"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(0);
 
 L_d84c4:;
     objc_retain(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d8684;
 
     /* [UNRESOLVED] [(id)0x257fd8 objectForKeyedSubscript:ret]; */
@@ -4152,7 +4153,7 @@ L_d84c4:;
     if (ret == 0) goto L_d85ac;
 
     /* [UNRESOLVED] [(id)0x257fd8 objectForKeyedSubscript:ret]; */
-    [(id)ret integerValue];
+    (void)[(id)ret integerValue];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d8838; */
@@ -4160,8 +4161,8 @@ L_d84c4:;
     /* [UNRESOLVED] HushSpyLastVisitForUid(); */
     /* [UNRESOLVED] if (cond / * le * /) goto L_d8694; */
 
-    [(id)[NSDate class] date];
-    [(id)ret timeIntervalSince1970];
+    (void)[(id)[NSDate class] date];
+    (void)[(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * pl * /) goto L_d86a4; */
 
@@ -4170,7 +4171,7 @@ L_d84c4:;
 L_d85ac:;
     /* [UNRESOLVED] if (0x258030 != 0) goto L_d85ec; */
 
-    [(id)[NSMutableSet class] set];
+    (void)[(id)[NSMutableSet class] set];
     /* [UNRESOLVED] objc_release(0x258030); */
 
 L_d85ec:;
@@ -4178,7 +4179,7 @@ L_d85ec:;
     /* [UNRESOLVED] if (((0x258030 >> 0) & 1) != 0) goto L_d8684; */
 
     /* [UNRESOLVED] [(id)0x258030 addObject:ret]; */
-    [(id)ret copy];
+    (void)[(id)ret copy];
     /* [UNRESOLVED] dispatch_get_global_queue(0); */
     objc_retain([(id)ret copy]);
     /* [UNRESOLVED] dispatch_async(-0x100); */
@@ -4209,22 +4210,22 @@ L_d8724:;
     goto L_d8754;
 
 L_d8754:;
-    [(id)[NSString class] stringWithFormat:@"%d 个月前"];
+    (void)[(id)[NSString class] stringWithFormat:@"%d 个月前"];
 
 L_d8768:;
     objc_retain(ret);
     objc_release(ret);
 
 L_d877c:;
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d87b0;
 
     goto L_d87b0;
 
 L_d87b0:;
-    [(id)[NSString class] stringWithFormat:@"看过你 %ld 次"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"看过你 %ld 次"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -4236,12 +4237,12 @@ L_d8838:;
     /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_d8944; */
 
     /* [UNRESOLVED] HushRoleClientInfoText(); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d8938;
 
-    [(id)[NSString class] stringWithFormat:@"客户端 · %@"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"客户端 · %@"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -4254,100 +4255,100 @@ L_d8944:;
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_d8f08; */
 
-    [(id)0 objectForKeyedSubscript:@"black_count"];
-    [(id)0 objectForKeyedSubscript:@"is_invisible_all"];
+    (void)[(id)0 objectForKeyedSubscript:@"black_count"];
+    (void)[(id)0 objectForKeyedSubscript:@"is_invisible_all"];
     if (ret == 0) goto L_d89cc;
 
     /* [UNRESOLVED] sub_d971c(); */
     goto L_d8a18;
 
 L_d89cc:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"invall"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"invall"];
     /* [UNRESOLVED] sub_d971c(); */
     objc_release(ret);
     objc_release(ret);
 
 L_d8a18:;
     objc_release(ret);
-    [(id)0 objectForKeyedSubscript:@"is_invisible_half"];
+    (void)[(id)0 objectForKeyedSubscript:@"is_invisible_half"];
     if (ret == 0) goto L_d8a58;
 
     /* [UNRESOLVED] sub_d971c(); */
     goto L_d8aa0;
 
 L_d8a58:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"invhalf"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"invhalf"];
     /* [UNRESOLVED] sub_d971c(); */
     objc_release(ret);
     objc_release(ret);
 
 L_d8aa0:;
     objc_release(ret);
-    [(id)0 objectForKeyedSubscript:@"is_traceless_access"];
+    (void)[(id)0 objectForKeyedSubscript:@"is_traceless_access"];
     if (ret == 0) goto L_d8ae0;
 
     /* [UNRESOLVED] sub_d971c(); */
     goto L_d8b2c;
 
 L_d8ae0:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"traceless"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"traceless"];
     /* [UNRESOLVED] sub_d971c(); */
     objc_release(ret);
     objc_release(ret);
 
 L_d8b2c:;
     objc_release(ret);
-    [(id)0 objectForKeyedSubscript:@"is_global_view_secretly"];
+    (void)[(id)0 objectForKeyedSubscript:@"is_global_view_secretly"];
     /* [UNRESOLVED] sub_d971c(); */
     objc_release(ret);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     if (ret == 0) goto L_d8c90;
 
-    [(id)[NSNull class] null];
+    (void)[(id)[NSNull class] null];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d8c4c; */
 
-    [(id)ret respondsToSelector:sel_registerName("integerValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("integerValue")];
     if (ret == 0) goto L_d8c4c;
 
-    [(id)ret integerValue];
+    (void)[(id)ret integerValue];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d8c90; */
 
-    [(id)ret description];
-    [(id)[NSString class] stringWithFormat:@"黑名单:%@"];
-    [(id)ret addObject:ret];
+    (void)[(id)ret description];
+    (void)[(id)[NSString class] stringWithFormat:@"黑名单:%@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
 
 L_d8c4c:;
     objc_release(ret);
 
 L_d8c90:;
-    [(id)[NSString class] stringWithFormat:@"全局隐身:%@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"全局隐身:%@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
-    [(id)[NSString class] stringWithFormat:@"半隐身:%@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"半隐身:%@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
-    [(id)ret componentsJoinedByString:@" · "];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)ret componentsJoinedByString:@" · "];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[NSString class] stringWithFormat:@"无痕访问:%@ · 悄悄查看:%@"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"无痕访问:%@ · 悄悄查看:%@"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] HushRoleRegistrationTime(); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d8ee8;
 
-    [(id)[NSString class] stringWithFormat:@"注册:%@"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"注册:%@"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:2];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -4358,7 +4359,7 @@ L_d8ee8:;
 
 L_d8f08:;
     objc_retain(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_d9124;
 
     /* [UNRESOLVED] [(id)0x257fe0 objectForKeyedSubscript:ret]; */
@@ -4366,14 +4367,14 @@ L_d8f08:;
     if (ret == 0) goto L_d904c;
 
     /* [UNRESOLVED] [(id)0x257fe0 objectForKeyedSubscript:ret]; */
-    [(id)ret integerValue];
+    (void)[(id)ret integerValue];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d913c; */
 
-    [(id)[NSString class] stringWithFormat:@"聊天相册 · %ld 张"];
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:3];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"聊天相册 · %ld 张"];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:3];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     goto L_d913c;
@@ -4381,7 +4382,7 @@ L_d8f08:;
 L_d904c:;
     /* [UNRESOLVED] if (0x258038 != 0) goto L_d908c; */
 
-    [(id)[NSMutableSet class] set];
+    (void)[(id)[NSMutableSet class] set];
     /* [UNRESOLVED] objc_release(0x258038); */
 
 L_d908c:;
@@ -4389,7 +4390,7 @@ L_d908c:;
     /* [UNRESOLVED] if (((0x258038 >> 0) & 1) != 0) goto L_d9124; */
 
     /* [UNRESOLVED] [(id)0x258038 addObject:ret]; */
-    [(id)ret copy];
+    (void)[(id)ret copy];
     /* [UNRESOLVED] dispatch_get_global_queue(0); */
     objc_retain([(id)ret copy]);
     /* [UNRESOLVED] dispatch_async(-0x100); */
@@ -4401,22 +4402,22 @@ L_d9124:;
     objc_release(ret);
 
 L_d913c:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"photoscnt"];
-    [(id)ret integerValue];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"photoscnt"];
+    (void)[(id)ret integerValue];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] HushAlbumCountFor(); */
     /* [UNRESOLVED] HushAlbumPicsFetchedWithin(); */
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"photos"];
-    [(id)ret count];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"photos"];
+    (void)[(id)ret count];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * gt * /) goto L_d924c; */
 
     /* [UNRESOLVED] HushAlbumPicsFor(); */
-    [(id)ret count];
+    (void)[(id)ret count];
     objc_release(ret);
 
 L_d924c:;
@@ -4425,17 +4426,17 @@ L_d924c:;
     objc_retain(HushAlbumHasLockInfo);
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d9348; */
 
-    [(id)[NSString class] stringWithFormat:@"%@ %ld 张 · 已加载"];
+    (void)[(id)[NSString class] stringWithFormat:@"%@ %ld 张 · 已加载"];
     goto L_d93e4;
 
 L_d9348:;
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d9488; */
 
-    [(id)[NSString class] stringWithFormat:@"%@ %ld 张 · 未加载"];
+    (void)[(id)[NSString class] stringWithFormat:@"%@ %ld 张 · 未加载"];
 
 L_d93e4:;
-    [(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:4];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:0 forKeys:0 count:4];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
 
 L_d9414:;
@@ -4453,13 +4454,13 @@ L_d9488:;
     if (ret == 0) goto L_d9534;
 
     /* [UNRESOLVED] [(id)[NSDictionary class] unknownSelector]; */
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
     goto L_d9414;
 
 L_d9534:;
     /* [UNRESOLVED] [(id)0/ *+0xbc0* / stringWithFormat:@"%@未加载"]; */
     /* [UNRESOLVED] [(id)[NSDictionary class] unknownSelector]; */
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     goto L_d9414;
 
@@ -4472,14 +4473,14 @@ L_d95f4:;
     /* [UNRESOLVED] objc_release(0x257ff0); */
 
     /* [UNRESOLVED] objc_retain(0x257ff0); */
-    [(id)[NSString class] class];
+    (void)[(id)[NSString class] class];
     /* [UNRESOLVED] [(id)0x257ff0 isKindOfClass:[(id)[NSString class] class]]; */
     /* [UNRESOLVED] if (0x257ff0 == 0) goto L_d9704; */
 
-    [(id)[NSCharacterSet class] whitespaceAndNewlineCharacterSet];
+    (void)[(id)[NSCharacterSet class] whitespaceAndNewlineCharacterSet];
     /* [UNRESOLVED] [(id)0x257ff0 stringByTrimmingCharactersInSet:ret]; */
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     objc_retain(ret);
     objc_release(ret);
     goto L_d9704;
@@ -4490,14 +4491,14 @@ L_d9704:;
     objc_retain(0);
     if (ret == 0) goto L_d979c;
 
-    [(id)[NSNull class] null];
+    (void)[(id)[NSNull class] null];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_d979c; */
 
-    [(id)0 respondsToSelector:sel_registerName("boolValue")];
+    (void)[(id)0 respondsToSelector:sel_registerName("boolValue")];
     if (0 == 0) goto L_d979c;
 
-    [(id)0 boolValue];
+    (void)[(id)0 boolValue];
     goto L_d979c;
 
 L_d979c:;
@@ -4633,22 +4634,22 @@ L_d979c:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)[NSString class] class];
+    (void)[(id)[NSString class] class];
     /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[NSString class] class]]; */
     objc_retain(0);
-    [(id)ret isEqualToString:@"red"];
+    (void)[(id)ret isEqualToString:@"red"];
     if (0 == 0) goto L_da114;
 
     goto L_da188;
 
 L_da114:;
-    [(id)0 isEqualToString:@"accent"];
+    (void)[(id)0 isEqualToString:@"accent"];
     if (0 == 0) goto L_da154;
 
     goto L_da188;
 
 L_da154:;
-    [(id)0 isEqualToString:@"lock"];
+    (void)[(id)0 isEqualToString:@"lock"];
     if (0 == 0) goto L_da1cc;
 
 L_da188:;
@@ -5195,10 +5196,10 @@ L_da200:;
     // 000da84c  mov     x23, x0
     id ret = nil;
 
-    [(id)self hushBuildIntelRows];
-    [(id)[NSMutableString class] string];
+    (void)[(id)self hushBuildIntelRows];
+    (void)[(id)[NSMutableString class] string];
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_da3bc;
 
 L_da300:;
@@ -5207,32 +5208,32 @@ L_da300:;
 L_da324:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"act"]; */
-    [(id)ret appendFormat:@"%@|%@|"];
+    (void)[(id)ret appendFormat:@"%@|%@|"];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_da300; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_da300;
 
 L_da3bc:;
     objc_release(ret);
     if (self->_infoSig == 0) goto L_da42c;
 
-    [(id)self->_infoSig isEqualToString:ret];
+    (void)[(id)self->_infoSig isEqualToString:ret];
     if (ret == 0) goto L_da42c;
 
-    [(id)self->_infoRowViews count];
-    [(id)ret count];
+    (void)[(id)self->_infoRowViews count];
+    (void)[(id)ret count];
     /* [UNRESOLVED] if (cond / * eq * /) goto L_daea4; */
 
 L_da42c:;
-    [(id)ret copy];
+    (void)[(id)ret copy];
     objc_release(self->_infoSig);
     objc_storeStrong((id *)&objc_release, ret);
-    [(id)[NSMutableArray class] array];
+    (void)[(id)[NSMutableArray class] array];
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_da584;
 
 L_da4e8:;
@@ -5240,17 +5241,17 @@ L_da4e8:;
 
 L_da504:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"t"]; */
-    [(id)[NSString class] class];
-    [(id)ret isKindOfClass:[(id)[NSString class] class]];
+    (void)[(id)[NSString class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
     if (ret == 0) goto L_da54c;
 
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
 
 L_da54c:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_da4e8; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_da4e8;
 
 L_da584:;
@@ -5258,20 +5259,20 @@ L_da584:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_da6ac;
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     if (ret == 0) goto L_da6c4;
 
-    [(id)ret description];
-    [(id)ret length];
+    (void)[(id)ret description];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_da6d0;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_da6e8;
 
 L_da668:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_da668; */
 
     goto L_da6e8;
@@ -5288,14 +5289,14 @@ L_da6d0:;
 
 L_da6e8:;
     /* [UNRESOLVED] [(id)0 / * adrp * / unknownSelector]; */
-    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
+    (void)[(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_da724:;
     /* [UNRESOLVED] objc_release(0 / * adrp * /); */
 
 L_da734:;
-    [(id)ret count];
-    [(id)ret componentsJoinedByString:@" | "];
+    (void)[(id)ret count];
+    (void)[(id)ret componentsJoinedByString:@" | "];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] 情报行(%@) %lu 条：%@"]; */
     objc_release(ret);
     objc_release(ret);
@@ -5305,7 +5306,7 @@ L_da734:;
 L_da7ac:;
     objc_release(ret);
     objc_retain(self->_infoRowViews);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_da858;
 
 L_da80c:;
@@ -5315,14 +5316,14 @@ L_da824:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / removeFromSuperview]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_da80c; */
 
-    [(id)self->_infoRowViews countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_infoRowViews countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_infoRowViews countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_da80c;
 
 L_da858:;
     objc_release(self->_infoRowViews);
-    [(id)self->_infoRowViews removeAllObjects];
-    [(id)self->_infoActionButtons removeAllObjects];
-    [(id)ret count];
+    (void)[(id)self->_infoRowViews removeAllObjects];
+    (void)[(id)self->_infoActionButtons removeAllObjects];
+    (void)[(id)ret count];
     if ([(id)ret count] == 0) goto L_dae9c;
 
 L_daa04:;
@@ -5331,19 +5332,19 @@ L_daa04:;
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
-    [(id)ret setCornerRadius:3];
+    (void)[(id)ret setCornerRadius:3];
     objc_release(ret);
-    [(id)ret objectForKeyedSubscript:@"c"];
+    (void)[(id)ret objectForKeyedSubscript:@"c"];
     /* [UNRESOLVED] [(id)self unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:[[UIView alloc] initWithFrame:0 / * unk * /]]; */
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
-    [(id)ret objectForKeyedSubscript:@"t"];
+    (void)[(id)ret objectForKeyedSubscript:@"t"];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
     objc_release(ret);
-    [(id)[UIFont class] systemFontOfSize:13];
+    (void)[(id)[UIFont class] systemFontOfSize:13];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
@@ -5355,30 +5356,30 @@ L_daa04:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
-    [(id)ret objectForKeyedSubscript:@"act"];
+    (void)[(id)ret objectForKeyedSubscript:@"act"];
     /* [UNRESOLVED] [(id)[NSString class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[NSString class] unknownSelector]]; */
     if (ret == 0) goto L_dae34;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_dae34;
 
     /* [UNRESOLVED] [(id)[UIButton class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret objectForKeyedSubscript:@"actTitle"];
-    [(id)ret setTitle:0 forState:0];
+    (void)[(id)ret objectForKeyedSubscript:@"actTitle"];
+    (void)[(id)ret setTitle:0 forState:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:12.5 weight:0x200180]; */
-    [(id)ret titleLabel];
-    [(id)ret setFont:ret];
+    (void)[(id)ret titleLabel];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
-    [(id)ret setTitleColor:ret forState:0];
+    (void)[(id)ret setTitleColor:ret forState:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:ret]; */
-    [(id)self->_infoActionButtons addObject:ret];
+    (void)[(id)self->_infoActionButtons addObject:ret];
     objc_release(ret);
 
 L_dae34:;
@@ -5389,11 +5390,11 @@ L_dae34:;
     /* [UNRESOLVED] objc_release([[UIView alloc] initWithFrame:0 / * unk * /]); */
     /* [UNRESOLVED] objc_release([[UIView alloc] initWithFrame:0 / * unk * /]); */
     objc_release(ret);
-    [(id)ret count];
+    (void)[(id)ret count];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_daa04; */
 
 L_dae9c:;
-    [(id)self setNeedsLayout];
+    (void)[(id)self setNeedsLayout];
 
 L_daea4:;
     objc_release(ret);
@@ -5427,8 +5428,8 @@ L_daea4:;
     // 000daf38  ldp     x20, x19, [sp], #0x20
     // 000daf3c  b       #0x1a72d8   ; _objc_msgSend
 
-    [(id)self hushApplyProfileExtras];
-    [(id)self hushApplyIntelRows];
+    (void)[(id)self hushApplyProfileExtras];
+    (void)[(id)self hushApplyIntelRows];
 }
 
 // @0xdaf40  types=v16@0:8
@@ -5957,38 +5958,38 @@ L_daea4:;
     // 000db57c  mov     x29, x29
     id ret = nil;
 
-    [(id)[NSMutableArray class] array];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"city"];
+    (void)[(id)[NSMutableArray class] array];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"city"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_db064;
 
-    [(id)[NSString class] stringWithFormat:@"定居%@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"定居%@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
 
 L_db064:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"ip"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"ip"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] != 0) goto L_db198;
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     /* [UNRESOLVED] HushRoleCachedUserBasic(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_db188;
 
-    [(id)ret objectForKeyedSubscript:@"ip_location"];
+    (void)[(id)ret objectForKeyedSubscript:@"ip_location"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
@@ -5997,38 +5998,38 @@ L_db188:;
     objc_release(ret);
 
 L_db198:;
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_db1ec;
 
-    [(id)[NSString class] stringWithFormat:@"IP %@"];
-    [(id)ret addObject:ret];
+    (void)[(id)[NSString class] stringWithFormat:@"IP %@"];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
 
 L_db1ec:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"job"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"job"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_db26c;
 
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
 
 L_db26c:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"reltxt"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"reltxt"];
     /* [UNRESOLVED] sub_d9644(); */
     objc_release(ret);
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_db300;
 
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
 
 L_db300:;
     objc_retain(self->_chips);
-    [(id)ret countByEnumeratingWithState:0 objects:-0xe0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0xe0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0xe0 count:0x10] == 0) goto L_db398;
 
 L_db348:;
@@ -6038,14 +6039,14 @@ L_db360:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / removeFromSuperview]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_db348; */
 
-    [(id)self->_chips countByEnumeratingWithState:0 objects:-0xe0 count:0x10];
+    (void)[(id)self->_chips countByEnumeratingWithState:0 objects:-0xe0 count:0x10];
     if ([(id)self->_chips countByEnumeratingWithState:0 objects:-0xe0 count:0x10] != 0) goto L_db348;
 
 L_db398:;
     objc_release(self->_chips);
-    [(id)self->_chips removeAllObjects];
+    (void)[(id)self->_chips removeAllObjects];
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_db48c;
 
 L_db40c:;
@@ -6053,18 +6054,18 @@ L_db40c:;
 
 L_db420:;
     /* [UNRESOLVED] sub_db998(); */
-    [(id)self->_card addSubview:ret];
-    [(id)self->_chips addObject:ret];
+    (void)[(id)self->_card addSubview:ret];
+    (void)[(id)self->_chips addObject:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_db40c; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_db40c;
 
 L_db48c:;
     objc_release(ret);
     objc_retain(self->_tagChips);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_db544;
 
 L_db4f8:;
@@ -6074,28 +6075,28 @@ L_db510:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / removeFromSuperview]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_db4f8; */
 
-    [(id)self->_tagChips countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_tagChips countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_tagChips countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_db4f8;
 
 L_db544:;
     objc_release(self->_tagChips);
     /* [UNRESOLVED] [(id)self->/ *+0x0* / unknownSelector]; */
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"tags"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"tags"];
     objc_release(ret);
-    [(id)[NSArray class] class];
-    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    (void)[(id)[NSArray class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_db718;
 
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_db708;
 
 L_db634:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_db650; */
 
 L_db650:;
-    [(id)[NSString class] class];
+    (void)[(id)[NSString class] class];
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / isKindOfClass:[(id)[NSString class] class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_db6e4; */
 
@@ -6104,8 +6105,8 @@ L_db650:;
 
     /* [UNRESOLVED] sub_db998(); */
     /* [UNRESOLVED] [(id)self->_card unknownSelector]; */
-    [(id)self->_tagChips addObject:ret];
-    [(id)self->_tagChips count];
+    (void)[(id)self->_tagChips addObject:ret];
+    (void)[(id)self->_tagChips count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * hi * /) goto L_db708; */
 
@@ -6119,15 +6120,15 @@ L_db708:;
     objc_release(ret);
 
 L_db718:;
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"vipg"];
-    [(id)ret integerValue];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"vipa"];
-    [(id)ret boolValue];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"vipl"];
-    [(id)ret integerValue];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"vipg"];
+    (void)[(id)ret integerValue];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"vipa"];
+    (void)[(id)ret boolValue];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"vipl"];
+    (void)[(id)ret integerValue];
     /* [UNRESOLVED] if (cond / * gt * /) goto L_db7f4; */
 
     if ([(id)ret boolValue] == 0) goto L_db8a8;
@@ -6137,12 +6138,12 @@ L_db7f4:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if ([? class] == 0) goto L_db8a8;
 
-    [(id)[? class] respondsToSelector:NSSelectorFromString];
+    (void)[(id)[? class] respondsToSelector:NSSelectorFromString];
     if ([? class] == 0) goto L_db8a8;
 
     /* [UNRESOLVED] [(id)[? class] unknownSelector]; */
-    [(id)[UIImage class] class];
-    [(id)ret isKindOfClass:[(id)[UIImage class] class]];
+    (void)[(id)[UIImage class] class];
+    (void)[(id)ret isKindOfClass:[(id)[UIImage class] class]];
     objc_retain(sel_registerName("class"));
     objc_release(ret);
     goto L_db8a8;
@@ -6154,8 +6155,8 @@ L_db8a8:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_vipView setImage:0];
-    [(id)self->_vipView setHidden:0];
+    (void)[(id)self->_vipView setImage:0];
+    (void)[(id)self->_vipView setHidden:0];
     objc_release(0);
     objc_release(ret);
     objc_release(ret);
@@ -6344,7 +6345,7 @@ L_db8a8:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_dbde0; */
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_dbdd8;
 
 L_dbcdc:;
@@ -6563,7 +6564,7 @@ L_dbde0:;
 
 L_dbec4:;
     /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:a0 count:2]; */
-    [(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10] == 0) goto L_dc064;
 
 L_dbf30:;
@@ -6571,7 +6572,7 @@ L_dbf30:;
 
 L_dbf54:;
     /* [UNRESOLVED] objc_retain(0 / * local * // *+0x0* /); */
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_dc028;
 
 L_dbf9c:;
@@ -6602,7 +6603,7 @@ L_dc028:;
 L_dc034:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_dbf30; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10] != 0) goto L_dbf30;
 
     goto L_dc064;
@@ -6732,21 +6733,21 @@ L_dc07c:;
     /* [UNRESOLVED] [(id)a0 tag]; */
     /* [UNRESOLVED] if ((([(id)a0 tag] >> 63) & 1) != 0) goto L_dc214; */
 
-    [(id)self->_infoRows count];
+    (void)[(id)self->_infoRows count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_dc214; */
 
     /* [UNRESOLVED] [(id)self->_infoRows objectAtIndexedSubscript:[(id)a0 tag]]; */
-    [(id)ret objectForKeyedSubscript:@"act"];
+    (void)[(id)ret objectForKeyedSubscript:@"act"];
     objc_release(ret);
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
 
-    [(id)[NSString class] class];
-    [(id)ret isKindOfClass:[(id)[NSString class] class]];
+    (void)[(id)[NSString class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
 
-    [(id)ret isEqualToString:@"gallery"];
+    (void)[(id)ret isEqualToString:@"gallery"];
 
     /* [UNRESOLVED] HushGalOpen(); */
 
@@ -7280,68 +7281,68 @@ L_dc214:;
     // 000dce00  fmul    d0, d0, d4
     id ret = nil;
 
-    [super layoutSubviews];
-    [(id)self bounds];
+    (void)[super layoutSubviews];
+    (void)[(id)self bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
-    [(id)self bounds];
+    (void)[(id)self bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     /* [UNRESOLVED] if (cond / * mi * /) goto L_dd5e4; */
 
-    [(id)self applySelection];
-    [(id)self bottomInset];
-    [(id)self->_sig text];
-    [(id)ret length];
+    (void)[(id)self applySelection];
+    (void)[(id)self bottomInset];
+    (void)[(id)self->_sig text];
+    (void)[(id)ret length];
     objc_release(ret);
-    [(id)self->_sig setHidden:0];
-    [(id)self hushChipRowCountForWidth:10];
-    [(id)self->_card setFrame:CGRectZero];
-    [(id)self layoutCard];
+    (void)[(id)self->_sig setHidden:0];
+    (void)[(id)self hushChipRowCountForWidth:10];
+    (void)[(id)self->_card setFrame:CGRectZero];
+    (void)[(id)self layoutCard];
     /* [UNRESOLVED] sub_dd61c(); */
-    [(id)self->_bar setFrame:CGRectZero];
+    (void)[(id)self->_bar setFrame:CGRectZero];
     /* [UNRESOLVED] sub_dd61c(); */
-    [(id)self->_buttons count];
+    (void)[(id)self->_buttons count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_dcaec; */
 
 L_dca44:;
-    [(id)self->_buttons objectAtIndexedSubscript:0];
-    [(id)ret setFrame:CGRectZero];
-    [(id)ret layer];
-    [(id)ret setCornerRadius:12.5];
+    (void)[(id)self->_buttons objectAtIndexedSubscript:0];
+    (void)[(id)ret setFrame:CGRectZero];
+    (void)[(id)ret layer];
+    (void)[(id)ret setCornerRadius:12.5];
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_buttons count];
+    (void)[(id)self->_buttons count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_dca44; */
 
 L_dcaec:;
-    [(id)self->_chip sizeThatFits:CGSizeZero];
-    [(id)self->_chipBox setFrame:CGRectZero];
-    [(id)self->_chipDot setFrame:CGRectZero];
-    [(id)self->_chip setFrame:CGRectZero];
+    (void)[(id)self->_chip sizeThatFits:CGSizeZero];
+    (void)[(id)self->_chipBox setFrame:CGRectZero];
+    (void)[(id)self->_chipDot setFrame:CGRectZero];
+    (void)[(id)self->_chip setFrame:CGRectZero];
     /* [UNRESOLVED] sub_dd61c(); */
-    [(id)self->_tiles count];
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self->_tiles count];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_dcc20;
 
     /* [UNRESOLVED] HushAlbumHasLockedFlag(); */
     goto L_dcc20;
 
 L_dcc20:;
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_dcc5c;
 
     /* [UNRESOLVED] HushAlbumHasLockInfo(); */
 
 L_dcc5c:;
     objc_retain(0);
-    [(id)self->_badge text];
-    [(id)ret isEqualToString:0];
+    (void)[(id)self->_badge text];
+    (void)[(id)ret isEqualToString:0];
     objc_release(ret);
     if ((([(id)ret isEqualToString:0] >> 0) & 1) != 0) goto L_dccb8;
 
-    [(id)self->_badge setText:0];
+    (void)[(id)self->_badge setText:0];
 
 L_dccb8:;
     objc_release(0);
@@ -7351,8 +7352,8 @@ L_dccb8:;
     goto L_dccfc;
 
 L_dccfc:;
-    [(id)self->_badgeBox setHidden:0];
-    [(id)self->_infoCard setHidden:0];
+    (void)[(id)self->_badgeBox setHidden:0];
+    (void)[(id)self->_infoCard setHidden:0];
     if (((0 >> 0) & 1) == 0) goto L_dd0a8;
 
     /* [UNRESOLVED] if (cond / * lt * /) goto L_dcdbc; */
@@ -7364,32 +7365,32 @@ L_dce18:;
     if ([(id)self->_tiles count] == 0) goto L_dd060;
 
 L_dceb0:;
-    [(id)self->_tiles objectAtIndexedSubscript:0];
+    (void)[(id)self->_tiles objectAtIndexedSubscript:0];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     if (ret == 0) goto L_dceec;
 
-    [(id)ret setHidden:0];
+    (void)[(id)ret setHidden:0];
 
 L_dceec:;
     if (-1 != 0) goto L_dcf48;
 
-    [(id)ret alpha];
+    (void)[(id)ret alpha];
     /* [UNRESOLVED] if (cond / * pl * /) goto L_dcf48; */
 
-    [(id)ret setAlpha:1];
+    (void)[(id)ret setAlpha:1];
 
 L_dcf48:;
-    [(id)ret text];
-    [(id)ret bounds];
-    [(id)self->_thumbs objectAtIndexedSubscript:0];
-    [(id)ret text];
+    (void)[(id)ret text];
+    (void)[(id)ret bounds];
+    (void)[(id)self->_thumbs objectAtIndexedSubscript:0];
+    (void)[(id)ret text];
     objc_release(ret);
-    [(id)ret layer];
-    [(id)ret setCornerRadius:0];
+    (void)[(id)ret layer];
+    (void)[(id)ret setCornerRadius:0];
     objc_release(ret);
-    [(id)self->_thumbs objectAtIndexedSubscript:0];
-    [(id)ret layer];
-    [(id)ret setCornerRadius:0];
+    (void)[(id)self->_thumbs objectAtIndexedSubscript:0];
+    (void)[(id)ret layer];
+    (void)[(id)ret setCornerRadius:0];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] sub_dd61c(); */
@@ -7403,14 +7404,14 @@ L_dd060:;
 L_dd0a8:;
     if ([(id)self->_tiles count] != 0) goto L_dd0f8;
 
-    [(id)self->_badgeBox alpha];
+    (void)[(id)self->_badgeBox alpha];
     /* [UNRESOLVED] if (cond / * pl * /) goto L_dd0f8; */
 
-    [(id)self->_badgeBox setAlpha:1];
+    (void)[(id)self->_badgeBox setAlpha:1];
 
 L_dd0f8:;
     objc_retain(self->_tiles);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_dd194;
 
 L_dd13c:;
@@ -7420,7 +7421,7 @@ L_dd158:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_dd13c; */
 
-    [(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_dd13c;
 
 L_dd194:;
@@ -7432,15 +7433,15 @@ L_dd194:;
     /* [UNRESOLVED] sub_dd61c(); */
 
 L_dd28c:;
-    [(id)self->_infoRowViews objectAtIndexedSubscript:0];
+    (void)[(id)self->_infoRowViews objectAtIndexedSubscript:0];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if (cond / * hi * /) goto L_dd4cc; */
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret viewWithTag:1];
+    (void)[(id)ret viewWithTag:1];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_retain(self->_infoActionButtons);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_dd3bc;
 
 L_dd364:;
@@ -7452,7 +7453,7 @@ L_dd380:;
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_dd364; */
 
-    [(id)self->_infoActionButtons countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_infoActionButtons countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_infoActionButtons countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_dd364;
 
 L_dd3bc:;
@@ -7465,14 +7466,14 @@ L_dd3cc:;
     if (0 == 0) goto L_dd454;
 
     /* [UNRESOLVED] [(id)0 sizeThatFits:0 / * unk * /]; */
-    [(id)ret bounds];
+    (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
-    [(id)0 text];
+    (void)[(id)0 text];
     goto L_dd454;
 
 L_dd454:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret bounds];
+    (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -7487,22 +7488,22 @@ L_dd4e4:;
     if ([(id)self->_tiles count] == 0) goto L_dd5e4;
 
     /* [UNRESOLVED] [(id)self->/ *+0x0* / sizeThatFits:0]; */
-    [(id)self->_badgeBox isHidden];
+    (void)[(id)self->_badgeBox isHidden];
     if (((ret >> 0) & 1) == 0) goto L_dd544;
 
     goto L_dd5a8;
 
 L_dd544:;
-    [(id)self->_badgeBox frame];
+    (void)[(id)self->_badgeBox frame];
     /* [UNRESOLVED] CGRectGetHeight(); */
     /* [UNRESOLVED] if (cond / * le * /) goto L_dd5a8; */
 
-    [(id)self->_badgeBox frame];
+    (void)[(id)self->_badgeBox frame];
     /* [UNRESOLVED] CGRectGetMaxY(); */
 
 L_dd5a8:;
     /* [UNRESOLVED] [(id)self->_badgeBox unknownSelector]; */
-    [(id)self->_badgeBox bounds];
+    (void)[(id)self->_badgeBox bounds];
     /* [UNRESOLVED] [(id)self->/ *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] sub_dd61c(); */
 
@@ -7627,22 +7628,22 @@ L_dd5e4:;
     // 000dd860  ret
     id ret = nil;
 
-    [(id)self->_tiles count];
+    (void)[(id)self->_tiles count];
     if ([(id)self->_tiles count] == 0) goto L_dd860;
 
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
 
-    [(id)ret description];
-    [(id)ret length];
+    (void)[(id)ret description];
+    (void)[(id)ret length];
 
-    [(id)ret length];
+    (void)[(id)ret length];
 
 L_dd810:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_dd810; */
 
 L_dd860:;
@@ -7942,16 +7943,16 @@ L_dd860:;
     // 000ddd60  ret
     id ret = nil;
 
-    [(id)self setNeedsLayout];
+    (void)[(id)self setNeedsLayout];
     /* [UNRESOLVED] if (a0 == 0) goto L_ddd3c; */
 
-    [(id)self layoutIfNeeded];
-    [(id)[NSMutableArray class] array];
+    (void)[(id)self layoutIfNeeded];
+    (void)[(id)[NSMutableArray class] array];
     if (0 == 0) goto L_ddadc;
 
-    [(id)ret addObject:self->_infoCard];
+    (void)[(id)ret addObject:self->_infoCard];
     objc_retain(self->_infoRowViews);
-    [(id)ret countByEnumeratingWithState:0 objects:-0xf8 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0xf8 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0xf8 count:0x10] == 0) goto L_ddb74;
 
 L_dda70:;
@@ -7961,14 +7962,14 @@ L_dda8c:;
     /* [UNRESOLVED] [(id)ret addObject:0 / * local * // *+0x0* /]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_dda70; */
 
-    [(id)self->_infoRowViews countByEnumeratingWithState:0 objects:-0xf8 count:0x10];
+    (void)[(id)self->_infoRowViews countByEnumeratingWithState:0 objects:-0xf8 count:0x10];
     if ([(id)self->_infoRowViews countByEnumeratingWithState:0 objects:-0xf8 count:0x10] != 0) goto L_dda70;
 
     goto L_ddb74;
 
 L_ddadc:;
     objc_retain(self->_tiles);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_ddb74;
 
 L_ddb24:;
@@ -7978,16 +7979,16 @@ L_ddb40:;
     /* [UNRESOLVED] [(id)ret addObject:0 / * local * // *+0x0* /]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_ddb24; */
 
-    [(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)self->_tiles countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_ddb24;
 
 L_ddb74:;
     objc_release(self->_tiles);
-    [(id)ret count];
+    (void)[(id)ret count];
     if ([(id)ret count] == 0) goto L_ddd24;
 
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_ddc7c;
 
 L_ddbf8:;
@@ -7999,7 +8000,7 @@ L_ddc18:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setTransform:0]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_ddbf8; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_ddbf8;
 
 L_ddc7c:;
@@ -8123,17 +8124,17 @@ L_ddd3c:;
 
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
 
-    [(id)self snap];
-    [(id)ret objectForKeyedSubscript:@"uid"];
+    (void)[(id)self snap];
+    (void)[(id)ret objectForKeyedSubscript:@"uid"];
 
-    [(id)ret description];
-    [(id)ret length];
+    (void)[(id)ret description];
+    (void)[(id)ret length];
 
-    [(id)ret length];
+    (void)[(id)ret length];
 
 L_de154:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_de154; */
 
 L_de188:;
@@ -8189,9 +8190,9 @@ L_de188:;
     // 000de308  ret
     id ret = nil;
 
-    [(id)self->_card bounds];
+    (void)[(id)self->_card bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
-    [(id)self->_card bounds];
+    (void)[(id)self->_card bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     /* [UNRESOLVED] if (cond / * pl * /) goto L_de30c; */
 

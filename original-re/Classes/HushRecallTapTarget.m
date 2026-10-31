@@ -1,5 +1,6 @@
 // Recovered implementation for HushRecallTapTarget (from BluedHush_5.19.dylib)
 #import "HushRecallTapTarget.h"
+#import <objc/runtime.h>
 
 @implementation HushRecallTapTarget
 
@@ -530,7 +531,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)[UIGestureRecognizer class] class];
+    (void)[(id)[UIGestureRecognizer class] class];
     /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[UIGestureRecognizer class] class]]; */
     /* [UNRESOLVED] if (a0 == 0) goto L_3bf18; */
 
@@ -538,7 +539,7 @@
     goto L_3bf58;
 
 L_3bf18:;
-    [(id)[UIView class] class];
+    (void)[(id)[UIView class] class];
     /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[UIView class] class]]; */
     /* [UNRESOLVED] if (a0 == 0) goto L_3bf58; */
 
@@ -546,8 +547,8 @@ L_3bf18:;
     goto L_3bf58;
 
 L_3bf58:;
-    [(id)[NSDate class] date];
-    [(id)ret timeIntervalSince1970];
+    (void)[(id)[NSDate class] date];
+    (void)[(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * mi * /) goto L_3d1ac; */
 
@@ -555,15 +556,15 @@ L_3bf58:;
     if (0 == 0) goto L_3c05c;
 
 L_3bfe0:;
-    [(id)0 class];
+    (void)[(id)0 class];
     /* [UNRESOLVED] NSStringFromClass(); */
-    [(id)ret lowercaseString];
-    [(id)ret hasSuffix:@"bdcustommenuview"];
+    (void)[(id)ret lowercaseString];
+    (void)[(id)ret hasSuffix:@"bdcustommenuview"];
     objc_release(ret);
     objc_release(ret);
     if ((([(id)ret hasSuffix:@"bdcustommenuview"] >> 0) & 1) != 0) goto L_3c05c;
 
-    [(id)0 superview];
+    (void)[(id)0 superview];
     objc_release(0);
     if (ret != 0) goto L_3bfe0;
 
@@ -572,10 +573,10 @@ L_3c05c:;
     if (objc_loadWeakRetained == 0) goto L_3c0d8;
 
     /* [UNRESOLVED] HushKeyValue(@"msgId"); */
-    [(id)ret respondsToSelector:sel_registerName("unsignedLongLongValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedLongLongValue")];
     if (objc_loadWeakRetained == 0) goto L_3c0cc;
 
-    [(id)ret unsignedLongLongValue];
+    (void)[(id)ret unsignedLongLongValue];
     objc_release(ret);
     goto L_3c0d8;
 
@@ -599,7 +600,7 @@ L_3c108:;
 L_3c140:;
     /* [UNRESOLVED] objc_retain(0x257550); */
     objc_retain(ret);
-    [(id)[NSString class] stringWithFormat:@"%llu:%llu"];
+    (void)[(id)[NSString class] stringWithFormat:@"%llu:%llu"];
     /* [UNRESOLVED] [(id)0x257550 objectForKeyedSubscript:ret]; */
     objc_release(ret);
     objc_release(ret);
@@ -611,7 +612,7 @@ L_3c140:;
 
 L_3c1ec:;
     /* [UNRESOLVED] objc_retain(0x257550); */
-    [(id)[NSString class] stringWithFormat:@"%llu:%llu"];
+    (void)[(id)[NSString class] stringWithFormat:@"%llu:%llu"];
     /* [UNRESOLVED] objc_retain(0x257550); */
     /* [UNRESOLVED] [(id)0x257550 objectForKeyedSubscript:ret]; */
     objc_release(ret);
@@ -641,20 +642,20 @@ L_3c308:;
     if (objc_loadWeakRetained == 0) goto L_3c3e8;
 
     /* [UNRESOLVED] HushKeyValue(@"toId"); */
-    [(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
     /* [UNRESOLVED] if (0x257550 == 0) goto L_3c3fc; */
 
-    [(id)ret unsignedIntValue];
+    (void)[(id)ret unsignedIntValue];
     goto L_3c3fc;
 
 L_3c364:;
-    [(id)[(id)ret unsignedIntValue] noteFiltered:3];
+    (void)[(id)[(id)ret unsignedIntValue] noteFiltered:3];
 
 L_3c36c:;
     goto L_3cd4c;
 
 L_3c37c:;
-    [(id)[(id)[(id)ret unsignedIntValue] noteFiltered:3] noteFiltered:3];
+    (void)[(id)[(id)[(id)ret unsignedIntValue] noteFiltered:3] noteFiltered:3];
 
 L_3c384:;
     objc_release(ret);
@@ -668,10 +669,10 @@ L_3c3e8:;
 L_3c3fc:;
     /* [UNRESOLVED] HushKeyValue(@"sessionType"); */
     objc_release(ret);
-    [(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
     if (ret == 0) goto L_3c448;
 
-    [(id)ret unsignedIntValue];
+    (void)[(id)ret unsignedIntValue];
     goto L_3c448;
 
 L_3c448:;
@@ -684,17 +685,17 @@ L_3c480:;
     /* [UNRESOLVED] HushKeyValue(@"targetUid"); */
 
 L_3c4c0:;
-    [(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
     if (((ret >> 0) & 1) != 0) goto L_3c4f8;
 
     objc_release(ret);
     /* [UNRESOLVED] HushKeyValue(@"sessionId"); */
 
 L_3c4f8:;
-    [(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
     if (ret == 0) goto L_3c528;
 
-    [(id)ret unsignedIntValue];
+    (void)[(id)ret unsignedIntValue];
     goto L_3c528;
 
 L_3c51c:;
@@ -705,10 +706,10 @@ L_3c528:;
     /* [UNRESOLVED] HushKeyValue(@"sessionType"); */
 
 L_3c554:;
-    [(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedIntValue")];
     if (ret == 0) goto L_3c570;
 
-    [(id)ret unsignedIntValue];
+    (void)[(id)ret unsignedIntValue];
 
 L_3c570:;
     objc_release(ret);
@@ -719,10 +720,10 @@ L_3c57c:;
 
 L_3c594:;
     /* [UNRESOLVED] HushKeyValue(@"sendTime"); */
-    [(id)ret respondsToSelector:sel_registerName("unsignedLongLongValue")];
+    (void)[(id)ret respondsToSelector:sel_registerName("unsignedLongLongValue")];
     /* [UNRESOLVED] if (0 / * local * / == 0) goto L_3c61c; */
 
-    [(id)ret unsignedLongLongValue];
+    (void)[(id)ret unsignedLongLongValue];
     /* [UNRESOLVED] if (cond / * le * /) goto L_3c61c; */
 
     objc_release(ret);
@@ -735,12 +736,12 @@ L_3c61c:;
 
 L_3c62c:;
     /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
-    [(id)ret timeIntervalSince1970];
+    (void)[(id)ret timeIntervalSince1970];
     objc_release(ret);
 
 L_3c664:;
     /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
-    [(id)ret timeIntervalSince1970];
+    (void)[(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (0 / * local * / == 0) goto L_3c6b8; */
 
@@ -759,7 +760,7 @@ L_3c708:;
 
 L_3c718:;
     /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
-    [(id)ret timeIntervalSince1970];
+    (void)[(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cb54; */
 
@@ -775,14 +776,14 @@ L_3c764:;
     goto L_3cac4;
 
 L_3c814:;
-    [(id)[NSNumber class] numberWithUnsignedLongLong:0];
-    [(id)[NSNumber class] numberWithUnsignedLongLong:0];
-    [(id)[NSNumber class] numberWithUnsignedLongLong:0];
-    [(id)[NSNumber class] numberWithUnsignedInt:[(id)ret unsignedIntValue]];
-    [(id)[NSNumber class] numberWithUnsignedInt:0];
-    [(id)[NSNumber class] numberWithDouble:0];
+    (void)[(id)[NSNumber class] numberWithUnsignedLongLong:0];
+    (void)[(id)[NSNumber class] numberWithUnsignedLongLong:0];
+    (void)[(id)[NSNumber class] numberWithUnsignedLongLong:0];
+    (void)[(id)[NSNumber class] numberWithUnsignedInt:[(id)ret unsignedIntValue]];
+    (void)[(id)[NSNumber class] numberWithUnsignedInt:0];
+    (void)[(id)[NSNumber class] numberWithDouble:0];
     /* [UNRESOLVED] [(id)[NSNumber class] numberWithUnsignedLongLong:0x257561]; */
-    [(id)[NSDictionary class] dictionaryWithObjects:-0xb8 forKeys:-0xf0 count:7];
+    (void)[(id)[NSDictionary class] dictionaryWithObjects:-0xb8 forKeys:-0xf0 count:7];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -867,7 +868,7 @@ L_3cc20:;
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (Unwind_Resume == 0) goto L_3ccc0;
 
-    [(id)ret reason];
+    (void)[(id)ret reason];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 预约异常：%@"]; */
     objc_release(ret);
     goto L_3ccc8;
@@ -891,8 +892,8 @@ L_3cd44:;
 
 L_3cd4c:;
     /* [UNRESOLVED] sub_505e8(); */
-    [(id)ret visibleCells];
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret visibleCells];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_3ce10;
 
 L_3cdbc:;
@@ -904,7 +905,7 @@ L_3cdd8:;
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cdbc; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] != 0) goto L_3cdbc;
 
 L_3ce10:;
@@ -918,7 +919,7 @@ L_3ce30:;
 
     if (0 == 0) goto L_3ce88;
 
-    [(id)ret indexPathForCell:0];
+    (void)[(id)ret indexPathForCell:0];
     objc_retain(ret);
     objc_release(ret);
 
@@ -927,24 +928,24 @@ L_3ce88:;
 
     if (1 == 0) goto L_3cee4;
 
-    [(id)ret numberOfItemsInSection:0];
+    (void)[(id)ret numberOfItemsInSection:0];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_3cee4; */
 
-    [(id)[NSIndexPath class] indexPathForItem:0 inSection:0];
+    (void)[(id)[NSIndexPath class] indexPathForItem:0 inSection:0];
     goto L_3cee4;
 
 L_3cee4:;
-    [(id)ret delegate];
+    (void)[(id)ret delegate];
     if (0 == 0) goto L_3cf9c;
 
-    [(id)ret respondsToSelector:sel_registerName("collectionView:didSelectItemAtIndexPath:")];
+    (void)[(id)ret respondsToSelector:sel_registerName("collectionView:didSelectItemAtIndexPath:")];
     if (ret == 0) goto L_3cf9c;
 
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_3d01c;
 
-    [(id)0 item];
-    [(id)ret numberOfItemsInSection:0];
+    (void)[(id)0 item];
+    (void)[(id)ret numberOfItemsInSection:0];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 收尾交给宿主 delegate（didSelect item=%ld/%ld）"]; */
     goto L_3d030;
 
@@ -954,7 +955,7 @@ L_3cf9c:;
 
     if (ret == 0) goto L_3d07c;
 
-    [(id)ret class];
+    (void)[(id)ret class];
     /* [UNRESOLVED] NSStringFromClass(); */
     goto L_3d07c;
 
@@ -983,7 +984,7 @@ L_3d090:;
     objc_release(0);
     objc_release(0);
     objc_release(ret);
-    [(id)0 respondsToSelector:NSSelectorFromString];
+    (void)[(id)0 respondsToSelector:NSSelectorFromString];
     if (0 == 0) goto L_3d10c;
 
     /* [UNRESOLVED] [(id)0 unknownSelector]; */
@@ -992,7 +993,7 @@ L_3d10c:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
-    [(id)objc_loadWeakRetained respondsToSelector:NSSelectorFromString];
+    (void)[(id)objc_loadWeakRetained respondsToSelector:NSSelectorFromString];
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
     /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */

@@ -1,5 +1,6 @@
 // Recovered implementation for HushFloatBall (from BluedHush_5.19.dylib)
 #import "HushFloatBall.h"
+#import <objc/runtime.h>
 
 @implementation HushFloatBall
 
@@ -258,39 +259,39 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_67678;
 
-    [(id)[UIColor class] clearColor];
-    [(id)self setBackgroundColor:ret];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self setUserInteractionEnabled:1];
-    [(id)self bounds];
-    [[UIImageView alloc] initWithFrame:CGRectZero];
+    (void)[(id)self setUserInteractionEnabled:1];
+    (void)[(id)self bounds];
+    (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_iconView);
-    [(id)self->_iconView setContentMode:1];
-    [(id)self->_iconView setUserInteractionEnabled:0];
-    [(id)[UIColor class] blackColor];
+    (void)[(id)self->_iconView setContentMode:1];
+    (void)[(id)self->_iconView setUserInteractionEnabled:0];
+    (void)[(id)[UIColor class] blackColor];
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
-    [(id)self->_iconView layer];
+    (void)[(id)self->_iconView layer];
     /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
     objc_release(ret);
     objc_release(ret);
-    [(id)self->_iconView layer];
-    [(id)ret setShadowOpacity:0];
+    (void)[(id)self->_iconView layer];
+    (void)[(id)ret setShadowOpacity:0];
     objc_release(ret);
-    [(id)self->_iconView layer];
-    [(id)ret setShadowRadius:4];
+    (void)[(id)self->_iconView layer];
+    (void)[(id)ret setShadowRadius:4];
     objc_release(ret);
-    [(id)self->_iconView layer];
-    [(id)ret setShadowOffset:CGSizeZero];
+    (void)[(id)self->_iconView layer];
+    (void)[(id)ret setShadowOffset:CGSizeZero];
     objc_release(ret);
-    [(id)self addSubview:self->_iconView];
-    [(id)self refreshIcon];
-    [(id)[NSNotificationCenter class] defaultCenter];
+    (void)[(id)self addSubview:self->_iconView];
+    (void)[(id)self refreshIcon];
+    (void)[(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
-    [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
-    [(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
-    [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];
-    [(id)self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]];
+    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
+    (void)[(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
+    (void)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];
+    (void)[(id)self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]];
     objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]);
     objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]);
 
@@ -339,8 +340,8 @@ L_67678:;
     // 000676f0  ret
     id ret = nil;
 
-    [(id)[NSNotificationCenter class] defaultCenter];
-    [(id)ret removeObserver:self];
+    (void)[(id)[NSNotificationCenter class] defaultCenter];
+    (void)[(id)ret removeObserver:self];
     objc_release(ret);
     /* [UNRESOLVED] [super dealloc] (ARC) */
     return;
@@ -394,10 +395,10 @@ L_67678:;
     id ret = nil;
 
     /* [UNRESOLVED] HushBallIconCurrentStyle(_cmd, a0, a1, a2, a3); */
-    [(id)self bounds];
+    (void)[(id)self bounds];
     /* [UNRESOLVED] HushBallIconImage(); */
-    [(id)self iconView];
-    [(id)ret setImage:ret];
+    (void)[(id)self iconView];
+    (void)[(id)ret setImage:ret];
     objc_release(ret);
 }
 
@@ -561,22 +562,22 @@ L_67678:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)self superview];
+    (void)[(id)self superview];
     if (ret == 0) goto L_67950;
 
     /* [UNRESOLVED] [(id)a0 translationInView:ret]; */
-    [(id)self center];
-    [(id)self bounds];
-    [(id)self bounds];
-    [(id)ret bounds];
-    [(id)ret bounds];
-    [(id)self setCenter:CGPointZero];
+    (void)[(id)self center];
+    (void)[(id)self bounds];
+    (void)[(id)self bounds];
+    (void)[(id)ret bounds];
+    (void)[(id)ret bounds];
+    (void)[(id)self setCenter:CGPointZero];
     /* [UNRESOLVED] [(id)a0 setTranslation:ret inView:0]; */
     /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_67950; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    [(id)self center];
+    (void)[(id)self center];
     /* [UNRESOLVED] NSStringFromCGPoint(); */
     /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);

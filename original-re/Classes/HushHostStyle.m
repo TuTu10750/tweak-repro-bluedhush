@@ -1,5 +1,6 @@
 // Recovered implementation for HushHostStyle (from BluedHush_5.19.dylib)
 #import "HushHostStyle.h"
+#import <objc/runtime.h>
 
 @implementation HushHostStyle
 

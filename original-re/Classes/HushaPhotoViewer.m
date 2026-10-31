@@ -1,5 +1,6 @@
 // Recovered implementation for HushaPhotoViewer (from BluedHush_5.19.dylib)
 #import "HushaPhotoViewer.h"
+#import <objc/runtime.h>
 
 @implementation HushaPhotoViewer
 
@@ -852,7 +853,7 @@ L_17fe1c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_17fe38; */
 
 L_17fe38:;
-    [(id)[UIImageView class] class];
+    (void)[(id)[UIImageView class] class];
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / isKindOfClass:[(id)[UIImageView class] class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_17fe64; */
 

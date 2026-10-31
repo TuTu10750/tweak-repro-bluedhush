@@ -1,5 +1,6 @@
 // Recovered implementation for HushRecallTapDelegate (from BluedHush_5.19.dylib)
 #import "HushRecallTapDelegate.h"
+#import <objc/runtime.h>
 
 @implementation HushRecallTapDelegate
 
@@ -182,9 +183,9 @@
     if (ret == 0) goto L_3bc8c;
 
     /* [UNRESOLVED] [(id)a0 locationInView:ret]; */
-    [(id)ret hitTest:0 withEvent:0];
+    (void)[(id)ret hitTest:0 withEvent:0];
     objc_retain(ret);
-    [(id)[NSMutableString class] string];
+    (void)[(id)[NSMutableString class] string];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3bb84; */
 
     objc_retain(ret);
@@ -193,11 +194,11 @@
 L_3bb84:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_3bbfc; */
 
-    [(id)ret class];
+    (void)[(id)ret class];
     /* [UNRESOLVED] NSStringFromClass(); */
-    [(id)ret appendFormat:@"%@ ← "];
+    (void)[(id)ret appendFormat:@"%@ ← "];
     objc_release(ret);
-    [(id)ret superview];
+    (void)[(id)ret superview];
     objc_release(ret);
     if (ret == 0) goto L_3bbfc;
 

@@ -1,5 +1,6 @@
 // Recovered implementation for HushRiskCell (from BluedHush_5.19.dylib)
 #import "HushRiskCell.h"
+#import <objc/runtime.h>
 
 @implementation HushRiskCell
 
@@ -382,61 +383,61 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_208a0;
 
-    [(id)[UIColor class] clearColor];
-    [(id)self setBackgroundColor:ret];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self setName:objc_alloc_init];
+    (void)[(id)self setName:objc_alloc_init];
     objc_release(objc_alloc_init);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
-    [(id)self name];
-    [(id)ret setFont:ret];
+    (void)[(id)self name];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self contentView];
-    [(id)self name];
-    [(id)ret addSubview:ret];
+    (void)[(id)self contentView];
+    (void)[(id)self name];
+    (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self setSource:objc_alloc_init];
+    (void)[(id)self setSource:objc_alloc_init];
     objc_release(objc_alloc_init);
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:11 weight:0x200378]; */
-    [(id)self source];
-    [(id)ret setFont:ret];
+    (void)[(id)self source];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self source];
-    [(id)ret setTextAlignment:1];
+    (void)[(id)self source];
+    (void)[(id)ret setTextAlignment:1];
     objc_release(ret);
-    [(id)self source];
-    [(id)ret layer];
-    [(id)ret setCornerRadius:3];
-    objc_release(ret);
-    objc_release(ret);
-    [(id)self source];
-    [(id)ret layer];
-    [(id)ret setMasksToBounds:1];
+    (void)[(id)self source];
+    (void)[(id)ret layer];
+    (void)[(id)ret setCornerRadius:3];
     objc_release(ret);
     objc_release(ret);
-    [(id)self contentView];
-    [(id)self source];
-    [(id)ret addSubview:ret];
+    (void)[(id)self source];
+    (void)[(id)ret layer];
+    (void)[(id)ret setMasksToBounds:1];
     objc_release(ret);
     objc_release(ret);
-    [(id)self setTime:objc_alloc_init];
+    (void)[(id)self contentView];
+    (void)[(id)self source];
+    (void)[(id)ret addSubview:ret];
+    objc_release(ret);
+    objc_release(ret);
+    (void)[(id)self setTime:objc_alloc_init];
     objc_release(objc_alloc_init);
-    [(id)[UIFont class] systemFontOfSize:12];
-    [(id)self time];
-    [(id)ret setFont:ret];
+    (void)[(id)[UIFont class] systemFontOfSize:12];
+    (void)[(id)self time];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[UIColor class] secondaryLabelColor];
-    [(id)self time];
-    [(id)ret setTextColor:ret];
+    (void)[(id)[UIColor class] secondaryLabelColor];
+    (void)[(id)self time];
+    (void)[(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self contentView];
-    [(id)self time];
-    [(id)ret addSubview:ret];
+    (void)[(id)self contentView];
+    (void)[(id)self time];
+    (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
 
@@ -605,25 +606,25 @@ L_208a0:;
     // 00020aa4  ret
     id ret = nil;
 
-    [super layoutSubviews];
-    [(id)self contentView];
-    [(id)ret bounds];
+    (void)[super layoutSubviews];
+    (void)[(id)self contentView];
+    (void)[(id)ret bounds];
     objc_release(ret);
-    [(id)self source];
+    (void)[(id)self source];
     /* [UNRESOLVED] [(id)ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
-    [(id)self name];
-    [(id)ret setFrame:CGRectZero];
+    (void)[(id)self name];
+    (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
-    [(id)self name];
-    [(id)ret frame];
+    (void)[(id)self name];
+    (void)[(id)ret frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
-    [(id)self source];
-    [(id)ret setFrame:CGRectZero];
+    (void)[(id)self source];
+    (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     objc_release(ret);
-    [(id)self time];
-    [(id)ret setFrame:CGRectZero];
+    (void)[(id)self time];
+    (void)[(id)ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

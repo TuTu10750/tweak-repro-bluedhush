@@ -1,5 +1,6 @@
 // Recovered implementation for HushStalkListController (from BluedHush_5.19.dylib)
 #import "HushStalkListController.h"
+#import <objc/runtime.h>
 
 @implementation HushStalkListController
 
@@ -1004,7 +1005,7 @@ L_143510:;
     if (((ret >> 0) & 1) == 0) goto L_143834;
 
     /* [UNRESOLVED] [(id)[(id)ret unknownSelector] unknownSelector]; */
-    [(id)ret boolValue];
+    (void)[(id)ret boolValue];
     objc_release(ret);
     if ([(id)ret boolValue] == 0) goto L_143bd8;
 
@@ -1021,7 +1022,7 @@ L_143510:;
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret boolValue];
+    (void)[(id)ret boolValue];
     objc_release(ret);
     objc_release(ret);
     if ([(id)ret boolValue] == 0) goto L_143b74;
@@ -1038,15 +1039,15 @@ L_143510:;
     if (ret == 0) goto L_143ae4;
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_143af0;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_143b08;
 
 L_1437e8:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)ret length];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_1437e8; */
 
     goto L_143b08;
@@ -5375,7 +5376,7 @@ L_148508:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     objc_retain(ret);
-    [(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10] == 0) goto L_148860;
 
 L_1487b8:;
@@ -5394,7 +5395,7 @@ L_1487d4:;
 L_148834:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_1487b8; */
 
-    [(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:-0x100 count:0x10] != 0) goto L_1487b8;
 
 L_148860:;
@@ -5420,7 +5421,7 @@ L_1488c0:;
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] objc_retain(0 / * unk * // *+0x0* /); */
-    [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
+    (void)[(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([(id)ret countByEnumeratingWithState:0 objects:0 count:0x10] == 0) goto L_148af8;
 
 L_1489e4:;

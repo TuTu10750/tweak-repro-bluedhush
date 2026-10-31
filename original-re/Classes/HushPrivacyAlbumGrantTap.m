@@ -1,5 +1,6 @@
 // Recovered implementation for HushPrivacyAlbumGrantTap (from BluedHush_5.19.dylib)
 #import "HushPrivacyAlbumGrantTap.h"
+#import <objc/runtime.h>
 
 @implementation HushPrivacyAlbumGrantTap
 
@@ -544,13 +545,13 @@
 L_f8b84:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_f8bf4; */
 
-    [(id)ret class];
+    (void)[(id)ret class];
     /* [UNRESOLVED] NSStringFromClass(); */
-    [(id)ret rangeOfString:@"NewKeyBoard"];
+    (void)[(id)ret rangeOfString:@"NewKeyBoard"];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f8bf8; */
 
-    [(id)ret superview];
+    (void)[(id)ret superview];
     objc_release(ret);
     if (ret != 0) goto L_f8b84;
 
@@ -564,15 +565,15 @@ L_f8bf8:;
     objc_release(ret);
 
 L_f8c40:;
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_f8cd0;
 
     objc_retain(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_f8cdc;
 
     /* [UNRESOLVED] HushChatDBPath(); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_f8cc4;
 
     /* [UNRESOLVED] [(id)objc_retainAutorelease UTF8String]; */
@@ -595,11 +596,11 @@ L_f8cdc:;
 
 L_f8ce4:;
     /* [UNRESOLVED] sqlite3_busy_timeout(0x190); */
-    [(id)@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String];
+    (void)[(id)@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String];
     /* [UNRESOLVED] sqlite3_prepare_v2([(id)@"SELECT sessionName FROM sessionTable WHERE sessionType=2 AND sessionId=? LIMIT 1" UTF8String], -1); */
     if (0 != 0) goto L_f8db8;
 
-    [(id)ret longLongValue];
+    (void)[(id)ret longLongValue];
     /* [UNRESOLVED] sqlite3_bind_int64(1, [(id)ret longLongValue]); */
     /* [UNRESOLVED] sqlite3_step(); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f8da4; */
@@ -607,8 +608,8 @@ L_f8ce4:;
     /* [UNRESOLVED] sqlite3_column_text(0); */
     if (sqlite3_column_text == 0) goto L_f8da4;
 
-    [(id)[NSString class] stringWithUTF8String:sqlite3_column_text];
-    [(id)ret length];
+    (void)[(id)[NSString class] stringWithUTF8String:sqlite3_column_text];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_f8db0;
 
     objc_retain(ret);
@@ -635,64 +636,64 @@ L_f8dd8:;
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [(id)ret length];
+    (void)[(id)ret length];
     objc_retain(sel_registerName("length"));
-    [(id)[NSString class] stringWithFormat:@"一键开放相册给 %@"];
-    [(id)[NSString class] stringWithFormat:@"一键关闭相册给 %@"];
-    [(id)[NSString class] stringWithFormat:@"管理对 %@ 的相册授权（改的是你的私密相册可见名单）"];
-    [(id)[UIAlertController class] alertControllerWithTitle:@"隐私相册" message:ret preferredStyle:0];
+    (void)[(id)[NSString class] stringWithFormat:@"一键开放相册给 %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"一键关闭相册给 %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"管理对 %@ 的相册授权（改的是你的私密相册可见名单）"];
+    (void)[(id)[UIAlertController class] alertControllerWithTitle:@"隐私相册" message:ret preferredStyle:0];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"清空全部可见用户" style:2 handler:0x207aa8]; */
-    [(id)ret addAction:ret];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
-    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushTopViewController(); */
     if (ret == 0) goto L_f9344;
 
-    [(id)ret view];
-    [(id)ret popoverPresentationController];
-    [(id)ret setSourceView:ret];
+    (void)[(id)ret view];
+    (void)[(id)ret popoverPresentationController];
+    (void)[(id)ret setSourceView:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)ret view];
-    [(id)ret bounds];
+    (void)[(id)ret view];
+    (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */
-    [(id)ret view];
-    [(id)ret bounds];
+    (void)[(id)ret view];
+    (void)[(id)ret bounds];
     /* [UNRESOLVED] CGRectGetMaxY(); */
-    [(id)ret popoverPresentationController];
-    [(id)ret setSourceRect:0];
+    (void)[(id)ret popoverPresentationController];
+    (void)[(id)ret setSourceRect:0];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)ret presentViewController:ret animated:1 completion:0];
+    (void)[(id)ret presentViewController:ret animated:1 completion:0];
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_f9288;
 
     if (ret == 0) goto L_f92a8;
 
-    [(id)ret description];
-    [(id)ret length];
+    (void)[(id)ret description];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_f92b8;
 
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_f92d4;
 
 L_f9244:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_f9244; */
 
     goto L_f92d4;
@@ -708,8 +709,8 @@ L_f92b8:;
     goto L_f930c;
 
 L_f92d4:;
-    [(id)ret length];
-    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
+    (void)[(id)ret length];
+    (void)[(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_f930c:;
     objc_release(ret);

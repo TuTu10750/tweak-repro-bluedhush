@@ -1,5 +1,6 @@
 // Recovered implementation for HushModuleSection (from BluedHush_5.19.dylib)
 #import "HushModuleSection.h"
+#import <objc/runtime.h>
 
 @implementation HushModuleSection
 

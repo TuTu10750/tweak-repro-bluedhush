@@ -1,5 +1,6 @@
 // Recovered implementation for HushModuleDetailController (from BluedHush_5.19.dylib)
 #import "HushModuleDetailController.h"
+#import <objc/runtime.h>
 
 @implementation HushModuleDetailController
 

@@ -1,5 +1,6 @@
 // Recovered implementation for HushNTFormController (from BluedHush_5.19.dylib)
 #import "HushNTFormController.h"
+#import <objc/runtime.h>
 
 @implementation HushNTFormController
 
@@ -548,7 +549,7 @@
     goto L_16260c;
 
 L_1625dc:;
-    [(id)ret whiteColor];
+    (void)[(id)ret whiteColor];
 
 L_16260c:;
     /* [UNRESOLVED] [(id)self unknownSelector]; */

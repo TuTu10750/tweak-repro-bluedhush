@@ -1,5 +1,6 @@
 // Recovered implementation for HushEntryButtonTarget (from BluedHush_5.19.dylib)
 #import "HushEntryButtonTarget.h"
+#import <objc/runtime.h>
 
 @implementation HushEntryButtonTarget
 
@@ -68,7 +69,7 @@ L_136550:;
     // 001365a0  ret
     id ret = nil;
 
-    [(id)[NSDate class] timeIntervalSinceReferenceDate];
+    (void)[(id)[NSDate class] timeIntervalSinceReferenceDate];
     /* [UNRESOLVED] if (cond / * pl * /) goto L_1365a4; */
 
     return;

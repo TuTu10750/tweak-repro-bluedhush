@@ -1,5 +1,6 @@
 // Recovered implementation for HushNTEntryTap (from BluedHush_5.19.dylib)
 #import "HushNTEntryTap.h"
+#import <objc/runtime.h>
 
 @implementation HushNTEntryTap
 
@@ -1114,7 +1115,7 @@ L_161b54:;
 L_161b70:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:0x2160f8]; */
     /* [UNRESOLVED] HushSafeStr(); */
-    [(id)ret isEqualToString:ret];
+    (void)[(id)ret isEqualToString:ret];
     objc_release(ret);
     objc_release(ret);
     if ([(id)ret isEqualToString:ret] != 0) goto L_161e48;

@@ -1,5 +1,6 @@
 // Recovered implementation for HushVanCell (from BluedHush_5.19.dylib)
 #import "HushVanCell.h"
+#import <objc/runtime.h>
 
 @implementation HushVanCell
 

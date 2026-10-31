@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalPreviewPageVC (from BluedHush_5.19.dylib)
 #import "HushGalPreviewPageVC.h"
+#import <objc/runtime.h>
 
 @implementation HushGalPreviewPageVC
 
@@ -216,28 +217,28 @@
     // 0007a948  ret
     id ret = nil;
 
-    [super viewDidLoad];
-    [(id)[UIColor class] clearColor];
-    [(id)self view];
-    [(id)ret setBackgroundColor:ret];
+    (void)[super viewDidLoad];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self view];
+    (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)self view];
-    [(id)ret bounds];
-    [[UIImageView alloc] initWithFrame:CGRectZero];
+    (void)[(id)self view];
+    (void)[(id)ret bounds];
+    (void)[[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setContentMode:1];
-    [(id)[UIColor class] clearColor];
-    [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
+    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setContentMode:1];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
-    [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAccessibilityIdentifier:@"hushgal_preview_image"];
-    [(id)self view];
-    [(id)ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero]];
+    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
+    (void)[(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAccessibilityIdentifier:@"hushgal_preview_image"];
+    (void)[(id)self view];
+    (void)[(id)ret addSubview:[[UIImageView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     objc_storeStrong((id *)&objc_release, [[UIImageView alloc] initWithFrame:CGRectZero]);
-    [(id)self path];
-    [(id)ret length];
+    (void)[(id)self path];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_7a924;
 
     /* [UNRESOLVED] dispatch_get_global_queue(0); */

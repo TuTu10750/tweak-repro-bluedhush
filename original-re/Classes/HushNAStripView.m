@@ -1,5 +1,6 @@
 // Recovered implementation for HushNAStripView (from BluedHush_5.19.dylib)
 #import "HushNAStripView.h"
+#import <objc/runtime.h>
 
 @implementation HushNAStripView
 
@@ -116,18 +117,18 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_c54e4;
 
-    [(id)[UIColor class] clearColor];
-    [(id)self setBackgroundColor:ret];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self setClipsToBounds:1];
-    [(id)self bounds];
-    [[UIScrollView alloc] initWithFrame:CGRectZero];
+    (void)[(id)self setClipsToBounds:1];
+    (void)[(id)self bounds];
+    (void)[[UIScrollView alloc] initWithFrame:CGRectZero];
     objc_release(self->_scrollView);
-    [(id)self->_scrollView setAutoresizingMask:0x12];
-    [(id)self->_scrollView setShowsHorizontalScrollIndicator:0];
-    [(id)self->_scrollView setAlwaysBounceHorizontal:1];
-    [(id)self->_scrollView setClipsToBounds:1];
-    [(id)self addSubview:self->_scrollView];
+    (void)[(id)self->_scrollView setAutoresizingMask:0x12];
+    (void)[(id)self->_scrollView setShowsHorizontalScrollIndicator:0];
+    (void)[(id)self->_scrollView setAlwaysBounceHorizontal:1];
+    (void)[(id)self->_scrollView setClipsToBounds:1];
+    (void)[(id)self addSubview:self->_scrollView];
     objc_retain(self);
 
 L_c54e4:;
@@ -662,25 +663,25 @@ L_c54e4:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)[NSArray class] class];
+    (void)[(id)[NSArray class] class];
     /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[NSArray class] class]]; */
     objc_retain(0);
-    [(id)self urls];
-    [(id)ret count];
-    [(id)0 count];
+    (void)[(id)self urls];
+    (void)[(id)ret count];
+    (void)[(id)0 count];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c569c; */
 
-    [(id)self urls];
-    [(id)ret isEqualToArray:0];
+    (void)[(id)self urls];
+    (void)[(id)ret isEqualToArray:0];
     objc_release(ret);
     objc_release(ret);
-    [(id)self setUrls:0];
+    (void)[(id)self setUrls:0];
     if ([(id)ret isEqualToArray:0] == 0) goto L_c56e0;
 
-    [(id)self scrollView];
-    [(id)ret subviews];
-    [(id)ret count];
-    [(id)0 count];
+    (void)[(id)self scrollView];
+    (void)[(id)ret subviews];
+    (void)[(id)ret count];
+    (void)[(id)0 count];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c56e0; */
@@ -689,46 +690,46 @@ L_c54e4:;
 
 L_c569c:;
     objc_release(ret);
-    [(id)self setUrls:0];
+    (void)[(id)self setUrls:0];
 
 L_c56e0:;
-    [(id)self scrollView];
-    [(id)ret subviews];
-    [(id)ret makeObjectsPerformSelector:sel_registerName("removeFromSuperview")];
+    (void)[(id)self scrollView];
+    (void)[(id)ret subviews];
+    (void)[(id)ret makeObjectsPerformSelector:sel_registerName("removeFromSuperview")];
     objc_release(ret);
     objc_release(ret);
-    [(id)self scrollView];
-    [(id)ret setScrollEnabled:1];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setScrollEnabled:1];
     objc_release(ret);
-    [(id)self scrollView];
-    [(id)ret setBounces:1];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setBounces:1];
     objc_release(ret);
-    [(id)self scrollView];
-    [(id)ret setAlwaysBounceHorizontal:1];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setAlwaysBounceHorizontal:1];
     objc_release(ret);
-    [(id)self scrollView];
-    [(id)ret setAlwaysBounceVertical:0];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setAlwaysBounceVertical:0];
     objc_release(ret);
-    [(id)self scrollView];
-    [(id)ret setShowsHorizontalScrollIndicator:0];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setShowsHorizontalScrollIndicator:0];
     objc_release(ret);
-    [(id)self scrollView];
-    [(id)ret setShowsVerticalScrollIndicator:0];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setShowsVerticalScrollIndicator:0];
     objc_release(ret);
-    [(id)[UIColor class] clearColor];
-    [(id)self setBackgroundColor:ret];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [(id)[UIColor class] clearColor];
-    [(id)self scrollView];
-    [(id)ret setBackgroundColor:ret];
+    (void)[(id)[UIColor class] clearColor];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)0 count];
+    (void)[(id)0 count];
     if ([(id)0 count] == 0) goto L_c5cbc;
 
 L_c59d8:;
-    [(id)0 objectAtIndexedSubscript:0];
-    [(id)[NSURL class] URLWithString:ret];
+    (void)[(id)0 objectAtIndexedSubscript:0];
+    (void)[(id)[NSURL class] URLWithString:ret];
     if (ret == 0) goto L_c5c80;
 
     /* [UNRESOLVED] [[UIImageView alloc] unknownSelector]; */
@@ -744,14 +745,14 @@ L_c59d8:;
     objc_release(ret);
     /* [UNRESOLVED] [[UITapGestureRecognizer alloc] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIImageView alloc] unknownSelector] unknownSelector]; */
-    [(id)self scrollView];
+    (void)[(id)self scrollView];
     /* [UNRESOLVED] [(id)ret addSubview:[[UIImageView alloc] unknownSelector]]; */
     objc_release(ret);
     /* [UNRESOLVED] CGAffineTransformMakeScale(); */
     /* [UNRESOLVED] [(id)[[UIImageView alloc] unknownSelector] setTransform:0]; */
     /* [UNRESOLVED] if (cond / * ls * /) goto L_c5c68; */
 
-    [(id)ret copy];
+    (void)[(id)ret copy];
     objc_retain(ret);
     /* [UNRESOLVED] dispatch_time(); */
     objc_retain(ret);
@@ -773,28 +774,28 @@ L_c5c70:;
 L_c5c80:;
     objc_release(ret);
     objc_release(ret);
-    [(id)0 count];
+    (void)[(id)0 count];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_c59d8; */
 
 L_c5cbc:;
-    [(id)self scrollView];
+    (void)[(id)self scrollView];
     /* [UNRESOLVED] [(id)ret setContentOffset:0 / * unk * /]; */
     objc_release(ret);
-    [(id)0 count];
+    (void)[(id)0 count];
     if ([(id)0 count] == 0) goto L_c5d30;
 
-    [(id)0 count];
+    (void)[(id)0 count];
 
 L_c5d30:;
-    [(id)0 count];
-    [(id)self scrollView];
-    [(id)ret setContentSize:CGSizeZero];
+    (void)[(id)0 count];
+    (void)[(id)self scrollView];
+    (void)[(id)ret setContentSize:CGSizeZero];
     objc_release(ret);
-    [(id)0 count];
+    (void)[(id)0 count];
     if ([(id)0 count] != 0) goto L_c5db8;
 
-    [(id)self setHidden:1];
-    [(id)self setAlpha:1];
+    (void)[(id)self setHidden:1];
+    (void)[(id)self setAlpha:1];
 
 L_c5db8:;
     objc_release(0);
@@ -995,20 +996,20 @@ L_c5db8:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_c63d4; */
 
     /* [UNRESOLVED] [(id)a0 view]; */
-    [(id)ret tag];
+    (void)[(id)ret tag];
     objc_release(ret);
     if ((([(id)ret tag] >> 63) & 1) != 0) goto L_c63d4;
 
-    [(id)self urls];
-    [(id)ret count];
+    (void)[(id)self urls];
+    (void)[(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ge * /) goto L_c63d4; */
 
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
     if (ret == 0) goto L_c62d8;
 
-    [(id)self urls];
-    [(id)ret count];
+    (void)[(id)self urls];
+    (void)[(id)ret count];
     /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:4 format:@"[NearbyAlbum] 点开大图 index=%ld / %lu"]; */
     objc_release(ret);
     goto L_c62e4;
@@ -1017,17 +1018,17 @@ L_c62d8:;
     /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:4]; */
 
 L_c62e4:;
-    [(id)self urls];
+    (void)[(id)self urls];
     objc_retain(ret);
-    [(id)[NSArray class] class];
-    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    (void)[(id)[NSArray class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_c63c4;
 
-    [(id)ret count];
+    (void)[(id)ret count];
     if ([(id)ret count] == 0) goto L_c63c4;
 
     objc_retain(ret);
-    [(id)[NSThread class] isMainThread];
+    (void)[(id)[NSThread class] isMainThread];
     if (ret == 0) goto L_c63ac;
 
     goto L_c63b4;

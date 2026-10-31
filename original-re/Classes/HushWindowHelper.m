@@ -1,5 +1,6 @@
 // Recovered implementation for HushWindowHelper (from BluedHush_5.19.dylib)
 #import "HushWindowHelper.h"
+#import <objc/runtime.h>
 
 @implementation HushWindowHelper
 
@@ -236,13 +237,13 @@ L_8d204:;
     /* [UNRESOLVED] if (0x257a08 == 0) goto L_8d2f8; */
 
     /* [UNRESOLVED] [(id)0x257a08 description]; */
-    [(id)ret length];
+    (void)[(id)ret length];
 
-    [(id)ret length];
+    (void)[(id)ret length];
 
 L_8d28c:;
-    [(id)ret characterAtIndex:0];
-    [(id)ret length];
+    (void)[(id)ret characterAtIndex:0];
+    (void)[(id)ret length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_8d28c; */
 
 L_8d2dc:;
@@ -380,19 +381,19 @@ L_8d2dc:;
     /* [UNRESOLVED] if ([(id)a0 state] == 0) goto L_8e4cc; */
 
     /* [UNRESOLVED] objc_retain(0x257a08); */
-    [(id)ret length];
+    (void)[(id)ret length];
 
     /* [UNRESOLVED] sub_8e5c4(); */
 
-    [(id)ret objectForKeyedSubscript:@"success"];
-    [(id)ret boolValue];
+    (void)[(id)ret objectForKeyedSubscript:@"success"];
+    (void)[(id)ret boolValue];
     objc_release(ret);
 
-    [(id)ret objectForKeyedSubscript:@"lat"];
-    [(id)ret doubleValue];
+    (void)[(id)ret objectForKeyedSubscript:@"lat"];
+    (void)[(id)ret doubleValue];
     objc_release(ret);
-    [(id)ret objectForKeyedSubscript:@"lng"];
-    [(id)ret doubleValue];
+    (void)[(id)ret objectForKeyedSubscript:@"lng"];
+    (void)[(id)ret doubleValue];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_8e57c; */

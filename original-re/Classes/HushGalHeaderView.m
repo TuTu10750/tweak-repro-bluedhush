@@ -1,5 +1,6 @@
 // Recovered implementation for HushGalHeaderView (from BluedHush_5.19.dylib)
 #import "HushGalHeaderView.h"
+#import <objc/runtime.h>
 
 @implementation HushGalHeaderView
 
@@ -329,46 +330,46 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_7c688;
 
-    [[UILabel alloc] initWithFrame:CGRectZero];
+    (void)[[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_name);
-    [(id)[UIFont class] boldSystemFontOfSize:12];
-    [(id)self->_name setFont:ret];
+    (void)[(id)[UIFont class] boldSystemFontOfSize:12];
+    (void)[(id)self->_name setFont:ret];
     objc_release(ret);
-    [(id)self->_name setAdjustsFontSizeToFitWidth:1];
-    [(id)self->_name setMinimumScaleFactor:0.72];
-    [(id)self->_name setLineBreakMode:2];
+    (void)[(id)self->_name setAdjustsFontSizeToFitWidth:1];
+    (void)[(id)self->_name setMinimumScaleFactor:0.72];
+    (void)[(id)self->_name setLineBreakMode:2];
     /* [UNRESOLVED] HushIsDarkMode(); */
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
-    [(id)self->_name setTextColor:ret];
+    (void)[(id)self->_name setTextColor:ret];
     objc_release(ret);
-    [(id)self->_name setAutoresizingMask:0x12];
-    [(id)self addSubview:self->_name];
-    [[UILabel alloc] initWithFrame:CGRectZero];
+    (void)[(id)self->_name setAutoresizingMask:0x12];
+    (void)[(id)self addSubview:self->_name];
+    (void)[[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_count);
-    [(id)[UIFont class] systemFontOfSize:12];
-    [(id)self->_count setFont:ret];
+    (void)[(id)[UIFont class] systemFontOfSize:12];
+    (void)[(id)self->_count setFont:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [(id)[UIColor class] colorWithWhite:0.42 alpha:1];
-    [(id)self->_count setTextColor:ret];
+    (void)[(id)[UIColor class] colorWithWhite:0.42 alpha:1];
+    (void)[(id)self->_count setTextColor:ret];
     objc_release(ret);
-    [(id)self->_count setTextAlignment:2];
-    [(id)self->_count setAutoresizingMask:0x11];
-    [(id)self addSubview:self->_count];
-    [(id)[UIButton class] buttonWithType:1];
+    (void)[(id)self->_count setTextAlignment:2];
+    (void)[(id)self->_count setAutoresizingMask:0x11];
+    (void)[(id)self addSubview:self->_count];
+    (void)[(id)[UIButton class] buttonWithType:1];
     objc_release(self->_home);
     /* [UNRESOLVED] [(id)self->_home setFrame:-0x3faf000000000000]; */
-    [(id)self->_home setTitle:@"主页" forState:0];
-    [(id)[UIFont class] systemFontOfSize:14];
-    [(id)self->_home titleLabel];
-    [(id)ret setFont:ret];
+    (void)[(id)self->_home setTitle:@"主页" forState:0];
+    (void)[(id)[UIFont class] systemFontOfSize:14];
+    (void)[(id)self->_home titleLabel];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
-    [(id)self->_home setTitleColor:ret forState:0];
+    (void)[(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    (void)[(id)self->_home setTitleColor:ret forState:0];
     objc_release(ret);
-    [(id)self->_home setAutoresizingMask:0x11];
-    [(id)self addSubview:self->_home];
+    (void)[(id)self->_home setAutoresizingMask:0x11];
+    (void)[(id)self addSubview:self->_home];
 
 L_7c688:;
     return (id)self;

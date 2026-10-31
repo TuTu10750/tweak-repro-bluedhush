@@ -1,5 +1,6 @@
 // Recovered implementation for HushSwitchCell (from BluedHush_5.19.dylib)
 #import "HushSwitchCell.h"
+#import <objc/runtime.h>
 
 @implementation HushSwitchCell
 

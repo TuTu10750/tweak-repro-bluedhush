@@ -1,5 +1,6 @@
 // Recovered implementation for HushSwitchItem (from BluedHush_5.19.dylib)
 #import "HushSwitchItem.h"
+#import <objc/runtime.h>
 
 @implementation HushSwitchItem
 

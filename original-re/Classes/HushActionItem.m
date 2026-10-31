@@ -1,5 +1,6 @@
 // Recovered implementation for HushActionItem (from BluedHush_5.19.dylib)
 #import "HushActionItem.h"
+#import <objc/runtime.h>
 
 @implementation HushActionItem
 

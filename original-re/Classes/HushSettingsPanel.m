@@ -1,5 +1,6 @@
 // Recovered implementation for HushSettingsPanel (from BluedHush_5.19.dylib)
 #import "HushSettingsPanel.h"
+#import <objc/runtime.h>
 
 @implementation HushSettingsPanel
 
@@ -6749,7 +6750,7 @@ L_19e1c4:;
 L_19e1dc:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] NSStringFromClass(); */
-    [(id)ret addObject:ret];
+    (void)[(id)ret addObject:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_19e1c4; */
 

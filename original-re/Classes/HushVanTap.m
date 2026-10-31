@@ -1,5 +1,6 @@
 // Recovered implementation for HushVanTap (from BluedHush_5.19.dylib)
 #import "HushVanTap.h"
+#import <objc/runtime.h>
 
 @implementation HushVanTap
 

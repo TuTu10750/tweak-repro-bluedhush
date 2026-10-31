@@ -1,5 +1,6 @@
 // Recovered implementation for HushRiskReportController (from BluedHush_5.19.dylib)
 #import "HushRiskReportController.h"
+#import <objc/runtime.h>
 
 @implementation HushRiskReportController
 
@@ -102,17 +103,17 @@
     // 00135020  ret
     id ret = nil;
 
-    [super viewDidLoad];
+    (void)[super viewDidLoad];
     /* [UNRESOLVED] [(id)self setTitle:0x225c98]; */
-    [(id)self tableView];
+    (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setRowHeight:0 / * unk * // *+0x0* /]; */
     objc_release(ret);
-    [(id)self tableView];
+    (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setEstimatedRowHeight:0x4050000000000000]; */
     objc_release(ret);
-    [(id)objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
-    [(id)self setRefreshControl:objc_alloc_init];
-    [(id)self hushRefresh];
+    (void)[(id)objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
+    (void)[(id)self setRefreshControl:objc_alloc_init];
+    (void)[(id)self hushRefresh];
     objc_release(objc_alloc_init);
     return;
 }
@@ -181,11 +182,11 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super viewWillAppear:a0]; */
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
-    [(id)self navigationItem];
-    [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]];
+    (void)[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
+    (void)[(id)self navigationItem];
+    (void)[(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]];
     objc_release(ret);
-    [(id)self hushRefresh];
+    (void)[(id)self hushRefresh];
     objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]);
     return;
 }
@@ -435,51 +436,51 @@
     /* [UNRESOLVED] sub_1351b0(a1); */
     /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x225538]; */
-    [(id)ret boolValue];
+    (void)[(id)ret boolValue];
     objc_release(ret);
     if ([(id)ret boolValue] == 0) goto L_1351ac;
 
-    [(id)self hushRefresh];
+    (void)[(id)self hushRefresh];
 
 L_1351ac:;
 
     objc_retain(ret);
     objc_retain(0);
-    [(id)[NSArray class] class];
-    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    (void)[(id)[NSArray class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (0 == 0) goto L_1353c0;
 
     if (ret == 0) goto L_1353c0;
 
-    [(id)0 section];
+    (void)[(id)0 section];
     if ((([(id)0 section] >> 63) & 1) != 0) goto L_13539c;
 
-    [(id)0 section];
-    [(id)ret count];
+    (void)[(id)0 section];
+    (void)[(id)ret count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_13539c; */
 
-    [(id)0 section];
-    [(id)ret objectAtIndexedSubscript:[(id)0 section]];
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)0 section];
+    (void)[(id)ret objectAtIndexedSubscript:[(id)0 section]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_1353a4;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2256f8]; */
-    [(id)[NSArray class] class];
-    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    (void)[(id)[NSArray class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_1353b0;
 
-    [(id)0 row];
+    (void)[(id)0 row];
     if ((([(id)0 row] >> 63) & 1) != 0) goto L_1353b0;
 
-    [(id)0 row];
-    [(id)ret count];
+    (void)[(id)0 row];
+    (void)[(id)ret count];
     /* [UNRESOLVED] if (cond / * hs * /) goto L_1353b0; */
 
-    [(id)0 row];
-    [(id)ret objectAtIndexedSubscript:[(id)0 row]];
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)0 row];
+    (void)[(id)ret objectAtIndexedSubscript:[(id)0 row]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     objc_retain(sel_registerName("count"));
     objc_release(ret);
     goto L_1353b0;
@@ -582,16 +583,16 @@ L_1353c0:;
 
     /* [UNRESOLVED] HushRiskReportSections(_cmd, a0, a1, a2, a3); */
     objc_release(self->_sections);
-    [(id)self tableView];
-    [(id)ret reloadData];
+    (void)[(id)self tableView];
+    (void)[(id)ret reloadData];
     objc_release(ret);
-    [(id)self refreshControl];
-    [(id)ret isRefreshing];
+    (void)[(id)self refreshControl];
+    (void)[(id)ret isRefreshing];
     objc_release(ret);
     if ([(id)ret isRefreshing] == 0) goto L_1354d4;
 
-    [(id)self refreshControl];
-    [(id)ret endRefreshing];
+    (void)[(id)self refreshControl];
+    (void)[(id)ret endRefreshing];
 
 L_1354d4:;
     return;
@@ -658,19 +659,19 @@ L_1354d4:;
     // 0013558c  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [(id)self navigationController];
+    (void)[(id)self navigationController];
     if (ret == 0) goto L_135578;
 
-    [(id)ret viewControllers];
-    [(id)ret count];
+    (void)[(id)ret viewControllers];
+    (void)[(id)ret count];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * lo * /) goto L_135578; */
 
-    [(id)ret popViewControllerAnimated:1];
+    (void)[(id)ret popViewControllerAnimated:1];
     goto L_13558c;
 
 L_135578:;
-    [(id)self dismissViewControllerAnimated:1 completion:0];
+    (void)[(id)self dismissViewControllerAnimated:1 completion:0];
 
 L_13558c:;
 }
@@ -790,20 +791,20 @@ L_13558c:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_1356ac; */
 
-    [(id)self->_sections count];
+    (void)[(id)self->_sections count];
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1356ac; */
 
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */
-    [(id)[NSDictionary class] class];
-    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
+    (void)[(id)[NSDictionary class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_1356b4;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2256f8]; */
-    [(id)[NSArray class] class];
-    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
+    (void)[(id)[NSArray class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_1356c0;
 
-    [(id)ret count];
+    (void)[(id)ret count];
     goto L_1356c0;
 
 L_1356ac:;
@@ -905,14 +906,14 @@ L_1356d0:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] if (((a1 >> 63) & 1) != 0) goto L_1357c8; */
 
-    [(id)self->_sections count];
+    (void)[(id)self->_sections count];
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1357c8; */
 
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2141b8]; */
     objc_release(ret);
-    [(id)[NSString class] class];
-    [(id)ret isKindOfClass:[(id)[NSString class] class]];
+    (void)[(id)[NSString class] class];
+    (void)[(id)ret isKindOfClass:[(id)[NSString class] class]];
     objc_retain(ret);
     objc_release(ret);
     goto L_1357c8;
@@ -1332,37 +1333,37 @@ L_135874:;
 
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] defaultContentConfiguration]; */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x20d778]; */
-    [(id)ret setText:ret];
+    (void)[(id)ret setText:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x217658]; */
-    [(id)ret setSecondaryText:ret];
+    (void)[(id)ret setSecondaryText:ret];
     objc_release(ret);
-    [(id)[UIFont class] systemFontOfSize:12];
-    [(id)ret secondaryTextProperties];
-    [(id)ret setFont:ret];
+    (void)[(id)[UIFont class] systemFontOfSize:12];
+    (void)[(id)ret secondaryTextProperties];
+    (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x225cd8]; */
-    [(id)ret boolValue];
+    (void)[(id)ret boolValue];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
-    [(id)ret textProperties];
-    [(id)ret setColor:ret];
+    (void)[(id)ret textProperties];
+    (void)[(id)ret setColor:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setContentConfiguration:ret]; */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x225538]; */
-    [(id)ret boolValue];
+    (void)[(id)ret boolValue];
     objc_release(ret);
     if ((([(id)ret boolValue] >> 0) & 1) == 0) goto L_135b88;
 
     /* [UNRESOLVED] [(id)objc_alloc_init setText:0x225cf8]; */
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    [(id)objc_alloc_init setFont:ret];
+    (void)[(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    [(id)self view];
-    [(id)ret tintColor];
-    [(id)objc_alloc_init setTextColor:ret];
+    (void)[(id)self view];
+    (void)[(id)ret tintColor];
+    (void)[(id)objc_alloc_init setTextColor:ret];
     objc_release(ret);
     goto L_135c48;
 
@@ -1376,19 +1377,19 @@ L_135b88:;
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    [(id)objc_alloc_init setFont:ret];
+    (void)[(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     if (((ret >> 0) & 1) == 0) goto L_135c18;
 
     goto L_135c18;
 
 L_135c18:;
-    [(id)[UIColor class] secondaryLabelColor];
-    [(id)objc_alloc_init setTextColor:ret];
+    (void)[(id)[UIColor class] secondaryLabelColor];
+    (void)[(id)objc_alloc_init setTextColor:ret];
 
 L_135c48:;
     objc_release(ret);
-    [(id)objc_alloc_init sizeToFit];
+    (void)[(id)objc_alloc_init sizeToFit];
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryView:objc_alloc_init]; */
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setSelectionStyle:0]; */
     /* [UNRESOLVED] [(id)[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8] setAccessoryType:[(id)ret boolValue]]; */

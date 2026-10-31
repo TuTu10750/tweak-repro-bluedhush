@@ -1,5 +1,6 @@
 // Recovered implementation for HushAUTCapsule (from BluedHush_5.19.dylib)
 #import "HushAUTCapsule.h"
+#import <objc/runtime.h>
 
 @implementation HushAUTCapsule
 
@@ -254,35 +255,35 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_cedc;
 
-    [(id)[UIColor class] colorWithRed:0.039 green:0.518 blue:1 alpha:1];
-    [(id)self setBackgroundColor:ret];
+    (void)[(id)[UIColor class] colorWithRed:0.039 green:0.518 blue:1 alpha:1];
+    (void)[(id)self setBackgroundColor:ret];
     objc_release(ret);
-    [(id)self layer];
-    [(id)ret setCornerRadius:9];
+    (void)[(id)self layer];
+    (void)[(id)ret setCornerRadius:9];
     objc_release(ret);
-    [(id)self setClipsToBounds:1];
-    [(id)self setUserInteractionEnabled:0];
+    (void)[(id)self setClipsToBounds:1];
+    (void)[(id)self setUserInteractionEnabled:0];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_capText);
-    [(id)self->_capText setText:@"隐私相册"];
+    (void)[(id)self->_capText setText:@"隐私相册"];
     /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:10 weight:0x200180]; */
-    [(id)self->_capText setFont:ret];
+    (void)[(id)self->_capText setFont:ret];
     objc_release(ret);
-    [(id)[UIColor class] whiteColor];
-    [(id)self->_capText setTextColor:ret];
+    (void)[(id)[UIColor class] whiteColor];
+    (void)[(id)self->_capText setTextColor:ret];
     objc_release(ret);
-    [(id)self addSubview:self->_capText];
-    [(id)[UIImageSymbolConfiguration class] configurationWithPointSize:6 weight:0];
-    [(id)[UIImage class] systemImageNamed:@"lock.open.fill" withConfiguration:ret];
+    (void)[(id)self addSubview:self->_capText];
+    (void)[(id)[UIImageSymbolConfiguration class] configurationWithPointSize:6 weight:0];
+    (void)[(id)[UIImage class] systemImageNamed:@"lock.open.fill" withConfiguration:ret];
     objc_release(ret);
-    [(id)[UIColor class] whiteColor];
-    [(id)ret imageWithTintColor:ret renderingMode:1];
+    (void)[(id)[UIColor class] whiteColor];
+    (void)[(id)ret imageWithTintColor:ret renderingMode:1];
     objc_release(ret);
     objc_release(ret);
-    [[UIImageView alloc] initWithImage:ret];
+    (void)[[UIImageView alloc] initWithImage:ret];
     objc_release(self->_capIcon);
-    [(id)self->_capIcon setContentMode:1];
-    [(id)self addSubview:self->_capIcon];
+    (void)[(id)self->_capIcon setContentMode:1];
+    (void)[(id)self addSubview:self->_capIcon];
     objc_retain(self);
     objc_release(ret);
 
@@ -435,27 +436,27 @@ L_cedc:;
     // 0000d0e0  ret
     id ret = nil;
 
-    [super layoutSubviews];
+    (void)[super layoutSubviews];
     /* [UNRESOLVED] [(id)self->_capText sizeThatFits:0x7fefffffffffffff]; */
-    [(id)self->_capIcon image];
+    (void)[(id)self->_capIcon image];
     if (ret == 0) goto L_cfe4;
 
-    [(id)self->_capIcon image];
-    [(id)ret size];
+    (void)[(id)self->_capIcon image];
+    (void)[(id)ret size];
     objc_release(ret);
     goto L_cfe4;
 
 L_cfe4:;
     objc_release(ret);
-    [(id)self bounds];
-    [(id)self bounds];
-    [(id)self->_capText setFrame:CGRectZero];
+    (void)[(id)self bounds];
+    (void)[(id)self bounds];
+    (void)[(id)self->_capText setFrame:CGRectZero];
     /* [UNRESOLVED] if (cond / * le * /) goto L_d0e0; */
 
-    [(id)self->_capText frame];
+    (void)[(id)self->_capText frame];
     /* [UNRESOLVED] CGRectGetMaxX(); */
-    [(id)self bounds];
-    [(id)self->_capIcon setFrame:CGRectZero];
+    (void)[(id)self bounds];
+    (void)[(id)self->_capIcon setFrame:CGRectZero];
 
 L_d0e0:;
     return;
@@ -537,11 +538,11 @@ L_d0e0:;
     id ret = nil;
 
     /* [UNRESOLVED] [(id)self->_capText sizeThatFits:a0]; */
-    [(id)self->_capIcon image];
+    (void)[(id)self->_capIcon image];
     if (ret == 0) goto L_d194;
 
-    [(id)self->_capIcon image];
-    [(id)ret size];
+    (void)[(id)self->_capIcon image];
+    (void)[(id)ret size];
     objc_release(ret);
     goto L_d194;
 

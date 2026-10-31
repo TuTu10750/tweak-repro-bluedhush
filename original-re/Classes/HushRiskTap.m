@@ -1,5 +1,6 @@
 // Recovered implementation for HushRiskTap (from BluedHush_5.19.dylib)
 #import "HushRiskTap.h"
+#import <objc/runtime.h>
 
 @implementation HushRiskTap
 
@@ -457,65 +458,65 @@
     objc_retain(ret);
     objc_retain(ret);
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_203cc;
 
     /* [UNRESOLVED] sub_222dc(); */
     if (ret == 0) goto L_203c4;
 
     /* [UNRESOLVED] HushRiskUserSource(); */
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_1ff84;
 
     objc_retain(ret);
     goto L_1ffb0;
 
 L_1ff84:;
-    [(id)[NSString class] stringWithFormat:@"用户 %@"];
+    (void)[(id)[NSString class] stringWithFormat:@"用户 %@"];
 
 L_1ffb0:;
-    [(id)[NSMutableString class] stringWithFormat:@"UID %@"];
-    [(id)ret length];
+    (void)[(id)[NSMutableString class] stringWithFormat:@"UID %@"];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_2000c;
 
-    [(id)ret appendFormat:@" · 已标记：%@"];
+    (void)[(id)ret appendFormat:@" · 已标记：%@"];
 
 L_2000c:;
-    [(id)[UIAlertController class] alertControllerWithTitle:ret message:ret preferredStyle:0];
+    (void)[(id)[UIAlertController class] alertControllerWithTitle:ret message:ret preferredStyle:0];
     objc_retain(ret);
     objc_retain(ret);
-    [(id)[UIAlertAction class] actionWithTitle:@"标记为风险用户" style:2 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:@"标记为风险用户" style:2 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    [(id)[UIAlertAction class] actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
-    [(id)ret length];
+    (void)[(id)ret length];
     if ([(id)ret length] == 0) goto L_20208;
 
     objc_retain(ret);
-    [(id)[UIAlertAction class] actionWithTitle:@"取消标记" style:0 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消标记" style:0 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release(ret);
 
 L_20208:;
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
-    [(id)ret addAction:ret];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
-    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
-    [(id)ret addAction:ret];
+    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (a0 != 0) goto L_202a8; */
 
-    [(id)ret view];
+    (void)[(id)ret view];
 
 L_202a8:;
-    [(id)ret popoverPresentationController];
-    [(id)ret setSourceView:ret];
+    (void)[(id)ret popoverPresentationController];
+    (void)[(id)ret setSourceView:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (a0 == 0) goto L_20300; */
 
@@ -526,10 +527,10 @@ L_20300:;
     objc_release(ret);
 
 L_20320:;
-    [(id)ret popoverPresentationController];
+    (void)[(id)ret popoverPresentationController];
     /* [UNRESOLVED] [(id)ret setSourceRect:0 / * unk * /]; */
     objc_release(ret);
-    [(id)ret presentViewController:ret animated:1 completion:0];
+    (void)[(id)ret presentViewController:ret animated:1 completion:0];
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release(ret);
     objc_release(ret);
