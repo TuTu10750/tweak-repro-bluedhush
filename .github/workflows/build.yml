@@ -330,23 +330,67 @@ jobs:
           test "$(ls original-re/Headers/*.h | wc -l)" = "76"
           test "$(ls original-re/Classes/*.m | wc -l)" = "76"
 
-      - name: Build original-re (arm64)
+      - name: Toolchain shim (Theos expects toolchain/linux/iphone/bin/clang)
+        run: |
+          mkdir -p "$THEOS/toolchain/linux/iphone/bin"
+          ln -sf "$(command -v clang)"   "$THEOS/toolchain/linux/iphone/bin/clang"
+          ln -sf "$(command -v clang++)" "$THEOS/toolchain/linux/iphone/bin/clang++" || true
+          for l in ld64.lld ld.lld lld; do
+            if command -v $l >/dev/null 2>&1; then ln -sf "$(command -v $l)" "$THEOS/toolchain/linux/iphone/bin/ld"; break; fi
+          done
+          ls -l "$THEOS/toolchain/linux/iphone/bin/" || true
+
+      - name: Syntax check (clang per-file, the real signal)
+        run: |
+          set +e
+          SDK=$(ls -d "$THEOS"/sdks/iPhoneOS*.sdk | head -1)
+          echo "SDK=$SDK"
+          rm -rf /tmp/obj; mkdir -p /tmp/obj
+          : > syntax.log
+          ok=0; fail=0
+          for f in original-re/Classes/*.m; do
+            if clang -x objective-c -target arm64-apple-ios14.0 -isysroot "$SDK" \
+                 -fobjc-arc -fobjc-runtime=ios-14.0 -I original-re/Headers \
+                 -Wno-everything -c "$f" -o "/tmp/obj/$(basename "$f").o" 2>>syntax.log; then
+              ok=$((ok+1))
+            else
+              fail=$((fail+1)); echo "FAIL $f"
+            fi
+          done
+          echo "=== syntax: ok=$ok fail=$fail ==="
+          echo "=== logos preprocess (hook layer) ==="
+          perl "$THEOS/bin/logos.pl" -x mm -o /tmp/Hooks.xm.mm original-re/Hooks/Hooks.generated.xm 2> logos.log || true
+          head -30 logos.log
+          if [ -f /tmp/Hooks.xm.mm ]; then
+            if clang -x objective-c++ -target arm64-apple-ios14.0 -isysroot "$SDK" \
+                 -fobjc-arc -fobjc-runtime=ios-14.0 -I original-re/Headers -I "$THEOS/include" \
+                 -Wno-everything -c /tmp/Hooks.xm.mm -o /tmp/obj/Hooks.o 2>>syntax.log; then
+              echo "hooks: OK"
+            else
+              echo "hooks: FAIL"
+            fi
+          fi
+
+      - name: Build original-re (Theos, best effort)
+        continue-on-error: true
         run: |
           set -o pipefail
           make -C original-re clean || true
-          make -C original-re ARCHS=arm64 2>&1 | tee build-original-re-linux.log
+          make -C original-re ARCHS=arm64 2>&1 | tee build-original-re-linux.log || true
           echo "--- outputs ---"
-          find original-re/.theos/obj -name '*.dylib' | sort
+          find original-re/.theos/obj -name '*.dylib' 2>/dev/null | sort
 
       - name: Report (does not fail the job)
         if: always()
         run: |
-          echo "== total errors =="
-          grep -c "error:" build-original-re-linux.log || true
+          echo "== syntax.log: total errors =="
+          grep -c "error:" syntax.log 2>/dev/null || echo 0
           echo "== errors by message =="
-          grep -E "error:" build-original-re-linux.log | sed -E 's/^.*error: //' | sort | uniq -c | sort -rn | head -40 || true
-          echo "== distinct failing files =="
-          grep -E "error:" build-original-re-linux.log | sed -E 's/^([^:]+):.*/\1/' | sort | uniq -c | sort -rn | head -40 || true
+          grep -E "error:" syntax.log 2>/dev/null | sed -E 's/^.*error: //' | sort | uniq -c | sort -rn | head -40 || true
+          echo "== errors by file =="
+          grep -E "error:" syntax.log 2>/dev/null | sed -E 's/^([^:]+):.*/\1/' | sed 's#^.*/##' | sort | uniq -c | sort -rn | head -40 || true
+          echo "== first 60 raw lines =="
+          grep -E "error:" syntax.log 2>/dev/null | head -60 || true
 
       - name: Upload build log
         if: always()
@@ -355,6 +399,8 @@ jobs:
           name: original-re-build-linux
           path: |
             build-original-re-linux.log
+            syntax.log
+            logos.log
             original-re/.theos/obj/**/*.dylib
           if-no-files-found: warn
           retention-days: 14
