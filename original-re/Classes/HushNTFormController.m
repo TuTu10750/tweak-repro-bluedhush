@@ -530,7 +530,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -544,7 +544,7 @@
     /* [UNRESOLVED] HushIsDarkMode(); */
     if (((HushIsDarkMode >> 0) & 1) == 0) goto L_1625dc;
 
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     goto L_16260c;
 
 L_1625dc:;
@@ -555,7 +555,7 @@ L_16260c:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
@@ -609,7 +609,7 @@ L_16283c:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[UIView alloc] unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIView alloc] unknownSelector] unknownSelector]; */
@@ -631,7 +631,7 @@ L_16283c:;
     goto L_162c58;
 
 L_162c58:;
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UILabel alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [self unknownSelector]; */
@@ -651,7 +651,7 @@ L_162c58:;
     /* [UNRESOLVED] [(id)[[UILabel alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UILabel alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [self unknownSelector]; */
@@ -692,13 +692,13 @@ L_162fa8:;
     goto L_16310c;
 
 L_1630e0:;
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
 
 L_16310c:;
     /* [UNRESOLVED] HushIsDarkMode(); */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret unknownSelector]; */

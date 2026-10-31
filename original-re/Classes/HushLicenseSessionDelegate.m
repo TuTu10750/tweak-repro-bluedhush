@@ -216,7 +216,7 @@
     /* [UNRESOLVED] CFDataGetBytePtr(); */
     /* [UNRESOLVED] CFDataGetLength(); */
     /* [UNRESOLVED] CC_SHA256(CFDataGetLength); */
-    [(id)NSMutableString string];
+    [(id)[NSMutableString class] string];
 
 L_12e20:;
     [(id)ret appendFormat:@"%02X"];
@@ -229,7 +229,7 @@ L_12e20:;
     objc_release(ret);
     /* [UNRESOLVED] if ((([(id)ret isEqualToString:0x256650] >> 0) & 1) == 0) goto L_12ed8; */
 
-    [(id)NSURLCredential credentialForTrust:[(id)ret serverTrust]];
+    [(id)[NSURLCredential class] credentialForTrust:[(id)ret serverTrust]];
     objc_release(ret);
     goto L_12ed8;
 

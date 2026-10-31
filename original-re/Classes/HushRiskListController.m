@@ -530,7 +530,7 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -541,29 +541,29 @@
     [self view];
     [(id)ret bounds];
     objc_release(ret);
-    [(id)UIScreen mainScreen];
+    [(id)[UIScreen class] mainScreen];
     [(id)ret traitCollection];
     [(id)ret userInterfaceStyle];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_20d50; */
 
-    [(id)UIColor colorWithWhite:0.11 alpha:1];
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] colorWithWhite:0.11 alpha:1];
+    [(id)[UIColor class] whiteColor];
     goto L_20da8;
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_216a0; */
 
 L_20d50:;
-    [(id)UIColor whiteColor];
-    [(id)UIColor blackColor];
+    [(id)[UIColor class] whiteColor];
+    [(id)[UIColor class] blackColor];
 
 L_20da8:;
     [self view];
     [(id)ret bounds];
     [[UIControl alloc] initWithFrame:CGRectZero];
     objc_release(ret);
-    [(id)UIColor colorWithWhite:0 alpha:0.45];
+    [(id)[UIColor class] colorWithWhite:0 alpha:0.45];
     [(id)[[UIControl alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     [(id)[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
@@ -597,7 +597,7 @@ L_20da8:;
     objc_release(ret);
     [[UILabel alloc] initWithFrame:CGRectZero];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setText:@"风险用户名单"];
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:17 weight:0x200180]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:17 weight:0x200180]; */
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
@@ -607,12 +607,12 @@ L_20da8:;
     [[UILabel alloc] initWithFrame:CGRectZero];
     [self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [self countLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [self countLabel];
     [(id)ret setTextColor:ret];
     objc_release(ret);
@@ -625,7 +625,7 @@ L_20da8:;
     [[UITableView alloc] initWithFrame:CGRectZero style:66];
     [self setTable:[[UITableView alloc] initWithFrame:CGRectZero style:66]];
     objc_release([[UITableView alloc] initWithFrame:CGRectZero style:66]);
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self table];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -643,21 +643,21 @@ L_20da8:;
     /* [UNRESOLVED] [(id)ret setRowHeight:0x404e000000000000]; */
     objc_release(ret);
     [self table];
-    /* [UNRESOLVED] [(id)@0x244a68 class]; */
-    /* [UNRESOLVED] [(id)ret registerClass:[(id)@0x244a68 class] forCellReuseIdentifier:@"risk"]; */
+    /* [UNRESOLVED] [(id)[@0x244a68 class] class]; */
+    /* [UNRESOLVED] [(id)ret registerClass:[(id)[@0x244a68 class] class] forCellReuseIdentifier:@"risk"]; */
     objc_release(ret);
     [self cardView];
     [self table];
     [(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIButton buttonWithType:1];
+    [(id)[UIButton class] buttonWithType:1];
     [(id)ret setFrame:CGRectZero];
-    [(id)UIColor colorWithWhite:0.95 alpha:1];
+    [(id)[UIColor class] colorWithWhite:0.95 alpha:1];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     [(id)ret setTitle:@"关闭" forState:0];
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -813,7 +813,7 @@ L_20da8:;
     [(id)ret mutableCopy];
     if ([(id)ret mutableCopy] != 0) goto L_21714;
 
-    [(id)NSMutableArray array];
+    [(id)[NSMutableArray class] array];
 
 L_21714:;
     [(id)ret mutableCopy];
@@ -828,7 +828,7 @@ L_21748:;
     objc_release(ret);
     [self items];
     [(id)ret count];
-    [(id)NSString stringWithFormat:@"共 %lu 人 · 左滑可取消标记"];
+    [(id)[NSString class] stringWithFormat:@"共 %lu 人 · 左滑可取消标记"];
     [self countLabel];
     [(id)ret setText:ret];
     objc_release(ret);
@@ -1301,7 +1301,7 @@ L_21748:;
     [(id)ret length];
     if ([(id)ret length] != 0) goto L_21a34;
 
-    [(id)NSString stringWithFormat:@"用户 %@"];
+    [(id)[NSString class] stringWithFormat:@"用户 %@"];
 
 L_21a34:;
     [(id)ret name];
@@ -1321,7 +1321,7 @@ L_21a7c:;
     [(id)ret setText:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor colorWithRed:1 green:0.23 blue:0.19 alpha:1];
+    [(id)[UIColor class] colorWithRed:1 green:0.23 blue:0.19 alpha:1];
     [(id)ret source];
     [(id)ret setTextColor:ret];
     objc_release(ret);
@@ -1339,9 +1339,9 @@ L_21a7c:;
     [(id)ret doubleValue];
     objc_release(ret);
     [(id)objc_alloc_init setDateFormat:@"MM-dd HH:mm"];
-    [(id)NSDate dateWithTimeIntervalSince1970:0];
+    [(id)[NSDate class] dateWithTimeIntervalSince1970:0];
     [(id)objc_alloc_init stringFromDate:ret];
-    [(id)NSString stringWithFormat:@"UID %@ · %@ 标记"];
+    [(id)[NSString class] stringWithFormat:@"UID %@ · %@ 标记"];
     [(id)ret time];
     [(id)ret setText:ret];
     objc_release(ret);
@@ -1636,12 +1636,12 @@ L_21a7c:;
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
     /* [UNRESOLVED] objc_retain(a1); */
-    [(id)UIContextualAction contextualActionWithStyle:1 title:@"取消标记" handler:0];
-    [(id)UIColor systemRedColor];
+    [(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"取消标记" handler:0];
+    [(id)[UIColor class] systemRedColor];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
-    [(id)NSArray arrayWithObjects:0 count:1];
-    [(id)UISwipeActionsConfiguration configurationWithActions:ret];
+    [(id)[NSArray class] arrayWithObjects:0 count:1];
+    [(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a1); */

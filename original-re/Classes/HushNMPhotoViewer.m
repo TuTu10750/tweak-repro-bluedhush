@@ -530,27 +530,27 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [(id)UIColor whiteColor];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    [(id)[UIColor class] whiteColor];
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     objc_release(ret);
     objc_release(ret);
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
-    [(id)NSArray class];
-    [(id)self->_urls isKindOfClass:[(id)NSArray class]];
+    [(id)[NSArray class] class];
+    [(id)self->_urls isKindOfClass:[(id)[NSArray class] class]];
     if (((self->_urls >> 0) & 1) != 0) goto L_e4b44;
 
-    /* [UNRESOLVED] objc_storeStrong((id *)&[(id)self->_urls isKindOfClass:[(id)NSArray class]], 0x200130/ *+0x0* /); */
+    /* [UNRESOLVED] objc_storeStrong((id *)&[(id)self->_urls isKindOfClass:[(id)[NSArray class] class]], 0x200130/ *+0x0* /); */
 
 L_e4b44:;
     [(id)self->_urls count];
-    [(id)NSMutableArray array];
+    [(id)[NSMutableArray class] array];
     objc_release(self->_pages);
-    [(id)NSMutableArray array];
+    [(id)[NSMutableArray class] array];
     objc_release(self->_thumbBoxes);
-    [(id)NSMutableArray array];
+    [(id)[NSMutableArray class] array];
     objc_release(self->_thumbImgs);
     /* [UNRESOLVED] [[UIImageView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_backdrop);
@@ -559,14 +559,14 @@ L_e4b44:;
     [self view];
     [(id)ret addSubview:self->_backdrop];
     objc_release(ret);
-    [(id)UIBlurEffect effectWithStyle:6];
+    [(id)[UIBlurEffect class] effectWithStyle:6];
     [[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(self->_blur);
     objc_release(ret);
     [self view];
     [(id)ret addSubview:self->_blur];
     objc_release(ret);
-    [(id)CAGradientLayer layer];
+    [(id)[CAGradientLayer class] layer];
     objc_release(self->_veil);
     [(id)ret colorWithAlphaComponent:0];
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
@@ -574,16 +574,16 @@ L_e4b44:;
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
-    [(id)NSArray arrayWithObjects:-0xb0 count:4];
+    [(id)[NSArray class] arrayWithObjects:-0xb0 count:4];
     [(id)self->_veil setColors:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)NSNumber numberWithDouble:0];
-    /* [UNRESOLVED] [(id)NSNumber numberWithDouble:0 / * unk * /]; */
-    /* [UNRESOLVED] [(id)NSNumber numberWithDouble:0 / * unk * /]; */
-    [(id)NSNumber numberWithDouble:1];
-    [(id)NSArray arrayWithObjects:0 count:4];
+    [(id)[NSNumber class] numberWithDouble:0];
+    /* [UNRESOLVED] [(id)[NSNumber class] numberWithDouble:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[NSNumber class] numberWithDouble:0 / * unk * /]; */
+    [(id)[NSNumber class] numberWithDouble:1];
+    [(id)[NSArray class] arrayWithObjects:0 count:4];
     [(id)self->_veil setLocations:ret];
     objc_release(ret);
     objc_release(ret);
@@ -653,7 +653,7 @@ L_e5318:;
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0 / * unk * /] layer]; */
     [(id)ret setCornerRadius:9];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0.5 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0.5 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:[[UIImageView alloc] initWithFrame:0 / * unk * /]]; */
@@ -1577,11 +1577,11 @@ L_e5990:;
     [(id)self->_strip bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     [(id)self->_thumbBoxes count];
-    [(id)NSMutableArray arrayWithCapacity:[(id)self->_thumbBoxes count]];
+    [(id)[NSMutableArray class] arrayWithCapacity:[(id)self->_thumbBoxes count]];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_e5bb0; */
 
 L_e5b2c:;
-    [(id)NSNumber numberWithDouble:0];
+    [(id)[NSNumber class] numberWithDouble:0];
     [(id)ret addObject:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e5b2c; */
@@ -1603,7 +1603,7 @@ L_e5cbc:;
     [(id)ret layer];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     /* [UNRESOLVED] [(id)objc_retainAutorelease unknownSelector]; */
     [(id)ret layer];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -1618,7 +1618,7 @@ L_e5cbc:;
     [(id)ret setCornerRadius:0];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor blackColor];
+    [(id)[UIColor class] blackColor];
     /* [UNRESOLVED] [(id)objc_retainAutorelease unknownSelector]; */
     [(id)ret layer];
     /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease unknownSelector]]; */
@@ -1998,8 +1998,8 @@ L_e6404:;
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)UIPanGestureRecognizer class];
-    /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)UIPanGestureRecognizer class]]; */
+    [(id)[UIPanGestureRecognizer class] class];
+    /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[UIPanGestureRecognizer class] class]]; */
     /* [UNRESOLVED] if (a0 == 0) goto L_e64b0; */
 
     /* [UNRESOLVED] [(id)a0 view]; */
@@ -2197,7 +2197,7 @@ L_e6650:;
     goto L_e670c;
 
 L_e6704:;
-    /* [UNRESOLVED] [(id)UIView animateWithDuration:0 / * unk * / animations:0]; */
+    /* [UNRESOLVED] [(id)[UIView class] animateWithDuration:0 / * unk * / animations:0]; */
 
 L_e670c:;
     /* [UNRESOLVED] objc_release(a0); */

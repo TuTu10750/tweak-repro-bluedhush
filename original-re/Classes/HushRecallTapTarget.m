@@ -530,23 +530,23 @@
     id ret = nil;
 
     /* [UNRESOLVED] objc_retain(a0); */
-    [(id)UIGestureRecognizer class];
-    /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)UIGestureRecognizer class]]; */
+    [(id)[UIGestureRecognizer class] class];
+    /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[UIGestureRecognizer class] class]]; */
     /* [UNRESOLVED] if (a0 == 0) goto L_3bf18; */
 
     /* [UNRESOLVED] [(id)a0 view]; */
     goto L_3bf58;
 
 L_3bf18:;
-    [(id)UIView class];
-    /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)UIView class]]; */
+    [(id)[UIView class] class];
+    /* [UNRESOLVED] [(id)a0 isKindOfClass:[(id)[UIView class] class]]; */
     /* [UNRESOLVED] if (a0 == 0) goto L_3bf58; */
 
     /* [UNRESOLVED] objc_retain(a0); */
     goto L_3bf58;
 
 L_3bf58:;
-    [(id)NSDate date];
+    [(id)[NSDate class] date];
     [(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * mi * /) goto L_3d1ac; */
@@ -599,7 +599,7 @@ L_3c108:;
 L_3c140:;
     /* [UNRESOLVED] objc_retain(0x257550); */
     objc_retain(ret);
-    [(id)NSString stringWithFormat:@"%llu:%llu"];
+    [(id)[NSString class] stringWithFormat:@"%llu:%llu"];
     /* [UNRESOLVED] [(id)0x257550 objectForKeyedSubscript:ret]; */
     objc_release(ret);
     objc_release(ret);
@@ -611,7 +611,7 @@ L_3c140:;
 
 L_3c1ec:;
     /* [UNRESOLVED] objc_retain(0x257550); */
-    [(id)NSString stringWithFormat:@"%llu:%llu"];
+    [(id)[NSString class] stringWithFormat:@"%llu:%llu"];
     /* [UNRESOLVED] objc_retain(0x257550); */
     /* [UNRESOLVED] [(id)0x257550 objectForKeyedSubscript:ret]; */
     objc_release(ret);
@@ -624,17 +624,17 @@ L_3c25c:;
     /* [UNRESOLVED] objc_release(0x257550); */
     if (ret == 0) goto L_3c384;
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_3c37c; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_3c37c; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 已取消预约 msgId=%llu sid=%llu"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 已取消预约 msgId=%llu sid=%llu"]; */
     goto L_3c384;
 
 L_3c2cc:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_3c364; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_3c364; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 点了但取不到目标 msgId（无可撤消息）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 点了但取不到目标 msgId（无可撤消息）"]; */
     goto L_3c36c;
 
 L_3c308:;
@@ -734,12 +734,12 @@ L_3c61c:;
     objc_release(ret);
 
 L_3c62c:;
-    /* [UNRESOLVED] [(id)NSDate unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
     [(id)ret timeIntervalSince1970];
     objc_release(ret);
 
 L_3c664:;
-    /* [UNRESOLVED] [(id)NSDate unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
     [(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (0 / * local * / == 0) goto L_3c6b8; */
@@ -748,24 +748,24 @@ L_3c664:;
     goto L_3c6b8;
 
 L_3c6b8:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_3c708; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_3c708; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"]; */
     goto L_3c718;
 
 L_3c708:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 预约参数 msgId=%llu sid=%llu sessionType=%u to=%u 距窗口末端=%.0f 秒"] noteFiltered:3]; */
 
 L_3c718:;
-    /* [UNRESOLVED] [(id)NSDate unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSDate class] unknownSelector]; */
     [(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cb54; */
 
 L_3c764:;
     /* [UNRESOLVED] objc_retain(0x257550); */
-    /* [UNRESOLVED] [(id)NSString unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSString class] unknownSelector]; */
     /* [UNRESOLVED] objc_retain(0x257550); */
     /* [UNRESOLVED] [(id)0x257550 objectForKeyedSubscript:ret]; */
     if (ret == 0) goto L_3c814;
@@ -775,14 +775,14 @@ L_3c764:;
     goto L_3cac4;
 
 L_3c814:;
-    [(id)NSNumber numberWithUnsignedLongLong:0];
-    [(id)NSNumber numberWithUnsignedLongLong:0];
-    [(id)NSNumber numberWithUnsignedLongLong:0];
-    [(id)NSNumber numberWithUnsignedInt:[(id)ret unsignedIntValue]];
-    [(id)NSNumber numberWithUnsignedInt:0];
-    [(id)NSNumber numberWithDouble:0];
-    /* [UNRESOLVED] [(id)NSNumber numberWithUnsignedLongLong:0x257561]; */
-    [(id)NSDictionary dictionaryWithObjects:-0xb8 forKeys:-0xf0 count:7];
+    [(id)[NSNumber class] numberWithUnsignedLongLong:0];
+    [(id)[NSNumber class] numberWithUnsignedLongLong:0];
+    [(id)[NSNumber class] numberWithUnsignedLongLong:0];
+    [(id)[NSNumber class] numberWithUnsignedInt:[(id)ret unsignedIntValue]];
+    [(id)[NSNumber class] numberWithUnsignedInt:0];
+    [(id)[NSNumber class] numberWithDouble:0];
+    /* [UNRESOLVED] [(id)[NSNumber class] numberWithUnsignedLongLong:0x257561]; */
+    [(id)[NSDictionary class] dictionaryWithObjects:-0xb8 forKeys:-0xf0 count:7];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -794,14 +794,14 @@ L_3c814:;
     objc_release(ret);
     /* [UNRESOLVED] sub_5151c(); */
     /* [UNRESOLVED] objc_release(0x257550); */
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_3ca44; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_3ca44; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 已预约撤回 msgId=%llu sid=%llu（%.0f 秒后执行，= 发送后 %ld 秒的窗口末端）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 已预约撤回 msgId=%llu sid=%llu（%.0f 秒后执行，= 发送后 %ld 秒的窗口末端）"]; */
     goto L_3ca5c;
 
 L_3ca44:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 已预约撤回 msgId=%llu sid=%llu（%.0f 秒后执行，= 发送后 %ld 秒的窗口末端）"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 已预约撤回 msgId=%llu sid=%llu（%.0f 秒后执行，= 发送后 %ld 秒的窗口末端）"] noteFiltered:3]; */
 
 L_3ca5c:;
     /* [UNRESOLVED] dispatch_time(); */
@@ -815,7 +815,7 @@ L_3cac4:;
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     /* [UNRESOLVED] if (cond / * le * /) goto L_3cce4; */
 
-    /* [UNRESOLVED] [(id)NSString unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSString class] unknownSelector]; */
     goto L_3cce4;
 
 L_3cb24:;
@@ -864,16 +864,16 @@ L_3cc10:;
 L_3cc20:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3cc10; */
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (Unwind_Resume == 0) goto L_3ccc0;
 
     [(id)ret reason];
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 预约异常：%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 预约异常：%@"]; */
     objc_release(ret);
     goto L_3ccc8;
 
 L_3ccc0:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_3ccc8:;
     objc_release(ret);
@@ -930,7 +930,7 @@ L_3ce88:;
     [(id)ret numberOfItemsInSection:0];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_3cee4; */
 
-    [(id)NSIndexPath indexPathForItem:0 inSection:0];
+    [(id)[NSIndexPath class] indexPathForItem:0 inSection:0];
     goto L_3cee4;
 
 L_3cee4:;
@@ -940,16 +940,16 @@ L_3cee4:;
     [(id)ret respondsToSelector:sel_registerName("collectionView:didSelectItemAtIndexPath:")];
     if (ret == 0) goto L_3cf9c;
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_3d01c;
 
     [(id)0 item];
     [(id)ret numberOfItemsInSection:0];
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 收尾交给宿主 delegate（didSelect item=%ld/%ld）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 收尾交给宿主 delegate（didSelect item=%ld/%ld）"]; */
     goto L_3d030;
 
 L_3cf9c:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if ([@0x244978 class] == 0) goto L_3d004; */
 
     if (ret == 0) goto L_3d07c;
@@ -959,11 +959,11 @@ L_3cf9c:;
     goto L_3d07c;
 
 L_3d004:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
     goto L_3d090;
 
 L_3d01c:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_3d030:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
@@ -973,7 +973,7 @@ L_3d030:;
     goto L_3d18c;
 
 L_3d07c:;
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Chat][后悔药] 交接宿主失败：coll=%@ cell=%@ ip=%@ delegate=%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Chat][后悔药] 交接宿主失败：coll=%@ cell=%@ ip=%@ delegate=%@"]; */
     if (ret == 0) goto L_3d090;
 
     objc_release(@"nil");
@@ -996,14 +996,14 @@ L_3d10c:;
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
     /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:4]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:4] == 0) goto L_3d180; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:4] == 0) goto L_3d180; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:4 format:@"[Chat][后悔药] 已调聊天页 menuHide 收尾"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:4 format:@"[Chat][后悔药] 已调聊天页 menuHide 收尾"]; */
     goto L_3d184;
 
 L_3d180:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:4 format:@"[Chat][后悔药] 已调聊天页 menuHide 收尾"] noteFiltered:4]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:4 format:@"[Chat][后悔药] 已调聊天页 menuHide 收尾"] noteFiltered:4]; */
 
 L_3d184:;
     /* [UNRESOLVED] sub_50abc(); */

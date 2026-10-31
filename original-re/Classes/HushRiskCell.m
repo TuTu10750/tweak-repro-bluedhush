@@ -382,12 +382,12 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_208a0;
 
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self setName:objc_alloc_init];
     objc_release(objc_alloc_init);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
     [self name];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -399,7 +399,7 @@
     objc_release(ret);
     [self setSource:objc_alloc_init];
     objc_release(objc_alloc_init);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:11 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:11 weight:0x200378]; */
     [self source];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -424,12 +424,12 @@
     objc_release(ret);
     [self setTime:objc_alloc_init];
     objc_release(objc_alloc_init);
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [self time];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [self time];
     [(id)ret setTextColor:ret];
     objc_release(ret);

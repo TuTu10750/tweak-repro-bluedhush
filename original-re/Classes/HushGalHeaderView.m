@@ -331,40 +331,40 @@
 
     [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_name);
-    [(id)UIFont boldSystemFontOfSize:12];
+    [(id)[UIFont class] boldSystemFontOfSize:12];
     [(id)self->_name setFont:ret];
     objc_release(ret);
     [(id)self->_name setAdjustsFontSizeToFitWidth:1];
     [(id)self->_name setMinimumScaleFactor:0.72];
     [(id)self->_name setLineBreakMode:2];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     [(id)self->_name setTextColor:ret];
     objc_release(ret);
     [(id)self->_name setAutoresizingMask:0x12];
     [self addSubview:self->_name];
     [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_count);
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [(id)self->_count setFont:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [(id)UIColor colorWithWhite:0.42 alpha:1];
+    [(id)[UIColor class] colorWithWhite:0.42 alpha:1];
     [(id)self->_count setTextColor:ret];
     objc_release(ret);
     [(id)self->_count setTextAlignment:2];
     [(id)self->_count setAutoresizingMask:0x11];
     [self addSubview:self->_count];
-    [(id)UIButton buttonWithType:1];
+    [(id)[UIButton class] buttonWithType:1];
     objc_release(self->_home);
     /* [UNRESOLVED] [(id)self->_home setFrame:-0x3faf000000000000]; */
     [(id)self->_home setTitle:@"主页" forState:0];
-    [(id)UIFont systemFontOfSize:14];
+    [(id)[UIFont class] systemFontOfSize:14];
     [(id)self->_home titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    [(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
     [(id)self->_home setTitleColor:ret forState:0];
     objc_release(ret);
     [(id)self->_home setAutoresizingMask:0x11];

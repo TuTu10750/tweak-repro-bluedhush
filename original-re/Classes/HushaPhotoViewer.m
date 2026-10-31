@@ -852,8 +852,8 @@ L_17fe1c:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_17fe38; */
 
 L_17fe38:;
-    [(id)UIImageView class];
-    /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / isKindOfClass:[(id)UIImageView class]]; */
+    [(id)[UIImageView class] class];
+    /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / isKindOfClass:[(id)[UIImageView class] class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_17fe64; */
 
     /* [UNRESOLVED] if (cond / * eq * /) goto L_17fe9c; */

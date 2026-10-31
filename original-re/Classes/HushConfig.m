@@ -88,12 +88,12 @@
     self = [super init];
     if (self == 0) goto L_e3f8;
 
-    [(id)NSUserDefaults standardUserDefaults];
+    [(id)[NSUserDefaults class] standardUserDefaults];
     /* [UNRESOLVED] objc_release(self->/ *+0x8* /); */
-    [(id)NSMutableDictionary dictionary];
+    [(id)[NSMutableDictionary class] dictionary];
     /* [UNRESOLVED] objc_release(self->/ *+0x10* /); */
     [self registerDefaults];
-    [(id)NSNotificationCenter defaultCenter];
+    [(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("hush_clearFlagCache") name:0x2001c8/ *+0x0* / object:0]; */
     objc_release(ret);
 
@@ -421,15 +421,15 @@ L_e66c:;
     objc_retain(self);
     [self setPrefsSnapshot:0];
     objc_release(self);
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:4]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
     if (self == 0) goto L_e704;
 
     /* [UNRESOLVED] [(id)0x2565c8 count]; */
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:4 format:@"[Config] 开关缓存预热完成（%lu 键，单次快照）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:4 format:@"[Config] 开关缓存预热完成（%lu 键，单次快照）"]; */
     goto L_e70c;
 
 L_e704:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:4]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:4]; */
 
 L_e70c:;
     objc_release(ret);
@@ -914,7 +914,7 @@ L_e9c8:;
     /* [UNRESOLVED] if (a0 == 0) goto L_ea74; */
 
     objc_retain(self);
-    [(id)NSNumber numberWithBool:0];
+    [(id)[NSNumber class] numberWithBool:0];
     [self flagCache];
     /* [UNRESOLVED] [(id)ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
@@ -973,7 +973,7 @@ L_ebf0:;
 
 L_ebfc:;
     objc_retain(self);
-    [(id)NSNumber numberWithBool:[(id)ret boolValue]];
+    [(id)[NSNumber class] numberWithBool:[(id)ret boolValue]];
     /* [UNRESOLVED] [self unknownSelector]; */
     /* [UNRESOLVED] [(id)ret setObject:ret forKeyedSubscript:a0]; */
     objc_release(ret);
@@ -1255,8 +1255,8 @@ L_eec4:;
     [self defaults];
     /* [UNRESOLVED] [(id)ret objectForKey:a0]; */
     objc_release(ret);
-    [(id)NSString class];
-    [(id)ret isKindOfClass:[(id)NSString class]];
+    [(id)[NSString class] class];
+    [(id)ret isKindOfClass:[(id)[NSString class] class]];
     if (ret == 0) goto L_ef80;
 
     objc_retain(ret);
@@ -1443,7 +1443,7 @@ L_f098:;
     // 0000f17c  ret
     id ret = nil;
 
-    [(id)NSMutableDictionary dictionary];
+    [(id)[NSMutableDictionary class] dictionary];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f180; */
 
     objc_retain(ret);
@@ -1752,10 +1752,10 @@ L_f528:;
     // 0000f614  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [(id)NSString stringWithFormat:@"%.6f"];
+    [(id)[NSString class] stringWithFormat:@"%.6f"];
     [self setString:ret forKey:@"runtime_custom_lat"];
     objc_release(ret);
-    [(id)NSString stringWithFormat:@"%.6f"];
+    [(id)[NSString class] stringWithFormat:@"%.6f"];
     [self setString:ret forKey:@"runtime_custom_lng"];
 }
 
@@ -1849,7 +1849,7 @@ L_f678:;
     // 0000f6fc  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [(id)NSString stringWithFormat:@"%.2f"];
+    [(id)[NSString class] stringWithFormat:@"%.2f"];
     [self setString:ret forKey:@"runtime_custom_altitude"];
 }
 

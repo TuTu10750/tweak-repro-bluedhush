@@ -530,7 +530,7 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [(id)UIColor systemBackgroundColor];
+    [(id)[UIColor class] systemBackgroundColor];
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -540,20 +540,20 @@
     [(id)ret addSubview:objc_alloc_init];
     objc_release(ret);
     [(id)objc_alloc_init setText:@"🎯"];
-    [(id)UIFont systemFontOfSize:24];
+    [(id)[UIFont class] systemFontOfSize:24];
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
     [(id)objc_alloc_init addSubview:objc_alloc_init];
     [(id)objc_alloc_init setText:@"对方位置"];
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:22 weight:0x200180]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:22 weight:0x200180]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
     [(id)objc_alloc_init addSubview:objc_alloc_init];
-    [(id)UIButton buttonWithType:1];
+    [(id)[UIButton class] buttonWithType:1];
     [(id)ret setTitle:@"关闭" forState:0];
-    [(id)UIFont systemFontOfSize:19];
+    [(id)[UIFont class] systemFontOfSize:19];
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -585,14 +585,14 @@
     [(id)self->_anno setTitle:@"目标位置"];
     [self lat];
     [self lng];
-    [(id)NSString stringWithFormat:@"%.6f, %.6f"];
+    [(id)[NSString class] stringWithFormat:@"%.6f, %.6f"];
     [(id)self->_anno setSubtitle:ret];
     objc_release(ret);
     [(id)self->_map addAnnotation:self->_anno];
     [(id)self->_anno coordinate];
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
     [(id)self->_map setRegion:0 animated:0];
-    [(id)UIBlurEffect effectWithStyle:7];
+    [(id)[UIBlurEffect class] effectWithStyle:7];
     [[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(ret);
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] layer];
@@ -607,7 +607,7 @@
     [(id)ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     objc_release(self->_chipLabel);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:12 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:12 weight:0x200378]; */
     [(id)self->_chipLabel setFont:ret];
     objc_release(ret);
     [(id)self->_chipLabel setNumberOfLines:1];
@@ -619,7 +619,7 @@
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] contentView];
     [(id)ret addSubview:self->_chipLabel];
     objc_release(ret);
-    [(id)UIBlurEffect effectWithStyle:7];
+    [(id)[UIBlurEffect class] effectWithStyle:7];
     [[UIVisualEffectView alloc] initWithEffect:ret];
     objc_release(ret);
     [(id)[[UIVisualEffectView alloc] initWithEffect:ret] layer];
@@ -635,12 +635,12 @@
     [self view];
     [(id)ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIFont monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     [self lat];
     [self lng];
-    [(id)NSString stringWithFormat:@"%.6f, %.6f"];
+    [(id)[NSString class] stringWithFormat:@"%.6f, %.6f"];
     [(id)objc_alloc_init setText:ret];
     objc_release(ret);
     [(id)objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
@@ -656,7 +656,7 @@
     /* [UNRESOLVED] sub_91f78(0); */
     [(id)ret setAccessibilityIdentifier:@"hush_track_card_redo"];
     [(id)ret addTarget:self action:sel_registerName("hushRedo:") forControlEvents:0x40];
-    [(id)NSArray arrayWithObjects:-0x88 count:3];
+    [(id)[NSArray class] arrayWithObjects:-0x88 count:3];
     [[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] setAxis:0];
@@ -780,8 +780,8 @@
     [(id)[[UIStackView alloc] initWithArrangedSubviews:ret] bottomAnchor];
     [(id)ret bottomAnchor];
     [(id)ret constraintEqualToAnchor:ret constant:0];
-    [(id)NSArray arrayWithObjects:0 count:0x1f];
-    [(id)NSLayoutConstraint activateConstraints:ret];
+    [(id)[NSArray class] arrayWithObjects:0 count:0x1f];
+    [(id)[NSLayoutConstraint class] activateConstraints:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1180,7 +1180,7 @@
     id ret = nil;
 
     [self ctx];
-    [(id)NSMutableArray array];
+    [(id)[NSMutableArray class] array];
     if (0 == 0) goto L_922a8;
 
 L_92294:;
@@ -1205,7 +1205,7 @@ L_92314:;
     goto L_92340;
 
 L_92340:;
-    [(id)NSString stringWithFormat:@"✅ 精确收敛 · 残余%.0f米"];
+    [(id)[NSString class] stringWithFormat:@"✅ 精确收敛 · 残余%.0f米"];
     [(id)ret addObject:ret];
     objc_release(ret);
 
@@ -1217,7 +1217,7 @@ L_923a8:;
     /* [UNRESOLVED] cos(); */
     /* [UNRESOLVED] sub_9256c(); */
     /* [UNRESOLVED] sub_9256c(); */
-    [(id)NSString stringWithFormat:@"%@%@ %@%@"];
+    [(id)[NSString class] stringWithFormat:@"%@%@ %@%@"];
     [(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
@@ -1253,7 +1253,7 @@ L_92568:;
     goto L_925b8;
 
 L_925b8:;
-    [(id)NSString stringWithFormat:@"%.1fkm"];
+    [(id)[NSString class] stringWithFormat:@"%.1fkm"];
 }
 
 // @0x925d0  types=v24@0:8@16
@@ -1339,14 +1339,14 @@ L_925b8:;
 
     [self lat];
     [self lng];
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_92670; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_92670; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"]; */
     goto L_926b8;
 
 L_92670:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"] noteFiltered:3]; */
 
 L_926b8:;
     [self dismissViewControllerAnimated:1 completion:0];
@@ -1426,14 +1426,14 @@ L_926b8:;
 
     [self lat];
     [self lng];
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_92c20; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_92c20; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"]; */
     goto L_92c68;
 
 L_92c20:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"] noteFiltered:3]; */
 
 L_92c68:;
     [self dismissViewControllerAnimated:1 completion:0];
@@ -1795,8 +1795,8 @@ L_92c68:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] objc_retain(a1); */
-    [(id)MKUserLocation class];
-    /* [UNRESOLVED] [(id)a1 isKindOfClass:[(id)MKUserLocation class]]; */
+    [(id)[MKUserLocation class] class];
+    /* [UNRESOLVED] [(id)a1 isKindOfClass:[(id)[MKUserLocation class] class]]; */
     /* [UNRESOLVED] if (((a1 >> 0) & 1) != 0) goto L_92f18; */
 
     /* [UNRESOLVED] if (cond / * eq * /) goto L_92f58; */
@@ -1810,7 +1810,7 @@ L_92f58:;
     if (ret != 0) goto L_93230;
 
     /* [UNRESOLVED] [[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; */
-    [(id)UIColor systemRedColor];
+    [(id)[UIColor class] systemRedColor];
     /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setMarkerTintColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setCanShowCallout:1]; */
@@ -1818,14 +1818,14 @@ L_92f58:;
     /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setAnimatesWhenAdded:0]; */
     /* [UNRESOLVED] [(id)[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"] setClipsToBounds:0]; */
     [(id)objc_alloc_init setText:@"目标位置"];
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:13 weight:0x200180]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:13 weight:0x200180]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)objc_alloc_init setTextColor:ret];
     objc_release(ret);
     [(id)objc_alloc_init setTextAlignment:1];
-    [(id)UIColor blackColor];
+    [(id)[UIColor class] blackColor];
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
     [(id)objc_alloc_init layer];
     /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
@@ -1952,17 +1952,17 @@ L_93230:;
     [(id)self->_anno coordinate];
     /* [UNRESOLVED] MKCoordinateRegionMakeWithDistance(); */
     [(id)self->_map setRegion:0 animated:0];
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (self->_map == 0) goto L_93364;
 
     [self lat];
     [self lng];
     [self ctx];
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track][位置卡片] 已打开：目标 %.6f,%.6f 残余 %.3f km（地图可缩放）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 已打开：目标 %.6f,%.6f 残余 %.3f km（地图可缩放）"]; */
     goto L_93378;
 
 L_93364:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_93378:;
     return;

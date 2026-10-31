@@ -258,7 +258,7 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_67678;
 
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self setUserInteractionEnabled:1];
@@ -267,7 +267,7 @@
     objc_release(self->_iconView);
     [(id)self->_iconView setContentMode:1];
     [(id)self->_iconView setUserInteractionEnabled:0];
-    [(id)UIColor blackColor];
+    [(id)[UIColor class] blackColor];
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
     [(id)self->_iconView layer];
     /* [UNRESOLVED] [(id)ret setShadowColor:[(id)objc_retainAutorelease CGColor]]; */
@@ -284,7 +284,7 @@
     objc_release(ret);
     [self addSubview:self->_iconView];
     [self refreshIcon];
-    [(id)NSNotificationCenter defaultCenter];
+    [(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
     [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
@@ -339,7 +339,7 @@ L_67678:;
     // 000676f0  ret
     id ret = nil;
 
-    [(id)NSNotificationCenter defaultCenter];
+    [(id)[NSNotificationCenter class] defaultCenter];
     [(id)ret removeObserver:self];
     objc_release(ret);
     /* [UNRESOLVED] [super dealloc] (ARC) */
@@ -575,7 +575,7 @@ L_67678:;
     /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_67950; */
 
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     [self center];
     /* [UNRESOLVED] NSStringFromCGPoint(); */
     /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */

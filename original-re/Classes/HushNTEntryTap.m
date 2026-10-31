@@ -448,13 +448,13 @@ L_160ef0:;
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIAlertAction unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIAlertAction class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIAlertAction unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIAlertAction class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIAlertAction unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIAlertAction class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     if (ret != 0) goto L_161664;
@@ -1130,16 +1130,16 @@ L_161bf8:;
     /* [UNRESOLVED] [(id)[(id)ret unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] sub_15fa8c(); */
-    /* [UNRESOLVED] [(id)NSString unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSString class] unknownSelector]; */
     objc_retain(ret);
     /* [UNRESOLVED] dispatch_async(); */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSString unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSString class] unknownSelector]; */
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
     if (ret == 0) goto L_161e74;
 
     if (ret == 0) goto L_161e8c;
@@ -1164,7 +1164,7 @@ L_161e48:;
     goto L_161f2c;
 
 L_161e74:;
-    /* [UNRESOLVED] [(id)@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
     goto L_161f2c;
 
 L_161e8c:;
@@ -1182,7 +1182,7 @@ L_161ee4:;
 
 L_161efc:;
     /* [UNRESOLVED] [(id)[(id)ret unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
     objc_release(ret);
 
 L_161f2c:;

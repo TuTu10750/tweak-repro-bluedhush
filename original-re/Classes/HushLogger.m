@@ -242,7 +242,7 @@ L_166a0:;
     // 000168ac  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     /* [UNRESOLVED] [(id)ret stringForKey:0 / * func * /]; */
     objc_release(ret);
     objc_retain(ret);
@@ -261,14 +261,14 @@ L_167c0:;
     if ([(id)ret length] == 0) goto L_16834;
 
     [self setLevel:3];
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:2]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:2] == 0) goto L_16890; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:2]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:2] == 0) goto L_16890; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:2 format:@"[Log] switch_log_level 取值非法（%@），已回落为「信息」"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:2 format:@"[Log] switch_log_level 取值非法（%@），已回落为「信息」"]; */
     goto L_168ac;
 
 L_16834:;
-    /* [UNRESOLVED] [(id)@0x244888 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     goto L_16890;
@@ -343,8 +343,8 @@ L_168ac:;
     // 00016978  b       #0x1a72d8   ; _objc_msgSend
     id ret = nil;
 
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
-    [(id)NSString stringWithFormat:@"%ld"];
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
+    [(id)[NSString class] stringWithFormat:@"%ld"];
     /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
@@ -391,8 +391,8 @@ L_168ac:;
     // 00016a00  ret
     id ret = nil;
 
-    [(id)NSString stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
-    return (id)[(id)NSString stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
+    [(id)[NSString class] stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
+    return (id)[(id)[NSString class] stringWithFormat:@"V%llu D%llu I%llu W%llu E%llu S%llu · 过滤 %llu"];
 }
 
 // @0x16a04  types=@16@0:8
@@ -631,11 +631,11 @@ L_16b4c:;
     /* [UNRESOLVED] pthread_setspecific(objc_alloc_init); */
 
 L_16bac:;
-    [(id)NSDate date];
+    [(id)[NSDate class] date];
     [(id)objc_alloc_init stringFromDate:ret];
     objc_release(ret);
     objc_release(objc_alloc_init);
-    [(id)NSString stringWithFormat:@"%@ %@ [%@] %@\n"];
+    [(id)[NSString class] stringWithFormat:@"%@ %@ [%@] %@\n"];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a1); */
     /* [UNRESOLVED] objc_release(a0); */
@@ -971,7 +971,7 @@ L_170d4:;
 
     /* [UNRESOLVED] if (0x256710 != 0) goto L_17194; */
 
-    /* [UNRESOLVED] [(id)NSMutableData dataWithCapacity:0x10000]; */
+    /* [UNRESOLVED] [(id)[NSMutableData class] dataWithCapacity:0x10000]; */
     /* [UNRESOLVED] objc_release(0x256710); */
 
 L_17194:;
@@ -1675,7 +1675,7 @@ L_177d0:;
 
     [self flush];
     [self logFilePath];
-    [(id)NSData dataWithContentsOfFile:ret];
+    [(id)[NSData class] dataWithContentsOfFile:ret];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_17b18;
 

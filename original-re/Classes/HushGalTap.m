@@ -181,7 +181,7 @@
     id ret = nil;
 
     /* [UNRESOLVED] HushChatFlashCurrentSessionId(_cmd, a0, a1, a2, a3); */
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (0 == 0) goto L_85e64;
 
     [(id)ret length];
@@ -204,11 +204,11 @@ L_85e20:;
     goto L_85ec4;
 
 L_85e64:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
     goto L_85f54;
 
 L_85e90:;
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
     goto L_85f54;
 
 L_85ea0:;
@@ -219,13 +219,13 @@ L_85eac:;
 
 L_85ec4:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    [(id)NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_85ef4:;
     objc_release(ret);
 
 L_85f14:;
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery] 照片墙悬浮球点击，当前会话=%@"]; */
     objc_release(ret);
 
 L_85f54:;
@@ -490,23 +490,23 @@ L_86160:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_86124; */
 
 L_86190:;
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     /* [UNRESOLVED] [(id)0 / * unk * / center]; */
     /* [UNRESOLVED] NSStringFromCGPoint(); */
     /* [UNRESOLVED] [(id)ret setString:ret forKey:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_8626c;
 
     /* [UNRESOLVED] [(id)0 / * unk * / center]; */
     /* [UNRESOLVED] NSStringFromCGPoint(); */
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery] 照片墙球位置已保存 %@"]; */
     objc_release(ret);
     goto L_86124;
 
 L_8626c:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
     goto L_86124;
 }
 

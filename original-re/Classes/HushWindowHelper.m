@@ -53,14 +53,14 @@
     // 0008d0d8  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_8d09c; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_8d09c; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Track] 用户取消追踪"]; */
     goto L_8d0b0;
 
 L_8d09c:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Track] 用户取消追踪"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Track] 用户取消追踪"] noteFiltered:3]; */
 
 L_8d0b0:;
     /* [UNRESOLVED] if (0x2579e8 == 0) goto L_8d0d8; */
@@ -208,7 +208,7 @@ L_8d0d8:;
     // 0008d2dc  ret
     id ret = nil;
 
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     if (0 == 0) goto L_8d190;
 
@@ -216,7 +216,7 @@ L_8d0d8:;
     goto L_8d1d8;
 
 L_8d190:;
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     objc_release(ret);
@@ -230,7 +230,7 @@ L_8d1d8:;
     /* [UNRESOLVED] sub_8d460(); */
 
 L_8d204:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     /* [UNRESOLVED] if (0x257a08 == 0) goto L_8d2e0; */
 
     /* [UNRESOLVED] if (0x257a08 == 0) goto L_8d2f8; */
@@ -394,10 +394,10 @@ L_8d2dc:;
     [(id)ret objectForKeyedSubscript:@"lng"];
     [(id)ret doubleValue];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_8e57c; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_8e57c; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[PreTrack] 长按按钮 → 打开地图（缓存目标 %.6f,%.6f）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[PreTrack] 长按按钮 → 打开地图（缓存目标 %.6f,%.6f）"]; */
 
 L_8e4cc:;
     return;

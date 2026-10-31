@@ -35,8 +35,8 @@
     // 0013654c  ldp     x20, x19, [sp], #0x20
     // 00136550  b       #0x1a72d8   ; _objc_msgSend
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_136550; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_136550; */
 
 L_136550:;
 }
@@ -68,7 +68,7 @@ L_136550:;
     // 001365a0  ret
     id ret = nil;
 
-    [(id)NSDate timeIntervalSinceReferenceDate];
+    [(id)[NSDate class] timeIntervalSinceReferenceDate];
     /* [UNRESOLVED] if (cond / * pl * /) goto L_1365a4; */
 
     return;
@@ -106,8 +106,8 @@ L_136550:;
     // 0013669c  ldp     x20, x19, [sp], #0x20
     // 001366a0  b       #0x1a72d8   ; _objc_msgSend
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_1366a0; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_1366a0; */
 
 L_1366a0:;
 }

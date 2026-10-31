@@ -471,42 +471,42 @@
     goto L_1ffb0;
 
 L_1ff84:;
-    [(id)NSString stringWithFormat:@"用户 %@"];
+    [(id)[NSString class] stringWithFormat:@"用户 %@"];
 
 L_1ffb0:;
-    [(id)NSMutableString stringWithFormat:@"UID %@"];
+    [(id)[NSMutableString class] stringWithFormat:@"UID %@"];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_2000c;
 
     [(id)ret appendFormat:@" · 已标记：%@"];
 
 L_2000c:;
-    [(id)UIAlertController alertControllerWithTitle:ret message:ret preferredStyle:0];
+    [(id)[UIAlertController class] alertControllerWithTitle:ret message:ret preferredStyle:0];
     objc_retain(ret);
     objc_retain(ret);
-    [(id)UIAlertAction actionWithTitle:@"标记为风险用户" style:2 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"标记为风险用户" style:2 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    [(id)UIAlertAction actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_20208;
 
     objc_retain(ret);
-    [(id)UIAlertAction actionWithTitle:@"取消标记" style:0 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"取消标记" style:0 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release(ret);
 
 L_20208:;
-    /* [UNRESOLVED] [(id)UIAlertAction actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
     [(id)ret addAction:ret];
     objc_release(ret);
-    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (a0 != 0) goto L_202a8; */

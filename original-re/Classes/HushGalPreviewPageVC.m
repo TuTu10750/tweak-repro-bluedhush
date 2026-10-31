@@ -217,7 +217,7 @@
     id ret = nil;
 
     [super viewDidLoad];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -227,7 +227,7 @@
     [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setContentMode:1];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];

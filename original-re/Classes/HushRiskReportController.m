@@ -445,8 +445,8 @@ L_1351ac:;
 
     objc_retain(ret);
     objc_retain(0);
-    [(id)NSArray class];
-    [(id)ret isKindOfClass:[(id)NSArray class]];
+    [(id)[NSArray class] class];
+    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (0 == 0) goto L_1353c0;
 
     if (ret == 0) goto L_1353c0;
@@ -460,13 +460,13 @@ L_1351ac:;
 
     [(id)0 section];
     [(id)ret objectAtIndexedSubscript:[(id)0 section]];
-    [(id)NSDictionary class];
-    [(id)ret isKindOfClass:[(id)NSDictionary class]];
+    [(id)[NSDictionary class] class];
+    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_1353a4;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2256f8]; */
-    [(id)NSArray class];
-    [(id)ret isKindOfClass:[(id)NSArray class]];
+    [(id)[NSArray class] class];
+    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_1353b0;
 
     [(id)0 row];
@@ -478,8 +478,8 @@ L_1351ac:;
 
     [(id)0 row];
     [(id)ret objectAtIndexedSubscript:[(id)0 row]];
-    [(id)NSDictionary class];
-    [(id)ret isKindOfClass:[(id)NSDictionary class]];
+    [(id)[NSDictionary class] class];
+    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     objc_retain(sel_registerName("count"));
     objc_release(ret);
     goto L_1353b0;
@@ -794,13 +794,13 @@ L_13558c:;
     /* [UNRESOLVED] if (cond / * ls * /) goto L_1356ac; */
 
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */
-    [(id)NSDictionary class];
-    [(id)ret isKindOfClass:[(id)NSDictionary class]];
+    [(id)[NSDictionary class] class];
+    [(id)ret isKindOfClass:[(id)[NSDictionary class] class]];
     if (ret == 0) goto L_1356b4;
 
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2256f8]; */
-    [(id)NSArray class];
-    [(id)ret isKindOfClass:[(id)NSArray class]];
+    [(id)[NSArray class] class];
+    [(id)ret isKindOfClass:[(id)[NSArray class] class]];
     if (ret == 0) goto L_1356c0;
 
     [(id)ret count];
@@ -911,8 +911,8 @@ L_1356d0:;
     /* [UNRESOLVED] [(id)self->_sections objectAtIndexedSubscript:a1]; */
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x2141b8]; */
     objc_release(ret);
-    [(id)NSString class];
-    [(id)ret isKindOfClass:[(id)NSString class]];
+    [(id)[NSString class] class];
+    [(id)ret isKindOfClass:[(id)[NSString class] class]];
     objc_retain(ret);
     objc_release(ret);
     goto L_1357c8;
@@ -1337,7 +1337,7 @@ L_135874:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x217658]; */
     [(id)ret setSecondaryText:ret];
     objc_release(ret);
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [(id)ret secondaryTextProperties];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -1345,7 +1345,7 @@ L_135874:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x225cd8]; */
     [(id)ret boolValue];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     [(id)ret textProperties];
     [(id)ret setColor:ret];
     objc_release(ret);
@@ -1357,7 +1357,7 @@ L_135874:;
     if ((([(id)ret boolValue] >> 0) & 1) == 0) goto L_135b88;
 
     /* [UNRESOLVED] [(id)objc_alloc_init setText:0x225cf8]; */
-    /* [UNRESOLVED] [(id)UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
+    /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     [self view];
@@ -1375,7 +1375,7 @@ L_135b88:;
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x21dff8]; */
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
+    /* [UNRESOLVED] [(id)[UIFont class] monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
     [(id)objc_alloc_init setFont:ret];
     objc_release(ret);
     if (((ret >> 0) & 1) == 0) goto L_135c18;
@@ -1383,7 +1383,7 @@ L_135b88:;
     goto L_135c18;
 
 L_135c18:;
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [(id)objc_alloc_init setTextColor:ret];
 
 L_135c48:;

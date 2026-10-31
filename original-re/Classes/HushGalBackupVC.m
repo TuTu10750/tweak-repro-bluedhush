@@ -518,7 +518,7 @@
 
     [super viewDidLoad];
     [self setTitle:@"管理相册备份"];
-    [(id)UIColor systemGroupedBackgroundColor];
+    [(id)[UIColor class] systemGroupedBackgroundColor];
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -529,7 +529,7 @@
     objc_release(ret);
     objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]);
     [[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];
-    [(id)UIColor systemRedColor];
+    [(id)[UIColor class] systemRedColor];
     [(id)[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")] setTintColor:ret];
     objc_release(ret);
     [self navigationItem];
@@ -554,8 +554,8 @@
     /* [UNRESOLVED] [(id)ret setRowHeight:0x404b000000000000]; */
     objc_release(ret);
     [self table];
-    /* [UNRESOLVED] [(id)@0x244ec8 class]; */
-    /* [UNRESOLVED] [(id)ret registerClass:[(id)@0x244ec8 class] forCellReuseIdentifier:@"hushGalBackup"]; */
+    /* [UNRESOLVED] [(id)[@0x244ec8 class] class]; */
+    /* [UNRESOLVED] [(id)ret registerClass:[(id)[@0x244ec8 class] class] forCellReuseIdentifier:@"hushGalBackup"]; */
     objc_release(ret);
     [self view];
     [self table];
@@ -577,10 +577,10 @@
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setAutoresizingMask:2];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setText:@"点击导入 · 长按分享 · 左滑删除；从「文件」App 也能导入备份。只删备份文件，相册照片不受影响。"];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setNumberOfLines:0];
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextAlignment:1];
@@ -865,10 +865,10 @@ L_8948c:;
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setText:@"没有本地备份文件\n可从上面的「从「文件」App 选择备份…」导入"];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setNumberOfLines:0];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextAlignment:1];
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     objc_release(ret);
-    [(id)UIFont systemFontOfSize:14];
+    [(id)[UIFont class] systemFontOfSize:14];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
     [self table];
@@ -1327,7 +1327,7 @@ L_895c0:;
     [(id)objc_alloc_init stringFromDate:ret];
     [(id)ret objectForKeyedSubscript:@"size"];
     [(id)ret doubleValue];
-    [(id)NSString stringWithFormat:@"%@ · %.1f MB"];
+    [(id)[NSString class] stringWithFormat:@"%@ · %.1f MB"];
     [(id)ret meta];
     [(id)ret setText:ret];
     objc_release(ret);
@@ -1346,12 +1346,12 @@ L_898ec:;
     [(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] textLabel];
     [(id)ret setText:@"从「文件」App 选择备份…"];
     objc_release(ret);
-    [(id)UIColor systemBlueColor];
+    [(id)[UIColor class] systemBlueColor];
     [(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] textLabel];
     [(id)ret setTextColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIImage systemImageNamed:@"square.and.arrow.down.on.square"];
+    [(id)[UIImage class] systemImageNamed:@"square.and.arrow.down.on.square"];
     [(id)[[UITableViewCell alloc] initWithStyle:0 reuseIdentifier:@"hushGalPickRow"] imageView];
     goto L_89a78;
 
@@ -1614,14 +1614,14 @@ L_89a90:;
 
     [(id)ret objectForKeyedSubscript:@"name"];
     [(id)ret objectForKeyedSubscript:@"path"];
-    [(id)NSString stringWithFormat:@"%@\n按「合并」导入：同名文件跳过，不覆盖现有照片。"];
-    [(id)UIAlertController alertControllerWithTitle:@"导入这份备份？" message:ret preferredStyle:1];
+    [(id)[NSString class] stringWithFormat:@"%@\n按「合并」导入：同名文件跳过，不覆盖现有照片。"];
+    [(id)[UIAlertController class] alertControllerWithTitle:@"导入这份备份？" message:ret preferredStyle:1];
     objc_release(ret);
-    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
-    [(id)UIAlertAction actionWithTitle:@"导入" style:0 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"导入" style:0 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     [self presentViewController:ret animated:1 completion:0];
@@ -1998,20 +1998,20 @@ L_89d70:;
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_8a22c;
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_8a028;
 
     [(id)ret objectForKeyedSubscript:@"name"];
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery][迁移] 长按分享备份：%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 长按分享备份：%@"]; */
     objc_release(ret);
     goto L_8a054;
 
 L_8a028:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_8a054:;
-    [(id)NSURL fileURLWithPath:ret];
-    [(id)NSArray arrayWithObjects:0 count:1];
+    [(id)[NSURL class] fileURLWithPath:ret];
+    [(id)[NSArray class] arrayWithObjects:0 count:1];
     [[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0];
     objc_release(ret);
     objc_release(ret);
@@ -2234,9 +2234,9 @@ L_8a244:;
     if ([(id)ret row] == 0) goto L_8a3f0;
 
     /* [UNRESOLVED] objc_retain(a1); */
-    [(id)UIContextualAction contextualActionWithStyle:1 title:@"删除" handler:0];
-    [(id)NSArray arrayWithObjects:0 count:1];
-    [(id)UISwipeActionsConfiguration configurationWithActions:ret];
+    [(id)[UIContextualAction class] contextualActionWithStyle:1 title:@"删除" handler:0];
+    [(id)[NSArray class] arrayWithObjects:0 count:1];
+    [(id)[UISwipeActionsConfiguration class] configurationWithActions:ret];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] objc_release(a1); */
@@ -2453,15 +2453,15 @@ L_8a450:;
 
     [(id)ret objectForKeyedSubscript:@"name"];
     [(id)ret objectForKeyedSubscript:@"path"];
-    [(id)NSString stringWithFormat:@"确定删除 %@？此操作不可恢复（展览馆里的照片不受影响）。"];
-    [(id)UIAlertController alertControllerWithTitle:@"删除备份" message:ret preferredStyle:1];
+    [(id)[NSString class] stringWithFormat:@"确定删除 %@？此操作不可恢复（展览馆里的照片不受影响）。"];
+    [(id)[UIAlertController class] alertControllerWithTitle:@"删除备份" message:ret preferredStyle:1];
     objc_release(ret);
-    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    [(id)UIAlertAction actionWithTitle:@"删除" style:2 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"删除" style:2 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     [self presentViewController:ret animated:1 completion:0];
@@ -2661,14 +2661,14 @@ L_8a6f4:;
     if ([(id)[(id)ret copy] count] == 0) goto L_8ae0c;
 
     [(id)[(id)ret copy] count];
-    [(id)NSString stringWithFormat:@"确定删除全部 %lu 份相册备份？此操作不可恢复（展览馆里的照片不受影响）。"];
-    [(id)UIAlertController alertControllerWithTitle:@"删除全部备份" message:ret preferredStyle:1];
+    [(id)[NSString class] stringWithFormat:@"确定删除全部 %lu 份相册备份？此操作不可恢复（展览馆里的照片不受影响）。"];
+    [(id)[UIAlertController class] alertControllerWithTitle:@"删除全部备份" message:ret preferredStyle:1];
     objc_release(ret);
-    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain([(id)ret copy]);
-    [(id)UIAlertAction actionWithTitle:@"全部删除" style:2 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"全部删除" style:2 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     [self presentViewController:ret animated:1 completion:0];

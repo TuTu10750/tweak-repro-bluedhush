@@ -1187,7 +1187,7 @@ L_193c38:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_193c54; */
 
 L_193c54:;
-    /* [UNRESOLVED] [(id)UITableViewCell unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UITableViewCell class] unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / unknownSelector]; */
     /* [UNRESOLVED] if (((0 / * local * // *+0x0* / >> 0) & 1) == 0) goto L_193ca0; */
 
@@ -1299,9 +1299,9 @@ L_19409c:;
 
 L_1940a8:;
     objc_retain(Unwind_Resume);
-    /* [UNRESOLVED] [(id)NSMutableArray unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSMutableArray class] unknownSelector]; */
     /* [UNRESOLVED] [(id)Unwind_Resume unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSMutableArray unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSMutableArray class] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if ([(id)ret unknownSelector] == 0) goto L_194314; */
@@ -1818,7 +1818,7 @@ L_194ce4:;
 
 L_194cfc:;
     /* [UNRESOLVED] HushKeyValue(0 / * local * // *+0x0* /); */
-    /* [UNRESOLVED] [(id)UITableView unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UITableView class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     if (((ret >> 0) & 1) != 0) goto L_194db0;
 

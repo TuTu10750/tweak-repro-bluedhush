@@ -271,12 +271,12 @@
     [[UILabel alloc] initWithFrame:CGRectZero];
     [self setName:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0x200378]; */
     [self name];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor labelColor];
+    [(id)[UIColor class] labelColor];
     [self name];
     [(id)ret setTextColor:ret];
     objc_release(ret);
@@ -289,12 +289,12 @@
     [[UILabel alloc] initWithFrame:CGRectZero];
     [self setMeta:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [self meta];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [self meta];
     [(id)ret setTextColor:ret];
     objc_release(ret);

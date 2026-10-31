@@ -535,14 +535,14 @@
     /* [UNRESOLVED] HushBallIconCurrentStyle(); */
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)objc_alloc_init unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
@@ -557,7 +557,7 @@
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
@@ -565,7 +565,7 @@
     /* [UNRESOLVED] [[NSObject alloc] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
@@ -574,8 +574,8 @@
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[NSObject alloc] unknownSelector] unknownSelector]; */
     /* [UNRESOLVED] HushBallIconStyleAll(); */
-    /* [UNRESOLVED] [(id)NSMutableArray unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSMutableArray unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSMutableArray class] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSMutableArray class] unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if ([(id)ret unknownSelector] == 0) goto L_198b9c; */
 
@@ -964,16 +964,16 @@ L_199938:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
     if (ret == 0) goto L_199a94;
 
     /* [UNRESOLVED] HushBallIconStyleValue(); */
-    /* [UNRESOLVED] [(id)@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
     objc_release(ret);
     goto L_199aa8;
 
 L_199a94:;
-    /* [UNRESOLVED] [(id)@0x244978 unknownSelector]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] unknownSelector]; */
 
 L_199aa8:;
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
@@ -1070,7 +1070,7 @@ L_199aa8:;
     /* [UNRESOLVED] if (a0 == 0) goto L_199c24; */
 
 L_199bc8:;
-    /* [UNRESOLVED] [(id)UIViewController unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIViewController class] unknownSelector]; */
     /* [UNRESOLVED] [(id)a0 unknownSelector]; */
     /* [UNRESOLVED] if (((a0 >> 0) & 1) != 0) goto L_199c24; */
 

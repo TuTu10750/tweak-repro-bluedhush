@@ -405,10 +405,10 @@
     if (ret == 0) goto L_15d308;
 
     /* [UNRESOLVED] [(id)0 / * unk * / unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSArray unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSArray unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSArray unknownSelector]; */
-    /* [UNRESOLVED] [(id)NSArray unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSArray class] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSArray class] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSArray class] unknownSelector]; */
+    /* [UNRESOLVED] [(id)[NSArray class] unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);

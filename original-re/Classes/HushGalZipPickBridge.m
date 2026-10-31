@@ -400,13 +400,13 @@
     [(id)ret hasPrefix:ret];
     if (((ret >> 0) & 1) == 0) goto L_879c0;
 
-    [(id)NSDate date];
+    [(id)[NSDate class] date];
     [(id)ret timeIntervalSince1970];
-    [(id)NSString stringWithFormat:@"hush_gal_pick_%lld.zip"];
+    [(id)[NSString class] stringWithFormat:@"hush_gal_pick_%lld.zip"];
     [(id)ret stringByAppendingPathComponent:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)NSFileManager defaultManager];
+    [(id)[NSFileManager class] defaultManager];
     [(id)ret moveItemAtPath:ret toPath:ret error:0];
     objc_release(ret);
     objc_retain(ret);
@@ -422,18 +422,18 @@ L_879cc:;
 
 L_879dc:;
     objc_release(ret);
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_87a80;
 
     [(id)ret lastPathComponent];
     [(id)0 lastPathComponent];
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选择完成：%@ → %@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选择完成：%@ → %@"]; */
     objc_release(ret);
     objc_release(ret);
     goto L_87a8c;
 
 L_87a80:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_87a8c:;
     [(id)0 length];
@@ -441,7 +441,7 @@ L_87a8c:;
 
     objc_retain(0);
     [(id)ret lastPathComponent];
-    [(id)NSFileManager defaultManager];
+    [(id)[NSFileManager class] defaultManager];
     [(id)ret attributesOfItemAtPath:0 error:0];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret objectForKeyedSubscript:0x200488/ *+0x0* /]; */
@@ -449,21 +449,21 @@ L_87a8c:;
     objc_release(ret);
     if ([(id)ret unsignedLongLongValue] == 0) goto L_87b84;
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_87bc0; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_87bc0; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"]; */
     goto L_87bd0;
 
 L_87b84:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector]; */
-    /* [UNRESOLVED] if ([(id)[(id)@0x244978 logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector] == 0) goto L_87c50; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector]; */
+    /* [UNRESOLVED] if ([(id)[(id)[@0x244978 class] logLevel:3 format:@"[Gallery][迁移] 「文件」App 选到备份：%@（%.1f MB）"] unknownSelector] == 0) goto L_87c50; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"]; */
     goto L_87c58;
 
 L_87bc0:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:1 format:@"[Gallery][迁移] 「文件」App 选到的文件读不出来：%@"] noteFiltered:3]; */
 
 L_87bd0:;
     /* [UNRESOLVED] dispatch_time(0x17d7); */
@@ -532,8 +532,8 @@ L_87c8c:;
     // 00087d24  b       #0x1a72d8   ; _objc_msgSend
 
     /* [UNRESOLVED] objc_release(0x2579b8); */
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_87d24; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_87d24; */
 
 L_87d24:;
 }

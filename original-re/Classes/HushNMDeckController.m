@@ -513,8 +513,8 @@
 
     [super viewDidLoad];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     [self view];
     [(id)ret setBackgroundColor:ret];
@@ -529,22 +529,22 @@
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setTag:0x2329]; */
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] [(id)0x257fc8 count]; */
-    [(id)NSString stringWithFormat:@"卡片浏览（%lu 人 · 一屏一人）"];
+    [(id)[NSString class] stringWithFormat:@"卡片浏览（%lu 人 · 一屏一人）"];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setText:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:17 weight:0x200180]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:17 weight:0x200180]; */
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setFont:ret]; */
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTextColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setTag:0x232a]; */
     [self embedded];
     /* [UNRESOLVED] [(id)[[UILabel alloc] initWithFrame:0 / * unk * /] setHidden:[self embedded]]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:[[UILabel alloc] initWithFrame:0 / * unk * /]]; */
-    [(id)UIButton buttonWithType:1];
+    [(id)[UIButton class] buttonWithType:1];
     [(id)ret setTitle:@"✕" forState:0];
-    [(id)UIFont systemFontOfSize:20];
+    [(id)[UIFont class] systemFontOfSize:20];
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -554,7 +554,7 @@
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:ret]; */
 
 L_ded64:;
-    [(id)UIButton buttonWithType:0];
+    [(id)[UIButton class] buttonWithType:0];
     [(id)ret setTag:0x2332];
     [(id)ret setTitle:0 forState:0];
     /* [UNRESOLVED] sub_d34c8(0); */
@@ -570,7 +570,7 @@ L_ded64:;
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setPagingEnabled:1]; */
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setShowsVerticalScrollIndicator:0]; */
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0 / * unk * /] setTag:0x232c]; */
@@ -1041,14 +1041,14 @@ L_df5f8:;
     objc_release(0);
 
 L_df610:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_df64c; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_df64c; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[NearbyMark] 卡片下拉刷新：宿主刷新=%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] 卡片下拉刷新：宿主刷新=%@"]; */
     goto L_df654;
 
 L_df64c:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[NearbyMark] 卡片下拉刷新：宿主刷新=%@"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] 卡片下拉刷新：宿主刷新=%@"] noteFiltered:3]; */
 
 L_df654:;
     /* [UNRESOLVED] objc_release(0 / * unk * /); */
@@ -1580,14 +1580,14 @@ L_e12ec:;
     [(id)ret viewWithTag:0];
     if (ret == 0) goto L_e133c;
 
-    /* [UNRESOLVED] [(id)UIButton unknownSelector]; */
-    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)UIButton unknownSelector]]; */
+    /* [UNRESOLVED] [(id)[UIButton class] unknownSelector]; */
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[UIButton class] unknownSelector]]; */
     if (((ret >> 0) & 1) != 0) goto L_e13ac;
 
     objc_release(ret);
 
 L_e133c:;
-    [(id)UIButton buttonWithType:0];
+    [(id)[UIButton class] buttonWithType:0];
     [(id)ret setTag:0];
     [(id)ret setTitle:@"距离" forState:0];
     /* [UNRESOLVED] sub_d34c8(0); */
@@ -1611,7 +1611,7 @@ L_e1410:;
     goto L_e165c;
 
 L_e144c:;
-    [(id)NSNumber numberWithBool:1];
+    [(id)[NSNumber class] numberWithBool:1];
     objc_release(ret);
     if (objc_loadWeakRetained == 0) goto L_e1410;
 
@@ -1687,16 +1687,16 @@ L_e165c:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
 
 L_e172c:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_e17a8;
 
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[NearbyMark] chip 初始态读宿主：距离=%@ 在线=%@（镜像宿主单选状态）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] chip 初始态读宿主：距离=%@ 在线=%@（镜像宿主单选状态）"]; */
     goto L_e17b0;
 
 L_e17a8:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
 
 L_e17b0:;
     objc_release(ret);
@@ -2050,28 +2050,28 @@ L_e1a50:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     /* [UNRESOLVED] if ((([(id)ret unknownSelector] >> 0) & 1) == 0) goto L_e1b74; */
 
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor whiteColor];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    [(id)[UIColor class] whiteColor];
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     goto L_e1c50;
 
 L_e1b74:;
     [(id)ret whiteColor];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor colorWithWhite:0.25 alpha:1];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    [(id)[UIColor class] colorWithWhite:0.25 alpha:1];
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
 
 L_e1c50:;
@@ -2079,7 +2079,7 @@ L_e1c50:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -2643,7 +2643,7 @@ L_e1f9c:;
 
     /* [UNRESOLVED] if (0x258088 != 0) goto L_e2004; */
 
-    [(id)NSMutableSet set];
+    [(id)[NSMutableSet class] set];
     /* [UNRESOLVED] objc_release(0x258088); */
 
 L_e2004:;
@@ -2686,7 +2686,7 @@ L_e219c:;
 
 L_e21b0:;
     objc_release(ret);
-    [(id)NSMutableArray arrayWithCapacity:4];
+    [(id)[NSMutableArray class] arrayWithCapacity:4];
 
 L_e21fc:;
     [(id)ret count];
@@ -2867,8 +2867,8 @@ L_e26c4:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_e26e0; */
 
 L_e26e0:;
-    /* [UNRESOLVED] [(id)@0x2452d8 class]; */
-    /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / isKindOfClass:[(id)@0x2452d8 class]]; */
+    /* [UNRESOLVED] [(id)[@0x2452d8 class] class]; */
+    /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / isKindOfClass:[(id)[@0x2452d8 class] class]]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_e270c; */
 
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / hushRefreshIntel]; */
@@ -3299,7 +3299,7 @@ L_e2888:;
     /* [UNRESOLVED] sub_e2b2c(); */
     /* [UNRESOLVED] sub_df09c(); */
     [(id)ret count];
-    [(id)NSString stringWithFormat:@"%@ · %lu 人（选中后不可取消）"];
+    [(id)[NSString class] stringWithFormat:@"%@ · %lu 人（选中后不可取消）"];
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
@@ -3312,8 +3312,8 @@ L_e2990:;
     objc_release(ret);
     if (ret == 0) goto L_e2a2c;
 
-    [(id)UIButton class];
-    [(id)ret isKindOfClass:[(id)UIButton class]];
+    [(id)[UIButton class] class];
+    [(id)ret isKindOfClass:[(id)[UIButton class] class]];
     if (ret == 0) goto L_e2a2c;
 
     [(id)ret setSelected:0];
@@ -3326,7 +3326,7 @@ L_e2a2c:;
     /* [UNRESOLVED] sub_e2c44(); */
     /* [UNRESOLVED] sub_df09c(); */
     [(id)ret count];
-    [(id)NSString stringWithFormat:@"%@开 · %lu 人"];
+    [(id)[NSString class] stringWithFormat:@"%@开 · %lu 人"];
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
@@ -3346,14 +3346,14 @@ L_e2b28:;
     if (objc_loadWeakRetained == 0) goto L_e2c1c;
 
     /* [UNRESOLVED] [(id)objc_loadWeakRetained unknownSelector]; */
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_e2bf8; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_e2bf8; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[NearbyMark] 已调宿主排序：%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] 已调宿主排序：%@"]; */
     goto L_e2c00;
 
 L_e2bf8:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:3 format:@"[NearbyMark] 已调宿主排序：%@"] noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] 已调宿主排序：%@"] noteFiltered:3]; */
 
 L_e2c00:;
     goto L_e2c1c;
@@ -3896,10 +3896,10 @@ L_e3220:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e325c; */
 
 L_e325c:;
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:3] == 0) goto L_e32e0; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:3] == 0) goto L_e32e0; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[NearbyMark] 卡片模式已退出，回到身边列表（用户关闭 ⇒ 本轮不再自动融入；重新拨动开关或重启 App 可恢复）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[NearbyMark] 卡片模式已退出，回到身边列表（用户关闭 ⇒ 本轮不再自动融入；重新拨动开关或重启 App 可恢复）"]; */
     goto L_e32e8;
 
 L_e329c:;
@@ -4485,7 +4485,7 @@ L_e35d0:;
 
     /* [UNRESOLVED] if (cond / * gt * /) goto L_e3770; */
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:4]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
     if (self == 0) goto L_e3738;
 
     [self view];
@@ -4497,7 +4497,7 @@ L_e35d0:;
     [(id)ret viewWithTag:0x2332];
     [(id)ret frame];
     /* [UNRESOLVED] NSStringFromCGRect(); */
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:4 format:@"[NearbyMark] 顶栏布局：view=%@ nav=%@ chip=%@"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:4 format:@"[NearbyMark] 顶栏布局：view=%@ nav=%@ chip=%@"]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -4507,7 +4507,7 @@ L_e35d0:;
     goto L_e3770;
 
 L_e3738:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:4]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:4]; */
 
 L_e3770:;
     [(id)ret setFrame:CGRectZero];
@@ -5053,7 +5053,7 @@ L_e3c80:;
     /* [UNRESOLVED] objc_retain(a0); */
     if (ret == 0) goto L_e4150;
 
-    [(id)NSDate date];
+    [(id)[NSDate class] date];
     [(id)ret timeIntervalSince1970];
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * mi * /) goto L_e4150; */
@@ -5095,19 +5095,19 @@ L_e3e3c:;
     if (0 == 0) goto L_e3f00;
 
     /* [UNRESOLVED] [(id)0 unknownSelector]; */
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:4]; */
-    /* [UNRESOLVED] if ([(id)@0x244978 isEnabledForLevel:4] == 0) goto L_e3ed4; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:4]; */
+    /* [UNRESOLVED] if ([(id)[@0x244978 class] isEnabledForLevel:4] == 0) goto L_e3ed4; */
 
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:4 format:@"[NearbyMark] 卡片到底(%ld 张) → 调宿主 p_footerRefresh（第 %ld 次）"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:4 format:@"[NearbyMark] 卡片到底(%ld 张) → 调宿主 p_footerRefresh（第 %ld 次）"]; */
     goto L_e3f00;
 
 L_e3ed4:;
-    /* [UNRESOLVED] [(id)[(id)@0x244978 logLevel:4 format:@"[NearbyMark] 卡片到底(%ld 张) → 调宿主 p_footerRefresh（第 %ld 次）"] noteFiltered:4]; */
+    /* [UNRESOLVED] [(id)[(id)[@0x244978 class] logLevel:4 format:@"[NearbyMark] 卡片到底(%ld 张) → 调宿主 p_footerRefresh（第 %ld 次）"] noteFiltered:4]; */
 
 L_e3f00:;
-    [(id)NSNumber numberWithDouble:1.5];
-    [(id)NSNumber numberWithDouble:4];
-    [(id)NSArray arrayWithObjects:0 count:2];
+    [(id)[NSNumber class] numberWithDouble:1.5];
+    [(id)[NSNumber class] numberWithDouble:4];
+    [(id)[NSArray class] arrayWithObjects:0 count:2];
     objc_release(ret);
     objc_release(ret);
     [(id)ret countByEnumeratingWithState:0 objects:0 count:0x10];

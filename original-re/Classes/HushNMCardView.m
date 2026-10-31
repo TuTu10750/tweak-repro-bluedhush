@@ -532,25 +532,25 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_ceef8;
 
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self setUserInteractionEnabled:1];
-    [(id)NSMutableArray arrayWithCapacity:9];
+    [(id)[NSMutableArray class] arrayWithCapacity:9];
     objc_release(self->_photos);
-    [(id)NSMutableArray arrayWithCapacity:4];
+    [(id)[NSMutableArray class] arrayWithCapacity:4];
     objc_release(self->_buttons);
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_badge);
     [(id)self->_badge setText:@"隐私相册"];
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:11 weight:0x200180]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:11 weight:0x200180]; */
     [(id)self->_badge setFont:ret];
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)self->_badge setTextColor:ret];
     objc_release(ret);
     [(id)self->_badge setTextAlignment:1];
-    /* [UNRESOLVED] [(id)UIColor colorWithRed:0 / * unk * / green:0 / * unk * / blue:1 alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithRed:0 / * unk * / green:0 / * unk * / blue:1 alpha:1]; */
     [(id)self->_badge setBackgroundColor:ret];
     objc_release(ret);
     [(id)self->_badge layer];
@@ -560,8 +560,8 @@
     [self addSubview:self->_badge];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipBox);
-    [(id)UIColor whiteColor];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    [(id)[UIColor class] whiteColor];
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     [(id)self->_chipBox setBackgroundColor:ret];
     objc_release(ret);
@@ -573,8 +573,8 @@
     [(id)self->_chipBox layer];
     [(id)ret setBorderWidth:0.5];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:1 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:1 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
     [(id)self->_chipBox layer];
@@ -586,7 +586,7 @@
     [self addSubview:self->_chipBox];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chipDot);
-    /* [UNRESOLVED] [(id)UIColor colorWithRed:0 / * unk * / green:0 / * unk * / blue:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithRed:0 / * unk * / green:0 / * unk * / blue:0 / * unk * / alpha:1]; */
     [(id)self->_chipDot setBackgroundColor:ret];
     objc_release(ret);
     [(id)self->_chipDot layer];
@@ -595,11 +595,11 @@
     [(id)self->_chipBox addSubview:self->_chipDot];
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_chip);
-    [(id)UIFont systemFontOfSize:13];
+    [(id)[UIFont class] systemFontOfSize:13];
     [(id)self->_chip setFont:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     [(id)self->_chip setTextColor:ret];
     objc_release(ret);
@@ -608,8 +608,8 @@
     [(id)self->_chipBox addSubview:self->_chip];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_bar);
-    [(id)UIColor whiteColor];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    [(id)[UIColor class] whiteColor];
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     [(id)self->_bar setBackgroundColor:ret];
     objc_release(ret);
@@ -621,8 +621,8 @@
     [(id)self->_bar layer];
     [(id)ret setBorderWidth:0.5];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:1 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:1 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [(id)objc_retainAutorelease CGColor]; */
     [(id)self->_bar layer];
@@ -994,7 +994,7 @@ L_cf278:;
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
     [(id)ret setCornerRadius:11];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0 / * unk * /] unknownSelector]; */
@@ -1314,9 +1314,9 @@ L_cf73c:;
     objc_release(self->_builtLabels);
 
 L_cf808:;
-    /* [UNRESOLVED] [(id)UIButton unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIButton class] unknownSelector]; */
     [(id)ret setTag:0];
-    /* [UNRESOLVED] [(id)UIFont unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIFont class] unknownSelector]; */
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -1660,23 +1660,23 @@ L_cfb0c:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / tag]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_cfbb4; */
 
-    /* [UNRESOLVED] [(id)UIColor unknownSelector]; */
+    /* [UNRESOLVED] [(id)[UIColor class] unknownSelector]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setBackgroundColor:ret]; */
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setTitleColor:ret forState:0]; */
     goto L_cfcd0;
 
 L_cfbb4:;
     /* [UNRESOLVED] [(id)[(id)0 / * local * // *+0x0* / setTitleColor:ret forState:0] unknownSelector]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setBackgroundColor:ret]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     /* [UNRESOLVED] sub_cef28(ret); */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setTitleColor:ret forState:0]; */
     objc_release(ret);
@@ -1684,7 +1684,7 @@ L_cfbb4:;
 
 L_cfcd0:;
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:14 weight:0x200348]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:14 weight:0x200348]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / titleLabel]; */
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -2331,7 +2331,7 @@ L_cff80:;
     [(id)0 count];
     /* [UNRESOLVED] if (cond / * ge * /) goto L_d00f4; */
 
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (0 == 0) goto L_d01e0;
 
     if (ret == 0) goto L_d0210;
@@ -2389,7 +2389,7 @@ L_d0210:;
 
 L_d0228:;
     [(id)ret length];
-    [(id)NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_d0268:;
     objc_release(ret);
@@ -2407,7 +2407,7 @@ L_d02ac:;
 
 L_d02c4:;
     [(id)sel_registerName("objectAtIndexedSubscript:") length];
-    [(id)NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_d0304:;
     objc_release(sel_registerName("objectAtIndexedSubscript:"));
@@ -2420,7 +2420,7 @@ L_d031c:;
 
 L_d0370:;
     /* [UNRESOLVED] [(id)sel_registerName("characterAtIndex:") objectAtIndexedSubscript:a0]; */
-    [(id)NSString stringWithFormat:@"已评价：%@"];
+    [(id)[NSString class] stringWithFormat:@"已评价：%@"];
     /* [UNRESOLVED] HushToast(); */
     objc_release(ret);
     objc_release(ret);
@@ -2430,8 +2430,8 @@ L_d03cc:;
     if (ret == 0) goto L_d0444;
 
 L_d03fc:;
-    [(id)UITableView class];
-    [(id)ret isKindOfClass:[(id)UITableView class]];
+    [(id)[UITableView class] class];
+    [(id)ret isKindOfClass:[(id)[UITableView class] class]];
     if (((ret >> 0) & 1) != 0) goto L_d0444;
 
     [(id)ret superview];
@@ -2439,8 +2439,8 @@ L_d03fc:;
     if (ret != 0) goto L_d03fc;
 
 L_d0444:;
-    [(id)UITableView class];
-    [(id)ret isKindOfClass:[(id)UITableView class]];
+    [(id)[UITableView class] class];
+    [(id)ret isKindOfClass:[(id)[UITableView class] class]];
     if (ret == 0) goto L_d05e8;
 
     [(id)ret visibleCells];

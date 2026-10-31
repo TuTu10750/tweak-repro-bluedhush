@@ -574,7 +574,7 @@ L_7ac04:;
     id ret = nil;
 
     [super viewDidLoad];
-    [(id)UIColor colorWithWhite:0 alpha:0.55];
+    [(id)[UIColor class] colorWithWhite:0 alpha:0.55];
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -587,7 +587,7 @@ L_7ac04:;
     objc_release(ret);
     [[UIView alloc] initWithFrame:CGRectZero];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [(id)UIColor colorWithWhite:0.96 alpha:1];
+    [(id)[UIColor class] colorWithWhite:0.96 alpha:1];
     [(id)[[UIView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     [(id)[[UIView alloc] initWithFrame:CGRectZero] layer];
@@ -608,7 +608,7 @@ L_7ac04:;
     [(id)self->_pager view];
     [(id)ret setAutoresizingMask:0x12];
     objc_release(ret);
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)self->_pager view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -635,19 +635,19 @@ L_7b0d4:;
     [self pageAtIndex:[self index]];
     if (ret == 0) goto L_7b174;
 
-    [(id)NSArray arrayWithObjects:0 count:1];
+    [(id)[NSArray class] arrayWithObjects:0 count:1];
     [(id)self->_pager setViewControllers:ret direction:0 animated:0 completion:0];
     objc_release(ret);
 
 L_7b174:;
     objc_release(self->_savedAt);
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [(id)self->_savedAt setFont:ret];
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)self->_savedAt setTextColor:ret];
     objc_release(ret);
-    [(id)UIColor colorWithWhite:0 alpha:0.7];
+    [(id)[UIColor class] colorWithWhite:0 alpha:0.7];
     [(id)self->_savedAt setBackgroundColor:ret];
     objc_release(ret);
     [(id)self->_savedAt layer];
@@ -657,15 +657,15 @@ L_7b174:;
     [(id)self->_savedAt setTextAlignment:1];
     [(id)self->_savedAt setUserInteractionEnabled:0];
     [(id)[[UIView alloc] initWithFrame:CGRectZero] addSubview:self->_savedAt];
-    [(id)UIButton buttonWithType:1];
+    [(id)[UIButton class] buttonWithType:1];
     [(id)ret setFrame:CGRectZero];
     [(id)ret setTitle:@"关闭" forState:0];
-    [(id)UIFont systemFontOfSize:16];
+    [(id)[UIFont class] systemFontOfSize:16];
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    [(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
     [(id)ret setTitleColor:ret forState:0];
     objc_release(ret);
     [(id)ret addTarget:self action:sel_registerName("closeTapped") forControlEvents:0x40];
@@ -1044,8 +1044,8 @@ L_7b6e4:;
     /* [UNRESOLVED] [(id)a0 viewControllers]; */
     [(id)ret firstObject];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)@0x244c98 class]; */
-    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)@0x244c98 class]]; */
+    /* [UNRESOLVED] [(id)[@0x244c98 class] class]; */
+    /* [UNRESOLVED] [(id)ret isKindOfClass:[(id)[@0x244c98 class] class]]; */
     if (ret == 0) goto L_7b828;
 
     [(id)ret index];
@@ -1375,7 +1375,7 @@ L_7b918:;
     if ([(id)ret length] == 0) goto L_7b9dc;
 
     /* [UNRESOLVED] sub_7ba74(); */
-    [(id)NSString stringWithFormat:@"%@  ·  来源：%@"];
+    [(id)[NSString class] stringWithFormat:@"%@  ·  来源：%@"];
     goto L_7ba04;
 
 L_7b9a8:;
@@ -1403,7 +1403,7 @@ L_7ba54:;
     objc_release(ret);
 
     objc_retain(0);
-    [(id)NSFileManager defaultManager];
+    [(id)[NSFileManager class] defaultManager];
     [(id)ret attributesOfItemAtPath:0 error:0];
     objc_release(0);
     objc_release(ret);
@@ -1414,7 +1414,7 @@ L_7ba54:;
 
 L_7bb40:;
     /* [UNRESOLVED] [(id)0x257998 stringFromDate:ret]; */
-    [(id)NSString stringWithFormat:@"保存时间：%@"];
+    [(id)[NSString class] stringWithFormat:@"保存时间：%@"];
     objc_release(ret);
     goto L_7bb90;
 

@@ -123,7 +123,7 @@
 
     [self files];
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a1]; */
-    [(id)NSURL fileURLWithPath:ret];
+    [(id)[NSURL class] fileURLWithPath:ret];
     objc_release(ret);
     objc_release(ret);
     goto L_7a690;

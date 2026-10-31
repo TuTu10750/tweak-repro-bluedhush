@@ -532,7 +532,7 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_13abd8;
 
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [[UIImageView alloc] initWithFrame:CGRectZero];
@@ -548,7 +548,7 @@
     [(id)ret setMasksToBounds:1];
     objc_release(ret);
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 / * unk * / alpha:1]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 / * unk * / alpha:1]; */
     [self avatar];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -561,7 +561,7 @@
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0x4052000000000000]; */
     /* [UNRESOLVED] [self setName:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:16 weight:0 / * unk * // *+0x0* /]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:16 weight:0 / * unk * // *+0x0* /]; */
     [self name];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -574,12 +574,12 @@
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0x4052000000000000]; */
     /* [UNRESOLVED] [self setDetail:[[UILabel alloc] initWithFrame:0x4052000000000000]]; */
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:0x4052000000000000]); */
-    [(id)UIFont systemFontOfSize:12];
+    [(id)[UIFont class] systemFontOfSize:12];
     [self detail];
     [(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    [(id)UIColor secondaryLabelColor];
+    [(id)[UIColor class] secondaryLabelColor];
     [self detail];
     [(id)ret setTextColor:ret];
     objc_release(ret);
@@ -600,7 +600,7 @@
     objc_release(ret);
     [self setTagLabel:objc_alloc_init];
     objc_release(objc_alloc_init);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:11 weight:0 / * unk * // *+0x0* /]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:11 weight:0 / * unk * // *+0x0* /]; */
     [self tagLabel];
     [(id)ret setFont:ret];
     objc_release(ret);

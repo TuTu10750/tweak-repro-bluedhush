@@ -532,12 +532,12 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_127c44;
 
-    [(id)UIColor secondarySystemBackgroundColor];
+    [(id)[UIColor class] secondarySystemBackgroundColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self setAutoresizingMask:2];
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
-    [(id)UIColor separatorColor];
+    [(id)[UIColor class] separatorColor];
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setBackgroundColor:ret]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0 / * unk * /] setTranslatesAutoresizingMaskIntoConstraints:0]; */
@@ -598,8 +598,8 @@
     [(id)self->_scroll frameLayoutGuide];
     [(id)ret heightAnchor];
     [(id)ret constraintEqualToAnchor:ret];
-    [(id)NSArray arrayWithObjects:-0xe8 count:0xd];
-    [(id)NSLayoutConstraint activateConstraints:ret];
+    [(id)[NSArray class] arrayWithObjects:-0xe8 count:0xd];
+    [(id)[NSLayoutConstraint class] activateConstraints:ret];
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);

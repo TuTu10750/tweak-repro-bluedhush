@@ -533,7 +533,7 @@
     /* [UNRESOLVED] [(id)a0 state]; */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_f93bc; */
 
-    /* [UNRESOLVED] [(id)@0x244888 shared]; */
+    /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
     /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_f93bc; */
@@ -607,7 +607,7 @@ L_f8ce4:;
     /* [UNRESOLVED] sqlite3_column_text(0); */
     if (sqlite3_column_text == 0) goto L_f8da4;
 
-    [(id)NSString stringWithUTF8String:sqlite3_column_text];
+    [(id)[NSString class] stringWithUTF8String:sqlite3_column_text];
     [(id)ret length];
     if ([(id)ret length] == 0) goto L_f8db0;
 
@@ -637,25 +637,25 @@ L_f8dd8:;
     objc_retain(0);
     [(id)ret length];
     objc_retain(sel_registerName("length"));
-    [(id)NSString stringWithFormat:@"一键开放相册给 %@"];
-    [(id)NSString stringWithFormat:@"一键关闭相册给 %@"];
-    [(id)NSString stringWithFormat:@"管理对 %@ 的相册授权（改的是你的私密相册可见名单）"];
-    [(id)UIAlertController alertControllerWithTitle:@"隐私相册" message:ret preferredStyle:0];
+    [(id)[NSString class] stringWithFormat:@"一键开放相册给 %@"];
+    [(id)[NSString class] stringWithFormat:@"一键关闭相册给 %@"];
+    [(id)[NSString class] stringWithFormat:@"管理对 %@ 的相册授权（改的是你的私密相册可见名单）"];
+    [(id)[UIAlertController class] alertControllerWithTitle:@"隐私相册" message:ret preferredStyle:0];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [(id)UIAlertAction actionWithTitle:ret style:0 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    [(id)UIAlertAction actionWithTitle:ret style:0 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIAlertAction actionWithTitle:@"清空全部可见用户" style:2 handler:0x207aa8]; */
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"清空全部可见用户" style:2 handler:0x207aa8]; */
     [(id)ret addAction:ret];
     objc_release(ret);
-    [(id)UIAlertAction actionWithTitle:@"取消" style:1 handler:0];
+    [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
     [(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushTopViewController(); */
@@ -678,7 +678,7 @@ L_f8dd8:;
     objc_release(ret);
     objc_release(ret);
     [(id)ret presentViewController:ret animated:1 completion:0];
-    /* [UNRESOLVED] [(id)@0x244978 isEnabledForLevel:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_f9288;
 
     if (ret == 0) goto L_f92a8;
@@ -698,7 +698,7 @@ L_f9244:;
     goto L_f92d4;
 
 L_f9288:;
-    /* [UNRESOLVED] [(id)@0x244978 noteFiltered:3]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] noteFiltered:3]; */
     goto L_f9344;
 
 L_f92a8:;
@@ -709,13 +709,13 @@ L_f92b8:;
 
 L_f92d4:;
     [(id)ret length];
-    [(id)NSString stringWithFormat:@"<len=%lu,h=%03lu>"];
+    [(id)[NSString class] stringWithFormat:@"<len=%lu,h=%03lu>"];
 
 L_f930c:;
     objc_release(ret);
 
 L_f9334:;
-    /* [UNRESOLVED] [(id)@0x244978 logLevel:3 format:@"[Privacy][相册授权] 已对 %@ 弹出授权菜单"]; */
+    /* [UNRESOLVED] [(id)[@0x244978 class] logLevel:3 format:@"[Privacy][相册授权] 已对 %@ 弹出授权菜单"]; */
     objc_release(ret);
 
 L_f9344:;

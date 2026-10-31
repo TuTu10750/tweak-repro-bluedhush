@@ -432,7 +432,7 @@
     [(id)self->_thumb setContentMode:2];
     [(id)self->_thumb setClipsToBounds:1];
     /* [UNRESOLVED] HushIsDarkMode(); */
-    [(id)UIColor colorWithWhite:0.96 alpha:1];
+    [(id)[UIColor class] colorWithWhite:0.96 alpha:1];
     [(id)self->_thumb setBackgroundColor:ret];
     objc_release(ret);
     [self contentView];
@@ -440,10 +440,10 @@
     objc_release(ret);
     [[UIImageView alloc] initWithFrame:CGRectZero];
     objc_release(self->_playBadge);
-    [(id)UIImage systemImageNamed:@"play.circle.fill"];
+    [(id)[UIImage class] systemImageNamed:@"play.circle.fill"];
     [(id)self->_playBadge setImage:ret];
     objc_release(ret);
-    [(id)UIColor colorWithWhite:1 alpha:0.92];
+    [(id)[UIColor class] colorWithWhite:1 alpha:0.92];
     [(id)self->_playBadge setTintColor:ret];
     objc_release(ret);
     [self contentView];
@@ -461,13 +461,13 @@
     objc_release(ret);
     objc_release(self->_flashTag);
     [(id)self->_flashTag setText:@"闪照"];
-    [(id)UIFont systemFontOfSize:10];
+    [(id)[UIFont class] systemFontOfSize:10];
     [(id)self->_flashTag setFont:ret];
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)self->_flashTag setTextColor:ret];
     objc_release(ret);
-    [(id)UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
+    [(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
     [(id)self->_flashTag setBackgroundColor:ret];
     objc_release(ret);
     [(id)self->_flashTag setTextAlignment:1];

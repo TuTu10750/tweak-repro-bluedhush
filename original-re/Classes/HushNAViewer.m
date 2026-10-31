@@ -89,7 +89,7 @@
     /* [UNRESOLVED] [self setImageURLs:a0]; */
     /* [UNRESOLVED] [self setInitialIndex:a1]; */
     [self setModalPresentationStyle:0];
-    [(id)NSMutableSet set];
+    [(id)[NSMutableSet class] set];
     [self setLoadedHighResolutionIndexes:ret];
     objc_release(ret);
     objc_retain(self);
@@ -622,7 +622,7 @@ L_c6544:;
     id ret = nil;
 
     [super viewDidLoad];
-    [(id)UIColor blackColor];
+    [(id)[UIColor class] blackColor];
     [self view];
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
@@ -632,7 +632,7 @@ L_c6544:;
     [[UIScrollView alloc] initWithFrame:CGRectZero];
     objc_release(ret);
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setPagingEnabled:1];
@@ -644,24 +644,24 @@ L_c6544:;
     [(id)ret addSubview:[[UIScrollView alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
     [self setPagingScrollView:[[UIScrollView alloc] initWithFrame:CGRectZero]];
-    [(id)UIButton buttonWithType:1];
+    [(id)[UIButton class] buttonWithType:1];
     [self view];
     [(id)ret bounds];
     /* [UNRESOLVED] CGRectGetWidth(); */
     [(id)ret setFrame:CGRectZero];
     objc_release(ret);
     [(id)ret setAutoresizingMask:0x21];
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 alpha:0 / * unk * /]; */
     [(id)ret setBackgroundColor:ret];
     objc_release(ret);
     [(id)ret layer];
     [(id)ret setCornerRadius:22];
     objc_release(ret);
     [(id)ret setTitle:@"✕" forState:0];
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)ret setTitleColor:ret forState:0];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:25 weight:0x200378]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:25 weight:0x200378]; */
     [(id)ret titleLabel];
     [(id)ret setFont:ret];
     objc_release(ret);
@@ -681,14 +681,14 @@ L_c6544:;
     objc_release(ret);
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setAutoresizingMask:0xd];
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextColor:ret];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setTextAlignment:1];
-    [(id)UIFont systemFontOfSize:14];
+    [(id)[UIFont class] systemFontOfSize:14];
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setFont:ret];
     objc_release(ret);
-    /* [UNRESOLVED] [(id)UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
+    /* [UNRESOLVED] [(id)[UIColor class] colorWithWhite:0 alpha:0 / * unk * /]; */
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     [(id)[[UILabel alloc] initWithFrame:CGRectZero] layer];
@@ -1287,7 +1287,7 @@ L_c6fb0:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     [[UIScrollView alloc] initWithFrame:CGRectZero];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)[[UIScrollView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0] setDelegate:0 / * local * /]; */
@@ -1303,13 +1303,13 @@ L_c6fb0:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
     [[UIView alloc] initWithFrame:CGRectZero];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)[[UIView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     [(id)[[UIView alloc] initWithFrame:CGRectZero] setTag:0];
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0] unknownSelector]; */
     [[UIImageView alloc] initWithFrame:CGRectZero];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0] unknownSelector]; */
@@ -1318,7 +1318,7 @@ L_c6fb0:;
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0] unknownSelector]; */
     /* [UNRESOLVED] [(id)[[UIView alloc] initWithFrame:0] unknownSelector]; */
     [[UIImageView alloc] initWithFrame:CGRectZero];
-    [(id)UIColor clearColor];
+    [(id)[UIColor class] clearColor];
     [(id)[[UIImageView alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[[UIImageView alloc] initWithFrame:0] unknownSelector]; */
@@ -1452,8 +1452,8 @@ L_c7490:;
     [self pagingScrollView];
     [(id)ret viewWithTag:0];
     objc_release(ret);
-    [(id)UIScrollView class];
-    [(id)ret isKindOfClass:[(id)UIScrollView class]];
+    [(id)[UIScrollView class] class];
+    [(id)ret isKindOfClass:[(id)[UIScrollView class] class]];
     /* [UNRESOLVED] objc_retain(a0); */
     objc_release(ret);
     goto L_c76d8;
@@ -1815,7 +1815,7 @@ L_c77d8:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * le * /) goto L_c7ae8; */
 
-    /* [UNRESOLVED] [(id)NSNumber numberWithInteger:a0]; */
+    /* [UNRESOLVED] [(id)[NSNumber class] numberWithInteger:a0]; */
     [self loadedHighResolutionIndexes];
     [(id)ret containsObject:ret];
     objc_release(ret);
@@ -1824,12 +1824,12 @@ L_c77d8:;
     /* [UNRESOLVED] [(id)ret objectAtIndexedSubscript:a0]; */
     objc_release(ret);
     objc_retain(ret);
-    [(id)NSString class];
-    [(id)ret isKindOfClass:[(id)NSString class]];
+    [(id)[NSString class] class];
+    [(id)ret isKindOfClass:[(id)[NSString class] class]];
 
     [(id)ret length];
 
-    [(id)NSURLComponents componentsWithString:ret];
+    [(id)[NSURLComponents class] componentsWithString:ret];
     [(id)ret host];
     [(id)ret lowercaseString];
     objc_release(ret);
@@ -2051,7 +2051,7 @@ L_c7ae8:;
     [self pageLabel];
     [(id)ret setHidden:0];
     objc_release(ret);
-    [(id)NSString stringWithFormat:@"%ld / %lu"];
+    [(id)[NSString class] stringWithFormat:@"%ld / %lu"];
     [self pageLabel];
     [(id)ret setText:ret];
     objc_release(ret);
@@ -2869,7 +2869,7 @@ L_c87b8:;
 
     /* [UNRESOLVED] if (cond / * gt * /) goto L_c88dc; */
 
-    /* [UNRESOLVED] [(id)UIView animateWithDuration:0 / * unk * / animations:0]; */
+    /* [UNRESOLVED] [(id)[UIView class] animateWithDuration:0 / * unk * / animations:0]; */
     goto L_c88d8;
 
 L_c883c:;

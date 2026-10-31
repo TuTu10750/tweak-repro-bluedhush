@@ -254,7 +254,7 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_cedc;
 
-    [(id)UIColor colorWithRed:0.039 green:0.518 blue:1 alpha:1];
+    [(id)[UIColor class] colorWithRed:0.039 green:0.518 blue:1 alpha:1];
     [self setBackgroundColor:ret];
     objc_release(ret);
     [self layer];
@@ -265,17 +265,17 @@
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_capText);
     [(id)self->_capText setText:@"隐私相册"];
-    /* [UNRESOLVED] [(id)UIFont systemFontOfSize:10 weight:0x200180]; */
+    /* [UNRESOLVED] [(id)[UIFont class] systemFontOfSize:10 weight:0x200180]; */
     [(id)self->_capText setFont:ret];
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)self->_capText setTextColor:ret];
     objc_release(ret);
     [self addSubview:self->_capText];
-    [(id)UIImageSymbolConfiguration configurationWithPointSize:6 weight:0];
-    [(id)UIImage systemImageNamed:@"lock.open.fill" withConfiguration:ret];
+    [(id)[UIImageSymbolConfiguration class] configurationWithPointSize:6 weight:0];
+    [(id)[UIImage class] systemImageNamed:@"lock.open.fill" withConfiguration:ret];
     objc_release(ret);
-    [(id)UIColor whiteColor];
+    [(id)[UIColor class] whiteColor];
     [(id)ret imageWithTintColor:ret renderingMode:1];
     objc_release(ret);
     objc_release(ret);
