@@ -94,7 +94,7 @@
 
 - (id)initWithReuseIdentifier:(id)a0;
 - (void)configureText:(id)a0 inset:(double)a1 tint:(id)a2;
-- (BOOL)textView:(id)a0 shouldInteractWithURL:(id)a1 inRange:(_NSRange)a2 interaction:(long long)a3;
+- (BOOL)textView:(id)a0 shouldInteractWithURL:(id)a1 inRange:(NSRange)a2 interaction:(long long)a3;
 
 @end
 

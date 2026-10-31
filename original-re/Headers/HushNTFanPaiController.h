@@ -65,7 +65,7 @@
 @class HushTabLongPressSettings;
 @class HushTabLPTap;
 @class HushNTEntryTap;
-@class HushNTFormController;
+#import "HushNTFormController.h"
 @class HushNTCheckTap;
 @class HushNTFindTargetController;
 @class HushNTSkipListController;

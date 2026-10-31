@@ -87,7 +87,7 @@
 @class HushSettingsPanel;
 
 @interface HushNMWeakTableBox : NSObject {
-    UITableView * _table;
+    UITableView * __weak _table;
 }
 
 @property (weak, nonatomic) UITableView *table;

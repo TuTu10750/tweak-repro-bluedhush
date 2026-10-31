@@ -343,7 +343,7 @@ jobs:
       - name: Syntax check (clang per-file, the real signal)
         run: |
           set +e
-          SDK=$(ls -d "$THEOS"/sdks/iPhoneOS*.sdk | head -1)
+          SDK=$(ls -d "$THEOS"/sdks/iPhoneOS*.sdk | sort -V | tail -1)
           echo "SDK=$SDK"
           rm -rf /tmp/obj; mkdir -p /tmp/obj
           : > syntax.log

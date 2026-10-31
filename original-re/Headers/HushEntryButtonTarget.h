@@ -87,7 +87,7 @@
 @class HushSettingsPanel;
 
 @interface HushEntryButtonTarget : NSObject {
-    UITableViewCell * _cell;
+    UITableViewCell * __weak _cell;
 }
 
 @property (weak, nonatomic) UITableViewCell *cell;

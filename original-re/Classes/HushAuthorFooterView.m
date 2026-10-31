@@ -603,7 +603,7 @@
 }
 
 // @0x19d8d4  types=B56@0:8@16@24{_NSRange=QQ}32q48
-- (BOOL)textView:(id)a0 shouldInteractWithURL:(id)a1 inRange:(_NSRange)a2 interaction:(long long)a3 {
+- (BOOL)textView:(id)a0 shouldInteractWithURL:(id)a1 inRange:(NSRange)a2 interaction:(long long)a3 {
     // ---- recovered call sequence ----
     // objc_retain(a3);
     // [@0x244978 ?];
