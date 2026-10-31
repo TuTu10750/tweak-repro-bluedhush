@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'pull_request'
     runs-on: macos-14
 
     env:
@@ -223,7 +223,7 @@ jobs:
   # 与上面两个变体完全独立：不同 Makefile、不同 TWEAK_NAME、不同产物。
   # ==========================================================================
   build-original-re:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'pull_request'
     runs-on: macos-14
 
     env:
