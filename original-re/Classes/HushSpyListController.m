@@ -649,7 +649,7 @@ L_13b0c0:;
     objc_release(ret);
     objc_release(ret);
     (void)[(id)self table];
-    (void)[(id)ret setSeparatorInset:0];
+    (void)[(id)ret setSeparatorInset:UIEdgeInsetsZero];
     objc_release(ret);
     (void)[(id)self table];
     (void)[(id)ret setDataSource:self];

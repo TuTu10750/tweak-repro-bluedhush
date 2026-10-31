@@ -184,7 +184,7 @@
     if (ret == 0) goto L_3bc8c;
 
     /* [UNRESOLVED] [(id)a0 locationInView:ret]; */
-    (void)[(id)ret hitTest:0 withEvent:0];
+    (void)[(id)ret hitTest:CGPointZero withEvent:0];
     objc_retain(ret);
     (void)[(id)[NSMutableString class] string];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_3bb84; */
