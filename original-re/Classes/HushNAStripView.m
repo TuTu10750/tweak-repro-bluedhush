@@ -788,7 +788,7 @@ L_c5cbc:;
 L_c5d30:;
     [0 count];
     [self scrollView];
-    [ret setContentSize:0];
+    [ret setContentSize:CGSizeZero];
     objc_release(ret);
     [0 count];
     if ([0 count]!= 0) goto L_c5db8;

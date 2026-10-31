@@ -1006,13 +1006,13 @@ L_13e58:;
     [0 length];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_14064; */
 
-    [objc_retainAutorelease bytes];
+    /* [UNRESOLVED] [objc_retainAutorelease bytes]; */
     [0 length];
     /* [UNRESOLVED] if (cond / * ne * /) goto L_14064; */
 
     /* [UNRESOLVED] if (cond / * ne * /) goto L_14064; */
 
-    [NSData dataWithBytes:[objc_retainAutorelease bytes]; length:0xc];
+    /* [UNRESOLVED] [NSData dataWithBytes:[objc_retainAutorelease bytes]; length:0xc]; */
     [[NSString alloc] initWithBytes:2 length:0 encoding:4];
     if ([[NSString alloc] initWithBytes:2 length:0 encoding:4]== 0) goto L_140ac;
 
@@ -1170,13 +1170,13 @@ L_140bc:;
     /* [UNRESOLVED] objc_release(a0); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_14248; */
 
-    objc_retain(objc_retainAutorelease);
+    /* [UNRESOLVED] objc_retain(objc_retainAutorelease); */
     [ret bytes];
     /* [UNRESOLVED] [0x2566b0 length]; */
-    [objc_retainAutorelease bytes];
+    /* [UNRESOLVED] [objc_retainAutorelease bytes]; */
     [ret length];
     /* [UNRESOLVED] CCHmac([ret bytes];, [0x2566b0 length];, [objc_retainAutorelease bytes];, [ret length];); */
-    [objc_retainAutorelease bytes];
+    /* [UNRESOLVED] [objc_retainAutorelease bytes]; */
     /* [UNRESOLVED] objc_release(0x2566b0); */
     objc_release(ret);
     objc_release(ret);

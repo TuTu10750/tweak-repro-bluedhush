@@ -575,7 +575,7 @@ L_f8c40:;
     [ret length];
     if ([ret length]== 0) goto L_f8cc4;
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] sqlite3_open_v2(); */
     if (sqlite3_open_v2 == 0) goto L_f8ce4;
 

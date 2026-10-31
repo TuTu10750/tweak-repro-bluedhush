@@ -1071,13 +1071,13 @@ L_1286c8:;
 
     /* [UNRESOLVED] if (self->/ *+0x28* / == 0) goto L_12892c; */
 
-    [objc_loadWeakRetained currentImage];
+    /* [UNRESOLVED] [objc_loadWeakRetained currentImage]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_12892c; */
 
     /* [UNRESOLVED] [objc_loadWeakRetained setImage:self->/ *+0x30* / forState:0]; */
     /* [UNRESOLVED] [objc_loadWeakRetained setBackgroundImage:self->/ *+0x38* / forState:0]; */
-    [objc_loadWeakRetained subviews];
+    /* [UNRESOLVED] [objc_loadWeakRetained subviews]; */
     [ret countByEnumeratingWithState:0 objects:0 count:0x10];
     if ([ret countByEnumeratingWithState:0 objects:0 count:0x10]== 0) goto L_1288d4;
 
@@ -1089,7 +1089,7 @@ L_128858:;
     /* [UNRESOLVED] [0 / * local * // *+0x0* / isKindOfClass:[UIImageView class];]; */
     /* [UNRESOLVED] if (0 / * local * // *+0x0* / == 0) goto L_1288ac; */
 
-    [objc_loadWeakRetained imageView];
+    /* [UNRESOLVED] [objc_loadWeakRetained imageView]; */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * eq * /) goto L_1288ac; */
 
@@ -3340,7 +3340,7 @@ L_12a018:;
     if (objc_loadWeakRetained == 0) goto L_12a0b4;
 
     [UIViewController class];
-    [objc_loadWeakRetained isKindOfClass:[UIViewController class]];
+    /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[UIViewController class];]; */
     if (objc_loadWeakRetained == 0) goto L_12a0c4;
 
     objc_retain(objc_loadWeakRetained);
@@ -3369,10 +3369,10 @@ L_12a110:;
 
 L_12a15c:;
     [UIResponder class];
-    [objc_loadWeakRetained isKindOfClass:[UIResponder class]];
+    /* [UNRESOLVED] [objc_loadWeakRetained isKindOfClass:[UIResponder class];]; */
     if (objc_loadWeakRetained == 0) goto L_12a1f8;
 
-    [objc_loadWeakRetained nextResponder];
+    /* [UNRESOLVED] [objc_loadWeakRetained nextResponder]; */
     if (ret == 0) goto L_12a1ec;
 
 L_12a1a8:;
@@ -3662,7 +3662,7 @@ L_12a4f4:;
     // 0012a75c  ldp     x20, x19, [sp], #0x20
     // 0012a760  b       #0x1a72d8   ; _objc_msgSend
 
-    [objc_loadWeakRetained resignFirstResponder];
+    /* [UNRESOLVED] [objc_loadWeakRetained resignFirstResponder]; */
     objc_release(objc_loadWeakRetained);
     /* [UNRESOLVED] HushInlineEditSetActive(); */
 }
@@ -4220,19 +4220,19 @@ L_12a4f4:;
 
 L_12aa9c:;
     [UIFont systemFontOfSize:14];
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
-    [objc_alloc_init setBorderStyle:3];
-    [objc_alloc_init setClearButtonMode:1];
-    [objc_alloc_init setReturnKeyType:9];
+    /* [UNRESOLVED] [objc_alloc_init setBorderStyle:3]; */
+    /* [UNRESOLVED] [objc_alloc_init setClearButtonMode:1]; */
+    /* [UNRESOLVED] [objc_alloc_init setReturnKeyType:9]; */
     /* [UNRESOLVED] [objc_alloc_init setText:0x209f58]; */
     /* [UNRESOLVED] [objc_alloc_init setPlaceholder:0x224178]; */
-    [objc_alloc_init widthAnchor];
+    /* [UNRESOLVED] [objc_alloc_init widthAnchor]; */
     /* [UNRESOLVED] [ret constraintEqualToConstant:0 / * unk * /]; */
     [ret setActive:1];
     objc_release(ret);
     objc_release(ret);
-    [objc_alloc_init heightAnchor];
+    /* [UNRESOLVED] [objc_alloc_init heightAnchor]; */
     [ret constraintEqualToConstant:30];
     [ret setActive:1];
     objc_release(ret);
@@ -4470,7 +4470,7 @@ L_12ad50:;
     // 0012b040  b       #0x1a7284   ; _objc_release
     id ret = nil;
 
-    [objc_loadWeakRetained text];
+    /* [UNRESOLVED] [objc_loadWeakRetained text]; */
     [NSCharacterSet whitespaceAndNewlineCharacterSet];
     [ret stringByTrimmingCharactersInSet:ret];
     objc_release(ret);

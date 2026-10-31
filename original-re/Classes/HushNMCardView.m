@@ -576,9 +576,9 @@
     /* [UNRESOLVED] [UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] [UIColor colorWithWhite:1 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [objc_retainAutorelease CGColor];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_chipBox layer];
-    [ret setBorderColor:[objc_retainAutorelease CGColor]];
+    /* [UNRESOLVED] [ret setBorderColor:[objc_retainAutorelease CGColor];]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -624,9 +624,9 @@
     /* [UNRESOLVED] [UIColor colorWithWhite:0 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] [UIColor colorWithWhite:1 alpha:0 / * unk * /]; */
     /* [UNRESOLVED] sub_cef28(ret); */
-    [objc_retainAutorelease CGColor];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_bar layer];
-    [ret setBorderColor:[objc_retainAutorelease CGColor]];
+    /* [UNRESOLVED] [ret setBorderColor:[objc_retainAutorelease CGColor];]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -2912,18 +2912,18 @@ L_d0e74:;
     [self->_chip setText:self->_chipText];
     [self->_chip sizeThatFits:CGSizeZero];
     [self->_chipBox setFrame:CGRectZero];
-    [self->_chipDot setFrame:14];
-    [self->_chip setFrame:30];
+    [self->_chipDot setFrame:CGRectZero];
+    [self->_chip setFrame:CGRectZero];
     goto L_d0f9c;
 
 L_d0f9c:;
-    [self->_bar setFrame:14];
+    [self->_bar setFrame:CGRectZero];
     [self->_buttons count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d106c; */
 
 L_d0ff8:;
     [self->_buttons objectAtIndexedSubscript:0];
-    [ret setFrame:8];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     [self->_buttons count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_d0ff8; */

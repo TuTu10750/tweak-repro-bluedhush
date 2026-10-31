@@ -576,7 +576,7 @@ L_ded64:;
     /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0 / * unk * /]; setTag:0x232c]; */
     /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0 / * unk * /]; setDelegate:self]; */
     /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0 / * unk * /]; setAlwaysBounceVertical:1]; */
-    [objc_alloc_init addTarget:self action:sel_registerName("pullRefresh:") forControlEvents:0x1000];
+    /* [UNRESOLVED] [objc_alloc_init addTarget:self action:sel_registerName("pullRefresh:") forControlEvents:0x1000]; */
     /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0 / * unk * /]; setRefreshControl:objc_alloc_init]; */
     [self view];
     /* [UNRESOLVED] [ret addSubview:[[UIScrollView alloc] initWithFrame:0 / * unk * /];]; */
@@ -1717,7 +1717,7 @@ L_e17f4:;
     /* [UNRESOLVED] object_getClass(); */
     if (object_getClass == 0) goto L_e193c;
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] class_getInstanceVariable([objc_retainAutorelease UTF8String];); */
     if (class_getInstanceVariable != 0) goto L_e18f4;
 
@@ -1728,7 +1728,7 @@ L_e17f4:;
 
 L_e18b8:;
     [@"_" stringByAppendingString:0];
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     /* [UNRESOLVED] class_getInstanceVariable([objc_retainAutorelease UTF8String];); */
     objc_release(ret);
     if (class_getInstanceVariable == 0) goto L_e193c;
@@ -2606,7 +2606,7 @@ L_e1cc8:;
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e1eac; */
 
-    [objc_release isEqualToString:0];
+    /* [UNRESOLVED] [objc_release isEqualToString:0]; */
     if (((objc_release >> 0) & 1) != 0) goto L_e2304;
 
 L_e1eac:;
@@ -3342,7 +3342,7 @@ L_e2b28:;
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_e2c1c; */
 
     /* [UNRESOLVED] NSSelectorFromString(); */
-    [objc_loadWeakRetained respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [objc_loadWeakRetained respondsToSelector:NSSelectorFromString]; */
     if (objc_loadWeakRetained == 0) goto L_e2c1c;
 
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */
@@ -4510,7 +4510,7 @@ L_e3738:;
     /* [UNRESOLVED] [@0x244978 noteFiltered:4]; */
 
 L_e3770:;
-    [ret setFrame:16];
+    [ret setFrame:CGRectZero];
     /* [UNRESOLVED] [ret setFrame:-0x3fb4000000000000]; */
     /* [UNRESOLVED] [0 / * local * / hushEnsureChips]; */
     [ret setFrame:CGRectZero];
@@ -4572,7 +4572,7 @@ L_e3af8:;
     /* [UNRESOLVED] if (cond / * lo * /) goto L_e39f4; */
 
 L_e3b2c:;
-    [ret setContentSize:0];
+    [ret setContentSize:CGSizeZero];
     /* [UNRESOLVED] [0 / * local * / hushEnsurePhotosForVisibleCard]; */
     objc_release(ret);
     objc_release(ret);

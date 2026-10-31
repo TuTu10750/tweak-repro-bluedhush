@@ -569,11 +569,11 @@ L_e4b44:;
     [CAGradientLayer layer];
     objc_release(self->_veil);
     [ret colorWithAlphaComponent:0];
-    [objc_retainAutorelease CGColor];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     /* [UNRESOLVED] [ret colorWithAlphaComponent:0 / * unk * /]; */
-    [objc_retainAutorelease CGColor];
-    [objc_retainAutorelease CGColor];
-    [objc_retainAutorelease CGColor];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [NSArray arrayWithObjects:-0xb0 count:4];
     [self->_veil setColors:ret];
     objc_release(ret);
@@ -1073,7 +1073,7 @@ L_e5778:;
     [self->_pages count];
     [self->_pager bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
-    [self->_pager setContentSize:-18];
+    [self->_pager setContentSize:CGSizeZero];
     [self->_pages count];
     if ([self->_pages count]== 0) goto L_e5990;
 
@@ -1081,7 +1081,7 @@ L_e5908:;
     [self->_pager bounds];
     /* [UNRESOLVED] CGRectGetHeight(); */
     [self->_pages objectAtIndexedSubscript:0];
-    [ret setFrame:-24];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     [self->_pages count];
     /* [UNRESOLVED] if (cond / * lo * /) goto L_e5908; */
@@ -1588,7 +1588,7 @@ L_e5b2c:;
 
 L_e5bb0:;
     [self->_strip setContentInset:0];
-    [self->_strip setContentSize:2];
+    [self->_strip setContentSize:CGSizeZero];
     /* [UNRESOLVED] if (cond / * le * /) goto L_e6030; */
 
 L_e5cbc:;
@@ -1631,7 +1631,7 @@ L_e5cbc:;
     [ret setShadowRadius:0.5];
     objc_release(ret);
     [ret layer];
-    [ret setShadowOffset:0];
+    [ret setShadowOffset:CGSizeZero];
     objc_release(ret);
     /* [UNRESOLVED] [ret setAlpha:0/ *+0x-a0* /]; */
     objc_release(ret);

@@ -268,9 +268,9 @@
     [self->_iconView setContentMode:1];
     [self->_iconView setUserInteractionEnabled:0];
     [UIColor blackColor];
-    [objc_retainAutorelease CGColor];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_iconView layer];
-    [ret setShadowColor:[objc_retainAutorelease CGColor]];
+    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor];]; */
     objc_release(ret);
     objc_release(ret);
     [self->_iconView layer];
@@ -280,7 +280,7 @@
     [ret setShadowRadius:4];
     objc_release(ret);
     [self->_iconView layer];
-    [ret setShadowOffset:0];
+    [ret setShadowOffset:CGSizeZero];
     objc_release(ret);
     [self addSubview:self->_iconView];
     [self refreshIcon];
@@ -342,7 +342,7 @@ L_67678:;
     [NSNotificationCenter defaultCenter];
     [ret removeObserver:self];
     objc_release(ret);
-    [super dealloc];
+    /* [UNRESOLVED] [super dealloc] (ARC) */
     return;
 }
 

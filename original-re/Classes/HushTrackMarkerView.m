@@ -92,7 +92,7 @@
     [self hushCaption];
     if (ret == 0) goto L_901fc;
 
-    [ret sizeThatFits:220];
+    [ret sizeThatFits:CGSizeZero];
     [ret setBounds:CGRectZero];
     [self bounds];
     /* [UNRESOLVED] CGRectGetMidX(); */

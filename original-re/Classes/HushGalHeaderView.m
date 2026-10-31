@@ -329,7 +329,7 @@
     /* [UNRESOLVED] [super initWithFrame:a0]; */
     if (self == 0) goto L_7c688;
 
-    [[UILabel alloc] initWithFrame:14];
+    [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_name);
     [UIFont boldSystemFontOfSize:12];
     [self->_name setFont:ret];
@@ -343,7 +343,7 @@
     objc_release(ret);
     [self->_name setAutoresizingMask:0x12];
     [self addSubview:self->_name];
-    [[UILabel alloc] initWithFrame:-118];
+    [[UILabel alloc] initWithFrame:CGRectZero];
     objc_release(self->_count);
     [UIFont systemFontOfSize:12];
     [self->_count setFont:ret];

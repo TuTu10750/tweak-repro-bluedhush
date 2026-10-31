@@ -590,30 +590,30 @@ L_7c8d8:;
     [self onlySid];
     [ret length];
     objc_release(ret);
-    [[UILabel alloc] initWithFrame:18];
+    [[UILabel alloc] initWithFrame:CGRectZero];
     [UIColor colorWithRed:0.3 green:0.55 blue:1 alpha:1];
     /* [UNRESOLVED] [[[UILabel alloc] initWithFrame:18]; unknownSelector]; */
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:18]; layer];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; layer];
     [ret setCornerRadius:1.5];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:18]; layer];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; layer];
     [ret setMasksToBounds:1];
     objc_release(ret);
     [self cardView];
     /* [UNRESOLVED] [ret unknownSelector]; */
     objc_release(ret);
-    [[UILabel alloc] initWithFrame:29];
+    [[UILabel alloc] initWithFrame:CGRectZero];
     [self onlySid];
     [ret length];
-    [[[UILabel alloc] initWithFrame:29]; setText:0];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setText:0];
     objc_release(ret);
     [UIFont boldSystemFontOfSize:17];
-    [[[UILabel alloc] initWithFrame:29]; setFont:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushIsDarkMode(); */
     /* [UNRESOLVED] [UIColor unknownSelector]; */
-    [[[UILabel alloc] initWithFrame:29]; setTextColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
     objc_release(ret);
     [self cardView];
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -673,9 +673,9 @@ L_7d0b8:;
     goto L_7d714;
 
 L_7d278:;
-    [[UITextField alloc] initWithFrame:18];
-    [self setSearchField:[[UITextField alloc] initWithFrame:18]];
-    objc_release([[UITextField alloc] initWithFrame:18]);
+    [[UITextField alloc] initWithFrame:CGRectZero];
+    [self setSearchField:[[UITextField alloc] initWithFrame:CGRectZero]];
+    objc_release([[UITextField alloc] initWithFrame:CGRectZero]);
     [self searchField];
     [ret setPlaceholder:@"输入ID或昵称"];
     objc_release(ret);
@@ -740,9 +740,9 @@ L_7d278:;
     objc_release(ret);
 
 L_7d714:;
-    [objc_alloc_init setMinimumInteritemSpacing:4];
-    [objc_alloc_init setMinimumLineSpacing:6];
-    [objc_alloc_init setSectionInset:0];
+    /* [UNRESOLVED] [objc_alloc_init setMinimumInteritemSpacing:4]; */
+    /* [UNRESOLVED] [objc_alloc_init setMinimumLineSpacing:6]; */
+    /* [UNRESOLVED] [objc_alloc_init setSectionInset:0]; */
     /* [UNRESOLVED] [objc_alloc_init setHeaderReferenceSize:0 / * unk * /]; */
     [[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0];
     [self setGrid:[[UICollectionView alloc] initWithFrame:objc_alloc_init collectionViewLayout:0]];
@@ -813,9 +813,9 @@ L_7d714:;
     goto L_7de50;
 
 L_7dc60:;
-    [[UILabel alloc] initWithFrame:18];
-    [self setProgressLabel:[[UILabel alloc] initWithFrame:18]];
-    objc_release([[UILabel alloc] initWithFrame:18]);
+    [[UILabel alloc] initWithFrame:CGRectZero];
+    [self setProgressLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [UIFont systemFontOfSize:12];
     [self progressLabel];
     /* [UNRESOLVED] [ret unknownSelector]; */
@@ -844,7 +844,7 @@ L_7dc60:;
 
 L_7de50:;
     [UIButton buttonWithType:1];
-    [ret setFrame:18];
+    [ret setFrame:CGRectZero];
     [ret setTitle:@"关闭" forState:0];
     [UIFont boldSystemFontOfSize:15];
     [ret titleLabel];
@@ -877,8 +877,8 @@ L_7de50:;
     objc_release(ret);
     objc_release(objc_alloc_init);
     /* [UNRESOLVED] objc_release([[UILabel alloc] initWithFrame:-0x3f97000000000000];); */
-    objc_release([[UILabel alloc] initWithFrame:29]);
-    objc_release([[UILabel alloc] initWithFrame:18]);
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release([[UIControl alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
     return;
@@ -5154,10 +5154,10 @@ L_81588:;
     if (ret == 0) goto L_81838;
 
     [ret files];
-    [objc_alloc_init setFiles:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFiles:ret]; */
     objc_release(ret);
     [self setPreviewSource:objc_alloc_init];
-    [objc_alloc_init setDataSource:objc_alloc_init];
+    /* [UNRESOLVED] [objc_alloc_init setDataSource:objc_alloc_init]; */
     /* [UNRESOLVED] [a1 item]; */
     /* [UNRESOLVED] [objc_alloc_init setCurrentPreviewItemIndex:[a1 item];]; */
     [self presentViewController:objc_alloc_init animated:1 completion:0];
@@ -5191,7 +5191,7 @@ L_81914:;
     /* [UNRESOLVED] [ret indexOfObject:0 / * local * /]; */
     /* [UNRESOLVED] if (cond / * eq * /) goto L_8199c; */
 
-    [objc_alloc_init setFiles:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFiles:ret]; */
     /* [UNRESOLVED] [objc_alloc_init setIndex:[ret indexOfObject:0 / * local * /];]; */
     [self presentViewController:objc_alloc_init animated:1 completion:0];
     objc_release(objc_alloc_init);
@@ -7145,7 +7145,7 @@ L_840dc:;
     [NSNotificationCenter defaultCenter];
     [ret removeObserver:self];
     objc_release(ret);
-    [super dealloc];
+    /* [UNRESOLVED] [super dealloc] (ARC) */
     return;
 }
 

@@ -913,7 +913,7 @@ L_7b4f0:;
     /* [UNRESOLVED] [objc_alloc_init setIndex:a0]; */
     [self files];
     /* [UNRESOLVED] [ret objectAtIndexedSubscript:a0]; */
-    [objc_alloc_init setPath:ret];
+    /* [UNRESOLVED] [objc_alloc_init setPath:ret]; */
     objc_release(ret);
     objc_release(ret);
     goto L_7b6e4;

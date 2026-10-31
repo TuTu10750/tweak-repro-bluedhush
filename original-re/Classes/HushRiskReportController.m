@@ -110,7 +110,7 @@
     [self tableView];
     /* [UNRESOLVED] [ret setEstimatedRowHeight:0x4050000000000000]; */
     objc_release(ret);
-    [objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000];
+    /* [UNRESOLVED] [objc_alloc_init addTarget:self action:sel_registerName("hushRefresh") forControlEvents:0x1000]; */
     [self setRefreshControl:objc_alloc_init];
     [self hushRefresh];
     objc_release(objc_alloc_init);
@@ -1358,11 +1358,11 @@ L_135874:;
 
     /* [UNRESOLVED] [objc_alloc_init setText:0x225cf8]; */
     /* [UNRESOLVED] [UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
     [self view];
     [ret tintColor];
-    [objc_alloc_init setTextColor:ret];
+    /* [UNRESOLVED] [objc_alloc_init setTextColor:ret]; */
     objc_release(ret);
     goto L_135c48;
 
@@ -1376,7 +1376,7 @@ L_135b88:;
     /* [UNRESOLVED] [objc_alloc_init unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] [UIFont monospacedSystemFontOfSize:15 weight:0 / * unk * // *+0x0* /]; */
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
     if (((ret >> 0) & 1) == 0) goto L_135c18;
 
@@ -1384,11 +1384,11 @@ L_135b88:;
 
 L_135c18:;
     [UIColor secondaryLabelColor];
-    [objc_alloc_init setTextColor:ret];
+    /* [UNRESOLVED] [objc_alloc_init setTextColor:ret]; */
 
 L_135c48:;
     objc_release(ret);
-    [objc_alloc_init sizeToFit];
+    /* [UNRESOLVED] [objc_alloc_init sizeToFit]; */
     /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryView:objc_alloc_init]; */
     /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setSelectionStyle:0]; */
     /* [UNRESOLVED] [[[UITableViewCell alloc] initWithStyle:3 reuseIdentifier:0x225cb8]; setAccessoryType:[ret boolValue];]; */

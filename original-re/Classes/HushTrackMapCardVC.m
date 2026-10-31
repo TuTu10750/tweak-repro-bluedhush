@@ -535,22 +535,22 @@
     [ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
+    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
     [self view];
     [ret addSubview:objc_alloc_init];
     objc_release(ret);
-    [objc_alloc_init setText:@"🎯"];
+    /* [UNRESOLVED] [objc_alloc_init setText:@"🎯"]; */
     [UIFont systemFontOfSize:24];
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
-    [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
-    [objc_alloc_init addSubview:objc_alloc_init];
-    [objc_alloc_init setText:@"对方位置"];
+    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
+    /* [UNRESOLVED] [objc_alloc_init addSubview:objc_alloc_init]; */
+    /* [UNRESOLVED] [objc_alloc_init setText:@"对方位置"]; */
     /* [UNRESOLVED] [UIFont systemFontOfSize:22 weight:0x200180]; */
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
-    [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
-    [objc_alloc_init addSubview:objc_alloc_init];
+    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
+    /* [UNRESOLVED] [objc_alloc_init addSubview:objc_alloc_init]; */
     [UIButton buttonWithType:1];
     [ret setTitle:@"关闭" forState:0];
     [UIFont systemFontOfSize:19];
@@ -561,7 +561,7 @@
     [ret setAccessibilityIdentifier:@"hush_track_card_close"];
     [ret addTarget:self action:sel_registerName("hushClose:") forControlEvents:0x40];
     [ret setTranslatesAutoresizingMaskIntoConstraints:0];
-    [objc_alloc_init addSubview:ret];
+    /* [UNRESOLVED] [objc_alloc_init addSubview:ret]; */
     /* [UNRESOLVED] [[MKMapView alloc] initWithFrame:0 / * unk * /]; */
     objc_release(self->_map);
     [self->_map setDelegate:self];
@@ -636,14 +636,14 @@
     [ret addSubview:[[UIVisualEffectView alloc] initWithEffect:ret]];
     objc_release(ret);
     /* [UNRESOLVED] [UIFont monospacedDigitSystemFontOfSize:13 weight:0x200378]; */
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
     [self lat];
     [self lng];
     [NSString stringWithFormat:@"%.6f, %.6f"];
-    [objc_alloc_init setText:ret];
+    /* [UNRESOLVED] [objc_alloc_init setText:ret]; */
     objc_release(ret);
-    [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0];
+    /* [UNRESOLVED] [objc_alloc_init setTranslatesAutoresizingMaskIntoConstraints:0]; */
     [[[UIVisualEffectView alloc] initWithEffect:ret]; contentView];
     [ret addSubview:objc_alloc_init];
     objc_release(ret);
@@ -669,39 +669,39 @@
     [self view];
     [ret safeAreaLayoutGuide];
     objc_release(ret);
-    [objc_alloc_init topAnchor];
+    /* [UNRESOLVED] [objc_alloc_init topAnchor]; */
     [ret topAnchor];
     [ret constraintEqualToAnchor:ret];
-    [objc_alloc_init leadingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
     [self view];
     [ret leadingAnchor];
     [ret constraintEqualToAnchor:ret];
-    [objc_alloc_init trailingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
     [self view];
     [ret trailingAnchor];
     [ret constraintEqualToAnchor:ret];
-    [objc_alloc_init heightAnchor];
+    /* [UNRESOLVED] [objc_alloc_init heightAnchor]; */
     /* [UNRESOLVED] [ret constraintEqualToConstant:0x404b000000000000]; */
-    [objc_alloc_init leadingAnchor];
-    [objc_alloc_init leadingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
+    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
     [ret constraintEqualToAnchor:ret constant:0];
-    [objc_alloc_init centerYAnchor];
-    [objc_alloc_init centerYAnchor];
+    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
+    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
     [ret constraintEqualToAnchor:ret];
-    [objc_alloc_init leadingAnchor];
-    [objc_alloc_init trailingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
+    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
     [ret constraintEqualToAnchor:ret constant:0];
-    [objc_alloc_init centerYAnchor];
-    [objc_alloc_init centerYAnchor];
+    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
+    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
     [ret constraintEqualToAnchor:ret];
     [ret trailingAnchor];
-    [objc_alloc_init trailingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
     [ret constraintEqualToAnchor:ret constant:0];
     [ret centerYAnchor];
-    [objc_alloc_init centerYAnchor];
+    /* [UNRESOLVED] [objc_alloc_init centerYAnchor]; */
     [ret constraintEqualToAnchor:ret];
     [self->_map topAnchor];
-    [objc_alloc_init bottomAnchor];
+    /* [UNRESOLVED] [objc_alloc_init bottomAnchor]; */
     [ret constraintEqualToAnchor:ret constant:0];
     [self->_map leadingAnchor];
     [self view];
@@ -753,19 +753,19 @@
     [[[UIVisualEffectView alloc] initWithEffect:ret]; bottomAnchor];
     [[[UIStackView alloc] initWithArrangedSubviews:ret]; topAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [objc_alloc_init leadingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init leadingAnchor]; */
     [[[UIVisualEffectView alloc] initWithEffect:ret]; contentView];
     [ret leadingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [objc_alloc_init trailingAnchor];
+    /* [UNRESOLVED] [objc_alloc_init trailingAnchor]; */
     [[[UIVisualEffectView alloc] initWithEffect:ret]; contentView];
     [ret trailingAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [objc_alloc_init topAnchor];
+    /* [UNRESOLVED] [objc_alloc_init topAnchor]; */
     [[[UIVisualEffectView alloc] initWithEffect:ret]; contentView];
     [ret topAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
-    [objc_alloc_init bottomAnchor];
+    /* [UNRESOLVED] [objc_alloc_init bottomAnchor]; */
     [[[UIVisualEffectView alloc] initWithEffect:ret]; contentView];
     [ret bottomAnchor];
     [ret constraintEqualToAnchor:ret constant:0];
@@ -1817,27 +1817,27 @@ L_92f58:;
     /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; setTitleVisibility:1]; */
     /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; setAnimatesWhenAdded:0]; */
     /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; setClipsToBounds:0]; */
-    [objc_alloc_init setText:@"目标位置"];
+    /* [UNRESOLVED] [objc_alloc_init setText:@"目标位置"]; */
     /* [UNRESOLVED] [UIFont systemFontOfSize:13 weight:0x200180]; */
-    [objc_alloc_init setFont:ret];
+    /* [UNRESOLVED] [objc_alloc_init setFont:ret]; */
     objc_release(ret);
     [UIColor whiteColor];
-    [objc_alloc_init setTextColor:ret];
+    /* [UNRESOLVED] [objc_alloc_init setTextColor:ret]; */
     objc_release(ret);
-    [objc_alloc_init setTextAlignment:1];
+    /* [UNRESOLVED] [objc_alloc_init setTextAlignment:1]; */
     [UIColor blackColor];
-    [objc_retainAutorelease CGColor];
-    [objc_alloc_init layer];
-    [ret setShadowColor:[objc_retainAutorelease CGColor]];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
+    /* [UNRESOLVED] [objc_alloc_init layer]; */
+    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor];]; */
     objc_release(ret);
     objc_release(ret);
-    [objc_alloc_init layer];
+    /* [UNRESOLVED] [objc_alloc_init layer]; */
     [ret setShadowOpacity:0];
     objc_release(ret);
-    [objc_alloc_init layer];
+    /* [UNRESOLVED] [objc_alloc_init layer]; */
     [ret setShadowRadius:2];
     objc_release(ret);
-    [objc_alloc_init layer];
+    /* [UNRESOLVED] [objc_alloc_init layer]; */
     /* [UNRESOLVED] [ret setShadowOffset:0 / * unk * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [[[@0x245008 alloc] initWithAnnotation:0 / * unk * / reuseIdentifier:@"hush_track_target"]; setHushCaption:objc_alloc_init]; */

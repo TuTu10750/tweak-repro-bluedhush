@@ -479,7 +479,7 @@
     [self->_flashTag setUserInteractionEnabled:0];
     [self->_flashTag sizeToFit];
     [self->_flashTag bounds];
-    [self->_flashTag setFrame:4];
+    [self->_flashTag setFrame:CGRectZero];
     [self->_flashTag setAutoresizingMask:0x24];
     [self contentView];
     [ret addSubview:self->_flashTag];

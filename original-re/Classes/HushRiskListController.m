@@ -595,18 +595,18 @@ L_20da8:;
     [ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    [[UILabel alloc] initWithFrame:18];
-    [[[UILabel alloc] initWithFrame:18]; setText:@"风险用户名单"];
+    [[UILabel alloc] initWithFrame:CGRectZero];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setText:@"风险用户名单"];
     /* [UNRESOLVED] [UIFont systemFontOfSize:17 weight:0x200180]; */
-    [[[UILabel alloc] initWithFrame:18]; setFont:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setFont:ret];
     objc_release(ret);
-    [[[UILabel alloc] initWithFrame:18]; setTextColor:ret];
+    [[[UILabel alloc] initWithFrame:CGRectZero]; setTextColor:ret];
     [self cardView];
-    [ret addSubview:[[UILabel alloc] initWithFrame:18]];
+    [ret addSubview:[[UILabel alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
-    [[UILabel alloc] initWithFrame:18];
-    [self setCountLabel:[[UILabel alloc] initWithFrame:18]];
-    objc_release([[UILabel alloc] initWithFrame:18]);
+    [[UILabel alloc] initWithFrame:CGRectZero];
+    [self setCountLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [UIFont systemFontOfSize:12];
     [self countLabel];
     [ret setFont:ret];
@@ -652,7 +652,7 @@ L_20da8:;
     objc_release(ret);
     objc_release(ret);
     [UIButton buttonWithType:1];
-    [ret setFrame:14];
+    [ret setFrame:CGRectZero];
     [UIColor colorWithWhite:0.95 alpha:1];
     [ret setBackgroundColor:ret];
     objc_release(ret);
@@ -671,7 +671,7 @@ L_20da8:;
     objc_release(ret);
     [self reload];
     objc_release(ret);
-    objc_release([[UILabel alloc] initWithFrame:18]);
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release([[UIControl alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */
@@ -1338,9 +1338,9 @@ L_21a7c:;
     [ret objectForKeyedSubscript:@"time"];
     [ret doubleValue];
     objc_release(ret);
-    [objc_alloc_init setDateFormat:@"MM-dd HH:mm"];
+    /* [UNRESOLVED] [objc_alloc_init setDateFormat:@"MM-dd HH:mm"]; */
     [NSDate dateWithTimeIntervalSince1970:0];
-    [objc_alloc_init stringFromDate:ret];
+    /* [UNRESOLVED] [objc_alloc_init stringFromDate:ret]; */
     [NSString stringWithFormat:@"UID %@ · %@ 标记"];
     [ret time];
     [ret setText:ret];
@@ -1658,7 +1658,7 @@ L_21f60:;
     objc_retain(0);
     if (objc_loadWeakRetained == 0) goto L_2208c;
 
-    [objc_loadWeakRetained items];
+    /* [UNRESOLVED] [objc_loadWeakRetained items]; */
     /* [UNRESOLVED] [Unwind_Resume/ *+0x20* / row]; */
     /* [UNRESOLVED] [ret objectAtIndexedSubscript:[Unwind_Resume/ *+0x20* / row];]; */
     objc_release(ret);
@@ -1671,7 +1671,7 @@ L_21f60:;
     /* [UNRESOLVED] HushRiskUserUnmark(); */
 
 L_22050:;
-    [objc_loadWeakRetained reload];
+    /* [UNRESOLVED] [objc_loadWeakRetained reload]; */
     objc_release(ret);
     objc_release(ret);
     goto L_2208c;

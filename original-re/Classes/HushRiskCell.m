@@ -613,7 +613,7 @@ L_208a0:;
     /* [UNRESOLVED] [ret sizeThatFits:0x7fefffffffffffff]; */
     objc_release(ret);
     [self name];
-    [ret setFrame:16];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     [self name];
     [ret frame];
@@ -623,7 +623,7 @@ L_208a0:;
     objc_release(ret);
     objc_release(ret);
     [self time];
-    [ret setFrame:16];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

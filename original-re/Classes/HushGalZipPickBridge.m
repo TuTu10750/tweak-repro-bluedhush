@@ -475,7 +475,7 @@ L_87bd0:;
     goto L_87c6c;
 
 L_87c50:;
-    [objc_release noteFiltered:1];
+    /* [UNRESOLVED] [objc_release noteFiltered:1]; */
 
 L_87c58:;
     /* [UNRESOLVED] sub_8b39c(); */

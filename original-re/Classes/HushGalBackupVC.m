@@ -537,9 +537,9 @@
     objc_release(ret);
     [self view];
     [ret bounds];
-    [[UITableView alloc] initWithFrame:2 style:0];
-    [self setTable:[[UITableView alloc] initWithFrame:2 style:0]];
-    objc_release([[UITableView alloc] initWithFrame:2 style:0]);
+    [[UITableView alloc] initWithFrame:CGRectZero style:0];
+    [self setTable:[[UITableView alloc] initWithFrame:CGRectZero style:0]];
+    objc_release([[UITableView alloc] initWithFrame:CGRectZero style:0]);
     objc_release(ret);
     [self table];
     [ret setAutoresizingMask:0x12];
@@ -1322,9 +1322,9 @@ L_895c0:;
     [ret setText:ret];
     objc_release(ret);
     objc_release(ret);
-    [objc_alloc_init setDateFormat:@"MM-dd HH:mm"];
+    /* [UNRESOLVED] [objc_alloc_init setDateFormat:@"MM-dd HH:mm"]; */
     [ret objectForKeyedSubscript:@"mtime"];
-    [objc_alloc_init stringFromDate:ret];
+    /* [UNRESOLVED] [objc_alloc_init stringFromDate:ret]; */
     [ret objectForKeyedSubscript:@"size"];
     [ret doubleValue];
     [NSString stringWithFormat:@"%@ · %.1f MB"];

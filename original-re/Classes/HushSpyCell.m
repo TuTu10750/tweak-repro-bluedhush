@@ -535,9 +535,9 @@
     [UIColor clearColor];
     [self setBackgroundColor:ret];
     objc_release(ret);
-    [[UIImageView alloc] initWithFrame:16];
-    [self setAvatar:[[UIImageView alloc] initWithFrame:16]];
-    objc_release([[UIImageView alloc] initWithFrame:16]);
+    [[UIImageView alloc] initWithFrame:CGRectZero];
+    [self setAvatar:[[UIImageView alloc] initWithFrame:CGRectZero]];
+    objc_release([[UIImageView alloc] initWithFrame:CGRectZero]);
     [self avatar];
     [ret layer];
     [ret setCornerRadius:22];

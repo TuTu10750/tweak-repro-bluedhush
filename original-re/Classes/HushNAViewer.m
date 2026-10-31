@@ -1344,7 +1344,7 @@ L_c7384:;
     /* [UNRESOLVED] [0 / * local * / unknownSelector]; */
     [ret count];
     /* [UNRESOLVED] [0 / * local * / pagingScrollView]; */
-    [ret setContentSize:0];
+    [ret setContentSize:CGSizeZero];
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [0 / * local * / initialIndex]; */

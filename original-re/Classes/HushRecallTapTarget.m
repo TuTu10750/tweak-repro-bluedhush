@@ -992,7 +992,7 @@ L_3d10c:;
     /* [UNRESOLVED] NSSelectorFromString(); */
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
-    [objc_loadWeakRetained respondsToSelector:NSSelectorFromString];
+    /* [UNRESOLVED] [objc_loadWeakRetained respondsToSelector:NSSelectorFromString]; */
     if (objc_loadWeakRetained == 0) goto L_3d184;
 
     /* [UNRESOLVED] [objc_loadWeakRetained unknownSelector]; */

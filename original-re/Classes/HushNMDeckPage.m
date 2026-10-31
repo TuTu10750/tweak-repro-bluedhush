@@ -7294,10 +7294,10 @@ L_dc214:;
     objc_release(ret);
     [self->_sig setHidden:0];
     [self hushChipRowCountForWidth:10];
-    [self->_card setFrame:14];
+    [self->_card setFrame:CGRectZero];
     [self layoutCard];
     /* [UNRESOLVED] sub_dd61c(); */
-    [self->_bar setFrame:14];
+    [self->_bar setFrame:CGRectZero];
     /* [UNRESOLVED] sub_dd61c(); */
     [self->_buttons count];
     /* [UNRESOLVED] if (cond / * lt * /) goto L_dcaec; */
@@ -7315,8 +7315,8 @@ L_dca44:;
 L_dcaec:;
     [self->_chip sizeThatFits:CGSizeZero];
     [self->_chipBox setFrame:CGRectZero];
-    [self->_chipDot setFrame:14];
-    [self->_chip setFrame:30];
+    [self->_chipDot setFrame:CGRectZero];
+    [self->_chip setFrame:CGRectZero];
     /* [UNRESOLVED] sub_dd61c(); */
     [self->_tiles count];
     [self snap];

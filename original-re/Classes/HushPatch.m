@@ -46,7 +46,7 @@
     /* [UNRESOLVED] [a0 length]; */
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19164; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     goto L_19164;
 
 L_19164:;
@@ -108,7 +108,7 @@ L_19164:;
 
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_191ec; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_191ec;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
@@ -307,7 +307,7 @@ L_191ec:;
 
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1942c; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_1931c;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
@@ -548,7 +548,7 @@ L_1942c:;
 
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_19700; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_195f0;
 
     /* [UNRESOLVED] class_getClassMethod(a1); */
@@ -955,7 +955,7 @@ L_19700:;
 
     /* [UNRESOLVED] if ([a1 count]; == 0) goto L_19a24; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_199b0;
 
     /* [UNRESOLVED] objc_retain(a1); */
@@ -1491,7 +1491,7 @@ L_19e0c:;
 
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a058; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_19fa4;
 
     /* [UNRESOLVED] class_getInstanceMethod(a1); */
@@ -1606,7 +1606,7 @@ L_1a058:;
 
     /* [UNRESOLVED] if ([a0 length]; == 0) goto L_1a140; */
 
-    [objc_retainAutorelease UTF8String];
+    /* [UNRESOLVED] [objc_retainAutorelease UTF8String]; */
     if ([? class] == 0) goto L_1a140;
 
     /* [UNRESOLVED] if (a2 == 0) goto L_1a130; */

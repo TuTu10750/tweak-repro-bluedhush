@@ -268,9 +268,9 @@
     /* [UNRESOLVED] [super initWithStyle:a0 reuseIdentifier:a1]; */
     if (self == 0) goto L_88b18;
 
-    [[UILabel alloc] initWithFrame:16];
-    [self setName:[[UILabel alloc] initWithFrame:16]];
-    objc_release([[UILabel alloc] initWithFrame:16]);
+    [[UILabel alloc] initWithFrame:CGRectZero];
+    [self setName:[[UILabel alloc] initWithFrame:CGRectZero]];
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     /* [UNRESOLVED] [UIFont systemFontOfSize:16 weight:0x200378]; */
     [self name];
     [ret setFont:ret];
@@ -286,9 +286,9 @@
     [ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    [[UILabel alloc] initWithFrame:16];
-    [self setMeta:[[UILabel alloc] initWithFrame:16]];
-    objc_release([[UILabel alloc] initWithFrame:16]);
+    [[UILabel alloc] initWithFrame:CGRectZero];
+    [self setMeta:[[UILabel alloc] initWithFrame:CGRectZero]];
+    objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     [UIFont systemFontOfSize:12];
     [self meta];
     [ret setFont:ret];
@@ -404,10 +404,10 @@ L_88b18:;
     [ret bounds];
     objc_release(ret);
     [self name];
-    [ret setFrame:16];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     [self meta];
-    [ret setFrame:16];
+    [ret setFrame:CGRectZero];
     objc_release(ret);
     return;
 }

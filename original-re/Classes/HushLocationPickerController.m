@@ -598,8 +598,8 @@
     objc_retain(ret);
     [[[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]; imageWithActions:0];
     objc_release([[UIGraphicsImageRenderer alloc] initWithSize:ret format:12]);
-    [objc_retainAutorelease CGImage];
-    if ([objc_retainAutorelease CGImage]== 0) goto L_983b8;
+    /* [UNRESOLVED] [objc_retainAutorelease CGImage]; */
+    /* [UNRESOLVED] if ([objc_retainAutorelease CGImage]; == 0) goto L_983b8; */
 
     /* [UNRESOLVED] CGImageGetWidth(); */
     /* [UNRESOLVED] CGImageGetHeight(); */
@@ -705,9 +705,9 @@ L_98664:;
     /* [UNRESOLVED] [ret setCornerCurve:0x200618/ *+0x0* /]; */
     objc_release(ret);
     [UIColor blackColor];
-    [objc_retainAutorelease CGColor];
+    /* [UNRESOLVED] [objc_retainAutorelease CGColor]; */
     [self->_infoCard layer];
-    [ret setShadowColor:[objc_retainAutorelease CGColor]];
+    /* [UNRESOLVED] [ret setShadowColor:[objc_retainAutorelease CGColor];]; */
     objc_release(ret);
     objc_release(ret);
     [self->_infoCard layer];
@@ -717,7 +717,7 @@ L_98664:;
     [ret setShadowRadius:6];
     objc_release(ret);
     [self->_infoCard layer];
-    [ret setShadowOffset:0];
+    [ret setShadowOffset:CGSizeZero];
     objc_release(ret);
     [self->_infoCard setTranslatesAutoresizingMaskIntoConstraints:0];
     [self view];
@@ -3550,9 +3550,9 @@ L_9cff4:;
     [NSString stringWithFormat:@"正在搜索「%@」…"];
     [self->_addrLabel setText:ret];
     objc_release(ret);
-    [objc_alloc_init setNaturalLanguageQuery:ret];
+    /* [UNRESOLVED] [objc_alloc_init setNaturalLanguageQuery:ret]; */
     [self->_map region];
-    [objc_alloc_init setRegion:0];
+    /* [UNRESOLVED] [objc_alloc_init setRegion:0]; */
     [[MKLocalSearch alloc] initWithRequest:objc_alloc_init];
     objc_storeStrong((id *)&[[MKLocalSearch alloc] initWithRequest:objc_alloc_init];, [[MKLocalSearch alloc] initWithRequest:objc_alloc_init]);
     /* [UNRESOLVED] [@0x244978 isEnabledForLevel:3]; */
@@ -5131,7 +5131,7 @@ L_9f300:;
     [NSNotificationCenter defaultCenter];
     [ret removeObserver:self];
     objc_release(ret);
-    [super dealloc];
+    /* [UNRESOLVED] [super dealloc] (ARC) */
     return;
 }
 
