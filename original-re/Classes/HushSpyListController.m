@@ -563,7 +563,7 @@ L_13b0c0:;
     (void)[[[UIControl alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     (void)[[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    (void)[[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    /* [UNRESOLVED] [[[UIControl alloc] initWithFrame:0] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40]; */
     (void)[(id)self view];
     (void)[(id)ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -711,7 +711,7 @@ L_13b0c0:;
     (void)[(id)ret layer];
     (void)[(id)ret setCornerRadius:12];
     objc_release(ret);
-    (void)[(id)ret addTarget:self action:sel_registerName("clearTapped") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("clearTapped") forControlEvents:0x40]; */
     (void)[(id)self cardView];
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
@@ -727,7 +727,7 @@ L_13b0c0:;
     (void)[(id)ret layer];
     (void)[(id)ret setCornerRadius:12];
     objc_release(ret);
-    (void)[(id)ret addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40]; */
     (void)[(id)self cardView];
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
@@ -1605,7 +1605,7 @@ L_13ca08:;
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:0x226478 style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     return;
 }

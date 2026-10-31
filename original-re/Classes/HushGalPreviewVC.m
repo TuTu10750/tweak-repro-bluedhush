@@ -669,7 +669,7 @@ L_7b174:;
     (void)[(id)[UIColor class] colorWithRed:0.3 green:0.55 blue:1 alpha:1];
     (void)[(id)ret setTitleColor:ret forState:0];
     objc_release(ret);
-    (void)[(id)ret addTarget:self action:sel_registerName("closeTapped") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("closeTapped") forControlEvents:0x40]; */
     (void)[(id)ret setAutoresizingMask:0xa];
     (void)[[[UIView alloc] initWithFrame:CGRectZero] addSubview:ret];
     (void)[(id)self refreshSavedAtLabel];

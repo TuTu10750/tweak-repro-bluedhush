@@ -560,7 +560,7 @@
     objc_release(ret);
     objc_release(ret);
     (void)[(id)ret setAccessibilityIdentifier:@"hush_track_card_close"];
-    (void)[(id)ret addTarget:self action:sel_registerName("hushClose:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("hushClose:") forControlEvents:0x40]; */
     (void)[(id)ret setTranslatesAutoresizingMaskIntoConstraints:0];
     /* [UNRESOLVED] [objc_alloc_init addSubview:ret]; */
     /* [UNRESOLVED] [[MKMapView alloc] initWithFrame:0 / * unk * /]; */
@@ -650,13 +650,13 @@
     objc_release(ret);
     /* [UNRESOLVED] sub_91f78(1); */
     (void)[(id)ret setAccessibilityIdentifier:@"hush_track_card_locate"];
-    (void)[(id)ret addTarget:self action:sel_registerName("hushLocateHere:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("hushLocateHere:") forControlEvents:0x40]; */
     /* [UNRESOLVED] sub_91f78(0); */
     (void)[(id)ret setAccessibilityIdentifier:@"hush_track_card_bigmap"];
-    (void)[(id)ret addTarget:self action:sel_registerName("hushOpenBigMap:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("hushOpenBigMap:") forControlEvents:0x40]; */
     /* [UNRESOLVED] sub_91f78(0); */
     (void)[(id)ret setAccessibilityIdentifier:@"hush_track_card_redo"];
-    (void)[(id)ret addTarget:self action:sel_registerName("hushRedo:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("hushRedo:") forControlEvents:0x40]; */
     /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:-0x88 count:3]; */
     (void)[[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
@@ -1350,7 +1350,7 @@ L_92670:;
     /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 定位到此 %.6f,%.6f"] noteFiltered:3]; */
 
 L_926b8:;
-    (void)[(id)self dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)self dismissViewControllerAnimated:1 completion:0]; */
     return;
 }
 
@@ -1437,7 +1437,7 @@ L_92c20:;
     /* [UNRESOLVED] [[(id)[@0x244978 class] logLevel:3 format:@"[Track][位置卡片] 空降地图 %.6f,%.6f"] noteFiltered:3]; */
 
 L_92c68:;
-    (void)[(id)self dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)self dismissViewControllerAnimated:1 completion:0]; */
     return;
 }
 
@@ -1496,7 +1496,7 @@ L_92c68:;
 
     (void)[(id)self uid];
     objc_retain(ret);
-    (void)[(id)self dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)self dismissViewControllerAnimated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     return;

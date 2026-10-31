@@ -181,11 +181,11 @@ L_962d8:;
     (void)[(id)self tableView];
     /* [UNRESOLVED] [(id)ret setRowHeight:0x4051000000000000]; */
     objc_release(ret);
-    (void)[[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")];
+    /* [UNRESOLVED] [[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]; */
     (void)[(id)self navigationItem];
-    (void)[(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]];
+    /* [UNRESOLVED] [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]]; */
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]);
+    /* [UNRESOLVED] objc_release([[UIBarButtonItem alloc] initWithTitle:@"清除" style:0 target:self action:sel_registerName("actClearAll")]); */
     (void)[(id)self hushReload];
     return;
 }
@@ -1797,13 +1797,13 @@ L_97318:;
     objc_retain(ret);
     (void)[(id)ret addTextFieldWithConfigurationHandler:0];
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"保存" style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"保存" style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -1931,13 +1931,13 @@ L_9756c:;
 
     (void)[(id)self hushIsFavorites];
     (void)[(id)[UIAlertController class] alertControllerWithTitle:0 message:0 preferredStyle:1];
-    (void)[(id)[UIAlertAction class] actionWithTitle:-32 style:2 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:-32 style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     return;
 }

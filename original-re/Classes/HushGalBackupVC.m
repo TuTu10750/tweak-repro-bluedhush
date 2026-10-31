@@ -524,17 +524,17 @@
     (void)[(id)ret setBackgroundColor:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")];
+    /* [UNRESOLVED] [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]; */
     (void)[(id)self navigationItem];
-    (void)[(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]];
+    /* [UNRESOLVED] [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]]; */
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]);
-    (void)[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")];
+    /* [UNRESOLVED] objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0 target:self action:sel_registerName("doneTapped")]); */
+    /* [UNRESOLVED] [[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]; */
     (void)[(id)[UIColor class] systemRedColor];
-    (void)[[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")] setTintColor:ret];
+    /* [UNRESOLVED] [[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")] setTintColor:ret]; */
     objc_release(ret);
     (void)[(id)self navigationItem];
-    (void)[(id)ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]];
+    /* [UNRESOLVED] [(id)ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]]; */
     objc_release(ret);
     (void)[(id)self view];
     (void)[(id)ret bounds];
@@ -563,10 +563,10 @@
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")];
-    (void)[[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")] setMinimumPressDuration:0.4];
+    /* [UNRESOLVED] [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]; */
+    /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")] setMinimumPressDuration:0.4]; */
     (void)[(id)self table];
-    (void)[(id)ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]];
+    /* [UNRESOLVED] [(id)ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]]; */
     objc_release(ret);
     (void)[(id)self view];
     (void)[(id)ret bounds];
@@ -597,8 +597,8 @@
     (void)[(id)self refreshTable];
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release([[UIView alloc] initWithFrame:CGRectZero]);
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]);
-    objc_release([[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]);
+    /* [UNRESOLVED] objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("longPressed:")]); */
+    /* [UNRESOLVED] objc_release([[UIBarButtonItem alloc] initWithTitle:@"清空" style:0 target:self action:sel_registerName("clearAllTapped")]); */
     return;
 }
 
@@ -1618,14 +1618,14 @@ L_89a90:;
     (void)[(id)[NSString class] stringWithFormat:@"%@\n按「合并」导入：同名文件跳过，不覆盖现有照片。"];
     (void)[(id)[UIAlertController class] alertControllerWithTitle:@"导入这份备份？" message:ret preferredStyle:1];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"导入" style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"导入" style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -2039,7 +2039,7 @@ L_8a1bc:;
     (void)[(id)ret setSourceRect:CGRectZero];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)self presentViewController:[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0] animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:[[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0] animated:1 completion:0]; */
     objc_release(ret);
     objc_release([[UIActivityViewController alloc] initWithActivityItems:ret applicationActivities:0]);
 
@@ -2457,15 +2457,15 @@ L_8a450:;
     (void)[(id)[NSString class] stringWithFormat:@"确定删除 %@？此操作不可恢复（展览馆里的照片不受影响）。"];
     (void)[(id)[UIAlertController class] alertControllerWithTitle:@"删除备份" message:ret preferredStyle:1];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"删除" style:2 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"删除" style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -2665,14 +2665,14 @@ L_8a6f4:;
     (void)[(id)[NSString class] stringWithFormat:@"确定删除全部 %lu 份相册备份？此操作不可恢复（展览馆里的照片不受影响）。"];
     (void)[(id)[UIAlertController class] alertControllerWithTitle:@"删除全部备份" message:ret preferredStyle:1];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain([(id)ret copy]);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"全部删除" style:2 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"全部删除" style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release([(id)ret copy]);
     objc_release(ret);
     goto L_8ae14;

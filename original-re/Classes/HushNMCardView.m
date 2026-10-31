@@ -1331,7 +1331,7 @@ L_cf808:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     (void)[(id)ret setCornerRadius:9];
     objc_release(ret);
-    (void)[(id)ret addTarget:self action:sel_registerName("hushMarkTap:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("hushMarkTap:") forControlEvents:0x40]; */
     /* [UNRESOLVED] [(id)self->_bar addSubview:ret]; */
     /* [UNRESOLVED] [(id)self->_buttons addObject:ret]; */
     objc_release(ret);

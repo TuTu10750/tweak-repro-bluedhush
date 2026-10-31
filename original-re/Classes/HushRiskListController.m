@@ -568,7 +568,7 @@ L_20da8:;
     (void)[[[UIControl alloc] initWithFrame:CGRectZero] setBackgroundColor:ret];
     objc_release(ret);
     (void)[[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    (void)[[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40];
+    /* [UNRESOLVED] [[[UIControl alloc] initWithFrame:0] addTarget:self action:sel_registerName("dimTapped") forControlEvents:0x40]; */
     (void)[(id)self view];
     (void)[(id)ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);

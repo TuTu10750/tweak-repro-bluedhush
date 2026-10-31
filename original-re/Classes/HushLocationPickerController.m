@@ -540,16 +540,16 @@
     (void)[(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("hushLocHistoryPicked:") name:@"HushLocationHistoryPick" object:0]; */
     objc_release(ret);
-    (void)[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")];
+    /* [UNRESOLVED] [[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]; */
     (void)[(id)self navigationItem];
-    (void)[(id)ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]];
+    /* [UNRESOLVED] [(id)ret setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]]; */
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]);
-    (void)[[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")];
+    /* [UNRESOLVED] objc_release([[UIBarButtonItem alloc] initWithTitle:@"收藏" style:0 target:self action:sel_registerName("actAddFav")]); */
+    /* [UNRESOLVED] [[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]; */
     (void)[(id)self navigationItem];
-    (void)[(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]];
+    /* [UNRESOLVED] [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]]; */
     objc_release(ret);
-    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]);
+    /* [UNRESOLVED] objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:1 target:self action:sel_registerName("actClose")]); */
     /* [UNRESOLVED] [[UISearchBar alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] objc_release(self->_searchBar); */
     /* [UNRESOLVED] [(id)self->_searchBar setDelegate:self]; */
@@ -586,8 +586,8 @@
     (void)[(id)self view];
     /* [UNRESOLVED] [(id)ret addSubview:self->_map]; */
     objc_release(ret);
-    (void)[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")];
-    (void)[[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")] setMinimumPressDuration:0.5];
+    /* [UNRESOLVED] [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]; */
+    /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")] setMinimumPressDuration:0.5]; */
     /* [UNRESOLVED] [(id)self->_map addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]]; */
     (void)[(id)[UIFont class] systemFontOfSize:30];
     /* [UNRESOLVED] [(id)[NSDictionary class] dictionaryWithObjects:-0xa8 forKeys:-0xb0 count:1]; */
@@ -743,9 +743,9 @@ L_98664:;
     objc_release(ret);
     /* [UNRESOLVED] [(id)self->_altitudeLabel setUserInteractionEnabled:1]; */
     /* [UNRESOLVED] [(id)self->_altitudeLabel setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")];
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")]; */
     /* [UNRESOLVED] [(id)self->_altitudeLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")]]; */
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")]);
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputAltitude")]); */
     /* [UNRESOLVED] [(id)self->_altitudeLabel setAccessibilityIdentifier:@"hush_loc_altitude"]; */
     /* [UNRESOLVED] [[UILabel alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] objc_release(self->_addrLabel); */
@@ -760,9 +760,9 @@ L_98664:;
     /* [UNRESOLVED] [(id)self->_addrLabel setText:@"点击选择位置"]; */
     /* [UNRESOLVED] [(id)self->_addrLabel setUserInteractionEnabled:1]; */
     /* [UNRESOLVED] [(id)self->_addrLabel setTranslatesAutoresizingMaskIntoConstraints:0]; */
-    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")];
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")]; */
     /* [UNRESOLVED] [(id)self->_addrLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")]]; */
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")]);
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("actInputCoord")]); */
     /* [UNRESOLVED] [(id)[NSArray class] arrayWithObjects:-0xe8 count:3]; */
     (void)[[UIStackView alloc] initWithArrangedSubviews:ret];
     objc_release(ret);
@@ -1197,7 +1197,7 @@ L_991d4:;
     objc_release(ret);
     objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
     objc_release([[UIStackView alloc] initWithArrangedSubviews:ret]);
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]);
+    /* [UNRESOLVED] objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushLocMapLongPress:")]); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9ad94; */
 
     return;
@@ -2167,7 +2167,7 @@ L_9b7c0:;
     /* [UNRESOLVED] CGAffineTransformEqualToTransform(); */
     /* [UNRESOLVED] if (((self->_centerPin >> 0) & 1) != 0) goto L_9b8e8; */
 
-    (void)[(id)[UIView class] animateWithDuration:2 delay:0 options:0 animations:0 completion:0];
+    /* [UNRESOLVED] [(id)[UIView class] animateWithDuration:2 delay:0 options:0 animations:0 completion:0]; */
 
 L_9b8e8:;
     return;
@@ -2540,7 +2540,7 @@ L_9bc48:;
     /* [UNRESOLVED] CGAffineTransformMakeScale(); */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setTransform:0]; */
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / setAlpha:0]; */
-    (void)[(id)[UIView class] animateWithDuration:4 delay:0 usingSpringWithDamping:0 initialSpringVelocity:0.5 options:0 animations:0 completion:0];
+    /* [UNRESOLVED] [(id)[UIView class] animateWithDuration:4 delay:0 usingSpringWithDamping:0 initialSpringVelocity:0.5 options:0 animations:0 completion:0]; */
 
 L_9bd0c:;
     /* [UNRESOLVED] if (cond / * ne * /) goto L_9bc2c; */
@@ -6502,13 +6502,13 @@ L_a0110:;
     (void)[(id)[UIAlertController class] alertControllerWithTitle:@"手动输入海拔" message:@"请输入海拔高度（单位：米）" preferredStyle:1];
     /* [UNRESOLVED] [(id)ret addTextFieldWithConfigurationHandler:0x206ab8]; */
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"确认" style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"确认" style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     return;
@@ -6782,7 +6782,7 @@ L_a0894:;
 
 L_a08a8:;
     objc_release(ret);
-    (void)[(id)ret dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)ret dismissViewControllerAnimated:1 completion:0]; */
 }
 
 // @0xa08d4  types=v16@0:8
@@ -6911,13 +6911,13 @@ L_a08a8:;
     /* [UNRESOLVED] [(id)ret addTextFieldWithConfigurationHandler:0x206ad8]; */
     /* [UNRESOLVED] [(id)ret addTextFieldWithConfigurationHandler:0x206af8]; */
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"确认" style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"确认" style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     return;
@@ -7069,7 +7069,7 @@ L_a08a8:;
 
     /* [UNRESOLVED] objc_retain(a2); */
     /* [UNRESOLVED] [(id)[UIAlertController class] alertControllerWithTitle:a0 message:a1 preferredStyle:1]; */
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"好的" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"好的" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)a2 presentViewController:ret animated:1 completion:0]; */

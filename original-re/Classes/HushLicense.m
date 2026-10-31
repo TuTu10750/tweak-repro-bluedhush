@@ -2133,7 +2133,7 @@ L_1497c:;
     /* [UNRESOLVED] [(id)[NSURLSession class] sessionWithConfiguration:ret delegate:0x256640 delegateQueue:0]; */
     /* [UNRESOLVED] objc_retain(a0); */
     objc_retain(ret);
-    (void)[(id)ret dataTaskWithRequest:ret completionHandler:0];
+    /* [UNRESOLVED] [(id)ret dataTaskWithRequest:ret completionHandler:0]; */
     (void)[(id)ret resume];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */

@@ -560,7 +560,7 @@ L_7c8d8:;
     /* [UNRESOLVED] [[[UIControl alloc] initWithFrame:0] unknownSelector]; */
     objc_release(ret);
     (void)[[[UIControl alloc] initWithFrame:CGRectZero] setAutoresizingMask:0x12];
-    (void)[[[UIControl alloc] initWithFrame:CGRectZero] addTarget:self action:sel_registerName("closeSelf") forControlEvents:0x40];
+    /* [UNRESOLVED] [[[UIControl alloc] initWithFrame:0] addTarget:self action:sel_registerName("closeSelf") forControlEvents:0x40]; */
     (void)[(id)self view];
     (void)[(id)ret addSubview:[[UIControl alloc] initWithFrame:CGRectZero]];
     objc_release(ret);
@@ -732,7 +732,7 @@ L_7d278:;
     (void)[(id)ret setAutoresizingMask:1];
     objc_release(ret);
     (void)[(id)self filterBtn];
-    (void)[(id)ret addTarget:self action:sel_registerName("openFilters") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("openFilters") forControlEvents:0x40]; */
     objc_release(ret);
     (void)[(id)self cardView];
     (void)[(id)self filterBtn];
@@ -863,7 +863,7 @@ L_7de50:;
     (void)[(id)ret setCornerRadius:12];
     objc_release(ret);
     (void)[(id)ret setAutoresizingMask:0xa];
-    (void)[(id)ret addTarget:self action:sel_registerName("closeSelf") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("closeSelf") forControlEvents:0x40]; */
     (void)[(id)self cardView];
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
@@ -2677,7 +2677,7 @@ L_7f958:;
     /* [UNRESOLVED] [(id)0 / * local * // *+0x0* / objectForKeyedSubscript:@"title"]; */
     (void)[(id)[NSString class] stringWithFormat:@"%@ %@"];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_release(ret);
@@ -2690,7 +2690,7 @@ L_7f958:;
 
 L_7facc:;
     /* [UNRESOLVED] objc_release(0 / * local * /); */
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     (void)[(id)self filterBtn];
@@ -2698,7 +2698,7 @@ L_7facc:;
     (void)[(id)ret setSourceView:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     /* [UNRESOLVED] if (cond / * ne * /) goto L_7fbdc; */
@@ -4103,10 +4103,10 @@ L_80b90:;
     /* [UNRESOLVED] [(id)ret setTag:[(id)a2 section]]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / home]; */
-    (void)[(id)ret removeTarget:0 action:0 forControlEvents:-1];
+    /* [UNRESOLVED] [(id)ret removeTarget:0 action:0 forControlEvents:-1]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)0 / * unk * / home]; */
-    (void)[(id)ret addTarget:ret action:sel_registerName("openHome:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:ret action:sel_registerName("openHome:") forControlEvents:0x40]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)a2 section]; */
     /* [UNRESOLVED] [(id)0 / * unk * / name]; */
@@ -4751,11 +4751,11 @@ L_81440:;
 L_81474:;
     objc_release([(id)ret copy]);
     (void)[(id)ret setTag:0];
-    (void)[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")];
-    (void)[[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")] setMinimumPressDuration:0.5];
-    (void)[(id)ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]];
+    /* [UNRESOLVED] [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]; */
+    /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")] setMinimumPressDuration:0.5]; */
+    /* [UNRESOLVED] [(id)ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]]; */
     objc_retain(ret);
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]);
+    /* [UNRESOLVED] objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("confirmDelete:")]); */
     objc_release(ret);
     objc_release(ret);
 
@@ -6001,15 +6001,15 @@ L_8310c:;
     (void)[(id)[NSString class] stringWithFormat:@"确定永久删除这个%@吗？"];
     (void)[(id)[UIAlertController class] alertControllerWithTitle:0 message:ret preferredStyle:1];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"删除" style:2 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"删除" style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
@@ -6706,13 +6706,13 @@ L_83824:;
     /* [UNRESOLVED] [(id)ret length]; */
     (void)[(id)[NSString class] stringWithFormat:@"复制用户ID（%@）"];
     objc_retain(ret);
-    (void)[(id)[UIAction class] actionWithTitle:ret image:ret identifier:0 handler:-0xb8];
+    /* [UNRESOLVED] [(id)[UIAction class] actionWithTitle:ret image:ret identifier:0 handler:-0xb8]; */
     (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
     (void)[(id)[NSString class] stringWithFormat:@"复制会话ID（%@）"];
     objc_retain(ret);
-    (void)[(id)[UIAction class] actionWithTitle:ret image:ret identifier:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAction class] actionWithTitle:ret image:ret identifier:0 handler:0]; */
     (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
@@ -6725,7 +6725,7 @@ L_83824:;
     (void)[(id)ret tag];
     objc_release(ret);
     (void)[(id)[UIImage class] systemImageNamed:@"eye.slash"];
-    (void)[(id)[UIAction class] actionWithTitle:ret image:ret identifier:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAction class] actionWithTitle:ret image:ret identifier:0 handler:0]; */
     (void)[(id)ret addObject:ret];
     objc_release(ret);
     objc_release(ret);
@@ -7084,15 +7084,15 @@ L_83e94:;
     (void)[(id)[NSString class] stringWithFormat:@"确定将 %@ %@不想看用户名单吗？"];
     (void)[(id)[UIAlertController class] alertControllerWithTitle:0 message:ret preferredStyle:1];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)self presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)self presentViewController:ret animated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);

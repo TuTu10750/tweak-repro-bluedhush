@@ -551,7 +551,7 @@
     objc_release(ret);
     objc_release(ret);
     (void)[(id)ret setTag:0x232b];
-    (void)[(id)ret addTarget:self action:sel_registerName("dismissSelf") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("dismissSelf") forControlEvents:0x40]; */
     /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:ret]; */
 
 L_ded64:;
@@ -561,7 +561,7 @@ L_ded64:;
     /* [UNRESOLVED] sub_d34c8(0); */
     (void)[(id)self embedded];
     (void)[(id)ret setHidden:0];
-    (void)[(id)ret addTarget:self action:sel_registerName("filterChipTap:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("filterChipTap:") forControlEvents:0x40]; */
     (void)[(id)ret setSelected:self];
     /* [UNRESOLVED] [[[UIView alloc] initWithFrame:0 / * unk * /] addSubview:ret]; */
     objc_release(ret);

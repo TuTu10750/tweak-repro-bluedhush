@@ -581,9 +581,9 @@
     /* [UNRESOLVED] [(id)self->_badge setTextAlignment:1]; */
     /* [UNRESOLVED] [(id)self->_badgeBox addSubview:self->_badge]; */
     /* [UNRESOLVED] [(id)self->_badgeBox setUserInteractionEnabled:1]; */
-    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")];
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]; */
     /* [UNRESOLVED] [(id)self->_badgeBox addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]]; */
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]);
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("hushBadgeTapped:")]); */
     /* [UNRESOLVED] [[UIView alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] objc_release(self->_chipBox); */
     /* [UNRESOLVED] sub_d34c8(0); */
@@ -684,9 +684,9 @@
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")];
-    (void)[(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]];
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]);
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]; */
+    /* [UNRESOLVED] [(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]]; */
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("cardTap:")]); */
     objc_retain(self);
 
 L_d32f8:;
@@ -1635,7 +1635,7 @@ L_d4c34:;
     /* [UNRESOLVED] [(id)ret unknownSelector]; */
     objc_release(ret);
     /* [UNRESOLVED] sub_d34c8(1); */
-    (void)[(id)ret addTarget:self action:sel_registerName("markTap:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("markTap:") forControlEvents:0x40]; */
     /* [UNRESOLVED] [(id)self->_bar addSubview:ret]; */
     /* [UNRESOLVED] [(id)self->_buttons addObject:ret]; */
     objc_release(ret);
@@ -2320,7 +2320,7 @@ L_d5700:;
     if (ret != 0) goto L_d5700;
 
 L_d5750:;
-    (void)[(id)ret dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)ret dismissViewControllerAnimated:1 completion:0]; */
     objc_release(ret);
     objc_release(ret);
 

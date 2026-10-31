@@ -288,12 +288,12 @@
     (void)[(id)[NSNotificationCenter class] defaultCenter];
     /* [UNRESOLVED] [(id)ret addObserver:self selector:sel_registerName("refreshIcon") name:0 / * func * / object:0]; */
     objc_release(ret);
-    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")];
-    (void)[(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]];
-    (void)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")];
-    (void)[(id)self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]];
-    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]);
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]);
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]; */
+    /* [UNRESOLVED] [(id)self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]]; */
+    /* [UNRESOLVED] [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]; */
+    /* [UNRESOLVED] [(id)self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]]; */
+    /* [UNRESOLVED] objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onPan:")]); */
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("onTap")]); */
 
 L_67678:;
     return nil;  /* [UNRESOLVED] self */

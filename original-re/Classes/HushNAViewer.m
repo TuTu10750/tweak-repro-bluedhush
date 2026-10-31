@@ -667,7 +667,7 @@ L_c6544:;
     (void)[(id)ret setFont:ret];
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)ret addTarget:self action:sel_registerName("bdh_close") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("bdh_close") forControlEvents:0x40]; */
     (void)[(id)self view];
     (void)[(id)ret addSubview:ret];
     objc_release(ret);
@@ -701,15 +701,15 @@ L_c6544:;
     objc_release(ret);
     (void)[(id)self setPageLabel:[[UILabel alloc] initWithFrame:CGRectZero]];
     (void)[(id)self bdh_buildPages];
-    (void)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")];
-    (void)[[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setMaximumNumberOfTouches:1];
-    (void)[[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setCancelsTouchesInView:0];
-    (void)[[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setDelegate:self];
+    /* [UNRESOLVED] [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]; */
+    /* [UNRESOLVED] [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setMaximumNumberOfTouches:1]; */
+    /* [UNRESOLVED] [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setCancelsTouchesInView:0]; */
+    /* [UNRESOLVED] [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")] setDelegate:self]; */
     (void)[(id)self view];
-    (void)[(id)ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
+    /* [UNRESOLVED] [(id)ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]]; */
     objc_release(ret);
-    (void)[(id)self setDismissPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]];
-    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]);
+    /* [UNRESOLVED] [(id)self setDismissPanGesture:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]]; */
+    /* [UNRESOLVED] objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("bdh_handleDismissPan:")]); */
     objc_release([[UILabel alloc] initWithFrame:CGRectZero]);
     objc_release(ret);
     objc_release([[UIScrollView alloc] initWithFrame:CGRectZero]);

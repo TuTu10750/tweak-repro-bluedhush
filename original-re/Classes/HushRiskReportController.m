@@ -182,12 +182,12 @@
     id ret = nil;
 
     /* [UNRESOLVED] [super viewWillAppear:a0]; */
-    (void)[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")];
+    /* [UNRESOLVED] [[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]; */
     (void)[(id)self navigationItem];
-    (void)[(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]];
+    /* [UNRESOLVED] [(id)ret setRightBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]]; */
     objc_release(ret);
     (void)[(id)self hushRefresh];
-    objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]);
+    /* [UNRESOLVED] objc_release([[UIBarButtonItem alloc] initWithBarButtonSystemItem:0xd target:self action:sel_registerName("hushRefresh")]); */
     return;
 }
 
@@ -671,7 +671,7 @@ L_1354d4:;
     goto L_13558c;
 
 L_135578:;
-    (void)[(id)self dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)self dismissViewControllerAnimated:1 completion:0]; */
 
 L_13558c:;
 }

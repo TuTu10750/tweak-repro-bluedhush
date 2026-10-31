@@ -645,18 +645,18 @@ L_f8dd8:;
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    (void)[(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(0);
-    (void)[(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:ret style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"清空全部可见用户" style:2 handler:0x207aa8]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] HushTopViewController(); */
@@ -678,7 +678,7 @@ L_f8dd8:;
     objc_release(ret);
     objc_release(ret);
     objc_release(ret);
-    (void)[(id)ret presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)ret presentViewController:ret animated:1 completion:0]; */
     /* [UNRESOLVED] [(id)[@0x244978 class] isEnabledForLevel:3]; */
     if (ret == 0) goto L_f9288;
 

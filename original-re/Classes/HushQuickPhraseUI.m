@@ -2695,11 +2695,11 @@ L_1299c8:;
     objc_release(ret);
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret setTag:a1]; */
-    (void)[(id)ret addTarget:self action:sel_registerName("chipTapped:") forControlEvents:0x40];
-    (void)[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("chipTapped:") forControlEvents:0x40]; */
+    /* [UNRESOLVED] [[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]; */
     /* [UNRESOLVED] [[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")] setMinimumPressDuration:0 / * unk * /]; */
-    (void)[(id)ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]];
-    objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]);
+    /* [UNRESOLVED] [(id)ret addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]]; */
+    /* [UNRESOLVED] objc_release([[UILongPressGestureRecognizer alloc] initWithTarget:self action:sel_registerName("chipLongPressed:")]); */
 }
 
 // @0x129cbc  types=@16@0:8
@@ -2953,7 +2953,7 @@ L_1299c8:;
     objc_release(ret);
     objc_release(ret);
     (void)[(id)ret setTag:-1];
-    (void)[(id)ret addTarget:self action:sel_registerName("addChipTapped:") forControlEvents:0x40];
+    /* [UNRESOLVED] [(id)ret addTarget:self action:sel_registerName("addChipTapped:") forControlEvents:0x40]; */
     objc_release(ret);
 }
 

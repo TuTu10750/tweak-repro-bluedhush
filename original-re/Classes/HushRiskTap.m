@@ -485,19 +485,19 @@ L_2000c:;
     (void)[(id)[UIAlertController class] alertControllerWithTitle:ret message:ret preferredStyle:0];
     objc_retain(ret);
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"标记为风险用户" style:2 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"标记为风险用户" style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     objc_retain(ret);
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"标记为诈骗用户" style:2 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"标记为诈骗用户" style:2 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] [(id)ret length]; */
     /* [UNRESOLVED] if ([(id)ret length] == 0) goto L_20208; */
 
     objc_retain(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消标记" style:0 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消标记" style:0 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] objc_release(0 / * local * /); */
@@ -507,7 +507,7 @@ L_20208:;
     /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"查看风险用户名单" style:0 handler:0x204e50]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
-    (void)[(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0];
+    /* [UNRESOLVED] [(id)[UIAlertAction class] actionWithTitle:@"取消" style:1 handler:0]; */
     (void)[(id)ret addAction:ret];
     objc_release(ret);
     /* [UNRESOLVED] if (a0 != 0) goto L_202a8; */
@@ -530,7 +530,7 @@ L_20320:;
     (void)[(id)ret popoverPresentationController];
     /* [UNRESOLVED] [(id)ret setSourceRect:0 / * unk * /]; */
     objc_release(ret);
-    (void)[(id)ret presentViewController:ret animated:1 completion:0];
+    /* [UNRESOLVED] [(id)ret presentViewController:ret animated:1 completion:0]; */
     /* [UNRESOLVED] objc_release(0 / * local * /); */
     objc_release(ret);
     objc_release(ret);

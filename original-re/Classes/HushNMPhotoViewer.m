@@ -628,9 +628,9 @@ L_e50c8:;
     /* [UNRESOLVED] if (cond / * lo * /) goto L_e50c8; */
 
 L_e5200:;
-    (void)[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")];
+    /* [UNRESOLVED] [[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")]; */
     /* [UNRESOLVED] [(id)self->_pager addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")]]; */
-    objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")]);
+    /* [UNRESOLVED] objc_release([[UITapGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_tap:")]); */
     /* [UNRESOLVED] [[UIScrollView alloc] initWithFrame:0 / * unk * /]; */
     /* [UNRESOLVED] objc_release(self->_strip); */
     /* [UNRESOLVED] [(id)self->_strip setShowsHorizontalScrollIndicator:0]; */
@@ -670,12 +670,12 @@ L_e5318:;
     /* [UNRESOLVED] if (cond / * lo * /) goto L_e5318; */
 
 L_e5508:;
-    (void)[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")];
-    (void)[[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")] setDelegate:self];
+    /* [UNRESOLVED] [[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]; */
+    /* [UNRESOLVED] [[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")] setDelegate:self]; */
     (void)[(id)self view];
-    (void)[(id)ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]];
+    /* [UNRESOLVED] [(id)ret addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]]; */
     objc_release(ret);
-    objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]);
+    /* [UNRESOLVED] objc_release([[UIPanGestureRecognizer alloc] initWithTarget:self action:sel_registerName("p_pan:")]); */
     objc_release(ret);
     /* [UNRESOLVED] if (cond / * ne * /) goto L_e559c; */
 
@@ -2194,7 +2194,7 @@ L_e6650:;
     (void)[(id)ret view];
     (void)[(id)ret setTransform:0];
     objc_release(ret);
-    (void)[(id)ret dismissViewControllerAnimated:1 completion:0];
+    /* [UNRESOLVED] [(id)ret dismissViewControllerAnimated:1 completion:0]; */
     goto L_e670c;
 
 L_e6704:;
