@@ -1,0 +1,9 @@
+
+
+# original-re: keep LF so control/Makefile stay valid for dpkg-deb
+original-re/** text eol=lf
+
+# recovered sources: LF
+*.m text eol=lf
+*.h text eol=lf
+*.xm text eol=lf

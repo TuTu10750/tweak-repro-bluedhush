@@ -7,6 +7,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import <objc/runtime.h>
+#import <substrate.h>
 
 // ---- host classes referenced by the original hook table ----
 @class GJIMSessionService;
