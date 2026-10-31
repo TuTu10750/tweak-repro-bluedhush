@@ -237,20 +237,20 @@
     goto L_95d84;
 
 L_95ca0:;
-    (void)[(id)ret customLat];
+    /* [UNRESOLVED] [(id)ret customLat]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
-    (void)[(id)ret customLng];
+    /* [UNRESOLVED] [(id)ret customLng]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
-    (void)[(id)ret hasCustomLocation];
+    /* [UNRESOLVED] [(id)ret hasCustomLocation]; */
 
     /* [UNRESOLVED] sub_9aed0(); */
     objc_release(ret);
     /* [UNRESOLVED] if (((sub_9aed0 >> 0) & 1) == 0) goto L_95e78; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] unknownSelector]; */
-    (void)[(id)ret setEnabled:3 forKey:sel_registerName("isEnabledForLevel:")];
+    /* [UNRESOLVED] [(id)ret setEnabled:3 forKey:sel_registerName("isEnabledForLevel:")]; */
     objc_release(ret);
     goto L_95d84;
 
@@ -518,9 +518,9 @@ L_95ddc:;
 
     /* [UNRESOLVED] objc_retain(a0); */
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLat];
+    /* [UNRESOLVED] [(id)ret customLat]; */
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLng];
+    /* [UNRESOLVED] [(id)ret customLng]; */
     (void)[(id)[NSString class] stringWithFormat:@"%.6f,%.6f"];
     objc_release(ret);
     objc_release(ret);
@@ -573,9 +573,9 @@ L_96128:;
     /* [UNRESOLVED] if ([(id)0 length] != 0) goto L_961a4; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLat];
+    /* [UNRESOLVED] [(id)ret customLat]; */
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLng];
+    /* [UNRESOLVED] [(id)ret customLng]; */
     /* [UNRESOLVED] sub_b4e10(); */
     objc_release(ret);
     objc_release(ret);

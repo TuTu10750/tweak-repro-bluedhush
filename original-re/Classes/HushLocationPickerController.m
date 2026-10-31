@@ -1971,13 +1971,13 @@ L_9b41c:;
 
     /* [UNRESOLVED] Unwind_Resume(); */
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLat];
+    /* [UNRESOLVED] [(id)ret customLat]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLng];
+    /* [UNRESOLVED] [(id)ret customLng]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret hasCustomLocation];
+    /* [UNRESOLVED] [(id)ret hasCustomLocation]; */
     if (ret == 0) goto L_9b544;
 
     /* [UNRESOLVED] sub_9aed0(); */
@@ -4590,15 +4590,15 @@ L_9e158:;
     /* [UNRESOLVED] [(id)ret isEnabled:0 / * func * /]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLat];
+    /* [UNRESOLVED] [(id)ret customLat]; */
     objc_release(ret);
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret customLng];
+    /* [UNRESOLVED] [(id)ret customLng]; */
     objc_release(ret);
     /* [UNRESOLVED] if ([(id)ret isEnabled:0 / * func * /] == 0) goto L_9e2d8; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret hasCustomLocation];
+    /* [UNRESOLVED] [(id)ret hasCustomLocation]; */
     /* [UNRESOLVED] if (((ret >> 0) & 1) == 0) goto L_9e2cc; */
 
     /* [UNRESOLVED] sub_9aed0(); */
@@ -5899,9 +5899,9 @@ L_9fa9c:;
     /* [UNRESOLVED] if (a0 == 0) goto L_9faf0; */
 
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */
-    (void)[(id)ret hasCustomLocation];
+    /* [UNRESOLVED] [(id)ret hasCustomLocation]; */
     objc_release(ret);
-    if ((([(id)ret hasCustomLocation] >> 0) & 1) == 0) goto L_9fbbc;
+    /* [UNRESOLVED] if ((([(id)ret hasCustomLocation] >> 0) & 1) == 0) goto L_9fbbc; */
 
 L_9faf0:;
     /* [UNRESOLVED] [(id)[@0x244888 class] shared]; */

@@ -1300,7 +1300,7 @@ L_c6fb0:;
     (void)[[[UIScrollView alloc] initWithFrame:CGRectZero] setShowsVerticalScrollIndicator:0];
     (void)[[[UIScrollView alloc] initWithFrame:CGRectZero] setTag:0];
     /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
-    (void)[(id)ret setEnabled:0];
+    /* [UNRESOLVED] [(id)ret setEnabled:0]; */
     objc_release(ret);
     /* [UNRESOLVED] [[[UIScrollView alloc] initWithFrame:0] unknownSelector]; */
     (void)[[UIView alloc] initWithFrame:CGRectZero];
@@ -2338,13 +2338,13 @@ L_c806c:;
     (void)[(id)ret setCenter:CGPointZero];
     /* [UNRESOLVED] [(id)a0 zoomScale]; */
     /* [UNRESOLVED] [(id)a0 panGestureRecognizer]; */
-    (void)[(id)ret setEnabled:0];
+    /* [UNRESOLVED] [(id)ret setEnabled:0]; */
     objc_release(ret);
     (void)[(id)self pagingScrollView];
     (void)[(id)ret setScrollEnabled:0];
     objc_release(ret);
     (void)[(id)self dismissPanGesture];
-    (void)[(id)ret setEnabled:0];
+    /* [UNRESOLVED] [(id)ret setEnabled:0]; */
     objc_release(ret);
 
 L_c8210:;
@@ -2455,13 +2455,13 @@ L_c8230:;
     /* [UNRESOLVED] if (cond / * eq * /) goto L_c8358; */
 
     /* [UNRESOLVED] [(id)a0 panGestureRecognizer]; */
-    (void)[(id)ret setEnabled:0];
+    /* [UNRESOLVED] [(id)ret setEnabled:0]; */
     objc_release(ret);
     (void)[(id)self pagingScrollView];
     (void)[(id)ret setScrollEnabled:ret];
     objc_release(ret);
     (void)[(id)self dismissPanGesture];
-    (void)[(id)ret setEnabled:ret];
+    /* [UNRESOLVED] [(id)ret setEnabled:ret]; */
     objc_release(ret);
 
 L_c8358:;
