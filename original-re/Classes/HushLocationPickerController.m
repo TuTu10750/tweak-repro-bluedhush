@@ -85,7 +85,7 @@ static NSString *const kHushLocFavoritesKey = @"hush_loc_favorites";
     _map.delegate = self;
     _map.showsUserLocation = NO;
     _map.showsCompass = YES;
-    _map.pointOfInterestFilter = [MKPointOfInterestFilter filterIncludingAll];
+    // POI 过滤保持默认（nil = 全部显示）；filterIncludingAll 在旧 SDK 里未声明
     _map.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_map];
 
