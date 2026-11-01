@@ -2,6 +2,7 @@
 // Root settings page: 9 module cards -> HushModuleDetailController, plus global search and author footer.
 #import "HushSettingsPanel.h"
 #import "HushConfig.h"
+#import "HushLogger.h"
 #import "HushModuleEntry.h"
 #import "HushModuleSection.h"
 #import "HushSwitchItem.h"
@@ -241,6 +242,17 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 - (void)buildModel {
+    // Prove at runtime what the panel is actually about to render. If this line
+    // shows mojibake the generator is at fault; if it shows correct Chinese the
+    // strings were fine and the bad glyphs came from somewhere else.
+    if (kHushToggleCount >= 2) {
+        [HushLogger logLevel:4 format:[NSString stringWithFormat:
+            @"[Panel] title check: %s=%s | %s=%s",
+            kHushToggles[0].key, kHushToggles[0].title,
+            kHushToggles[1].key, kHushToggles[1].title]];
+    }
+
+
     HushConfig *cfg = [HushConfig shared];
     NSMutableArray<HushModuleEntry *> *mods = [NSMutableArray arrayWithCapacity:kHushModuleCount];
     NSMutableArray<NSMutableArray<id> *> *buckets = [NSMutableArray arrayWithCapacity:kHushModuleCount];
