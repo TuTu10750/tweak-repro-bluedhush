@@ -4,11 +4,12 @@
 // methods is `{ return %orig; }`, which is exactly why the recovered dylib did
 // nothing.  This file is where real behaviour gets attached.
 //
-// We deliberately do NOT add another %hook for BDHomeViewController or any other
-// host class — Hooks.generated.xm already hooks those, and two Logos blocks for
-// the same class/selector collide at link time.  Instead we hook one UIControl
-// method that every app has and that fires before any of our targets appear:
-// UIApplication becomes active, which is when the home page is on screen.
+// We deliberately do NOT add another %hook for any host class — Hooks.generated.xm
+// already hooks those, and two Logos blocks for the same class/selector collide at
+// link time.  Instead we inject from a constructor plus a bounded poll, because
+// the dylib constructor can run before the app has a window with a root view
+// controller (that is why the ball used to appear only after backgrounding and
+// returning: the become-active observer was the only path that ever fired).
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
@@ -17,23 +18,62 @@
 #import "HushConfig.h"
 #import "HushLogger.h"
 
-// Fire once the app is actually frontmost.  The original injected from a
-// periodic home-page refresh pass; a become-active observer is equivalent for
-// our purposes and does not depend on any Blued class name.
+static NSInteger gHushPollTicks = 0;
+static BOOL gHushPollStopped = NO;
+
+// Poll: try to inject, stop as soon as a ball is actually on screen.
+static void HushPollInject(int64_t delayNs);
+
+static void HushPollStep(void) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (gHushPollStopped) return;
+
+        if (HushBallIsPresent()) {
+            gHushPollStopped = YES;
+            NSLog(@"[Hush] ball present after %ld ticks", (long)gHushPollTicks);
+            return;
+        }
+
+        HushGalInjectBallFromKeyWindow();
+
+        if (HushBallIsPresent()) {
+            gHushPollStopped = YES;
+            NSLog(@"[Hush] ball injected after %ld ticks", (long)gHushPollTicks);
+            return;
+        }
+
+        gHushPollTicks++;
+        if (gHushPollTicks > 60) {          // ~18 s at 0.3 s
+            gHushPollStopped = YES;
+            NSLog(@"[Hush] give up after %ld ticks", (long)gHushPollTicks);
+            return;
+        }
+        HushPollInject((int64_t)(0.30 * NSEC_PER_SEC));
+    });
+}
+
+static void HushPollInject(int64_t delayNs) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, delayNs), dispatch_get_main_queue(), ^{
+        HushPollStep();
+    });
+}
+
 static void HushOnBecameActive(CFNotificationCenterRef center,
                                void *observer,
                                CFStringRef name,
                                const void *object,
                                CFDictionaryRef userInfo) {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if (HushBallIsPresent()) return;
         NSLog(@"[Hush] became-active -> inject");
+        gHushPollStopped = NO;
+        gHushPollTicks = 0;
         HushGalInjectBallFromKeyWindow();
+        HushPollInject((int64_t)(0.30 * NSEC_PER_SEC));
     });
 }
 
 %ctor {
-    // UIApplicationDidBecomeActiveNotification, matched by literal name so we
-    // do not need the symbol to be linked.
     CFNotificationCenterAddObserver(CFNotificationCenterGetLocalCenter(),
                                     NULL,
                                     HushOnBecameActive,
@@ -44,15 +84,6 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     NSLog(@"[Hush] ctor ran, entry installed");
     [HushLogger logLevel:4 format:@"[Hush] entry installed (ball inject armed)"];
 
-    // If the app is already active by the time dylib constructors run (common
-    // when injected via LiveContainer), inject right away as well.
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-        NSLog(@"[Hush] timer -> inject");
-        HushGalInjectBallFromKeyWindow();
-    });
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{
-        HushGalInjectBallFromKeyWindow();   // second chance after the UI settles
-    });
+    // First attempt as soon as a runloop exists, then poll until it lands.
+    HushPollInject((int64_t)(0.10 * NSEC_PER_SEC));
 }

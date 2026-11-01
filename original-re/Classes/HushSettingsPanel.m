@@ -1,60 +1,33 @@
-// HushSettingsPanel — functional reimplementation.
-//
-// The 261 KB recovered skeleton carried 32 methods of commented-out call traces
-// and returned nil everywhere, so tapping the ball produced a blank page.  This
-// is a from-scratch panel that provides the *behaviour* the original had:
-// a grouped, searchable list of every switch in the config table, tap to flip,
-// persisted through HushConfig (which is the same NSUserDefaults the original
-// wrote to, so original keys keep working).
-//
-// Presentation path mirrors the original:
-//   +open            @0x19dabc -> [self hushOpenAttempt:0]
-//   +sharedPanel     @0x19da50 -> dispatch_once alloc/init
-//   +hushOpenAttempt @0x19dacc -> present on the visible top view controller
-//
-// The original drove its rows from -buildModel (@0x19f254, 1049 disassembly
-// lines); we derive them from kHushDefaults so every key the binary knew about
-// is reachable even if its UI section was lost.
-
+// Recovered from BluedHush_5.19.dylib @ 0x245fa8 (class index 75, flags=0x184 instanceSize=72)
+// Root settings page: 9 module cards -> HushModuleDetailController, plus global search and author footer.
 #import "HushSettingsPanel.h"
-#import "HushRuntime.h"
 #import "HushConfig.h"
+#import "HushModuleEntry.h"
+#import "HushModuleSection.h"
+#import "HushSwitchItem.h"
+#import "HushActionItem.h"
+#import "HushSwitchCell.h"
+#import "HushModuleDetailController.h"
+#import "HushAuthorFooterView.h"
+#import "HushRuntime.h"
+#import "HushModuleMap.h"
 #import "HushKeys.h"
-#import "HushLogger.h"
 
 static HushSettingsPanel *gHushSharedPanel = nil;
 static dispatch_once_t gHushSharedPanelOnce;
 
-// Declared here because HushSettingRow below needs it before the main
-// @implementation opens.
-@interface HushSettingsPanel (Titles)
-+ (NSString *)titleForKey:(NSString *)key;
-@end
-
-// One row = one config key.
-@interface HushSettingRow : NSObject
-@property (nonatomic, copy) NSString *key;
-@property (nonatomic, copy) NSString *title;
-@property (nonatomic) BOOL isBool;
-@property (nonatomic, copy) NSString *textValue;
-
-+ (instancetype)rowWithKey:(NSString *)key isBool:(BOOL)isBool text:(NSString *)text;
-@end
-
-@implementation HushSettingRow
-+ (instancetype)rowWithKey:(NSString *)key isBool:(BOOL)isBool text:(NSString *)text {
-    HushSettingRow *r = [HushSettingRow new];
-    r.key = key;
-    r.isBool = isBool;
-    r.textValue = text;
-    r.title = [HushSettingsPanel titleForKey:key];
-    return r;
-}
-@end
-
 @implementation HushSettingsPanel
 
-#pragma mark - presentation (same three entry points as the original)
+@synthesize table = _table;
+@synthesize modules = _modules;
+@synthesize searchCtl = _searchCtl;
+@synthesize searchIndex = _searchIndex;
+@synthesize searchResults = _searchResults;
+@synthesize hushTopSearchBar = _hushTopSearchBar;
+@synthesize hushFooterInsetX = _hushFooterInsetX;
+@synthesize pendingScrollTop = _pendingScrollTop;
+
+#pragma mark - singleton / entry
 
 + (id)sharedPanel {
     dispatch_once(&gHushSharedPanelOnce, ^{
@@ -68,72 +41,38 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 + (void)hushOpenAttempt:(long long)a0 {
-    UIViewController *top = HushVisibleTopViewController();
-    if (!top) {
-        [HushLogger logLevel:4 format:@"[Hush] open: no visible top view controller"];
-        return;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *top = HushVisibleTopViewController();
+        if (!top) {
+            if (a0 < 6) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.35 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [HushSettingsPanel hushOpenAttempt:a0 + 1];
+                });
+            }
+            return;
+        }
 
-    HushSettingsPanel *panel = (HushSettingsPanel *)[self sharedPanel];
-    if (!panel) return;
+        HushSettingsPanel *panel = [HushSettingsPanel sharedPanel];
+        // already showing?
+        UIViewController *probe = top;
+        while (probe) {
+            if ([probe isKindOfClass:[HushSettingsPanel class]]) return;
+            probe = probe.presentedViewController ?: probe.parentViewController;
+        }
 
-    // Already on screen?
-    if ([top isKindOfClass:[HushSettingsPanel class]]) return;
-    if ([top presentedViewController] &&
-        [[top presentedViewController] isKindOfClass:[HushSettingsPanel class]]) return;
+        UINavigationController *nav = HushVisibleNavigationController();
+        if (!nav) nav = top.navigationController;
 
-    UINavigationController *nav = HushVisibleNavigationController();
-    if (nav && [nav isKindOfClass:[UINavigationController class]]) {
-        [nav pushViewController:panel animated:YES];
-        return;
-    }
+        if (nav) {
+            panel.hidesBottomBarWhenPushed = YES;
+            [nav pushViewController:panel animated:YES];
+            return;
+        }
 
-    [top presentViewController:panel animated:YES completion:nil];
-}
-
-#pragma mark - titles
-
-+ (NSString *)titleForKey:(NSString *)key {
-    static NSDictionary *map = nil;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        map = @{
-            @"float_ball": @"悬浮球",
-            @"ball_icon": @"悬浮球图标",
-            @"switch_lite": @"轻量模式",
-            @"purify_master": @"净化总开关",
-            @"switch_anti_recall": @"防撤回",
-            @"switch_msg_heal": @"消息修复",
-            @"switch_read_receipt": @"已读回执",
-            @"switch_screenshot": @"截屏提醒",
-            @"switch_secret_view_all": @"私密相册全可见",
-            @"switch_deleted_mark": @"删除标记",
-            @"switch_msg_timestamp": @"消息时间戳",
-            @"switch_chat_watermark": @"聊天水印",
-            @"switch_virtual_location": @"虚拟定位",
-            @"switch_location_sim": @"位置模拟",
-            @"switch_altitude_sim": @"海拔模拟",
-            @"switch_track": @"轨迹",
-            @"switch_stalk": @"访客监控",
-            @"switch_visit_clear": @"清理访客记录",
-            @"switch_viewed_strike": @"被看标记",
-            @"switch_spy_detect": @"访客探测",
-            @"switch_chat_gallery": @"聊天相册",
-            @"switch_chat_gallery_ball": @"聊天相册悬浮球",
-            @"switch_album_grant": @"相册权限开通",
-            @"switch_private_photo": @"私密照片",
-            @"switch_flash_photo": @"闪照保存",
-            @"switch_flash_text": @"闪照文字",
-            @"switch_unlimited_burn": @"无限阅后即焚",
-            @"switch_keep_alive": @"后台保活",
-            @"switch_license_bypass": @"授权绕过",
-            @"switch_version_spoof": @"版本伪装",
-            @"switch_device_fake": @"设备伪装",
-            @"switch_debug_log": @"调试日志",
-        };
+        UINavigationController *wrap = [[UINavigationController alloc] initWithRootViewController:panel];
+        wrap.modalPresentationStyle = UIModalPresentationFullScreen;
+        [top presentViewController:wrap animated:YES completion:nil];
     });
-    NSString *t = map[key];
-    return t ?: key;
 }
 
 #pragma mark - lifecycle
@@ -141,209 +80,487 @@ static dispatch_once_t gHushSharedPanelOnce;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"Hush";
-    [self setView:[[UIView alloc] init]];
-    [[self view] setBackgroundColor:[UIColor systemBackgroundColor]];
+    self.title = @"BluedHush";
+    _hushFooterInsetX = 20.0;
 
-    UITableView *table = [[UITableView alloc] initWithFrame:CGRectZero
-                                                      style:UITableViewStyleInsetGrouped];
-    _table = table;
-    [_table setDataSource:self];
-    [_table setDelegate:self];
-    [_table setRowHeight:UITableViewAutomaticDimension];
-    [_table setEstimatedRowHeight:44.0];
-    [_table setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [[self view] addSubview:_table];
+    _table = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleInsetGrouped];
+    _table.translatesAutoresizingMaskIntoConstraints = NO;
+    _table.dataSource = self;
+    _table.delegate = self;
+    _table.rowHeight = UITableViewAutomaticDimension;
+    _table.estimatedRowHeight = 68.0;
+    _table.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    [self.view addSubview:_table];
 
-    [NSLayoutConstraint activateConstraints:@[
-        [[_table topAnchor] constraintEqualToAnchor:[[self view] topAnchor]],
-        [[_table bottomAnchor] constraintEqualToAnchor:[[self view] bottomAnchor]],
-        [[_table leadingAnchor] constraintEqualToAnchor:[[self view] leadingAnchor]],
-        [[_table trailingAnchor] constraintEqualToAnchor:[[self view] trailingAnchor]],
+    [self.view addConstraints:@[
+        [NSLayoutConstraint constraintWithItem:_table attribute:NSLayoutAttributeLeading
+                                     relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeading
+                                    multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:_table attribute:NSLayoutAttributeTrailing
+                                     relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTrailing
+                                    multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:_table attribute:NSLayoutAttributeTop
+                                     relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop
+                                    multiplier:1.0 constant:0.0],
+        [NSLayoutConstraint constraintWithItem:_table attribute:NSLayoutAttributeBottom
+                                     relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom
+                                    multiplier:1.0 constant:0.0],
     ]];
 
-    UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                         target:self
-                                                                         action:@selector(hushCloseModal)];
-    [[self navigationItem] setRightBarButtonItem:done];
+    _table.tableHeaderView = [self hushMakeTopSearchHeader];
+
+    if (self.presentingViewController || self.navigationController.presentingViewController) {
+        self.navigationItem.leftBarButtonItem =
+            [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                          target:self
+                                                          action:@selector(hushCloseModal)];
+    }
+    self.navigationItem.rightBarButtonItem =
+        [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"doc.text.magnifyingglass"]
+                                         style:UIBarButtonItemStylePlain
+                                        target:self
+                                        action:@selector(showLog)];
 
     [self buildModel];
+    [self rebuildSearchIndex];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(hushActivationDidChange)
+                                                 name:NSUserDefaultsDidChangeNotification
+                                               object:nil];
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)hushCloseModal {
-    if ([self navigationController]) {
-        [[self navigationController] popViewControllerAnimated:YES];
-    } else {
-        [self dismissViewControllerAnimated:YES completion:nil];
+- (void)hushActivationDidChange {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self buildModel];
+        [self.tableView reloadData];
+    });
+}
+
+- (void)viewWillAppear:(BOOL)a0 {
+    [super viewWillAppear:a0];
+    [self buildModel];
+    [_table reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)a0 {
+    [super viewDidAppear:a0];
+    if (_pendingScrollTop) {
+        _pendingScrollTop = NO;
+        [_table setContentOffset:CGPointZero animated:NO];
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self buildModel];
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self hushUpdateSearchBarPlacement];
 }
 
-- (void)viewDidAppear:(BOOL)animated  { [super viewDidAppear:animated]; }
-- (void)viewDidLayoutSubviews         { [super viewDidLayoutSubviews]; }
-- (void)hushActivationDidChange        { [self buildModel]; }
+- (void)hushCloseModal {
+    if (self.navigationController.presentingViewController) {
+        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    } else if (self.presentingViewController) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    } else if (self.navigationController) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)showLog {
+    __weak typeof(self) weakSelf = self;
+    NSString *logPath = [[HushConfig shared] backupDir];
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"诊断"
+                                                               message:(logPath ?: @"未设置备份目录")
+                                                        preferredStyle:UIAlertControllerStyleActionSheet];
+    [ac addAction:[UIAlertAction actionWithTitle:@"复制路径" style:UIAlertActionStyleDefault handler:^(UIAlertAction *x) {
+        [UIPasteboard generalPasteboard].string = logPath ?: @"";
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"重新注入悬浮球" style:UIAlertActionStyleDefault handler:^(UIAlertAction *x) {
+        HushGalRemoveBall();
+        HushGalInjectBallFromKeyWindow();
+        (void)weakSelf;
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [self presentViewController:ac animated:YES completion:nil];
+}
 
 #pragma mark - model
 
 - (void)buildModel {
     HushConfig *cfg = [HushConfig shared];
-    NSMutableArray *sections = [NSMutableArray array];
+    NSMutableArray<HushModuleEntry *> *mods = [NSMutableArray arrayWithCapacity:kHushModuleCount];
+    NSMutableArray<NSMutableArray<id> *> *buckets = [NSMutableArray arrayWithCapacity:kHushModuleCount];
+    for (int m = 0; m < kHushModuleCount; m++) [buckets addObject:[NSMutableArray array]];
 
-    NSMutableArray *general = [NSMutableArray array];
-    NSMutableArray *purify  = [NSMutableArray array];
-    NSMutableArray *runtime = [NSMutableArray array];
+    for (int i = 0; i < kHushToggleCount; i++) {
+        const HushToggleEntry *e = &kHushToggles[i];
+        if (e->module < 0 || e->module >= kHushModuleCount) continue;
+        HushSwitchItem *it = [HushSwitchItem key:[NSString stringWithUTF8String:e->key]
+                                           title:[NSString stringWithUTF8String:e->title]
+                                        subtitle:[NSString stringWithUTF8String:e->desc]
+                                            icon:nil
+                                          effect:0];
+        [buckets[(NSUInteger)e->module] addObject:it];
+    }
 
-    for (int i = 0; i < kHushDefaultsCount; i++) {
-        const HushDefaultEntry *e = &kHushDefaults[i];
-        if (!e->key) continue;
-        NSString *key = @(e->key);
-        if ([key hasPrefix:@"runtime_"]) continue;
+    for (int m = 0; m < kHushModuleCount; m++) {
+        const HushModuleMeta *meta = &kHushModules[m];
+        HushModuleEntry *entry = [[HushModuleEntry alloc] init];
+        entry.title = [NSString stringWithUTF8String:meta->name];
+        entry.icon = [NSString stringWithUTF8String:meta->symbol];
+        entry.footer = [NSString stringWithUTF8String:meta->summary];
 
-        HushSettingRow *row = [HushSettingRow rowWithKey:key
-                                                  isBool:(e->isBool != 0)
-                                                    text:(e->defStr ? @(e->defStr) : nil)];
-        if ([key hasPrefix:@"purify_"] || [key hasPrefix:@"switch_purify"] || [key hasPrefix:@"switch_hide"]) {
-            [purify addObject:row];
-        } else {
-            [general addObject:row];
+        NSArray<HushSwitchItem *> *items = buckets[(NSUInteger)m];
+
+        // count how many of this module's switches are ON
+        NSUInteger onCount = 0;
+        for (HushSwitchItem *it in items) {
+            const HushToggleEntry *e = NULL;
+            const char *k = [it.key UTF8String];
+            for (int i = 0; i < kHushToggleCount; i++) {
+                if (strcmp(kHushToggles[i].key, k) == 0) { e = &kHushToggles[i]; break; }
+            }
+            if (!e || !e->isBool) continue;
+            if ([cfg isEnabled:it.key default:e->defBool]) onCount++;
+        }
+
+        NSUInteger boolTotal = 0;
+        for (HushSwitchItem *it in items) {
+            for (int i = 0; i < kHushToggleCount; i++) {
+                if (strcmp(kHushToggles[i].key, [it.key UTF8String]) == 0) {
+                    if (kHushToggles[i].isBool) boolTotal++;
+                    break;
+                }
+            }
+        }
+
+        entry.subtitle = [NSString stringWithFormat:@"已开 %lu/%lu · %@",
+                          (unsigned long)onCount, (unsigned long)boolTotal,
+                          [NSString stringWithUTF8String:meta->summary]];
+
+        entry.sections = [self hushSectionsForModule:m items:items];
+        entry.items = items;
+
+        [mods addObject:entry];
+    }
+
+    _modules = mods;
+}
+
+- (NSArray<HushModuleSection *> *)hushSectionsForModule:(int)m items:(NSArray<HushSwitchItem *> *)items {
+    if (m != 0) {
+        // modules 1..8: a single section keyed by the module name
+        NSString *name = [NSString stringWithUTF8String:kHushModules[m].name];
+        return @[[HushModuleSection title:name icon:nil
+                                 subtitle:[NSString stringWithFormat:@"共 %lu 项，改动即时写入", (unsigned long)[items count]]
+                                    items:items]];
+    }
+
+    // module 0 (净化中心) is big: split into three semantic sections
+    NSMutableArray<HushSwitchItem *> *purify = [NSMutableArray array];
+    NSMutableArray<HushSwitchItem *> *ui = [NSMutableArray array];
+    NSMutableArray<HushSwitchItem *> *net = [NSMutableArray array];
+
+    for (HushSwitchItem *it in items) {
+        NSString *k = it.key;
+        if ([k isEqualToString:@"purify_master"]) { [purify insertObject:it atIndex:0]; }
+        else if ([k hasPrefix:@"purify_"]) { [purify addObject:it]; }
+        else if ([k isEqualToString:@"switch_block_live_request"] || [k isEqualToString:@"switch_no_data_collect"]) { [net addObject:it]; }
+        else { [ui addObject:it]; }
+    }
+
+    NSMutableArray<HushModuleSection *> *out = [NSMutableArray array];
+    if ([purify count]) {
+        [out addObject:[HushModuleSection title:@"广告净化" icon:@"sparkles"
+                                       subtitle:@"跟随「净化总开关」，关掉总开关后下面各项全部失效"
+                                          items:purify]];
+    }
+    if ([ui count]) {
+        [out addObject:[HushModuleSection title:@"界面净化" icon:@"rectangle.3.group"
+                                       subtitle:@"隐藏入口、标签与推广卡片"
+                                          items:ui]];
+    }
+    if ([net count]) {
+        [out addObject:[HushModuleSection title:@"网络与采集" icon:@"antenna.radiowaves.left.and.right"
+                                       subtitle:@"拦截直播请求与本地数据采集"
+                                          items:net]];
+    }
+    return out;
+}
+
+#pragma mark - search
+
+- (void)rebuildSearchIndex {
+    NSMutableArray *idx = [NSMutableArray array];
+    for (HushModuleEntry *mod in _modules) {
+        for (HushSwitchItem *it in mod.items) {
+            [idx addObject:@[it, mod.title ?: @""]];
         }
     }
+    _searchIndex = idx;
+}
 
-    // Runtime rows (location/token) are editable text, appended as their own section.
-    for (NSString *k in @[@"runtime_custom_lat", @"runtime_custom_lng",
-                          @"runtime_custom_altitude", @"runtime_auth_token",
-                          @"runtime_user_agent", @"runtime_backup_dir"]) {
-        NSString *v = [cfg stringForKey:k];
-        [runtime addObject:[HushSettingRow rowWithKey:k isBool:NO text:v]];
+- (id)hushMakeTopSearchHeader {
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 52)];
+    header.backgroundColor = [UIColor clearColor];
+
+    _hushTopSearchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+    _hushTopSearchBar.translatesAutoresizingMaskIntoConstraints = NO;
+    _hushTopSearchBar.placeholder = @"搜索开关（名字 / 说明）";
+    _hushTopSearchBar.searchBarStyle = UISearchBarStyleMinimal;
+    _hushTopSearchBar.delegate = self;
+    _hushTopSearchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    [header addSubview:_hushTopSearchBar];
+
+    [header addConstraints:@[
+        [NSLayoutConstraint constraintWithItem:_hushTopSearchBar attribute:NSLayoutAttributeLeading
+                                     relatedBy:NSLayoutRelationEqual toItem:header attribute:NSLayoutAttributeLeading
+                                    multiplier:1.0 constant:8.0],
+        [NSLayoutConstraint constraintWithItem:_hushTopSearchBar attribute:NSLayoutAttributeTrailing
+                                     relatedBy:NSLayoutRelationEqual toItem:header attribute:NSLayoutAttributeTrailing
+                                    multiplier:1.0 constant:-8.0],
+        [NSLayoutConstraint constraintWithItem:_hushTopSearchBar attribute:NSLayoutAttributeCenterY
+                                     relatedBy:NSLayoutRelationEqual toItem:header attribute:NSLayoutAttributeCenterY
+                                    multiplier:1.0 constant:0.0],
+    ]];
+    return header;
+}
+
+- (void)hushUpdateSearchBarPlacement {
+    UIView *header = _table.tableHeaderView;
+    if (!header) return;
+    CGFloat w = _table.bounds.size.width;
+    CGFloat h = 52.0;
+    if (fabs(header.frame.size.width - w) > 0.5 || fabs(header.frame.size.height - h) > 0.5) {
+        header.frame = CGRectMake(0, 0, w, h);
+        _table.tableHeaderView = header;
     }
-
-    [sections addObject:@{@"title": @"功能开关", @"rows": general}];
-    if (purify.count) [sections addObject:@{@"title": @"净化", @"rows": purify}];
-    [sections addObject:@{@"title": @"运行时", @"rows": runtime}];
-
-    _modules = sections;
-    [[self table] reloadData];
 }
 
-#pragma mark - table
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tv {
-    return (NSInteger)[_modules count];
+- (BOOL)searching {
+    return [[self hushSearchQuery] length] > 0;
 }
 
-- (NSString *)tableView:(UITableView *)tv titleForHeaderInSection:(NSInteger)section {
-    return _modules[(NSUInteger)section][@"title"];
+- (id)hushSearchQuery {
+    return [_hushTopSearchBar.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] ?: @"";
 }
 
-- (NSInteger)tableView:(UITableView *)tv numberOfRowsInSection:(NSInteger)section {
-    NSArray *rows = _modules[(NSUInteger)section][@"rows"];
-    return (NSInteger)[rows count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellId = @"HushSettingCell";
-    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:cellId];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
-                                      reuseIdentifier:cellId];
-    }
-
-    NSArray *rows = _modules[(NSUInteger)indexPath.section][@"rows"];
-    HushSettingRow *row = rows[(NSUInteger)indexPath.row];
-
-    [[cell textLabel] setText:row.title];
-
-    HushConfig *cfg = [HushConfig shared];
-    if (row.isBool) {
-        BOOL on = [cfg isEnabled:row.key];
-        [[cell detailTextLabel] setText:on ? @"开" : @"关"];
-        [[cell detailTextLabel] setTextColor:on ? [UIColor systemGreenColor]
-                                                : [UIColor secondaryLabelColor]];
-        [cell setAccessoryType:UITableViewCellAccessoryNone];
+- (void)hushApplySearchQuery:(id)a0 {
+    NSString *q = [(a0 ?: @"") stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    if (![q length]) {
+        _searchResults = nil;
     } else {
-        NSString *v = [cfg stringForKey:row.key];
-        [[cell detailTextLabel] setText:(v.length ? v : @"—")];
-        [[cell detailTextLabel] setTextColor:[UIColor secondaryLabelColor]];
-        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+        NSMutableArray *hits = [NSMutableArray array];
+        for (NSArray *pair in _searchIndex) {
+            HushSwitchItem *it = pair[0];
+            NSString *mod = pair[1];
+            NSString *hay = [NSString stringWithFormat:@"%@ %@ %@ %@",
+                             it.key ?: @"", it.title ?: @"", it.subtitle ?: @"", mod];
+            if ([hay rangeOfString:q options:NSCaseInsensitiveSearch].location != NSNotFound) {
+                [hits addObject:pair];
+            }
+        }
+        _searchResults = hits;
     }
+    [_table reloadData];
+}
+
+- (void)updateSearchResultsForSearchController:(id)a0 {
+    if (_searchCtl) [self hushApplySearchQuery:_searchCtl.searchBar.text];
+}
+
+- (void)searchBar:(id)a0 textDidChange:(id)a1 {
+    [self hushApplySearchQuery:a1];
+}
+
+- (void)searchBarTextDidBeginEditing:(id)a0 {
+    [self hushApplySearchQuery:a0.text];
+}
+
+- (void)searchBarTextDidEndEditing:(id)a0 {
+    [self hushApplySearchQuery:a0.text];
+}
+
+- (void)searchBarCancelButtonClicked:(id)a0 {
+    a0.text = @"";
+    [a0 resignFirstResponder];
+    [self hushApplySearchQuery:@""];
+}
+
+- (void)searchBarSearchButtonClicked:(id)a0 {
+    [a0 resignFirstResponder];
+    [self hushApplySearchQuery:a0.text];
+}
+
+#pragma mark - navigation
+
+- (void)openModule:(id)a0 {
+    HushModuleEntry *mod = a0;
+    if (![mod isKindOfClass:[HushModuleEntry class]]) return;
+
+    HushModuleDetailController *detail =
+        [[HushModuleDetailController alloc] initWithTitle:mod.title
+                                                 sections:(mod.sections ?: @[])
+                                                   footer:mod.footer];
+    UINavigationController *nav = self.navigationController;
+    if (nav) {
+        detail.hidesBottomBarWhenPushed = YES;
+        [nav pushViewController:detail animated:YES];
+    } else {
+        UINavigationController *wrap = [[UINavigationController alloc] initWithRootViewController:detail];
+        [self presentViewController:wrap animated:YES completion:nil];
+    }
+}
+
+#pragma mark - table datasource / delegate
+
+- (long long)numberOfSectionsInTableView:(id)a0 {
+    return 1;
+}
+
+- (id)tableView:(id)a0 titleForHeaderInSection:(long long)a1 {
+    return [self searching] ? @"搜索结果" : @"功能模块";
+}
+
+- (double)tableView:(id)a0 heightForHeaderInSection:(long long)a1 {
+    return 34.0;
+}
+
+- (id)tableView:(id)a0 titleForFooterInSection:(long long)a1 {
+    return nil;
+}
+
+- (double)tableView:(id)a0 heightForFooterInSection:(long long)a1 {
+    return [self searching] ? 0.01 : UITableViewAutomaticDimension;
+}
+
+- (id)tableView:(id)a0 viewForFooterInSection:(long long)a1 {
+    if ([self searching]) return nil;
+    HushAuthorFooterView *fv = [a0 dequeueReusableHeaderFooterViewWithIdentifier:@"author"];
+    if (!fv) fv = [[HushAuthorFooterView alloc] initWithReuseIdentifier:@"author"];
+    [fv configureText:[self hushFooterText]
+                inset:[self hushFooterInsetForTable:a0]
+                 tint:[UIColor systemBlueColor]];
+    return fv;
+}
+
+- (double)hushFooterInsetForTable:(id)a0 {
+    return _hushFooterInsetX;
+}
+
+- (id)hushFooterText {
+    NSUInteger bools = 0, texts = 0;
+    for (int i = 0; i < kHushToggleCount; i++) {
+        if (kHushToggles[i].isBool) bools++; else texts++;
+    }
+    return [NSString stringWithFormat:
+            @"作者 Tinycca (@Tinycca) · TG @Tinycca\n"
+             "版本 5.19 · 共 %d 项（开关 %lu · 文本 %lu）\n"
+             "开关改动即时写入；标注「需重启」的项请重启 App 生效。",
+            kHushToggleCount, (unsigned long)bools, (unsigned long)texts];
+}
+
+- (long long)tableView:(id)a0 numberOfRowsInSection:(long long)a1 {
+    return [self searching] ? (long long)[_searchResults count] : (long long)[_modules count];
+}
+
+- (id)tableView:(id)a0 cellForRowAtIndexPath:(id)a1 {
+    HushConfig *cfg = [HushConfig shared];
+
+    if ([self searching]) {
+        UITableViewCell *cell = [a0 dequeueReusableCellWithIdentifier:@"hit"];
+        if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"hit"];
+        NSArray *pair = _searchResults[(NSUInteger)a1.row];
+        HushSwitchItem *it = pair[0];
+        cell.textLabel.text = it.title;
+        cell.textLabel.numberOfLines = 0;
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ · %@", pair[1], it.key];
+        cell.detailTextLabel.numberOfLines = 0;
+        cell.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+        BOOL isBool = NO, on = NO;
+        for (int i = 0; i < kHushToggleCount; i++) {
+            if (strcmp(kHushToggles[i].key, [it.key UTF8String]) == 0) {
+                isBool = kHushToggles[i].isBool;
+                if (isBool) on = [cfg isEnabled:it.key default:kHushToggles[i].defBool];
+                break;
+            }
+        }
+        if (!isBool) {
+            NSString *cur = [cfg stringForKey:it.key];
+            cell.accessoryView = [self hushMiniLabel:([cur length] ? cur : @"未设置")];
+        } else {
+            cell.accessoryView = [self hushMiniLabel:(on ? @"开" : @"关")];
+        }
+        return cell;
+    }
+
+    HushModuleEntry *mod = _modules[(NSUInteger)a1.row];
+    UITableViewCell *cell = [a0 dequeueReusableCellWithIdentifier:@"mod"];
+    if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"mod"];
+    if (@available(iOS 14.0, *)) {
+        UIListContentConfiguration *c = [UIListContentConfiguration subtitleCellConfiguration];
+        c.text = mod.title;
+        c.secondaryText = mod.subtitle;
+        c.secondaryTextProperties.color = [UIColor secondaryLabelColor];
+        c.secondaryTextProperties.numberOfLines = 2;
+        UIImage *img = [UIImage systemImageNamed:(mod.icon ?: @"circle")];
+        if (img) {
+            c.image = img;
+            c.imageProperties.tintColor = [UIColor systemBlueColor];
+        }
+        cell.contentConfiguration = c;
+    } else {
+        cell.textLabel.text = mod.title;
+        cell.detailTextLabel.text = mod.subtitle;
+        cell.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+        cell.detailTextLabel.numberOfLines = 2;
+        UIImage *img = [UIImage systemImageNamed:(mod.icon ?: @"circle")];
+        if (img) cell.imageView.image = img;
+    }
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 
-- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tv deselectRowAtIndexPath:indexPath animated:YES];
+- (id)hushMiniLabel:(NSString *)text {
+    UILabel *l = [[UILabel alloc] init];
+    l.text = text;
+    l.font = [UIFont systemFontOfSize:13];
+    l.textColor = [UIColor secondaryLabelColor];
+    [l sizeToFit];
+    return l;
+}
 
-    NSArray *rows = _modules[(NSUInteger)indexPath.section][@"rows"];
-    HushSettingRow *row = rows[(NSUInteger)indexPath.row];
-    HushConfig *cfg = [HushConfig shared];
+- (void)hushFinishNavigateCell:(id)a0 style:(id)a1 {
+    UITableViewCell *cell = a0;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+}
 
-    if (row.isBool) {
-        BOOL on = [cfg isEnabled:row.key];
-        [cfg setEnabled:!on forKey:row.key];
-        [HushLogger logLevel:4 format:[NSString stringWithFormat:@"[Hush] %@ = %d",
-                                       row.key, !on]];
-    } else {
-        [self hushPromptForText:row.key current:[cfg stringForKey:row.key]];
+- (void)tableView:(id)a0 didSelectRowAtIndexPath:(id)a1 {
+    [a0 deselectRowAtIndexPath:a1 animated:YES];
+
+    if ([self searching]) {
+        // jump into the owning module and highlight the row
+        NSArray *pair = _searchResults[(NSUInteger)a1.row];
+        HushSwitchItem *it = pair[0];
+        NSString *modName = pair[1];
+        for (HushModuleEntry *mod in _modules) {
+            if ([mod.title isEqualToString:modName]) {
+                [self openModule:mod];
+                break;
+            }
+        }
+        (void)it;
         return;
     }
 
-    [tv reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-
-    // ball_icon changes have to re-render every live ball.
-    if ([row.key isEqualToString:@"ball_icon"] ||
-        [row.key isEqualToString:@"float_ball"]      ||
-        [row.key isEqualToString:@"switch_chat_gallery_ball"]) {
-        [[NSNotificationCenter defaultCenter]
-            postNotificationName:HushBallIconStyleDidChangeNotification object:nil];
-        HushGalInjectBallFromKeyWindow();
-    }
+    if (a1.row < 0 || a1.row >= (long long)[_modules count]) return;
+    [self openModule:_modules[(NSUInteger)a1.row]];
 }
-
-- (void)hushPromptForText:(NSString *)key current:(NSString *)current {
-    UIAlertController *ac = [UIAlertController alertControllerWithTitle:key
-                                                                message:nil
-                                                         preferredStyle:UIAlertControllerStyleAlert];
-    [ac addTextFieldWithConfigurationHandler:^(UITextField *tf) {
-        tf.text = current;
-        tf.placeholder = @"value";
-    }];
-    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-    [ac addAction:[UIAlertAction actionWithTitle:@"保存" style:UIAlertActionStyleDefault
-                                        handler:^(UIAlertAction *a) {
-        NSString *v = ac.textFields.firstObject.text;
-        [[HushConfig shared] setString:(v.length ? v : nil) forKey:key];
-        [[self table] reloadData];
-    }]];
-    [self presentViewController:ac animated:YES completion:nil];
-}
-
-- (void)openModule:(id)a0     {}
-- (void)showLog               {}
-- (BOOL)searching             { return NO; }
-- (id)hushSearchQuery         { return nil; }
-- (void)hushApplySearchQuery:(id)a0 {}
-- (void)rebuildSearchIndex    {}
-- (void)updateSearchResultsForSearchController:(id)a0 {}
-- (void)hushUpdateSearchBarPlacement {}
-- (id)hushMakeTopSearchHeader { return nil; }
-- (id)hushFooterText          { return @"Hush recovered build"; }
-- (double)hushFooterInsetForTable:(id)a0 { return 0; }
-- (id)tableView:(id)a0 titleForFooterInSection:(long long)a1 { return nil; }
-- (id)tableView:(id)a0 viewForFooterInSection:(long long)a1  { return nil; }
-- (double)tableView:(id)a0 heightForHeaderInSection:(long long)a1 { return 28.0; }
-- (double)tableView:(id)a0 heightForFooterInSection:(long long)a1 { return 0.0; }
-- (void)hushFinishNavigateCell:(id)a0 style:(id)a1 {}
-- (void)searchBar:(id)a0 textDidChange:(id)a1 {}
-- (void)searchBarTextDidBeginEditing:(id)a0 {}
-- (void)searchBarTextDidEndEditing:(id)a0 {}
-- (void)searchBarCancelButtonClicked:(id)a0 {}
-- (void)searchBarSearchButtonClicked:(id)a0 {}
 
 @end
