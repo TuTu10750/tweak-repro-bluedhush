@@ -33,12 +33,12 @@
 %hook BDADX_Blued_Splash_Image_ViewController
 - (id)p_getSplashAdvertisementForColdLaunch { return nil; }
 - (void)presentBluedSplashImageViewController { /* purified */ }
-- (id)removeAllSplashAdViews:(id)a0 { return %orig; }
+- (void)removeAllSplashAdViews:(id)a0 { /* purified */ }
 %end
 
 %hook BDADX_Blued_Splash_Video_ViewController
-- (id)presentInViewController:(id)a0 { return %orig; }
-- (id)removeBluedSplashImageViewController { return %orig; }
+- (void)presentInViewController:(id)a0 { /* purified */ }
+- (void)removeBluedSplashImageViewController { /* purified */ }
 %end
 
 %hook BDAnimatedImageView
@@ -70,7 +70,7 @@
 - (id)avatar_is_fuzzy { return %orig; }
 - (id)is_hide_distance { return %orig; }
 - (id)is_unlock { return %orig; }
-- (id)needBlur { return %orig; }
+- (BOOL)needBlur { return NO; }
 - (id)requestArgument { return %orig; }
 %end
 
@@ -225,8 +225,8 @@
 
 %hook BDMapBlurBaseView
 - (void)applyBlurRadius:(double)a0 { /* purified */ }
-- (id)isHavingSomePrivilege { return %orig; }
-- (id)needToBuyPrivilege:(id)a0 sender:(id)a1 { return %orig; }
+- (BOOL)isHavingSomePrivilege { return YES; }
+- (BOOL)needToBuyPrivilege:(id)a0 sender:(id)a1 { return YES; }
 %end
 
 %hook BDMenHealthCareCenterCollectionViewCell
@@ -243,7 +243,7 @@
 
 %hook BDMineBannerCell
 - (void)configerBanner:(id)a0 { /* purified */ }
-- (id)hasShown { return %orig; }
+- (BOOL)hasShown { return YES; }
 - (id)images { return @[]; }
 - (id)videos { return @[]; }
 %end
@@ -265,20 +265,20 @@
 %end
 
 %hook BDNearbyBannerCell
-- (id)p_topHeight { return %orig; }
-- (id)setHasShown:(id)a0 { return %orig; }
+- (double)p_topHeight { return 0.0; }
+- (void)setHasShown:(BOOL)a0 { /* purified */ }
 %end
 
 %hook BDNearbyDataAdapter
 - (void)setAdmsArray:(id)a0 { /* purified */ }
-- (id)synchronizeTopHeaderWithHeight:(id)a0 { return %orig; }
+- (void)synchronizeTopHeaderWithHeight:(double)a0 { /* purified */ }
 - (id)viewDidLayoutSubviews { return %orig; }
 %end
 
 %hook BDNearbyFloatingLayerModel
 - (BOOL)hasShown { return YES; }
 - (void)setHasShown:(BOOL)a0 { /* purified */ }
-- (id)setLayerModel:(id)a0 { return %orig; }
+- (void)setLayerModel:(id)a0 { /* purified */ }
 %end
 
 %hook BDNearbyFloatingLayerView
@@ -312,21 +312,21 @@
 %end
 
 %hook BDNearbyMenu
-- (id)p_topHeight { return %orig; }
+- (double)p_topHeight { return 0.0; }
 %end
 
 %hook BDNearbyRecommendCell
 - (id)p_baseHeaderHeight { return %orig; }
 - (id)p_updateHeaderHeight { return %orig; }
-- (id)setHasShown:(id)a0 { return %orig; }
+- (void)setHasShown:(BOOL)a0 { /* purified */ }
 %end
 
 %hook BDNearbyRecommendSquareItemCell
-- (id)p_topHeight { return %orig; }
+- (double)p_topHeight { return 0.0; }
 %end
 
 %hook BDNearbySceneMatchingTableViewCell
-- (id)p_topHeight { return %orig; }
+- (double)p_topHeight { return 0.0; }
 %end
 
 %hook BDNearbyTopFixView
@@ -462,9 +462,9 @@
 %end
 
 %hook BDVisitBottomView
-- (id)setShowBlur:(id)a0 { return %orig; }
+- (void)setShowBlur:(BOOL)a0 { /* purified */ }
 - (id)setVisitor:(id)a0 { return %orig; }
-- (id)showNsnofyView { return %orig; }
+- (void)showNsnofyView { /* purified */ }
 %end
 
 %hook BELicenseHelper

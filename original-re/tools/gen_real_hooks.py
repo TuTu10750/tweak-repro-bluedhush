@@ -130,6 +130,9 @@ B = {
  'BDNearbyFloatingLayerModel|hasShown':                    ('ret', 'YES'),
  'BDNearbyFloatingLayerModel|setHasShown:':                ('noop',),
  'BDNearbyTopFixView|p_topHeight':                         ('ret', '0.0'),
+ 'BDNearbyMenu|p_topHeight':                               ('ret', '0.0'),
+ 'BDNearbySceneMatchingTableViewCell|p_topHeight':         ('ret', '0.0'),
+ 'BDVisitBottomView|showNsnofyView':                       ('noop',),
  'BDNearbyListPopForH5View|showPopWithUrl:handler:':       ('noop',),
  'BDSessionViewController|p_insertRecommendUserModelsIfNeeded': ('noop',),
  'BDMapBlurBaseView|applyBlurRadius:':                     ('noop',),
@@ -217,7 +220,7 @@ B = {
  'BDMineBannerCell|videos':                                ('ret', '@[]'),
  # ===== 模糊 / 特权遮罩 =====
  'BDMapBlurBaseView|isHavingSomePrivilege':                ('ret', 'YES'),
- 'BDMapBlurBaseView|needToBuyPrivilege:sender:':           ('noop',),
+ 'BDMapBlurBaseView|needToBuyPrivilege:sender:':           ('ret', 'YES'),
  'BDVisitBottomView|setShowBlur:':                         ('noop',),
  'GJIMChatSessionModel|applyBlurAlpha:':                   ('noop',),
  'BDAvatarSurroundingRequest|needBlur':                    ('ret', 'NO'),
@@ -347,6 +350,39 @@ def main():
     ]
     EXTRA += [
         ('BDNearbyMakeFriendsSubPageController', 'viewDidLayoutSubviews', 'v16@0:8'),
+    ]
+    # 净化层：这些 selector 在宿主 ObjC 元数据里查不到（Swift @objc 侧不暴露），
+    # 之前的生成器只能回落 (id) 纯透传 —— 净化逻辑等于没写。
+    # 下面的类型全部从原版 dylib 对应 hook IMP 的反汇编反推：
+    #   p_topHeight          保存 d9/d8 并 fmov d8, d0  -> CGFloat (d)
+    #   isHavingSome / need* 取 HushConfig 后 cbz w0    -> BOOL (B)
+    #   showXxx / setXxx     调用 orig 后直接 ret        -> void (v)
+    EXTRA += [
+        ('BDNearbyMenu',                          'p_topHeight',        'd16@0:8'),
+        ('BDNearbyBannerCell',                    'p_topHeight',        'd16@0:8'),
+        ('BDNearbySceneMatchingTableViewCell',    'p_topHeight',        'd16@0:8'),
+        ('BDNearbyRecommendSquareItemCell',       'p_topHeight',        'd16@0:8'),
+        ('BDNearbyTopFixView',                    'p_topHeight',        'd16@0:8'),
+        ('BDMapBlurBaseView',                     'isHavingSomePrivilege',      'B16@0:8'),
+        ('BDMapBlurBaseView',                     'needToBuyPrivilege:sender:', 'B24@0:8@16'),
+        ('BDMapBlurBaseView',                     'applyBlurRadius:',           'v24@0:8d16'),
+        ('BDAvatarSurroundingRequest',            'needBlur',           'B16@0:8'),
+        ('BDMineBannerCell',                      'hasShown',           'B16@0:8'),
+        ('BDMineBannerCell',                      'images',             '@16@0:8'),
+        ('BDMineBannerCell',                      'videos',             '@16@0:8'),
+        ('BDMineBannerCell',                      'configerBanner:',    'v24@0:8@16'),
+        ('BDVisitBottomView',                     'showNsnofyView',     'v16@0:8'),
+        ('BDVisitBottomView',                     'setShowBlur:',       'v20@0:8B16'),
+        ('BDGlobalBannerView',                    'showNsnofyView',     'v16@0:8'),
+        ('BDNearbyFloatingLayerModel',            'setLayerModel:',     'v24@0:8@16'),
+        ('BDNearbyBannerCell',                    'setHasShown:',       'v20@0:8B16'),
+        ('BDNearbyRecommendCell',                 'setHasShown:',       'v20@0:8B16'),
+        ('BDNearbyDataAdapter',                   'setAdmsArray:',      'v24@0:8@16'),
+        ('BDNearbyDataAdapter',                   'synchronizeTopHeaderWithHeight:', 'v24@0:8d16'),
+        ('BDADX_Blued_Splash_Image_ViewController','removeAllSplashAdViews:',        'v24@0:8@16'),
+        ('BDADX_Blued_Splash_Video_ViewController','presentInViewController:',       'v24@0:8@16'),
+        ('BDADX_Blued_Splash_Video_ViewController','removeBluedSplashImageViewController', 'v16@0:8'),
+        ('BluedTabBar',                           'p_showFindBubble',   'v16@0:8'),
     ]
     for _c, _s, _e in EXTRA:
         want[_c].add(_s)
