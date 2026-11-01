@@ -137,7 +137,7 @@ static dispatch_once_t gHushSharedPanelOnce;
 - (void)hushActivationDidChange {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self buildModel];
-        [self.tableView reloadData];
+        [_table reloadData];
     });
 }
 
@@ -378,22 +378,26 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 - (void)searchBarTextDidBeginEditing:(id)a0 {
-    [self hushApplySearchQuery:a0.text];
+    UISearchBar *sb = (UISearchBar *)a0;
+    [self hushApplySearchQuery:sb.text];
 }
 
 - (void)searchBarTextDidEndEditing:(id)a0 {
-    [self hushApplySearchQuery:a0.text];
+    UISearchBar *sb = (UISearchBar *)a0;
+    [self hushApplySearchQuery:sb.text];
 }
 
 - (void)searchBarCancelButtonClicked:(id)a0 {
-    a0.text = @"";
+    UISearchBar *sb = (UISearchBar *)a0;
+    sb.text = @"";
     [a0 resignFirstResponder];
     [self hushApplySearchQuery:@""];
 }
 
 - (void)searchBarSearchButtonClicked:(id)a0 {
+    UISearchBar *sb = (UISearchBar *)a0;
     [a0 resignFirstResponder];
-    [self hushApplySearchQuery:a0.text];
+    [self hushApplySearchQuery:sb.text];
 }
 
 #pragma mark - navigation

@@ -72,7 +72,8 @@
 }
 
 - (void)switchChanged {
-    if (_onToggle) _onToggle(_sw.isOn);
+    void (^blk)(BOOL) = (void (^)(BOOL))_onToggle;
+    if (blk) blk(_sw.isOn);
 }
 
 - (void)prepareForReuse {
