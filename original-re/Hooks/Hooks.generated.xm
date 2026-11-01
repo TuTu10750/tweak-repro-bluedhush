@@ -15,6 +15,9 @@
 #import <MapKit/MapKit.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import <objc/runtime.h>
+#import "HushConfig.h"
+#import "HushLogger.h"
+#import "HushRuntime.h"
 
 // ---- host classes referenced by the original hook table ----
 @class GJIMSessionService;
@@ -134,11 +137,37 @@
 %end
 
 %hook GJIMMessageModel
-- (int)recallType { return %orig; }
-- (BOOL)isSuperRecallTip { return %orig; }
-- (void)setRecallType:(int)a0 { %orig; }
-- (void)setDestroyUrl:(id)a0 { %orig; }
-- (void)setIsSuperRecallTip:(BOOL)a0 { %orig; }
+// anti-recall @ 0x46f94 / 0x47084 / 0x47118 / 0x47230 / 0x47320
+- (int)recallType {
+    BOOL on = [[HushConfig shared] isEnabled:@"switch_anti_recall"];
+    int r = %orig;
+    if (on && r != 0) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:@"[AntiRecall] recallType %d -> 0", r]];
+        r = 0;
+    }
+    return r;
+}
+- (BOOL)isSuperRecallTip {
+    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) return NO;
+    return %orig;
+}
+- (void)setRecallType:(int)a0 {
+    if (a0 != 0 && [[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:@"[AntiRecall] blocked setRecallType:%d", a0]];
+        return;
+    }
+    %orig;
+}
+- (void)setDestroyUrl:(id)a0 {
+    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
+        [HushLogger logLevel:3 format:@"[AntiRecall] setDestroyUrl suppressed"];
+    }
+    %orig;
+}
+- (void)setIsSuperRecallTip:(BOOL)a0 {
+    BOOL on = [[HushConfig shared] isEnabled:@"switch_anti_recall"];
+    %orig(a0 & !on);
+}
 - (BOOL)isShowTime { return %orig; }
 - (BOOL)autoDestroy { return %orig; }
 - (BOOL)is_prohibit_chat_screenshot { return %orig; }
