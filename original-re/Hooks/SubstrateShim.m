@@ -35,6 +35,8 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <stdio.h>
+#import <string.h>
+#import <stdlib.h>
 
 // ---------------------------------------------------------------------------
 // No-op IMP handed to %orig when a selector cannot be resolved at all.
@@ -87,6 +89,123 @@ static Method rea_inherited_anywhere(Class cls, SEL sel) {
 // ---------------------------------------------------------------------------
 static int gHushHookOwn, gHushHookInherited, gHushHookMissing, gHushHookTotal;
 
+#define HUSH_MISSING_CAP 512
+static const char *gHushMissingClass[HUSH_MISSING_CAP];
+static const char *gHushMissingSel[HUSH_MISSING_CAP];
+static int gHushMissingNames;
+
+// ---------------------------------------------------------------------------
+// Deferred install.
+// %ctor runs before the Swift-backed classes are registered with the ObjC
+// runtime, so class_getInstanceMethod() answers NULL for them and we used to
+// drop the hook on the floor (hush.log showed missing=164 of 265). The method
+// really does exist later on -- the host just had not registered the class yet.
+// So park the request and retry once the app has finished launching.
+// ---------------------------------------------------------------------------
+#define HUSH_PENDING_CAP 1024
+
+typedef struct {
+    Class cls;
+    SEL sel;
+    IMP replacement;
+    IMP *result;
+} HushPendingHook;
+
+static HushPendingHook gHushPending[HUSH_PENDING_CAP];
+static int gHushPendingCount;
+static int gHushRetryPass;
+
+static void hush_pending_add(Class cls, SEL sel, IMP replacement, IMP *result) {
+    if (gHushPendingCount >= HUSH_PENDING_CAP) return;
+    gHushPending[gHushPendingCount].cls = cls;
+    gHushPending[gHushPendingCount].sel = sel;
+    gHushPending[gHushPendingCount].replacement = replacement;
+    gHushPending[gHushPendingCount].result = result;
+    gHushPendingCount++;
+}
+
+static void hush_pending_retry(void) {
+    if (!gHushPendingCount) return;
+    int fixed = 0;
+    for (int i = 0; i < gHushPendingCount; i++) {
+        HushPendingHook *p = &gHushPending[i];
+        if (!p->cls || !p->sel || !p->replacement) continue;
+        Method live = class_getInstanceMethod(p->cls, p->sel);
+        if (!live) {
+            Class meta = object_getClass((id)p->cls);
+            if (meta) live = class_getInstanceMethod((Class)meta, p->sel);
+        }
+        if (!live) continue;
+        IMP orig = method_getImplementation(live);
+        // If our replacement is already the live IMP we have nothing to do.
+        if (orig == p->replacement) { if (p->result) *(p->result) = (IMP)&rea_noop_imp; continue; }
+        method_setImplementation(live, p->replacement);
+        if (p->result) *(p->result) = orig;
+        p->cls = Nil; p->sel = NULL; p->replacement = NULL; p->result = NULL;
+        fixed++;
+    }
+    gHushRetryPass++;
+    fprintf(stderr, "[Hush] pending retry #%d: installed %d of %d deferred hooks\n",
+            gHushRetryPass, fixed, gHushPendingCount);
+    NSString *line = [NSString stringWithFormat:
+        @"[Hush] pending retry #%d: installed %d of %d deferred hooks",
+        gHushRetryPass, fixed, gHushPendingCount];
+    Class logger = objc_getClass("HushLogger");
+    if (logger) {
+        SEL ls = sel_registerName("logLevel:format:");
+        if ([logger respondsToSelector:ls])
+            ((void (*)(id, SEL, long long, id))objc_msgSend)(logger, ls, 4, line);
+    }
+}
+
+static void hush_schedule_retries(void) {
+    static const double delays[] = { 0.5, 1.5, 3.0, 6.0, 12.0 };
+    for (unsigned i = 0; i < sizeof(delays) / sizeof(delays[0]); i++) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delays[i] * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{ hush_pending_retry(); });
+    }
+}
+
+static void hush_record_missing(Class cls, SEL sel) {
+    if (gHushMissingNames >= HUSH_MISSING_CAP) return;
+    const char *cn = cls ? class_getName(cls) : "?";
+    const char *sn = sel ? sel_getName(sel) : "?";
+    gHushMissingClass[gHushMissingNames] = cn ? cn : "?";
+    gHushMissingSel[gHushMissingNames] = sn ? sn : "?";
+    gHushMissingNames++;
+}
+
+// Dump the classes the recovered table depends on straight from the running
+// runtime. The static scan of the shipping binary is not authoritative for
+// Swift-backed classes, so this is the only honest answer to "what selectors
+// does the host actually expose".
+static void hush_probe_class(const char *name) {
+    Class c = objc_getClass(name);
+    if (!c) { fprintf(stderr, "[Hush] probe %s: class MISSING\n", name); return; }
+    unsigned int n = 0;
+    Method *list = class_copyMethodList(c, &n);
+    fprintf(stderr, "[Hush] probe %s: %u own methods\n", name, n);
+    for (unsigned int i = 0; i < n && i < 500; i++)
+        fprintf(stderr, "[Hush]   %s\n", sel_getName(method_getName(list[i])));
+    if (list) free(list);
+    Class super = class_getSuperclass(c);
+    while (super && super != c) {
+        unsigned int sn = 0;
+        Method *sl = class_copyMethodList(super, &sn);
+        fprintf(stderr, "[Hush] probe %s <- super %s: %u methods (filtered)\n",
+                name, class_getName(super), sn);
+        for (unsigned int i = 0; i < sn && i < 500; i++) {
+            const char *m = sel_getName(method_getName(sl[i]));
+            if (strstr(m,"privacy")||strstr(m,"album")||strstr(m,"Album")||
+                strstr(m,"lock")||strstr(m,"Lock")||strstr(m,"visitor")||
+                strstr(m,"Visitor")||strstr(m,"adms")||strstr(m,"vip"))
+                fprintf(stderr, "[Hush]   * %s\n", m);
+        }
+        if (sl) free(sl);
+        super = class_getSuperclass(super);
+    }
+}
+
 static void hush_hook_report(void) {
     fprintf(stderr, "[Hush] hooks: total=%d own=%d inherited=%d missing=%d\n",
             gHushHookTotal, gHushHookOwn, gHushHookInherited, gHushHookMissing);
@@ -107,7 +226,20 @@ __attribute__((constructor))
 static void hush_hook_counters_init(void) {
     // Report once the tweak's own constructors have all run.
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)),
-                   dispatch_get_main_queue(), ^{ hush_hook_report(); });
+                   dispatch_get_main_queue(), ^{
+        hush_hook_report();
+        for (int i = 0; i < gHushMissingNames; i++)
+            fprintf(stderr, "[Hush] missing %d/%d %s | %s\n", i + 1, gHushMissingNames,
+                    gHushMissingClass[i], gHushMissingSel[i]);
+        hush_probe_class("UserInformation");
+        hush_probe_class("BDHomeViewController");
+        hush_probe_class("BDHomeAlbumCell");
+        hush_probe_class("BDPersonPrivacyAlbumCollectView");
+        hush_probe_class("BDHomePageAlbumCell");
+        hush_probe_class("BDPrivacyAlbumCell");
+        hush_probe_class("BDProfile");
+    });
+    hush_schedule_retries();
 }
 
 void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
@@ -165,8 +297,11 @@ void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
     //    types is NULL because the host gave us no encoding to copy; objc_msgSend
     //    does not consult it, only runtime introspection does.
     gHushHookMissing++;
+    hush_record_missing(cls, sel);
+    // The class is probably registered but the Swift method is not exposed yet.
+    // Park it: hush_pending_retry() installs it once the runtime knows the class.
+    if (cls && sel && replacement) hush_pending_add(cls, sel, replacement, result);
     if (result) *result = (IMP)&rea_noop_imp;
-    if (replacement) class_addMethod(cls, sel, replacement, NULL);
 }
 
 // Logos only emits inline hooks for %hookf, which the recovered table does not
