@@ -84,6 +84,21 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     NSLog(@"[Hush] ctor ran, entry installed");
     [HushLogger logLevel:4 format:@"[Hush] entry installed (ball inject armed)"];
 
+    // 启动快照：把真正读到的开关值落进日志。
+    // 用户报「开关开了但功能没生效」时，先看这一行是否与面板一致。
+    {
+        NSArray *keys = @[@"purify_master", @"switch_private_photo", @"switch_anti_recall",
+                          @"switch_virtual_location", @"switch_location_sim", @"switch_altitude_sim",
+                          @"switch_real_location_mask", @"switch_version_spoof",
+                          @"switch_spoof_lite", @"float_ball", @"switch_debug_log"];
+        NSMutableString *dump = [NSMutableString stringWithString:@"[Hush] config dump:"];
+        for (NSString *k in keys) {
+            [dump appendFormat:@" %@=%d", k, (int)[[HushConfig shared] isEnabled:k]];
+        }
+        NSLog(@"%@", dump);
+        [HushLogger logLevel:3 format:dump];
+    }
+
     // First attempt as soon as a runloop exists, then poll until it lands.
     HushPollInject((int64_t)(0.10 * NSEC_PER_SEC));
 }
