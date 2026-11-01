@@ -46,3 +46,11 @@ FOUNDATION_EXPORT UIView *HushForceVisibleView(UIView *v);                    //
 FOUNDATION_EXPORT BOOL HushKeyNeedsActivation(NSString *key);
 FOUNDATION_EXPORT BOOL HushHostCompatKeyIsInapplicable(NSString *key);
 FOUNDATION_EXPORT BOOL gHushActivationCacheReady;
+
+#pragma mark - hook hit counter
+
+// Records that a hook body actually ran. Silently does nothing if called twice
+// for the same key. Gives us a definitive answer to "did the host ever call
+// this override" without needing a debugger on the device.
+FOUNDATION_EXPORT void HushHit(const char *cls, const char *sel);
+FOUNDATION_EXPORT void HushHitReport(const char *tag);

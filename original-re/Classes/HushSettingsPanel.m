@@ -245,11 +245,15 @@ static dispatch_once_t gHushSharedPanelOnce;
     // Prove at runtime what the panel is actually about to render. If this line
     // shows mojibake the generator is at fault; if it shows correct Chinese the
     // strings were fine and the bad glyphs came from somewhere else.
+    // %s 在 NSString stringWithFormat: 里按系统编码解释 C 字符串，UTF-8 中文会被
+    // 拆成一堆 Latin-1 字符（日志里就是 ÊÇ¨ÊµÆÁêÉ…）。必须先转成 NSString 再用 %@。
     if (kHushToggleCount >= 2) {
+        NSString *k0 = [NSString stringWithUTF8String:kHushToggles[0].key];
+        NSString *t0 = [NSString stringWithUTF8String:kHushToggles[0].title];
+        NSString *k1 = [NSString stringWithUTF8String:kHushToggles[1].key];
+        NSString *t1 = [NSString stringWithUTF8String:kHushToggles[1].title];
         [HushLogger logLevel:4 format:[NSString stringWithFormat:
-            @"[Panel] title check: %s=%s | %s=%s",
-            kHushToggles[0].key, kHushToggles[0].title,
-            kHushToggles[1].key, kHushToggles[1].title]];
+            @"[Panel] title check: %@=%@ | %@=%@", k0, t0, k1, t1]];
     }
 
 

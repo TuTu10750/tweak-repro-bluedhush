@@ -14,6 +14,7 @@
 
 #import "HushRuntime.h"
 #import "HushConfig.h"
+#import <string.h>
 #import "HushLogger.h"
 
 NSString *const HushBallIconStyleDidChangeNotification = @"HushBallIconStyleDidChangeNotification";
@@ -206,4 +207,54 @@ UIImage *HushBallIconImage(NSUInteger style, CGFloat scale) {
         }
     }];
     return img;
+}
+
+#pragma mark - hook hit counter
+
+// 110 behaviour rows across 114 hooked classes. Knowing which of them the host
+// actually calls is the difference between "the override never runs" and "it
+// runs but the value gets recomputed downstream". Counting is cheap: one
+// @synchronized block and a linear scan over at most 256 keys.
+
+#define HUSH_HIT_CAP 256
+static const char *gHitKey[HUSH_HIT_CAP];
+static long        gHitCount[HUSH_HIT_CAP];
+static int         gHitUsed;
+static NSLock     *gHitLock;
+
+void HushHit(const char *cls, const char *sel) {
+    if (!cls || !sel) return;
+    static NSString *joined[HUSH_HIT_CAP];
+    if (!gHitLock) gHitLock = [[NSLock alloc] init];
+    [gHitLock lock];
+    for (int i = 0; i < gHitUsed; i++) {
+        if (gHitKey[i] == cls) {          // literal pointers, one per call site
+            gHitCount[i]++;
+            [gHitLock unlock];
+            return;
+        }
+    }
+    if (gHitUsed < HUSH_HIT_CAP) {
+        char buf[192];
+        snprintf(buf, sizeof(buf), "%s|%s", cls, sel);
+        char *copy = strdup(buf);
+        gHitKey[gHitUsed] = copy;
+        gHitCount[gHitUsed] = 1;
+        joined[gHitUsed] = nil;
+        gHitUsed++;
+    }
+    [gHitLock unlock];
+}
+
+void HushHitReport(const char *tag) {
+    if (!gHitLock) return;
+    [gHitLock lock];
+    int n = gHitUsed;
+    [gHitLock unlock];
+    NSMutableString *out = [NSMutableString stringWithFormat:@"[Hush] hit %s: %d distinct hooks ran", tag ? tag : "", n];
+    for (int i = 0; i < n && i < 48; i++) {
+        [out appendFormat:@"\n[Hush]   %s x%ld", gHitKey[i], gHitCount[i]];
+    }
+    if (n > 48) [out appendFormat:@"\n[Hush]   ... %d more", n - 48];
+    [HushLogger logLevel:4 format:out];
 }

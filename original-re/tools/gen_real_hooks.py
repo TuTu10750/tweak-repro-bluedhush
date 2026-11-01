@@ -423,6 +423,10 @@ def main():
             else:
                 ret, sig, args = _fallback_sig(sel)
             body = body_for(key, ret, sig, args, enc)
+            # Every row that actually carries behaviour gets a hit counter, so a
+            # device log can answer "did the host ever call this override".
+            if key in B:
+                body = 'HushHit("%s","%s"); %s' % (cls, sel, body)
             lines.append('- (%s)%s { %s }' % (ret, sig, body))
         lines.append('%end')
         lines.append('')

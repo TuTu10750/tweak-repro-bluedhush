@@ -21,6 +21,18 @@
 static NSInteger gHushPollTicks = 0;
 
 // Poll: try to inject, stop as soon as a ball is actually on screen.
+
+// Ask, after the UI has had time to lay out, which overrides the host actually
+// reached. Three reports: after first frame, after the first tab switch, later.
+static void HushScheduleHitReports(void) {
+    static const double t[] = { 1.0, 4.0, 12.0 };
+    static const char *tags[] = { "t1", "t4", "t12" };
+    for (int i = 0; i < 3; i++) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t[i] * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{ HushHitReport(tags[i]); });
+    }
+}
+
 static void HushPollInject(int64_t delayNs);
 
 static void HushPollStep(void) {
@@ -101,4 +113,8 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
 
     // First attempt as soon as a runloop exists, then poll until it lands.
     HushPollInject((int64_t)(0.10 * NSEC_PER_SEC));
+
+    // Which overrides did the host actually reach?  See HushHit/HushHitReport
+    // in HushRuntime.m — every behaviour-bearing hook stamps a counter.
+    HushScheduleHitReports();
 }
