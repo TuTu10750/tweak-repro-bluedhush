@@ -153,10 +153,20 @@ void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
         return;
     }
 
-    // 3) Nowhere to be found (host dropped the selector this build). Do not
-    //    invent one: hand %orig the stub so the passthrough body cannot fault.
+    // 3) Nowhere in the hierarchy: the host build never exposed this selector
+    //    to Objective-C (Swift members that stayed un-@objc, renamed methods,
+    //    protocol-only declarations). Real substrate installs the replacement
+    //    as the sole implementation in exactly this case, and that is how the
+    //    original dylib makes these hooks fire - dropping them here is why 164
+    //    of 265 hooks silently did nothing.
+    //
+    //    %orig still points at the no-op, so an unconditional-passthrough body
+    //    returns safely; a body that gates on HushConfig now actually runs.
+    //    types is NULL because the host gave us no encoding to copy; objc_msgSend
+    //    does not consult it, only runtime introspection does.
     gHushHookMissing++;
     if (result) *result = (IMP)&rea_noop_imp;
+    if (replacement) class_addMethod(cls, sel, replacement, NULL);
 }
 
 // Logos only emits inline hooks for %hookf, which the recovered table does not
