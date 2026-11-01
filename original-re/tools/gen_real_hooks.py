@@ -144,6 +144,10 @@ B = {
  'BDHomePhotoModel|audit_status':                          ('ret', '0'),
  'BDPhotoBrowserBasicCell|album_ban_save':                 ('ret', '0'),
  'BDGlobalConfig|is_open_pic_ban_save':                    ('ret', '0'),
+ # 数据源头：锁定态本身就在 UserInformation 上（172 个 property 里的三个）
+ 'UserInformation|privacy_photos_has_locked':              ('int', 'switch_private_photo', '0'),
+ 'UserInformation|access_private_photos':                  ('int', 'switch_private_photo', '1'),
+ 'UserInformation|album_ban_save':                         ('int', 'switch_private_photo', '0'),
  'BDGlobalConfig|ban_applestore_review':                   ('ret', '0'),
  'BDPrivacyAlbumCell|showMaskViewOrNot:':                  ('noop',),
  'BDPhotoBrowserController|setWaterMarkText:':             ('noop',),
@@ -310,6 +314,16 @@ def main():
     for o in pairs:
         if o['cls'] and o['sel']:
             want[o['cls']].add(o['sel'])
+
+    # 557 个调用点里没有、但决定隐私相册锁定态的源头 getter（在 UserInformation 上）
+    EXTRA = [
+        ('UserInformation', 'privacy_photos_has_locked', 'i16@0:8'),
+        ('UserInformation', 'access_private_photos',     'i16@0:8'),
+        ('UserInformation', 'album_ban_save',            'i16@0:8'),
+    ]
+    for _c, _s, _e in EXTRA:
+        want[_c].add(_s)
+        types.setdefault('%s|%s' % (_c, _s), _e)
 
     lines = []
     lines.append('// HushReal.xm — 自动生成，勿手改（tools/gen_real_hooks.py）')

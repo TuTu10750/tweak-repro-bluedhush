@@ -598,9 +598,12 @@
 %end
 
 %hook UserInformation
+- (int)access_private_photos { if ([[HushConfig shared] isEnabled:@"switch_private_photo"]) return 1; return %orig; }
+- (int)album_ban_save { if ([[HushConfig shared] isEnabled:@"switch_private_photo"]) return 0; return %orig; }
 - (double)distance { if ([[HushConfig shared] isEnabled:@"switch_real_location_mask"]) return 0.0; return %orig; }
 - (id)layoutSubviews { return %orig; }
 - (id)mapView:(id)a0 viewForAnnotation:(id)a1 { return %orig; }
+- (int)privacy_photos_has_locked { if ([[HushConfig shared] isEnabled:@"switch_private_photo"]) return 0; return %orig; }
 - (void)setUnion_uid:(id)a0 { %orig; }
 - (id)viewDidAppear:(id)a0 { return %orig; }
 %end
