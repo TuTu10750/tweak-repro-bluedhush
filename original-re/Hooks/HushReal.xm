@@ -70,12 +70,12 @@
 - (id)avatar_is_fuzzy { return %orig; }
 - (id)is_hide_distance { return %orig; }
 - (id)is_unlock { return %orig; }
-- (id)needBlur { return NO; }
+- (id)needBlur { return %orig; }
 - (id)requestArgument { return %orig; }
 %end
 
 %hook BDBluedSplashAdHotLimitView
-- (id)shouldShowColdLaunchLoadingForIdentifier:(id)a0 { return NO; }
+- (id)shouldShowColdLaunchLoadingForIdentifier:(id)a0 { return %orig; }
 %end
 
 %hook BDBlurredLabel
@@ -265,7 +265,7 @@
 %end
 
 %hook BDNearbyBannerCell
-- (id)p_topHeight { return 0.0; }
+- (id)p_topHeight { return %orig; }
 - (id)setHasShown:(id)a0 { return %orig; }
 %end
 
@@ -316,13 +316,13 @@
 %end
 
 %hook BDNearbyRecommendCell
-- (id)p_baseHeaderHeight { return 0.0; }
+- (id)p_baseHeaderHeight { return %orig; }
 - (id)p_updateHeaderHeight { return %orig; }
 - (id)setHasShown:(id)a0 { return %orig; }
 %end
 
 %hook BDNearbyRecommendSquareItemCell
-- (id)p_topHeight { return 0.0; }
+- (id)p_topHeight { return %orig; }
 %end
 
 %hook BDNearbySceneMatchingTableViewCell
@@ -428,13 +428,13 @@
 - (id)p_showKSSplash:(id)a0 isColdLaunch:(id)a1 finished:(id)a2 { return %orig; }
 - (id)p_showPangleSplash:(id)a0 isColdLaunch:(id)a1 finished:(id)a2 { return %orig; }
 - (void)presentInViewController:(id)a0 { /* purified */ }
-- (id)shouldShowColdLaunchLoadingForIdentifier:(id)a0 { return NO; }
+- (id)shouldShowColdLaunchLoadingForIdentifier:(id)a0 { return %orig; }
 - (id)showSplashAd_Adx:(id)a0 currentWinAdModel:(id)a1 isColdLaunch:(id)a2 finished:(id)a3 { return %orig; }
 - (id)showSplashAd_Normal:(id)a0 isColdLaunch:(id)a1 finished:(id)a2 { return %orig; }
 %end
 
 %hook BDSplashVideoAdViewController
-- (id)shouldShowColdLaunchLoadingForIdentifier:(id)a0 { return NO; }
+- (id)shouldShowColdLaunchLoadingForIdentifier:(id)a0 { return %orig; }
 %end
 
 %hook BDSuperCallingCardConfigView

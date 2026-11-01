@@ -260,7 +260,9 @@ def body_for(key, ret, sig, args, enc):
         val = act[1]
         # 没有宿主类型编码时，签名会回落成 (id)。这时返回 YES / 1 之类的非零
         # 标量，调用方会把它当对象指针用（0x1），必崩。只放行真正的空值。
-        if enc is None and val not in ('nil', 'NULL', '0', '0.0', 'NO', '@[]', '@{}'):
+        # 无类型时签名会回落成 (id)：只有空指针常量和字面量对象能直接返回，
+        # 0.0 / NO 之类在 id 返回函数里是类型错误（clang: cannot initialize return object of type id）
+        if enc is None and val not in ('nil', 'NULL', '0', '@[]', '@{}'):
             return '%orig;' if ret == 'void' else 'return %orig;'
         return 'return %s;' % val if ret != 'void' else '%orig;'
     if kind == 'bool':
