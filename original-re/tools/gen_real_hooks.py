@@ -176,6 +176,25 @@ B = {
  'GJIMMessageModel|isIdentifyYellow':                      ('ret', '0'),
  'BDMessageRecentSendPhotoModel|isPorn':                   ('ret', 'NO'),
  'BDUserVisitorCell|showBlur':                             ('ret', 'NO'),
+ # ===== 隐私相册解锁（按原版 557 hook 清单重做）=====
+ # 数据落地：服务器给的 islock / isAccessOpen 直接改掉，解锁状态从源头成立
+ 'BDPersonPrivacyAlbumCollectView|updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:':
+     ('args', 'switch_private_photo', ['a3 = 0;', 'a4 = 1;'], '%orig;'),
+ # 渲染落地：lockStatus 归零，列表不再画锁
+ 'BDHomeAlbumCell|configureAllAlbum:lockStatus:isMultiple:indexPath:':
+     ('args', 'switch_private_photo', ['a1 = 0;'], '%orig;'),
+ 'BDPhotoBrowserController|configureAllAlbum:lockStatus:isMultiple:indexPath:':
+     ('args', 'switch_private_photo', ['a1 = 0;'], '%orig;'),
+ # 遮罩/模糊/水印/禁存
+ 'BDPrivacyAlbumCell|showMaskViewOrNot:':                  ('noop',),
+ 'BDPhotoBrowserController|setWaterMarkText:':             ('noop',),
+ 'BDPhotoBrowserPrivacyAlbumCell|setWaterMarkText:':       ('noop',),
+ 'BDHomePageAlbumCell|blurImage:withRadius:':              ('ret', 'a0'),
+ 'BDPhotoBrowserBasicCell|album_ban_save':                 ('ret', '0'),
+ # 状态字段
+ 'BDHomePrivacyAlbumModel|status':                         ('ret', '1'),
+ 'BDHomePhotoModel|audit_status':                          ('ret', '0'),
+ 'BDHomeViewController|isUnlockPrivateAlbum':              ('ret', 'YES'),
  # ===== 距离伪造 =====
  'UserInformation|distance':                               ('double', 'switch_real_location_mask', '0.0'),
  'SearchUsersData|distance':                               ('double', 'switch_real_location_mask', '0.0'),
@@ -196,6 +215,22 @@ def body_for(key, ret, sig, args, enc):
     if kind == 'int':
         return 'if ([[HushConfig shared] isEnabled:@"%s"]) return %s; return %%orig;' % (act[1], act[2]) \
                if ret != 'void' else '%orig;'
+    if kind == 'args':
+        # 只对已知的标量参数赋值；参数类型不明（回落成 id）时不生成任何改写，
+        # 否则 `a1 = 0` 会把一个对象指针置空，调用即崩。
+        safe = []
+        for a in act[2]:
+            idx = int(a.split('=')[0].strip()[1:])
+            t = args[idx] if (args and idx < len(args)) else 'id'
+            if t == 'id' or t.startswith('id '):
+                continue
+            safe.append(a)
+        if not safe:
+            return '%orig;' if ret == 'void' else 'return %orig;'
+        assigns = ' '.join(safe)
+        gate = act[1]
+        tail = act[3] if len(act) > 3 else ('%orig;' if ret == 'void' else 'return %orig;')
+        return ('if ([[HushConfig shared] isEnabled:@"%s"]) { %s } ' % (gate, assigns)) + tail
     if kind == 'double':
         return 'if ([[HushConfig shared] isEnabled:@"%s"]) return %s; return %%orig;' % (act[1], act[2])
     return 'return %orig;' if ret != 'void' else '%orig;'

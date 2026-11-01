@@ -148,7 +148,7 @@
 %end
 
 %hook BDHomeAlbumCell
-- (void)configureAllAlbum:(id)a0 lockStatus:(int)a1 isMultiple:(BOOL)a2 indexPath:(id)a3 { %orig; }
+- (void)configureAllAlbum:(id)a0 lockStatus:(int)a1 isMultiple:(BOOL)a2 indexPath:(id)a3 { if ([[HushConfig shared] isEnabled:@"switch_private_photo"]) { a1 = 0; } %orig; }
 - (id)setAudit_status:(id)a0 { return %orig; }
 %end
 
@@ -354,7 +354,7 @@
 - (id)is_improve_backlist { return %orig; }
 - (id)is_vip_annual_mark { return %orig; }
 - (id)is_vip_mark { return %orig; }
-- (void)updatePrivateAlbumWithUid:(id)a0 photos:(id)a1 hasMore:(BOOL)a2 islock:(int)a3 isAccessOpen:(int)a4 picNums:(int)a5 { %orig; }
+- (void)updatePrivateAlbumWithUid:(id)a0 photos:(id)a1 hasMore:(BOOL)a2 islock:(int)a3 isAccessOpen:(int)a4 picNums:(int)a5 { if ([[HushConfig shared] isEnabled:@"switch_private_photo"]) { a3 = 0; a4 = 1; } %orig; }
 %end
 
 %hook BDPhotoBrowserBasicCell
