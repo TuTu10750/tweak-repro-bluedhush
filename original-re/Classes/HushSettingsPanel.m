@@ -469,12 +469,13 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 - (id)tableView:(id)a0 cellForRowAtIndexPath:(id)a1 {
+    NSIndexPath *ip = (NSIndexPath *)a1;
     HushConfig *cfg = [HushConfig shared];
 
     if ([self searching]) {
         UITableViewCell *cell = [a0 dequeueReusableCellWithIdentifier:@"hit"];
         if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"hit"];
-        NSArray *pair = _searchResults[(NSUInteger)a1.row];
+        NSArray *pair = _searchResults[(NSUInteger)ip.row];
         HushSwitchItem *it = pair[0];
         cell.textLabel.text = it.title;
         cell.textLabel.numberOfLines = 0;
@@ -500,7 +501,7 @@ static dispatch_once_t gHushSharedPanelOnce;
         return cell;
     }
 
-    HushModuleEntry *mod = _modules[(NSUInteger)a1.row];
+    HushModuleEntry *mod = _modules[(NSUInteger)ip.row];
     UITableViewCell *cell = [a0 dequeueReusableCellWithIdentifier:@"mod"];
     if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"mod"];
     if (@available(iOS 14.0, *)) {
@@ -542,11 +543,12 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 - (void)tableView:(id)a0 didSelectRowAtIndexPath:(id)a1 {
+    NSIndexPath *ip = (NSIndexPath *)a1;
     [a0 deselectRowAtIndexPath:a1 animated:YES];
 
     if ([self searching]) {
         // jump into the owning module and highlight the row
-        NSArray *pair = _searchResults[(NSUInteger)a1.row];
+        NSArray *pair = _searchResults[(NSUInteger)ip.row];
         HushSwitchItem *it = pair[0];
         NSString *modName = pair[1];
         for (HushModuleEntry *mod in _modules) {
@@ -559,8 +561,8 @@ static dispatch_once_t gHushSharedPanelOnce;
         return;
     }
 
-    if (a1.row < 0 || a1.row >= (long long)[_modules count]) return;
-    [self openModule:_modules[(NSUInteger)a1.row]];
+    if (ip.row < 0 || ip.row >= (long long)[_modules count]) return;
+    [self openModule:_modules[(NSUInteger)ip.row]];
 }
 
 @end

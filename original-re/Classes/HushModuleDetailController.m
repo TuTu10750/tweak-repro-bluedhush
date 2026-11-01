@@ -95,10 +95,11 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
 }
 
 - (id)tableView:(id)a0 cellForRowAtIndexPath:(id)a1 {
-    if (a1.section < 0 || a1.section >= (long long)[_sections count]) return [[UITableViewCell alloc] init];
-    HushModuleSection *sec = _sections[(NSUInteger)a1.section];
-    if (a1.row < 0 || a1.row >= (long long)[sec.items count]) return [[UITableViewCell alloc] init];
-    id item = sec.items[(NSUInteger)a1.row];
+    NSIndexPath *ip = (NSIndexPath *)a1;
+    if (ip.section < 0 || ip.section >= (long long)[_sections count]) return [[UITableViewCell alloc] init];
+    HushModuleSection *sec = _sections[(NSUInteger)ip.section];
+    if (ip.row < 0 || ip.row >= (long long)[sec.items count]) return [[UITableViewCell alloc] init];
+    id item = sec.items[(NSUInteger)ip.row];
 
     HushConfig *cfg = [HushConfig shared];
 
@@ -187,11 +188,12 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
 }
 
 - (void)tableView:(id)a0 didSelectRowAtIndexPath:(id)a1 {
+    NSIndexPath *ip = (NSIndexPath *)a1;
     [a0 deselectRowAtIndexPath:a1 animated:YES];
-    if (a1.section < 0 || a1.section >= (long long)[_sections count]) return;
-    HushModuleSection *sec = _sections[(NSUInteger)a1.section];
-    if (a1.row < 0 || a1.row >= (long long)[sec.items count]) return;
-    id item = sec.items[(NSUInteger)a1.row];
+    if (ip.section < 0 || ip.section >= (long long)[_sections count]) return;
+    HushModuleSection *sec = _sections[(NSUInteger)ip.section];
+    if (ip.row < 0 || ip.row >= (long long)[sec.items count]) return;
+    id item = sec.items[(NSUInteger)ip.row];
     HushConfig *cfg = [HushConfig shared];
 
     if ([item isKindOfClass:[HushSwitchItem class]]) {
@@ -201,7 +203,7 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
 
         if (isBool) {
             if ([si.key isEqualToString:@"switch_legacy_auto_import"]) {
-                [self hushConfirmLegacyAutoImportToggle:si section:a1.section];
+                [self hushConfirmLegacyAutoImportToggle:si section:ip.section];
                 return;
             }
             BOOL on = [cfg isEnabled:si.key default:(e ? e->defBool : NO)];
