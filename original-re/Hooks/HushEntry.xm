@@ -116,5 +116,6 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
 
     // Which overrides did the host actually reach?  See HushHit/HushHitReport
     // in HushRuntime.m — every behaviour-bearing hook stamps a counter.
+    HushInstallHooks();
     HushScheduleHitReports();
 }

@@ -54,3 +54,4 @@ FOUNDATION_EXPORT BOOL gHushActivationCacheReady;
 // this override" without needing a debugger on the device.
 FOUNDATION_EXPORT void HushHit(const char *cls, const char *sel);
 FOUNDATION_EXPORT void HushHitReport(const char *tag);
+FOUNDATION_EXPORT void HushInstallHooks(void);

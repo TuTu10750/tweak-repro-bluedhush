@@ -7,9 +7,12 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = BluedHushRE
 
 BluedHushRE_FILES = $(wildcard Classes/*.m)
-BluedHushRE_FILES += Hooks/HushReal.xm
+# HushReal.xm disabled for the minimal-loop run (114 classes / 286 methods,
+# 194 of them untyped). Re-enable only after the table-driven layer is verified.
+# BluedHushRE_FILES += Hooks/HushReal.xm
 BluedHushRE_FILES += Hooks/HushEntry.xm
 BluedHushRE_FILES += Hooks/SubstrateShim.m
+BluedHushRE_FILES += Hooks/HushHooks.m
 BluedHushRE_CFLAGS = -I$(THEOS_PROJECT_DIR)/Headers -fobjc-arc -Wno-everything -Wno-objc-method-access
 
 # ---------------------------------------------------------------------------
@@ -38,6 +41,9 @@ Hooks/HushReal.xm_CFLAGS = -fno-objc-arc
 # Theos resolves per-file flags by several spellings depending on version, so
 # declare the bare filename form as well; a no-op when unused.
 HushReal.xm_CFLAGS = -fno-objc-arc
+
+Hooks/HushHooks.m_CFLAGS = -fno-objc-arc
+HushHooks.m_CFLAGS = -fno-objc-arc
 
 BluedHushRE_FRAMEWORKS = Foundation UIKit CoreLocation QuartzCore MapKit QuickLook
 BluedHushRE_LIBRARIES = sqlite3
