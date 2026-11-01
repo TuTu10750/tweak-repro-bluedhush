@@ -116,7 +116,7 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
             if (HushKeyNeedsRestart(si.key)) {
                 sub = [sub length] ? [sub stringByAppendingString:@"  ·  需重启"] : @"需重启 App 生效";
             }
-            [cell configureTitle:si.title subtitle:sub icon:si.icon effect:HushKeyNeedsRestart(si.key) on:on];
+            [cell configureTitle:si.title subtitle:sub icon:si.icon effect:0 on:on];
             __weak typeof(self) weakSelf = self;
             cell.onToggle = ^(BOOL v) {
                 [cfg setEnabled:v forKey:si.key];

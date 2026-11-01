@@ -199,9 +199,11 @@ static dispatch_once_t gHushSharedPanelOnce;
     for (int i = 0; i < kHushToggleCount; i++) {
         const HushToggleEntry *e = &kHushToggles[i];
         if (e->module < 0 || e->module >= kHushModuleCount) continue;
+        // 原版把生效方式拼在说明前面：「立即生效 · 首页「交友」右侧入口显隐…」
+        NSString *sub = [NSString stringWithFormat:@"%s · %s", e->effect, e->desc];
         HushSwitchItem *it = [HushSwitchItem key:[NSString stringWithUTF8String:e->key]
                                            title:[NSString stringWithUTF8String:e->title]
-                                        subtitle:[NSString stringWithUTF8String:e->desc]
+                                        subtitle:sub
                                             icon:nil
                                           effect:0];
         [buckets[(NSUInteger)e->module] addObject:it];
@@ -224,7 +226,8 @@ static dispatch_once_t gHushSharedPanelOnce;
         HushModuleEntry *entry = [[HushModuleEntry alloc] init];
         entry.title = [NSString stringWithUTF8String:meta->name];
         entry.icon = [NSString stringWithUTF8String:meta->symbol];
-        entry.footer = [NSString stringWithUTF8String:meta->summary];
+        entry.subtitle = [NSString stringWithUTF8String:meta->summary];
+        entry.footer = [NSString stringWithUTF8String:(meta->footer ? meta->footer : "")];
 
         NSArray<HushSwitchItem *> *items = buckets[(NSUInteger)m];
 
@@ -476,7 +479,7 @@ static dispatch_once_t gHushSharedPanelOnce;
     return [NSString stringWithFormat:
             @"作者 Tinycca (@Tinycca) · TG @Tinycca\n"
              "版本 5.19 · 共 %d 项（开关 %lu · 文本 %lu）\n"
-             "开关改动即时写入；标注「需重启」的项请重启 App 生效。",
+             "开关改动即时写入（标注「需重启 App」的项请按提示重启）",
             kHushToggleCount, (unsigned long)bools, (unsigned long)texts];
 }
 
