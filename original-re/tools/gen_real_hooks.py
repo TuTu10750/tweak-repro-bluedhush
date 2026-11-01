@@ -148,6 +148,11 @@ B = {
  'UserInformation|privacy_photos_has_locked':              ('int', 'switch_private_photo', '0'),
  'UserInformation|access_private_photos':                  ('int', 'switch_private_photo', '1'),
  'UserInformation|album_ban_save':                         ('int', 'switch_private_photo', '0'),
+ 'UserInformation|is_locked':                              ('int', 'switch_private_photo', '0'),
+ # Setter 拦截：把入参强制写成 0 再交给原实现。model 自己就从未记录过「已锁」，
+ # 之后所有读取（KVC / Swift 存储 / cell 渲染）天然是解锁态。比只拦 getter 根本。
+ 'UserInformation|setPrivacy_photos_has_locked:':          ('arg0_int_zero', 'switch_private_photo'),
+ 'UserInformation|setIs_locked:':                          ('arg0_int_zero', 'switch_private_photo'),
  'BDGlobalConfig|ban_applestore_review':                   ('ret', '0'),
  'BDPrivacyAlbumCell|showMaskViewOrNot:':                  ('noop',),
  'BDPhotoBrowserController|setWaterMarkText:':             ('noop',),
@@ -288,6 +293,12 @@ def body_for(key, ret, sig, args, enc):
         if ret == 'void':
             return '%orig; ' + body
         return '{ id _r = (id)%orig; ' + body + ' return _r; }'
+    if kind == 'arg0_int_zero':
+        # setter 清零：把第一个 int 参数强制写成 0 再调原实现
+        gate = act[1]
+        if ret != 'void':
+            return 'if ([[HushConfig shared] isEnabled:@"%s"]) { a0 = 0; } return %%orig;' % gate
+        return 'if ([[HushConfig shared] isEnabled:@"%s"]) { a0 = 0; } %%orig;' % gate
     if kind == 'args':
         # 只对已知的标量参数赋值；参数类型不明（回落成 id）时不生成任何改写，
         # 否则 `a1 = 0` 会把一个对象指针置空，调用即崩。
@@ -330,6 +341,9 @@ def main():
         ('UserInformation', 'privacy_photos_has_locked', 'i16@0:8'),
         ('UserInformation', 'access_private_photos',     'i16@0:8'),
         ('UserInformation', 'album_ban_save',            'i16@0:8'),
+        ('UserInformation', 'is_locked',                 'i16@0:8'),
+        ('UserInformation', 'setPrivacy_photos_has_locked:', 'v20@0:8i16'),
+        ('UserInformation', 'setIs_locked:',             'v20@0:8i16'),
     ]
     EXTRA += [
         ('BDNearbyMakeFriendsSubPageController', 'viewDidLayoutSubviews', 'v16@0:8'),
