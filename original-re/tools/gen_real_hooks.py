@@ -176,6 +176,9 @@ B = {
  'GJIMMessageModel|isIdentifyYellow':                      ('ret', '0'),
  'BDMessageRecentSendPhotoModel|isPorn':                   ('ret', 'NO'),
  'BDUserVisitorCell|showBlur':                             ('ret', 'NO'),
+ # ===== 虚拟定位信息条 =====
+ 'BDNearbyMakeFriendsSubPageController|viewDidLayoutSubviews':
+     ('call', None, '[HushLocationBanner installInto:((UIViewController *)self).view]'),
  # ===== 隐私相册解锁（按原版 557 hook 清单重做）=====
  # 数据落地：服务器给的 islock / isAccessOpen 直接改掉，解锁状态从源头成立
  'BDPersonPrivacyAlbumCollectView|updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:':
@@ -215,6 +218,15 @@ def body_for(key, ret, sig, args, enc):
     if kind == 'int':
         return 'if ([[HushConfig shared] isEnabled:@"%s"]) return %s; return %%orig;' % (act[1], act[2]) \
                if ret != 'void' else '%orig;'
+    if kind == 'call':
+        # ('call', gate, expr)  ——  gate 为 None 表示无条件
+        #   void 返回: %orig; <expr>; return;
+        #   其他返回: { id _r = (id)%orig; <expr>; return _r; }
+        gate = act[1]; expr = act[2]
+        body = ('if ([[HushConfig shared] isEnabled:@"%s"]) { %s }' % (gate, expr)) if gate else expr
+        if ret == 'void':
+            return '%orig; ' + body + ';'
+        return '{ id _r = (id)%orig; ' + body + '; return _r; }'
     if kind == 'args':
         # 只对已知的标量参数赋值；参数类型不明（回落成 id）时不生成任何改写，
         # 否则 `a1 = 0` 会把一个对象指针置空，调用即崩。
@@ -264,6 +276,7 @@ def main():
     lines.append('#import <CoreLocation/CoreLocation.h>')
     lines.append('#import <MapKit/MapKit.h>')
     lines.append('#import "HushRuntime.h"')
+    lines.append('#import "HushLocationBanner.h"')
     lines.append('#import "HushConfig.h"')
     lines.append('#import "HushLogger.h"')
     lines.append('')

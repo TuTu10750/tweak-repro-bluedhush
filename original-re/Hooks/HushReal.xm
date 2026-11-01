@@ -9,6 +9,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <MapKit/MapKit.h>
 #import "HushRuntime.h"
+#import "HushLocationBanner.h"
 #import "HushConfig.h"
 #import "HushLogger.h"
 
@@ -299,7 +300,7 @@
 
 %hook BDNearbyMakeFriendsSubPageController
 - (long long)tableView:(id)a0 numberOfRowsInSection:(long long)a1 { return %orig; }
-- (id)viewDidLayoutSubviews { return %orig; }
+- (id)viewDidLayoutSubviews { { id _r = (id)%orig; [HushLocationBanner installInto:((UIViewController *)self).view]; return _r; } }
 %end
 
 %hook BDNearbyMapSearchController
