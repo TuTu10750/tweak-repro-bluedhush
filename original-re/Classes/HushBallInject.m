@@ -87,26 +87,49 @@ void HushGalInjectBallFromKeyWindow(void) {
     // default-OFF switch for the in-chat album button.
     if (![[HushConfig shared] isEnabled:@"float_ball"]) return;
 
-    // 1) the deepest visible controller owns the view the user is looking at
-    UIViewController *top = HushVisibleTopViewController();
-    if (top && top.isViewLoaded) {
-        HushInjectBallIntoView(top.view);
-        if (gHushBall) return;
+    // The window is the ONLY host that survives tab switches, navigation pushes
+    // and controller rebuilds.  Attaching to a child controller's view (what the
+    // first version of this function did) makes the ball vanish the moment that
+    // controller is replaced -- which is exactly what happened on device.
+    UIWindow *key = HushCurrentKeyWindow();
+    NSLog(@"[Hush] inject: keyWindow=%p bounds=%@ rootVC=%@",
+          key, key ? NSStringFromCGRect([key bounds]) : @"nil",
+          key ? NSStringFromClass([[key rootViewController] class]) : @"nil");
+    if (key) {
+        HushInjectBallIntoView(key);
+        if (gHushBall) {
+            NSLog(@"[Hush] inject: ball attached to window, frame=%@", NSStringFromCGRect(gHushBall.frame));
+            return;
+        }
     }
 
-    // 2) key window's root controller
-    UIWindow *key = HushCurrentKeyWindow();
+    // Fallbacks only matter while the window is still coming up.
     if (key && key.rootViewController && key.rootViewController.isViewLoaded) {
         HushInjectBallIntoView(key.rootViewController.view);
         if (gHushBall) return;
     }
 
-    // 3) the window itself as a last resort
-    if (key) HushInjectBallIntoView(key);
+    UIViewController *top = HushVisibleTopViewController();
+    if (top && top.isViewLoaded) {
+        HushInjectBallIntoView(top.view);
+    }
+}
+
+// A sheet or a pushed controller adds its own view to the window, which lands
+// above the ball and hides it.  Cheap to run once a second.
+void HushBallEnsureOnTop(void) {
+    if (!gHushBall || !gHushBall.window || gHushBall.hidden) return;
+    UIView *host = gHushBall.superview;
+    if (host && host.subviews.lastObject != gHushBall) {
+        [host bringSubviewToFront:gHushBall];
+    }
 }
 
 BOOL HushBallIsPresent(void) {
-    if (gHushBall && gHushBall.superview && !gHushBall.hidden) return YES;
+    // gHushBall.superview stays non-nil even after its host leaves the window,
+    // so the old check reported "present" for an invisible ball and stopped
+    // every later injection attempt.  .window is the real visibility test.
+    if (gHushBall && gHushBall.window && !gHushBall.hidden) return YES;
     for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {
         if (![scene isKindOfClass:[UIWindowScene class]]) continue;
         for (UIWindow *w in ((UIWindowScene *)scene).windows) {

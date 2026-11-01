@@ -31,6 +31,7 @@ FOUNDATION_EXPORT void HushGalRemoveBall(void);                // @0x85cc0
 FOUNDATION_EXPORT void HushGalInjectBallFromKeyWindow(void);
 // YES once a visible ball exists anywhere in the connected scenes.
 FOUNDATION_EXPORT BOOL HushBallIsPresent(void);
+FOUNDATION_EXPORT void HushBallEnsureOnTop(void);
 
 #pragma mark - navigation helpers (@0x33fb8, @0x3445c, @0x34548, @0x34930, @0x32d28)
 

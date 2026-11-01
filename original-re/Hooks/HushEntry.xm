@@ -19,36 +19,37 @@
 #import "HushLogger.h"
 
 static NSInteger gHushPollTicks = 0;
-static BOOL gHushPollStopped = NO;
 
 // Poll: try to inject, stop as soon as a ball is actually on screen.
 static void HushPollInject(int64_t delayNs);
 
 static void HushPollStep(void) {
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (gHushPollStopped) return;
+        static BOOL loggedPresent = NO;
 
         if (HushBallIsPresent()) {
-            gHushPollStopped = YES;
-            NSLog(@"[Hush] ball present after %ld ticks", (long)gHushPollTicks);
+            // Heartbeat: stay armed instead of stopping.  Quitting the poll the
+            // first time the ball appears is what made it unrecoverable later --
+            // switching tabs or rebuilding a controller removed it and nothing
+            // ever put it back until the app was backgrounded.
+            if (!loggedPresent) {
+                loggedPresent = YES;
+                NSLog(@"[Hush] ball on screen after %ld ticks (heartbeat armed)", (long)gHushPollTicks);
+            }
+            HushBallEnsureOnTop();          // a sheet or push can land above it
+            HushPollInject((int64_t)(1.0 * NSEC_PER_SEC));
             return;
         }
 
+        loggedPresent = NO;
         HushGalInjectBallFromKeyWindow();
-
-        if (HushBallIsPresent()) {
-            gHushPollStopped = YES;
-            NSLog(@"[Hush] ball injected after %ld ticks", (long)gHushPollTicks);
-            return;
-        }
-
         gHushPollTicks++;
-        if (gHushPollTicks > 60) {          // ~18 s at 0.3 s
-            gHushPollStopped = YES;
-            NSLog(@"[Hush] give up after %ld ticks", (long)gHushPollTicks);
-            return;
-        }
-        HushPollInject((int64_t)(0.30 * NSEC_PER_SEC));
+
+        // Fast ticks first so the ball lands as soon as a window exists, then a
+        // cheap 1 s heartbeat that re-attaches it after any controller rebuild.
+        double delay = (gHushPollTicks <= 30) ? 0.30 : 1.00;
+        if (gHushPollTicks == 31) NSLog(@"[Hush] ball still absent, switching to 1s heartbeat");
+        HushPollInject((int64_t)(delay * NSEC_PER_SEC));
     });
 }
 
@@ -66,7 +67,6 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     dispatch_async(dispatch_get_main_queue(), ^{
         if (HushBallIsPresent()) return;
         NSLog(@"[Hush] became-active -> inject");
-        gHushPollStopped = NO;
         gHushPollTicks = 0;
         HushGalInjectBallFromKeyWindow();
         HushPollInject((int64_t)(0.30 * NSEC_PER_SEC));
