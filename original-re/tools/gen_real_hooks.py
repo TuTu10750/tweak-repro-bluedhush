@@ -179,6 +179,48 @@ B = {
  # ===== 虚拟定位信息条 =====
  'BDNearbyMakeFriendsSubPageController|viewDidLayoutSubviews':
      ('call', None, '[HushLocationBanner installInto:((UIViewController *)self).view]'),
+ # ===== 冷启动广告链：原版 59 条净化 hook 的全量清单 =====
+ 'AppDelegateModel|getSplashAdForColdLaunch':              ('ret', 'nil'),
+ 'BDADX_Blued_Splash_Image_ViewController|p_getSplashAdvertisementForColdLaunch': ('ret', 'nil'),
+ 'BDADX_Blued_Splash_Image_ViewController|removeAllSplashAdViews:': ('noop',),
+ 'BDADX_Blued_Splash_Video_ViewController|presentInViewController:': ('noop',),
+ 'BDADX_Blued_Splash_Video_ViewController|removeBluedSplashImageViewController': ('noop',),
+ 'BDBluedSplashAdHotLimitView|shouldShowColdLaunchLoadingForIdentifier:': ('ret', 'NO'),
+ 'BDSplashImageAdViewController|p_showGDTSplash:isColdLaunch:finished:': ('noop',),
+ 'BDSplashImageAdViewController|p_showKSSplash:isColdLaunch:finished:': ('noop',),
+ 'BDSplashImageAdViewController|p_showPangleSplash:isColdLaunch:finished:': ('noop',),
+ 'BDSplashImageAdViewController|showSplashAd_Adx:currentWinAdModel:isColdLaunch:finished:': ('noop',),
+ 'BDSplashImageAdViewController|showSplashAd_Normal:isColdLaunch:finished:': ('noop',),
+ 'BDSplashImageAdViewController|shouldShowColdLaunchLoadingForIdentifier:': ('ret', 'NO'),
+ 'BDSplashVideoAdViewController|shouldShowColdLaunchLoadingForIdentifier:': ('ret', 'NO'),
+ # ===== 身边页横幅 / 浮层 / 推荐位 =====
+ 'BDNearbyBannerCell|p_topHeight':                         ('ret', '0.0'),
+ 'BDNearbyBannerCell|setHasShown:':                        ('noop',),
+ 'BDNearbyRecommendCell|p_baseHeaderHeight':               ('ret', '0.0'),
+ 'BDNearbyRecommendCell|p_updateHeaderHeight':             ('noop',),
+ 'BDNearbyRecommendCell|setHasShown:':                     ('noop',),
+ 'BDNearbyRecommendSquareItemCell|p_topHeight':            ('ret', '0.0'),
+ 'BDNearbyFloatingLayerModel|setLayerModel:':              ('noop',),
+ 'BDNearbyFloatingLayerView|didMoveToSuperview':           ('noop',),
+ 'BDNearbyDataAdapter|synchronizeTopHeaderWithHeight:':    ('noop',),
+ # ===== 我的页横幅 =====
+ 'BDMineBannerCell|hasShown':                              ('ret', 'YES'),
+ 'BDMineBannerCell|images':                                ('ret', '@[]'),
+ 'BDMineBannerCell|videos':                                ('ret', '@[]'),
+ # ===== 模糊 / 特权遮罩 =====
+ 'BDMapBlurBaseView|isHavingSomePrivilege':                ('ret', 'YES'),
+ 'BDMapBlurBaseView|needToBuyPrivilege:sender:':           ('noop',),
+ 'BDVisitBottomView|setShowBlur:':                         ('noop',),
+ 'GJIMChatSessionModel|applyBlurAlpha:':                   ('noop',),
+ 'BDAvatarSurroundingRequest|needBlur':                    ('ret', 'NO'),
+ 'BDNewNavigationTitleViewTagView|setIsBlurringForName:':  ('noop',),
+ # ===== 访客页广告 =====
+ 'RecentlyVisitorViewController|setAdmsArray:':            ('noop',),
+ 'RecentlyVisitorViewController|setOriginUserAdsArray:':   ('noop',),
+ # ===== 会话推荐插入 =====
+ 'BDSessionGuestCallView|p_insertRecommendUserModelIfNeeded': ('noop',),
+ 'BDSessionGuestCallView|removeRecommendSessionWithUid:':  ('noop',),
+ 'BDSessionGuestCallView|saveRecommendSession:':           ('noop',),
  # ===== 隐私相册解锁（按原版 557 hook 清单重做）=====
  # 数据落地：服务器给的 islock / isAccessOpen 直接改掉，解锁状态从源头成立
  'BDPersonPrivacyAlbumCollectView|updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:':
@@ -211,7 +253,12 @@ def body_for(key, ret, sig, args, enc):
     if kind == 'noop':
         return '/* purified */' if ret == 'void' else 'return %orig;'
     if kind == 'ret':
-        return 'return %s;' % act[1] if ret != 'void' else '%orig;'
+        val = act[1]
+        # 没有宿主类型编码时，签名会回落成 (id)。这时返回 YES / 1 之类的非零
+        # 标量，调用方会把它当对象指针用（0x1），必崩。只放行真正的空值。
+        if enc is None and val not in ('nil', 'NULL', '0', '0.0', 'NO', '@[]', '@{}'):
+            return '%orig;' if ret == 'void' else 'return %orig;'
+        return 'return %s;' % val if ret != 'void' else '%orig;'
     if kind == 'bool':
         return 'if ([[HushConfig shared] isEnabled:@"%s"]) return %s; return %%orig;' % (act[1], act[2]) \
                if ret != 'void' else '%orig;'
