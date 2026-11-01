@@ -190,6 +190,56 @@ static dispatch_once_t gHushSharedPanelOnce;
 
 #pragma mark - model
 
+@interface HushSettingsPanel (Icons)
++ (UIColor *)hushColorForModule:(NSInteger)m;
++ (UIImage *)hushIcon:(NSString *)symbol module:(NSInteger)m;
+@end
+
+#pragma mark - module icons
+
+// 原版模块列表每行左边是一个彩色圆角方块 + 白色符号，不是纯色 SF Symbol
++ (UIColor *)hushColorForModule:(NSInteger)m {
+    static NSArray<UIColor *> *cols = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        cols = @[
+            [UIColor colorWithRed:0.55 green:0.36 blue:0.96 alpha:1.0],  // 净化中心 紫
+            [UIColor colorWithRed:0.20 green:0.78 blue:0.45 alpha:1.0],  // 聊天增强 绿
+            [UIColor colorWithRed:0.98 green:0.62 blue:0.20 alpha:1.0],  // 隐私与特权 橙
+            [UIColor colorWithRed:0.20 green:0.55 blue:0.98 alpha:1.0],  // 定位与追踪 蓝
+            [UIColor colorWithRed:0.45 green:0.55 blue:0.65 alpha:1.0],  // 自动化与筛选 灰蓝
+            [UIColor colorWithRed:0.15 green:0.70 blue:0.72 alpha:1.0],  // 视奸与访问 青
+            [UIColor colorWithRed:0.98 green:0.75 blue:0.20 alpha:1.0],  // 照片与相册 金
+            [UIColor colorWithRed:0.98 green:0.42 blue:0.58 alpha:1.0],  // 入口与手势 粉
+            [UIColor colorWithRed:0.30 green:0.68 blue:0.50 alpha:1.0],  // 风控与设备 墨绿
+        ];
+    });
+    if (m < 0 || m >= (NSInteger)cols.count) return cols[0];
+    return cols[(NSUInteger)m];
+}
+
++ (UIImage *)hushIcon:(NSString *)symbol module:(NSInteger)m {
+    CGFloat side = 29.0;
+    UIGraphicsImageRenderer *r =
+        [[UIGraphicsImageRenderer alloc] initWithSize:CGSizeMake(side, side)];
+    return [r imageWithActions:^(UIGraphicsImageRendererContext *ctx) {
+        UIBezierPath *box = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, side, side)
+                                                           cornerRadius:7.0];
+        [[self hushColorForModule:m] setFill];
+        [box fill];
+
+        UIImageSymbolConfiguration *cfg =
+            [UIImageSymbolConfiguration configurationWithPointSize:16.0 weight:UIFontWeightSemibold];
+        UIImage *glyph = [UIImage systemImageNamed:symbol withConfiguration:cfg];
+        glyph = [glyph imageWithTintColor:[UIColor whiteColor]
+                            renderingMode:UIImageRenderingModeAlwaysOriginal];
+        if (!glyph) return;
+        CGSize gs = glyph.size;
+        [glyph drawInRect:CGRectMake((side - gs.width) / 2.0, (side - gs.height) / 2.0,
+                                     gs.width, gs.height)];
+    }];
+}
+
 - (void)buildModel {
     HushConfig *cfg = [HushConfig shared];
     NSMutableArray<HushModuleEntry *> *mods = [NSMutableArray arrayWithCapacity:kHushModuleCount];
@@ -253,7 +303,7 @@ static dispatch_once_t gHushSharedPanelOnce;
             }
         }
 
-        entry.subtitle = [NSString stringWithFormat:@"已开 %lu/%lu · %@",
+        entry.subtitle = [NSString stringWithFormat:@"%lu/%lu · %@",
                           (unsigned long)onCount, (unsigned long)boolTotal,
                           [NSString stringWithUTF8String:meta->summary]];
 
@@ -529,11 +579,9 @@ static dispatch_once_t gHushSharedPanelOnce;
         c.secondaryText = mod.subtitle;
         c.secondaryTextProperties.color = [UIColor secondaryLabelColor];
         c.secondaryTextProperties.numberOfLines = 2;
-        UIImage *img = [UIImage systemImageNamed:(mod.icon ?: @"circle")];
-        if (img) {
-            c.image = img;
-            c.imageProperties.tintColor = [UIColor systemBlueColor];
-        }
+        // 原版是彩色圆角方块，不是纯色符号
+        UIImage *img = [HushSettingsPanel hushIcon:(mod.icon ?: @"circle") module:(NSInteger)ip.row];
+        if (img) c.image = img;
         cell.contentConfiguration = c;
     } else {
         cell.textLabel.text = mod.title;
