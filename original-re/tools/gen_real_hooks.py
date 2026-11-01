@@ -181,8 +181,7 @@ B = {
  'BDMessageRecentSendPhotoModel|isPorn':                   ('ret', 'NO'),
  'BDUserVisitorCell|showBlur':                             ('ret', 'NO'),
  # ===== 虚拟定位信息条 =====
- 'BDNearbyMakeFriendsSubPageController|viewDidLayoutSubviews':
-     ('call', None, '[HushLocationBanner installInto:((UIViewController *)self).view]'),
+ 'BDNearbyMakeFriendsSubPageController|viewDidLayoutSubviews': ('defer', '[HushLocationBanner installInto:(UIView *)((UIViewController *)self).view]'),
  # ===== 冷启动广告链：原版 59 条净化 hook 的全量清单 =====
  'AppDelegateModel|getSplashAdForColdLaunch':              ('ret', 'nil'),
  'BDADX_Blued_Splash_Image_ViewController|p_getSplashAdvertisementForColdLaunch': ('ret', 'nil'),
@@ -280,6 +279,15 @@ def body_for(key, ret, sig, args, enc):
         if ret == 'void':
             return '%orig; ' + body + ';'
         return '{ id _r = (id)%orig; ' + body + '; return _r; }'
+    if kind == 'defer':
+        # ('defer', expr) —— 把调用丢到下一个 runloop。
+        # 直接在 viewDidLayoutSubviews / layoutSublayers 里改视图层级会触发
+        # 「布局 → 改布局 → 再布局」无限循环，主线程跑满 20 秒被 watchdog 强杀。
+        expr = act[1]
+        body = 'dispatch_async(dispatch_get_main_queue(), ^{ %s });' % expr
+        if ret == 'void':
+            return '%orig; ' + body
+        return '{ id _r = (id)%orig; ' + body + ' return _r; }'
     if kind == 'args':
         # 只对已知的标量参数赋值；参数类型不明（回落成 id）时不生成任何改写，
         # 否则 `a1 = 0` 会把一个对象指针置空，调用即崩。
@@ -322,6 +330,9 @@ def main():
         ('UserInformation', 'privacy_photos_has_locked', 'i16@0:8'),
         ('UserInformation', 'access_private_photos',     'i16@0:8'),
         ('UserInformation', 'album_ban_save',            'i16@0:8'),
+    ]
+    EXTRA += [
+        ('BDNearbyMakeFriendsSubPageController', 'viewDidLayoutSubviews', 'v16@0:8'),
     ]
     for _c, _s, _e in EXTRA:
         want[_c].add(_s)

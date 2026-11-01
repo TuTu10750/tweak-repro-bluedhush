@@ -14,6 +14,7 @@
 
 // 幂等：host 上已有就只刷新；开关全关则移除
 + (void)installInto:(UIView *)host;
++ (NSString *)displayTextForConfig:(HushConfig *)cfg;
 + (instancetype)bannerIn:(UIView *)host;
 
 - (void)refresh;

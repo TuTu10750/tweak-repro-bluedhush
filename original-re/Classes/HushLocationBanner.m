@@ -54,7 +54,9 @@ static const NSInteger kHushLocBannerTag = 9877;
         return;
     }
     if (existing) {
-        [existing refresh];
+        // 只在文案真的变了才刷，避免每次布局都写 label
+        NSString *want = [self displayTextForConfig:cfg];
+        if (![existing.detailLabel.text isEqualToString:want]) [existing refresh];
         return;
     }
 
@@ -118,6 +120,17 @@ static const NSInteger kHushLocBannerTag = 9877;
     return self;
 }
 
++ (NSString *)displayTextForConfig:(HushConfig *)cfg {
+    NSString *addr = [cfg stringForKey:@"runtime_loc_address"];
+    NSString *name = [cfg stringForKey:@"runtime_loc_name"];
+    if (addr.length > 0) return addr;
+    if (name.length > 0) return name;
+    if ([cfg hasCustomLocation]) {
+        return [NSString stringWithFormat:@"%.6f, %.6f", [cfg customLat], [cfg customLng]];
+    }
+    return @"未选定位置 · 长按选择";
+}
+
 - (void)refresh {
     HushConfig *cfg = [HushConfig shared];
     BOOL locOn  = [cfg isEnabled:@"switch_location_sim"];
@@ -125,23 +138,10 @@ static const NSInteger kHushLocBannerTag = 9877;
 
     _titleLabel.text = (locOn || vlocOn) ? @"虚拟定位开" : @"虚拟定位关";
 
-    NSString *addr = [cfg stringForKey:@"runtime_loc_address"];
-    NSString *name = [cfg stringForKey:@"runtime_loc_name"];
-    NSString *text = nil;
+    _detailLabel.text = [[self class] displayTextForConfig:cfg];
 
-    if (addr.length > 0) {
-        text = addr;
-    } else if (name.length > 0) {
-        text = name;
-    } else if ([cfg hasCustomLocation]) {
-        text = [NSString stringWithFormat:@"%.6f, %.6f", [cfg customLat], [cfg customLng]];
-    } else {
-        text = @"未选定位置 · 长按选择";
-    }
-    _detailLabel.text = text;
-
-    [self invalidateIntrinsicContentSize];
-    [self.superview setNeedsLayout];
+    // 绝不在这里调 setNeedsLayout：refresh 会在 viewDidLayoutSubviews 的调用链上执行，
+    // 让父视图重排等于「布局 → 改布局 → 再布局」无限循环，watchdog 20 秒强杀。
 }
 
 - (void)onTap {
