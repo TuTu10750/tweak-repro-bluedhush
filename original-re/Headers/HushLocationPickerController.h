@@ -129,7 +129,7 @@
 - (void)hushLocPinLift:(BOOL)a0;
 - (id)mapView:(id)a0 viewForAnnotation:(id)a1;
 - (void)mapView:(id)a0 didAddAnnotationViews:(id)a1;
-- (void)refreshCenter:(BOOL)a0;
+- (void)refreshCenter:(CLLocationCoordinate2D)a0;
 - (void)mapView:(id)a0 regionDidChangeAnimated:(BOOL)a1;
 - (void)dropNameHintIfFar;
 - (void)searchBar:(id)a0 textDidChange:(id)a1;

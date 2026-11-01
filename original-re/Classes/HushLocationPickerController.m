@@ -22,6 +22,7 @@
 #import "HushLogger.h"
 #import "HushRuntime.h"
 #import "HushLocationPickerController.h"
+#import "HushLocationHistoryController.h"
 
 static NSString *const kHushLocHistoryKey   = @"hush_loc_history";
 static NSString *const kHushLocFavoritesKey = @"hush_loc_favorites";
@@ -84,7 +85,7 @@ static NSString *const kHushLocFavoritesKey = @"hush_loc_favorites";
     _map.delegate = self;
     _map.showsUserLocation = NO;
     _map.showsCompass = YES;
-    _map.pointOfInterestFilter = MKPointOfInterestFilterFilterIncludingAll;
+    _map.pointOfInterestFilter = [MKPointOfInterestFilter filterIncludingAll];
     _map.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view addSubview:_map];
 
@@ -571,14 +572,14 @@ static NSString *const kHushLocFavoritesKey = @"hush_loc_favorites";
 - (void)actHistory {
     Class cls = NSClassFromString(@"HushLocationHistoryController");
     if (!cls) return;
-    UIViewController *vc = [[cls alloc] initWithMode:0];
+    UIViewController *vc = [(HushLocationHistoryController *)[cls alloc] initWithMode:0];
     if (vc) [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)actFavListPage {
     Class cls = NSClassFromString(@"HushLocationHistoryController");
     if (!cls) return;
-    UIViewController *vc = [[cls alloc] initWithMode:1];
+    UIViewController *vc = [(HushLocationHistoryController *)[cls alloc] initWithMode:1];
     if (vc) [self.navigationController pushViewController:vc animated:YES];
 }
 
