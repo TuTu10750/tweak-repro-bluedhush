@@ -33,6 +33,8 @@
 
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
+#import <objc/message.h>
+#import <stdio.h>
 
 // ---------------------------------------------------------------------------
 // No-op IMP handed to %orig when a selector cannot be resolved at all.
@@ -77,8 +79,41 @@ static Method rea_inherited_anywhere(Class cls, SEL sel) {
 // ---------------------------------------------------------------------------
 // The one symbol the recovered tweak needs.
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// Install counters. A single line in hush.log tells us whether a hook layer
+// that reports success actually reached the ObjC runtime: own/inherited are
+// live hooks, missing means the host build has no such selector (a Swift
+// method that was never @objc-exposed, usually).
+// ---------------------------------------------------------------------------
+static int gHushHookOwn, gHushHookInherited, gHushHookMissing, gHushHookTotal;
+
+static void hush_hook_report(void) {
+    fprintf(stderr, "[Hush] hooks: total=%d own=%d inherited=%d missing=%d\n",
+            gHushHookTotal, gHushHookOwn, gHushHookInherited, gHushHookMissing);
+    // Also straight into the shared log so a field report needs no console.
+    NSString *line = [NSString stringWithFormat:
+        @"[Hush] hooks: total=%d own=%d inherited=%d missing=%d",
+        gHushHookTotal, gHushHookOwn, gHushHookInherited, gHushHookMissing];
+    Class logger = objc_getClass("HushLogger");
+    if (logger) {
+        SEL s = sel_registerName("logLevel:format:");
+        if ([logger respondsToSelector:s]) {
+            ((void (*)(id, SEL, long long, id))objc_msgSend)(logger, s, 4, line);
+        }
+    }
+}
+
+__attribute__((constructor))
+static void hush_hook_counters_init(void) {
+    // Report once the tweak's own constructors have all run.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{ hush_hook_report(); });
+}
+
 void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
+    gHushHookTotal++;
     if (!cls || !sel) {
+        gHushHookMissing++;
         if (result) *result = (IMP)&rea_noop_imp;
         return;
     }
@@ -92,6 +127,7 @@ void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
     // 1) Declared on the target class: swap in place, exactly like substrate.
     Method own = rea_own_method(cls, sel);
     if (own) {
+        gHushHookOwn++;
         IMP previous = method_getImplementation(own);
         if (result) *result = previous;
         if (previous != replacement) method_setImplementation(own, replacement);
@@ -102,6 +138,7 @@ void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
     //    chain is left untouched, so sibling classes keep the original IMP.
     Method inherited = rea_inherited_anywhere(cls, sel);
     if (inherited) {
+        gHushHookInherited++;
         IMP previous = method_getImplementation(inherited);
         const char *types = method_getTypeEncoding(inherited);
         if (result) *result = previous;
@@ -118,6 +155,7 @@ void MSHookMessageEx(Class cls, SEL sel, IMP replacement, IMP *result) {
 
     // 3) Nowhere to be found (host dropped the selector this build). Do not
     //    invent one: hand %orig the stub so the passthrough body cannot fault.
+    gHushHookMissing++;
     if (result) *result = (IMP)&rea_noop_imp;
 }
 
