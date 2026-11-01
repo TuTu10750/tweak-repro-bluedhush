@@ -30,6 +30,14 @@ FOUNDATION_EXPORT void HushGalRemoveBall(void);                // @0x85cc0
 // Same injection, but resolves the host window itself instead of taking a VC.
 FOUNDATION_EXPORT void HushGalInjectBallFromKeyWindow(void);
 
+#pragma mark - navigation helpers (@0x33fb8, @0x3445c, @0x34548, @0x34930, @0x32d28)
+
+FOUNDATION_EXPORT UIWindow *HushKeyWindow(void);                              // @0x33fb8
+FOUNDATION_EXPORT UIViewController *HushTopViewController(void);              // @0x3445c
+FOUNDATION_EXPORT UIViewController *HushVisibleTopViewController(void);       // @0x34548
+FOUNDATION_EXPORT UINavigationController *HushVisibleNavigationController(void); // @0x34930
+FOUNDATION_EXPORT UIView *HushForceVisibleView(UIView *v);                    // @0x32d28
+
 #pragma mark - config gate (@0x120f8, @0x130b8)
 
 FOUNDATION_EXPORT BOOL HushKeyNeedsActivation(NSString *key);
