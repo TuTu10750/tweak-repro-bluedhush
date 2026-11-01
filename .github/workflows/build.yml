@@ -259,8 +259,11 @@ jobs:
           # substitution yields "      76" and a bare test against "76" is
           # always false.  GNU wc does not pad, which is why only the macOS
           # leg failed here.  Strip the padding before comparing.
-          test "$(ls original-re/Headers/*.h | wc -l | tr -d ' ')" = "76"
-          test "$(ls original-re/Classes/*.m | wc -l | tr -d ' ')" = "76"
+          # Header/impl counts grow as restoration adds non-class headers
+          # (e.g. Headers/HushKeys.h) so assert a floor, not an exact match.
+          test "$(ls original-re/Headers/*.h | wc -l | tr -d ' ')" -ge 76
+          test "$(ls original-re/Classes/*.m | wc -l | tr -d ' ')" -ge 76
+          test -f original-re/Headers/HushKeys.h
 
       - name: Build original-re
         run: |
@@ -335,8 +338,11 @@ jobs:
           # substitution yields "      76" and a bare test against "76" is
           # always false.  GNU wc does not pad, which is why only the macOS
           # leg failed here.  Strip the padding before comparing.
-          test "$(ls original-re/Headers/*.h | wc -l | tr -d ' ')" = "76"
-          test "$(ls original-re/Classes/*.m | wc -l | tr -d ' ')" = "76"
+          # Header/impl counts grow as restoration adds non-class headers
+          # (e.g. Headers/HushKeys.h) so assert a floor, not an exact match.
+          test "$(ls original-re/Headers/*.h | wc -l | tr -d ' ')" -ge 76
+          test "$(ls original-re/Classes/*.m | wc -l | tr -d ' ')" -ge 76
+          test -f original-re/Headers/HushKeys.h
 
       - name: Toolchain shim (Apple-ld -> lld darwin translator)
         run: |
