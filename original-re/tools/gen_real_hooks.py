@@ -284,7 +284,7 @@ def body_for(key, ret, sig, args, enc):
         # 直接在 viewDidLayoutSubviews / layoutSublayers 里改视图层级会触发
         # 「布局 → 改布局 → 再布局」无限循环，主线程跑满 20 秒被 watchdog 强杀。
         expr = act[1]
-        body = 'dispatch_async(dispatch_get_main_queue(), ^{ %s });' % expr
+        body = 'dispatch_async(dispatch_get_main_queue(), ^{ %s; });' % expr
         if ret == 'void':
             return '%orig; ' + body
         return '{ id _r = (id)%orig; ' + body + ' return _r; }'

@@ -303,9 +303,16 @@ static dispatch_once_t gHushSharedPanelOnce;
             }
         }
 
-        entry.subtitle = [NSString stringWithFormat:@"%lu/%lu · %@",
-                          (unsigned long)onCount, (unsigned long)boolTotal,
-                          [NSString stringWithUTF8String:meta->summary]];
+        // 原版一级页副标题：有开关的模块写「已开 14/35 · 关键词」，
+        // 纯动作模块（没有布尔项）写「1 个操作 · 关键词」。
+        NSString *sum = [NSString stringWithUTF8String:meta->summary];
+        if (boolTotal > 0) {
+            entry.subtitle = [NSString stringWithFormat:@"已开 %lu/%lu · %@",
+                              (unsigned long)onCount, (unsigned long)boolTotal, sum];
+        } else {
+            entry.subtitle = [NSString stringWithFormat:@"%lu 个操作 · %@",
+                              (unsigned long)items.count, sum];
+        }
 
         entry.sections = [self hushSectionsForModule:m items:items];
         entry.items = items;

@@ -300,7 +300,7 @@
 
 %hook BDNearbyMakeFriendsSubPageController
 - (long long)tableView:(id)a0 numberOfRowsInSection:(long long)a1 { return %orig; }
-- (void)viewDidLayoutSubviews { %orig; dispatch_async(dispatch_get_main_queue(), ^{ [HushLocationBanner installInto:(UIView *)((UIViewController *)self).view] }); }
+- (void)viewDidLayoutSubviews { %orig; dispatch_async(dispatch_get_main_queue(), ^{ [HushLocationBanner installInto:(UIView *)((UIViewController *)self).view]; }); }
 %end
 
 %hook BDNearbyMapSearchController
