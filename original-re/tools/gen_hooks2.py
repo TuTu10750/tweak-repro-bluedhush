@@ -199,7 +199,10 @@ def build_signature(ret, args, sel):
     ret_t = ret if ret != 'void' else 'void'
 
     if not parts:
-        params = ''
+        # Selector with no colons is a plain getter: the method name IS the
+        # selector.  Emitting '' here produced `- (int) { ... }`, which clang
+        # rejects with "expected selector for Objective-C method".
+        params = sel
     else:
         chunks = []
         for idx, p in enumerate(parts):

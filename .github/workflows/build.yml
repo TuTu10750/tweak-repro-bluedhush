@@ -255,8 +255,12 @@ jobs:
           echo "headers: $(ls original-re/Headers/*.h | wc -l)"
           echo "impls  : $(ls original-re/Classes/*.m | wc -l)"
           echo "hooks  : $(grep -c '^%hook' original-re/Hooks/Hooks.generated.xm)"
-          test "$(ls original-re/Headers/*.h | wc -l)" = "76"
-          test "$(ls original-re/Classes/*.m | wc -l)" = "76"
+          # BSD wc (macOS) right-pads its count to 8 columns, so the command
+          # substitution yields "      76" and a bare test against "76" is
+          # always false.  GNU wc does not pad, which is why only the macOS
+          # leg failed here.  Strip the padding before comparing.
+          test "$(ls original-re/Headers/*.h | wc -l | tr -d ' ')" = "76"
+          test "$(ls original-re/Classes/*.m | wc -l | tr -d ' ')" = "76"
 
       - name: Build original-re
         run: |
@@ -327,8 +331,12 @@ jobs:
           echo "headers: $(ls original-re/Headers/*.h | wc -l)"
           echo "impls  : $(ls original-re/Classes/*.m | wc -l)"
           echo "hooks  : $(grep -c '^%hook' original-re/Hooks/Hooks.generated.xm)"
-          test "$(ls original-re/Headers/*.h | wc -l)" = "76"
-          test "$(ls original-re/Classes/*.m | wc -l)" = "76"
+          # BSD wc (macOS) right-pads its count to 8 columns, so the command
+          # substitution yields "      76" and a bare test against "76" is
+          # always false.  GNU wc does not pad, which is why only the macOS
+          # leg failed here.  Strip the padding before comparing.
+          test "$(ls original-re/Headers/*.h | wc -l | tr -d ' ')" = "76"
+          test "$(ls original-re/Classes/*.m | wc -l | tr -d ' ')" = "76"
 
       - name: Toolchain shim (Apple-ld -> lld darwin translator)
         run: |

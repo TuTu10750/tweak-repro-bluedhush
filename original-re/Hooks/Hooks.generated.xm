@@ -134,19 +134,19 @@
 %end
 
 %hook GJIMMessageModel
-- (int) { return %orig; }
-- (BOOL) { return %orig; }
+- (int)recallType { return %orig; }
+- (BOOL)isSuperRecallTip { return %orig; }
 - (void)setRecallType:(int)a0 { %orig; }
 - (void)setDestroyUrl:(id)a0 { %orig; }
 - (void)setIsSuperRecallTip:(BOOL)a0 { %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
-- (id) { return %orig; }
+- (BOOL)isShowTime { return %orig; }
+- (BOOL)autoDestroy { return %orig; }
+- (BOOL)is_prohibit_chat_screenshot { return %orig; }
+- (id)destroyUrl { return %orig; }
 - (void)setAutoDestroy:(BOOL)a0 { %orig; }
 - (id)initWithPushPackage:(id)a0 { return %orig; }
-- (int) { return %orig; }
-- (id) { return %orig; }
+- (int)isIdentifyYellow { return %orig; }
+- (id)msgExtra { return %orig; }
 %end
 
 %hook GJIMMessageService
@@ -161,17 +161,17 @@
 %end
 
 %hook GXWatchdog
-- (void) { %orig; }
+- (void)checkConnectOrHeart { %orig; }
 %end
 
 %hook NetworkWatchdog
-- (void) { %orig; }
+- (void)checkConnectOrHeart { %orig; }
 %end
 
 %hook BDChatBasicCell
-- (void) { %orig; }
-- (void) { %orig; }
-- (double) { return %orig; }
+- (void)setLimitMessageState { %orig; }
+- (void)setupData { %orig; }
+- (double)tipsHeight { return %orig; }
 %end
 
 %hook BDMessageViewController
@@ -181,24 +181,24 @@
 - (void)updateMessages:(id)a0 updateType:(unsigned long long)a1 { %orig; }
 - (void)didReceivePhotoRevoke:(id)a0 { %orig; }
 - (void)didReceivePhotoLook:(id)a0 { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
-- (long long) { return %orig; }
+- (void)p_screenshotWarning { %orig; }
+- (void)p_screenshotTip { %orig; }
+- (void)checkSendScreenshotTip { %orig; }
+- (long long)is_prohibit_chat_screenshot { return %orig; }
 - (void)viewDidAppear:(BOOL)a0 { %orig; }
-- (void) { %orig; }
+- (void)viewDidLoad { %orig; }
 - (void)viewWillAppear:(BOOL)a0 { %orig; }
 - (void)viewWillDisappear:(BOOL)a0 { %orig; }
 - (void)chatKeyBoardWillChangeFrameWithNewFrame:(CGRect)a0 animationTime:(double)a1 keyBoardState:(int)a2 { %orig; }
 %end
 
 %hook NewKeyBoardPhotoView
-- (void) { %orig; }
+- (void)resetLoadData { %orig; }
 - (void)actionDes:(id)a0 { %orig; }
 %end
 
 %hook NewKeyBoard
-- (void) { %orig; }
+- (void)p_showKeyboardStateRecentPhoto { %orig; }
 - (void)p_configBtnStatus:(BOOL)a0 { %orig; }
 - (void)sinaFaceBoardPressed:(id)a0 { %orig; }
 - (void)setGiftButton:(id)a0 { %orig; }
@@ -213,51 +213,51 @@
 %end
 
 %hook BDChatImageCell
-- (void) { %orig; }
+- (void)setupData { %orig; }
 %end
 
 %hook BDChatVideoCell
-- (void) { %orig; }
+- (void)setupData { %orig; }
 %end
 
 %hook BDChatTextAndFaceCell
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)setupData { %orig; }
+- (void)layoutSubviews { %orig; }
 %end
 
 %hook BDChatTextAndFaceCellSelf
-- (void) { %orig; }
+- (void)setupData { %orig; }
 %end
 
 %hook BDChatTextAndFaceCellPrivateOther
-- (void) { %orig; }
+- (void)setupData { %orig; }
 %end
 
 %hook BDAutoDestoryImageViewController
-- (void) { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)countDown { %orig; }
+- (void)finishReview { %orig; }
+- (void)exitAction { %orig; }
+- (void)popBack { %orig; }
 - (void)setTakeScreenBlock:(id /*block*/)a0 { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)initBluexTipView { %orig; }
+- (void)bluedxTipDoneAction { %orig; }
+- (void)destoryChatAddTimeAction { %orig; }
 %end
 
 %hook BDDestoryChatCell
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)setupData { %orig; }
+- (void)prepareForReuse { %orig; }
 - (void)setImageURL:(id)a0 { %orig; }
 - (void)setVideoURL:(id)a0 { %orig; }
 %end
 
 %hook GtkDbStore
-- (void) { %orig; }
+- (void)cleanExpireData { %orig; }
 - (void)cleanExpireDataInPaylodMsg:(double)a0 { %orig; }
 %end
 
 %hook BDVideoFileManager
-- (void) { %orig; }
+- (void)deleteAllVideos { %orig; }
 - (void)deleteVideoPath:(id)a0 { %orig; }
 %end
 
@@ -281,23 +281,23 @@
 
 %hook UserInformation
 - (void)setUid:(int)a0 { %orig; }
-- (double) { return %orig; }
-- (unsigned int) { return %orig; }
-- (int) { return %orig; }
+- (double)distance { return %orig; }
+- (unsigned int)is_global_view_secretly { return %orig; }
+- (int)last_operate { return %orig; }
 - (void)setUnion_uid:(id)a0 { %orig; }
 %end
 
 %hook HPGrowingTextView
-- (BOOL) { return %orig; }
+- (BOOL)becomeFirstResponder { return %orig; }
 %end
 
 %hook BDLocationService
 - (void)p_saveLocationWithLot:(id)a0 lat:(id)a1 { %orig; }
 - (void)locationManager:(id)a0 didUpdateLocations:(id)a1 { %orig; }
 - (void)p_reverseGeocodeLocation:(id)a0 { %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
-- (void) { %orig; }
+- (id)latitude { return %orig; }
+- (id)longitude { return %orig; }
+- (void)p_startLocation { %orig; }
 %end
 
 %hook CLLocation
@@ -321,9 +321,9 @@
 %hook BDShadowPrivilegeController
 - (void)selectGaodePOI:(id)a0 { %orig; }
 - (void)selectApplePlacemark:(id)a0 { %orig; }
-- (void) { %orig; }
+- (void)p_confirmAction { %orig; }
 - (void)inserShadowSetRecordWithKeyword:(id)a0 { %orig; }
-- (double) { return %orig; }
+- (double)distanceFromLocation { return %orig; }
 %end
 
 %hook BDSettingShadowRequest
@@ -333,7 +333,7 @@
 %hook BDHomePageHeaderView
 - (void)setUserInfo:(id)a0 { %orig; }
 - (void)setProtectLockState:(id)a0 { %orig; }
-- (void) { %orig; }
+- (void)updatePrivateAlbum { %orig; }
 - (void)updateWithUserInfo:(id)a0 isCacheData:(BOOL)a1 { %orig; }
 - (void)setInfoTagView:(id)a0 { %orig; }
 %end
@@ -342,10 +342,10 @@
 - (void)viewDidDisappear:(BOOL)a0 { %orig; }
 - (void)viewWillAppear:(BOOL)a0 { %orig; }
 - (void)viewDidAppear:(BOOL)a0 { %orig; }
-- (BOOL) { return %orig; }
+- (BOOL)isUnlockPrivateAlbum { return %orig; }
 - (void)setIsUnlockPrivateAlbum:(BOOL)a0 { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)p_updatePrivatePhoto { %orig; }
+- (void)p_scheduleFollowSomeoneSecretlyVC { %orig; }
 - (void)p_presentFollowSomeoneSecretlyVCWithType:(int)a0 { %orig; }
 %end
 
@@ -359,14 +359,14 @@
 
 %hook BDNearbyBViewController
 - (void)viewDidAppear:(BOOL)a0 { %orig; }
-- (void) { %orig; }
+- (void)viewDidLayoutSubviews { %orig; }
 %end
 
 %hook BDNearbyMapSearchController
-- (void) { %orig; }
+- (void)dismiss { %orig; }
 - (void)p_dismissWithCompletion:(id /*block*/)a0 { %orig; }
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)p_showGuideView { %orig; }
+- (void)p_showMapLocationAlert { %orig; }
 - (id)mapView:(id)a0 viewForAnnotation:(id)a1 { return %orig; }
 - (void)handleMapFriendSelection:(id)a0 { %orig; }
 - (void)viewDidAppear:(BOOL)a0 { %orig; }
@@ -379,23 +379,23 @@
 
 %hook BDAvatarSurroundingModel
 - (void)setAvatar:(id)a0 { %orig; }
-- (id) { return %orig; }
-- (double) { return %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
-- (BOOL) { return %orig; }
+- (id)avatar { return %orig; }
+- (double)distance { return %orig; }
+- (BOOL)is_hide_distance { return %orig; }
+- (BOOL)needBlur { return %orig; }
+- (BOOL)avatar_is_fuzzy { return %orig; }
+- (BOOL)is_unlock { return %orig; }
+- (BOOL)outOfDistance { return %orig; }
+- (BOOL)is_hide_last_operate { return %orig; }
 %end
 
 %hook BDAvatarSurroundingRequest
-- (long long) { return %orig; }
-- (id) { return %orig; }
+- (long long)use_pay_map { return %orig; }
+- (id)requestArgument { return %orig; }
 %end
 
 %hook BDNearbyMapSearchSignal
-- (long long) { return %orig; }
+- (long long)use_pay_map { return %orig; }
 %end
 
 %hook BDMapBlurBaseView
@@ -404,11 +404,11 @@
 %end
 
 %hook GJIMChatSessionModel
-- (id) { return %orig; }
-- (BOOL) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
+- (id)distance { return %orig; }
+- (BOOL)is_hide_last_operate { return %orig; }
+- (int)soulmate_enable { return %orig; }
+- (int)soulmate_stage1 { return %orig; }
+- (int)soulmate_stage2 { return %orig; }
 %end
 
 %hook BDAvatarAnnotationView
@@ -434,45 +434,45 @@
 %end
 
 %hook BDProfile
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
+- (int)is_hide_last_operate { return %orig; }
+- (int)vip_grade { return %orig; }
+- (int)vip_exp_lvl { return %orig; }
+- (int)is_vip_annual { return %orig; }
+- (int)expire_type { return %orig; }
+- (int)is_prohibit_chat_screenshot { return %orig; }
+- (int)is_eco_user { return %orig; }
 %end
 
 %hook BaseModel
-- (int) { return %orig; }
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
+- (int)is_hide_last_operate { return %orig; }
 %end
 
 %hook SearchUsersData
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (double) { return %orig; }
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
+- (int)is_hide_last_operate { return %orig; }
+- (double)distance { return %orig; }
+- (int)last_operate { return %orig; }
 %end
 
 %hook UserSetting
-- (int) { return %orig; }
-- (unsigned long long) { return %orig; }
-- (int) { return %orig; }
+- (int)is_traceless_access { return %orig; }
+- (unsigned long long)is_global_view_secretly { return %orig; }
+- (int)is_prohibit_chat_screenshot { return %orig; }
 %end
 
 %hook BDVIPPrivilegeConfigModel
-- (long long) { return %orig; }
-- (long long) { return %orig; }
-- (long long) { return %orig; }
-- (long long) { return %orig; }
-- (long long) { return %orig; }
-- (long long) { return %orig; }
+- (long long)is_global_view_secretly { return %orig; }
+- (long long)is_view_secretly { return %orig; }
+- (long long)is_improve_backlist { return %orig; }
+- (long long)is_filter_ads { return %orig; }
+- (long long)is_vip_mark { return %orig; }
+- (long long)is_vip_annual_mark { return %orig; }
 %end
 
 %hook UserSettingModel
-- (int) { return %orig; }
+- (int)is_traceless_access { return %orig; }
 %end
 
 %hook UITableView
@@ -480,43 +480,43 @@
 %end
 
 %hook UserBasic
-- (char) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
-- (int) { return %orig; }
+- (char)is_hide_distance { return %orig; }
+- (int)is_hide_last_operate { return %orig; }
+- (int)soulmate_enable { return %orig; }
+- (int)soulmate_stage1 { return %orig; }
+- (int)soulmate_stage2 { return %orig; }
 %end
 
 %hook BDAvatarLocationModel
-- (long long) { return %orig; }
+- (long long)is_hide_distance { return %orig; }
 %end
 
 %hook BDHomeDynamicAlbumModel
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
 %end
 
 %hook BDPhotoBrowserDynamic
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
 %end
 
 %hook DynamicRepostModel
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
 %end
 
 %hook LiveVideoAnchor
-- (long long) { return %orig; }
+- (long long)is_hide_distance { return %orig; }
 %end
 
 %hook LivingUserCardUser
-- (int) { return %orig; }
+- (int)is_hide_distance { return %orig; }
 %end
 
 %hook BDGlobalConfig
-- (long long) { return %orig; }
-- (long long) { return %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
-- (long long) { return %orig; }
+- (long long)vip_type { return %orig; }
+- (long long)vip_status { return %orig; }
+- (id)is_vip { return %orig; }
+- (id)vip_expire_days { return %orig; }
+- (long long)is_open_pic_ban_save { return %orig; }
 %end
 
 %hook BDPersonPrivacyAlbumCollectView
@@ -527,9 +527,9 @@
 - (id)didMoveToSuperview { return %orig; }
 - (id)setFrame:(id)a0 { return %orig; }
 - (id)layoutSubviews { return %orig; }
-- (int) { return %orig; }
+- (int)privacy_photos_has_locked { return %orig; }
 - (void)setPrivacy_photos_has_locked:(int)a0 { %orig; }
-- (int) { return %orig; }
+- (int)access_private_photos { return %orig; }
 - (void)setAccess_private_photos:(int)a0 { %orig; }
 %end
 
@@ -537,18 +537,18 @@
 - (id)blurImage:(id)a0 withRadius:(double)a1 { return %orig; }
 - (void)applyPrivacyAlbumStatus:(long long)a0 { %orig; }
 - (void)configurePrivacyAlbumStatus:(int)a0 isSelf:(BOOL)a1 { %orig; }
-- (void) { %orig; }
+- (void)awakeFromNib { %orig; }
 - (void)setUserAlbum:(id)a0 isSelf:(BOOL)a1 { %orig; }
 %end
 
 %hook UserAlbum
-- (int) { return %orig; }
+- (int)audit_status { return %orig; }
 - (void)setAudit_status:(int)a0 { %orig; }
-- (BOOL) { return %orig; }
+- (BOOL)isBlank { return %orig; }
 %end
 
 %hook UserAvatar
-- (int) { return %orig; }
+- (int)audit_status { return %orig; }
 - (void)setAudit_status:(int)a0 { %orig; }
 %end
 
@@ -557,16 +557,16 @@
 %end
 
 %hook BDHomePrivacyAlbumModel
-- (int) { return %orig; }
+- (int)status { return %orig; }
 - (void)setStatus:(int)a0 { %orig; }
-- (int) { return %orig; }
+- (int)privacy_photos_has_locked { return %orig; }
 - (void)setPrivacy_photos_has_locked:(int)a0 { %orig; }
-- (int) { return %orig; }
+- (int)access_private_photos { return %orig; }
 - (void)setAccess_private_photos:(int)a0 { %orig; }
 %end
 
 %hook BDHomePhotoModel
-- (int) { return %orig; }
+- (int)audit_status { return %orig; }
 - (void)setAudit_status:(int)a0 { %orig; }
 %end
 
@@ -578,12 +578,12 @@
 
 %hook BDPhotoBrowserController
 - (void)setWaterMarkText:(id)a0 { %orig; }
-- (id) { return %orig; }
-- (BOOL) { return %orig; }
+- (id)waterMarkText { return %orig; }
+- (BOOL)privatePhoto { return %orig; }
 - (void)setPrivatePhoto:(BOOL)a0 { %orig; }
-- (BOOL) { return %orig; }
+- (BOOL)privatePhotoOn { return %orig; }
 - (void)setPrivatePhotoOn:(BOOL)a0 { %orig; }
-- (BOOL) { return %orig; }
+- (BOOL)isSecurity { return %orig; }
 - (void)setIsSecurity:(BOOL)a0 { %orig; }
 %end
 
@@ -592,34 +592,34 @@
 %end
 
 %hook BDPhotoBrowserBasicCell
-- (int) { return %orig; }
-- (int) { return %orig; }
+- (int)album_ban_save { return %orig; }
+- (int)feed_pic_ban_save { return %orig; }
 %end
 
 %hook BDSecurityView
 - (void)secure_updateSecure:(BOOL)a0 { %orig; }
-- (void) { %orig; }
+- (void)setup { %orig; }
 %end
 
 %hook BDChatProtectionManager
-- (long long) { return %orig; }
+- (long long)is_prohibit_chat_screenshot { return %orig; }
 %end
 
 %hook BDChatProtectionModel
-- (long long) { return %orig; }
+- (long long)is_prohibit_chat_screenshot { return %orig; }
 %end
 
 %hook BDHomePageBlockController
 - (void)p_changeBlockStatus:(BOOL)a0 { %orig; }
 - (void)setBlockTip:(id)a0 { %orig; }
-- (void) { %orig; }
+- (void)reloadDataForChangeRelationship { %orig; }
 - (void)updateWithUserInfo:(id)a0 { %orig; }
 - (id)viewDidAppear:(id)a0 { return %orig; }
 - (id)viewDidLayoutSubviews { return %orig; }
 %end
 
 %hook BlacklistViewController
-- (void) { %orig; }
+- (void)getBlacklistByFistPage { %orig; }
 %end
 
 %hook BELicenseHelper
@@ -628,7 +628,7 @@
 
 %hook TXVodLicenseCheckManager
 - (BOOL)checkValid:(int)a0 { return %orig; }
-- (BOOL) { return %orig; }
+- (BOOL)checkValidForPlayerMonet { return %orig; }
 %end
 
 %hook BDChatSafeTipCell
@@ -638,23 +638,23 @@
 
 %hook PrivateChatViewController
 - (id)tableView:(id)a0 cellForRowAtIndexPath:(id)a1 { return %orig; }
-- (void) { %orig; }
+- (void)p_ifShowMatchEmojiView { %orig; }
 %end
 
 %hook BDSessionListHeader1
-- (void) { %orig; }
-- (double) { return %orig; }
+- (void)layoutSubviews { %orig; }
+- (double)p_baseHeaderHeight { return %orig; }
 - (double)p_callNewGuestHeaderHeightWithTip:(BOOL)a0 { return %orig; }
-- (void) { %orig; }
+- (void)p_updateHeaderHeight { %orig; }
 %end
 
 %hook BDNearbyRecommendCell
-- (void) { %orig; }
+- (void)awakeFromNib { %orig; }
 - (id)initWithStyle:(id)a0 reuseIdentifier:(id)a1 { return %orig; }
 %end
 
 %hook BDNearbyBannerCell
-- (void) { %orig; }
+- (void)awakeFromNib { %orig; }
 - (id)initWithStyle:(id)a0 reuseIdentifier:(id)a1 { return %orig; }
 %end
 
@@ -663,7 +663,7 @@
 %end
 
 %hook BDIndexPageCoversManager
-- (BOOL) { return %orig; }
+- (BOOL)showFloatingLayerAfterNearbyPageShown { return %orig; }
 - (void)p_showFloatingLayerAds:(id)a0 image:(id)a1 finished:(id /*block*/)a2 { %orig; }
 %end
 
@@ -672,8 +672,8 @@
 %end
 
 %hook BDEmotionChatCell
-- (void) { %orig; }
-- (void) { %orig; }
+- (void)setupData { %orig; }
+- (void)prepareForReuse { %orig; }
 %end
 
 %hook BDAnimatedImageView
@@ -681,47 +681,47 @@
 %end
 
 %hook BDSVGAAnimationView
-- (void) { %orig; }
+- (void)startAnimation { %orig; }
 - (void)playWithResource:(id)a0 bundle:(id)a1 completion:(id /*block*/)a2 { %orig; }
 - (void)playWithURLString:(id)a0 completion:(id /*block*/)a1 { %orig; }
 %end
 
 %hook BDMessageRecentSendPhotoModel
-- (BOOL) { return %orig; }
+- (BOOL)isPorn { return %orig; }
 %end
 
 %hook BDNearbySceneMatchingTableViewCell
-- (void) { %orig; }
+- (void)awakeFromNib { %orig; }
 - (id)initWithStyle:(long long)a0 reuseIdentifier:(id)a1 { return %orig; }
 %end
 
 %hook ChatKeyBoardModel
-- (void) { %orig; }
+- (void)showGiftView { %orig; }
 %end
 
 %hook LoginData
-- (int) { return %orig; }
+- (int)device_safe { return %orig; }
 %end
 
 %hook BDFingerprintManager
-- (void) { %orig; }
-- (void) { %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
+- (void)uploadDeviceInfoByLogin { %orig; }
+- (void)uploadDeviceInfoByRegister { %orig; }
+- (id)fingerprint { return %orig; }
+- (id)getShumeiDeviceId { return %orig; }
+- (id)getDuDeviceId { return %orig; }
+- (id)lastOutSideExtra { return %orig; }
 %end
 
 %hook DLDeviceFingerprint
 - (void)p_uploadRequest:(id)a0 completion:(id /*block*/)a1 { %orig; }
 - (void)p_retryUploadDeviceInfoCompletion:(id /*block*/)a0 { %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
-- (id) { return %orig; }
+- (id)p_requestParams { return %orig; }
+- (id)p_deviceInfo { return %orig; }
+- (id)infoClsArray { return %orig; }
 %end
 
 %hook BDSMeiIDManager
-- (id) { return %orig; }
+- (id)getShumeiDeviceId { return %orig; }
 %end
 
 %hook ZOAUHandler
@@ -731,8 +731,8 @@
 %end
 
 %hook SmAntiFraud
-- (id) { return %orig; }
-- (id) { return %orig; }
+- (id)getDeviceId { return %orig; }
+- (id)getVdata { return %orig; }
 - (long long)check:(id)a0 { return %orig; }
 - (void)startDetector:(id)a0 { %orig; }
 %end
