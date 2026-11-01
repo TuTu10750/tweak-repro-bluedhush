@@ -7,7 +7,7 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = BluedHushRE
 
 BluedHushRE_FILES = $(wildcard Classes/*.m)
-BluedHushRE_FILES += Hooks/Hooks.generated.xm
+BluedHushRE_FILES += Hooks/HushReal.xm
 BluedHushRE_FILES += Hooks/HushEntry.xm
 BluedHushRE_FILES += Hooks/SubstrateShim.m
 BluedHushRE_CFLAGS = -I$(THEOS_PROJECT_DIR)/Headers -fobjc-arc -Wno-everything -Wno-objc-method-access
@@ -34,10 +34,10 @@ BluedHushRE_CFLAGS = -I$(THEOS_PROJECT_DIR)/Headers -fobjc-arc -Wno-everything -
 #
 # The 76 recovered classes stay ARC — only this one translation unit opts out.
 # ---------------------------------------------------------------------------
-Hooks/Hooks.generated.xm_CFLAGS = -fno-objc-arc
+Hooks/HushReal.xm_CFLAGS = -fno-objc-arc
 # Theos resolves per-file flags by several spellings depending on version, so
 # declare the bare filename form as well; a no-op when unused.
-Hooks.generated.xm_CFLAGS = -fno-objc-arc
+HushReal.xm_CFLAGS = -fno-objc-arc
 
 BluedHushRE_FRAMEWORKS = Foundation UIKit CoreLocation QuartzCore MapKit QuickLook
 BluedHushRE_LIBRARIES = sqlite3
