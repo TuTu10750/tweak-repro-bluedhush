@@ -330,17 +330,51 @@
 %end
 
 %hook CLLocation
-- (id)coordinate { return %orig; }
-- (id)altitude { return %orig; }
-- (id)verticalAccuracy { return %orig; }
+// virtual location @ 0xa44e8 / 0xa4570 / 0xa4650
+// the original caches the fetched pair for 301s; reading through
+// HushConfig is already memoised by _flagCache, so no separate cache here.
+- (CLLocationCoordinate2D)coordinate {
+    HushConfig *cfg = [HushConfig shared];
+    if ([cfg isEnabled:@"switch_virtual_location"] && [cfg hasCustomLocation]) {
+        CLLocationCoordinate2D c;
+        c.latitude  = [cfg customLat];
+        c.longitude = [cfg customLng];
+        if (c.latitude > -90.0 && c.latitude < 90.0 &&
+            c.longitude > -180.0 && c.longitude < 180.0 &&
+            !(c.latitude == 0.0 && c.longitude == 0.0)) {
+            return c;
+        }
+    }
+    return %orig;
+}
+- (double)altitude {
+    if ([[HushConfig shared] isEnabled:@"switch_altitude_sim"]) {
+        return [[HushConfig shared] customAltitude];
+    }
+    return %orig;
+}
+- (double)verticalAccuracy {
+    if ([[HushConfig shared] isEnabled:@"switch_virtual_location"]) return 5.0;
+    return %orig;
+}
+- (double)horizontalAccuracy {
+    if ([[HushConfig shared] isEnabled:@"switch_virtual_location"]) return 5.0;
+    return %orig;
+}
 %end
 
 %hook CLLocationManager
-- (id)location { return %orig; }
-- (id)setDelegate:(id)a0 { return %orig; }
-- (id)setDesiredAccuracy:(id)a0 { return %orig; }
-- (id)accuracyAuthorization { return %orig; }
-- (id)requestTemporaryFullAccuracyAuthorizationWithPurposeKey:(id)a0 completion:(id)a1 { return %orig; }
+- (id)location { return %orig; }   // CLLocation.coordinate already reports the virtual fix
+- (void)setDelegate:(id)a0 { %orig; }
+- (void)setDesiredAccuracy:(double)a0 {
+    if ([[HushConfig shared] isEnabled:@"switch_virtual_location"]) { %orig(5.0); return; }
+    %orig;
+}
+- (long long)accuracyAuthorization {
+    if ([[HushConfig shared] isEnabled:@"switch_virtual_location"]) return 2; // CLAccuracyAuthorizationFullAccuracy
+    return %orig;
+}
+- (void)requestTemporaryFullAccuracyAuthorizationWithPurposeKey:(id)a0 completion:(id)a1 { %orig; }
 %end
 
 %hook MKUserLocation
