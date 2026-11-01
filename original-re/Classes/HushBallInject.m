@@ -54,7 +54,7 @@ static void HushInjectBallIntoView(UIView *host) {
 
 void HushGalInjectBall(id viewController) {
     if (!viewController) return;
-    if (![[HushConfig shared] isEnabled:@"switch_chat_gallery_ball"]) return;
+    if (![[HushConfig shared] isEnabled:@"float_ball"]) return;
 
     UIView *host = nil;
     if ([viewController respondsToSelector:@selector(view)]) {
@@ -66,7 +66,10 @@ void HushGalInjectBall(id viewController) {
 }
 
 void HushGalInjectBallFromKeyWindow(void) {
-    if (![[HushConfig shared] isEnabled:@"switch_chat_gallery_ball"]) return;
+    // float_ball defaults to YES in the original registerDefaults table, so the
+    // ball shows up on a fresh install.  switch_chat_gallery_ball is a separate,
+    // default-OFF switch for the in-chat album button.
+    if (![[HushConfig shared] isEnabled:@"float_ball"]) return;
 
     UIWindow *key = nil;
     for (UIScene *scene in [UIApplication sharedApplication].connectedScenes) {

@@ -26,6 +26,7 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
                                const void *object,
                                CFDictionaryRef userInfo) {
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"[Hush] became-active -> inject");
         HushGalInjectBallFromKeyWindow();
     });
 }
@@ -40,12 +41,18 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
                                     NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately);
 
+    NSLog(@"[Hush] ctor ran, entry installed");
     [HushLogger logLevel:4 format:@"[Hush] entry installed (ball inject armed)"];
 
     // If the app is already active by the time dylib constructors run (common
     // when injected via LiveContainer), inject right away as well.
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)),
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)),
                    dispatch_get_main_queue(), ^{
+        NSLog(@"[Hush] timer -> inject");
         HushGalInjectBallFromKeyWindow();
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.5 * NSEC_PER_SEC)),
+                   dispatch_get_main_queue(), ^{
+        HushGalInjectBallFromKeyWindow();   // second chance after the UI settles
     });
 }
