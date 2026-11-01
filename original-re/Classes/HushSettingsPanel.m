@@ -16,6 +16,11 @@
 static HushSettingsPanel *gHushSharedPanel = nil;
 static dispatch_once_t gHushSharedPanelOnce;
 
+@interface HushSettingsPanel (Icons)
++ (UIColor *)hushColorForModule:(NSInteger)m;
++ (UIImage *)hushIcon:(NSString *)symbol module:(NSInteger)m;
+@end
+
 @implementation HushSettingsPanel
 
 @synthesize table = _table;
@@ -189,11 +194,6 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 #pragma mark - model
-
-@interface HushSettingsPanel (Icons)
-+ (UIColor *)hushColorForModule:(NSInteger)m;
-+ (UIImage *)hushIcon:(NSString *)symbol module:(NSInteger)m;
-@end
 
 #pragma mark - module icons
 
