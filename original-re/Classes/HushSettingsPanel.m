@@ -207,6 +207,18 @@ static dispatch_once_t gHushSharedPanelOnce;
         [buckets[(NSUInteger)e->module] addObject:it];
     }
 
+    // virtual-location coordinates are free-text runtime values, not switches
+    if (kHushModuleCount > 3) {
+        NSArray<NSArray<NSString *> *> *runtimeRows = @[
+            @[@"runtime_custom_lat",      @"虚拟纬度", @"CLLocation 返回该纬度；留空则用真实定位"],
+            @[@"runtime_custom_lng",      @"虚拟经度", @"与纬度成对填写，范围 -180 ~ 180"],
+            @[@"runtime_custom_altitude", @"虚拟海拔", @"配合「海拔模拟」开关生效，单位米"],
+        ];
+        for (NSArray<NSString *> *r in runtimeRows) {
+            [buckets[3] addObject:[HushSwitchItem key:r[0] title:r[1] subtitle:r[2]]];
+        }
+    }
+
     for (int m = 0; m < kHushModuleCount; m++) {
         const HushModuleMeta *meta = &kHushModules[m];
         HushModuleEntry *entry = [[HushModuleEntry alloc] init];

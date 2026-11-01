@@ -106,7 +106,7 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
     if ([item isKindOfClass:[HushSwitchItem class]]) {
         HushSwitchItem *si = (HushSwitchItem *)item;
         const HushToggleEntry *e = HushEntryForKey(si.key);
-        BOOL isBool = (e ? e->isBool : YES);
+        BOOL isBool = (e ? e->isBool : NO);   // keys outside kHushToggles are text values
 
         if (isBool) {
             HushSwitchCell *cell = [a0 dequeueReusableCellWithIdentifier:@"sw"];
@@ -199,7 +199,7 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
     if ([item isKindOfClass:[HushSwitchItem class]]) {
         HushSwitchItem *si = (HushSwitchItem *)item;
         const HushToggleEntry *e = HushEntryForKey(si.key);
-        BOOL isBool = (e ? e->isBool : YES);
+        BOOL isBool = (e ? e->isBool : NO);   // keys outside kHushToggles are text values
 
         if (isBool) {
             if ([si.key isEqualToString:@"switch_legacy_auto_import"]) {
