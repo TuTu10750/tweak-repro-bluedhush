@@ -23,6 +23,13 @@ FOUNDATION_EXPORT NSArray *HushBallIconStyleAll(void);                // @0x1959
 FOUNDATION_EXPORT NSUInteger HushBallIconCurrentStyle(void);          // @0x195ab8
 FOUNDATION_EXPORT UIImage *HushBallIconImage(NSUInteger style, CGFloat scale); // @0x195b38
 
+#pragma mark - floating ball injection (@0x8492c, @0x85cc0)
+
+FOUNDATION_EXPORT void HushGalInjectBall(id viewController);   // @0x8492c
+FOUNDATION_EXPORT void HushGalRemoveBall(void);                // @0x85cc0
+// Same injection, but resolves the host window itself instead of taking a VC.
+FOUNDATION_EXPORT void HushGalInjectBallFromKeyWindow(void);
+
 #pragma mark - config gate (@0x120f8, @0x130b8)
 
 FOUNDATION_EXPORT BOOL HushKeyNeedsActivation(NSString *key);
