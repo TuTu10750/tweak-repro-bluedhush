@@ -247,14 +247,22 @@ void HushHit(const char *cls, const char *sel) {
 }
 
 void HushHitReport(const char *tag) {
-    if (!gHitLock) return;
-    [gHitLock lock];
-    int n = gHitUsed;
-    [gHitLock unlock];
+    // gHitLock is created lazily by the first HushHit(). Bailing out when it is
+    // still NULL made "not a single hook fired" indistinguishable from "the
+    // report never ran" — and that distinction is the whole point of the
+    // t1/t4/t12 reports. Report 0 explicitly instead.
+    int n = 0;
+    if (gHitLock) {
+        [gHitLock lock];
+        n = gHitUsed;
+        [gHitLock unlock];
+    }
     NSMutableString *out = [NSMutableString stringWithFormat:@"[Hush] hit %s: %d distinct hooks ran", tag ? tag : "", n];
     for (int i = 0; i < n && i < 48; i++) {
         [out appendFormat:@"\n[Hush]   %s x%ld", gHitKey[i], gHitCount[i]];
     }
     if (n > 48) [out appendFormat:@"\n[Hush]   ... %d more", n - 48];
-    [HushLogger logLevel:4 format:out];
+    // Level 3 (info), not 4: with switch_debug_log off the level is pinned to 3,
+    // and a debug-level report would be swallowed exactly when it matters most.
+    [HushLogger logLevel:3 format:out];
 }

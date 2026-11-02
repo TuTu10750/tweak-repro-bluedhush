@@ -229,8 +229,13 @@ static void hush_report(int idx, const char *cls, const char *sel,
     // Every other outcome is final for this process.
     if (strcmp(r.kind, "MISSING") != 0) s_done[idx] = YES;
 
-    fprintf(stderr, "[Hush] hook %s %s::%s prev=%p types=%s\n",
-            r.kind, cls, sel, r.prev, r.types ? r.types : "(none)");
+    // stderr goes nowhere on iOS: it is not forwarded to the device log and it is
+    // not part of HushLogger's file, which is the artefact the verification
+    // table is read from. Mirror everything through the logger at info level so
+    // `prev=` survives with switch_debug_log off.
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush] hook %s %s::%s prev=%p types=%s",
+        r.kind, cls, sel, r.prev, r.types ? r.types : "(none)"]];
 }
 
 void HushInstallHooks(void) {
@@ -238,6 +243,7 @@ void HushInstallHooks(void) {
     if (!announced) {
         announced = YES;
         fprintf(stderr, "[Hush] HushInstallHooks begin\n");
+        [HushLogger logLevel:3 format:@"[Hush] HushInstallHooks begin"];
     }
 
     // Serialised on the main queue by every caller (ctor runs on the main thread
@@ -296,6 +302,8 @@ void HushInstallHooks(void) {
         }
     } else {
         fprintf(stderr, "[Hush] hooks(min): %d still pending retry\n", pending);
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush] hooks(min): %d still pending retry (round done)", pending]];
     }
 }
 
