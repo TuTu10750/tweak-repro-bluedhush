@@ -12,11 +12,20 @@
 #import "HushLogger.h"
 #import "HushConfig.h"
 #import <stdio.h>
+#import <unistd.h>
+#import <fcntl.h>
 
 static long long gHushLogLevel = 4;          // @0x243e20 in the original
 static unsigned long long gHushFiltered[6] = {0, 0, 0, 0, 0, 0};
 static unsigned long long gHushEmitted[6]  = {0, 0, 0, 0, 0, 0};
 static NSLock *gHushLogLock = nil;
+// Persistent fd + buffer.  v19 opened, seeked, wrote and closed the file on
+// EVERY line: the panel alone emitted 362 debug lines in 30 s, i.e. ~2 200
+// syscalls on the UI thread, and the private-chat page came up blank because
+// the main thread never got to layout.  Debug/trace now stay in memory until
+// 64 KB; info and above still flush (and mirror to stderr) immediately.
+static int gHushFd = -1;
+static NSMutableData *gHushBuf = nil;
 
 @implementation HushLogger
 
@@ -111,7 +120,13 @@ static NSLock *gHushLogLock = nil;
 }
 
 + (void)openFdIfNeeded {
-    // Nothing to pre-open; appendLine: opens on demand.  Kept for API parity.
+    if (gHushFd >= 0) return;
+    NSString *path = [self logFilePath];
+    if (!path) return;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:path]) [fm createFileAtPath:path contents:nil attributes:nil];
+    gHushFd = open(path.UTF8String, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    if (!gHushBuf) gHushBuf = [NSMutableData dataWithCapacity:65536];
 }
 
 + (void)rollIfNeeded {
@@ -124,32 +139,40 @@ static NSLock *gHushLogLock = nil;
     NSString *old = [path stringByAppendingString:@".1"];
     [fm removeItemAtPath:old error:NULL];
     [fm moveItemAtPath:path toPath:old error:NULL];
+
+    // The file we hold open was renamed out from under us: drop the fd so the
+    // next openFdIfNeeded() recreates <path> and appends there.
+    if (gHushFd >= 0) { close(gHushFd); gHushFd = -1; }
 }
 
 + (BOOL)flushBuffer {
-    return YES;      // every append writes and closes, so nothing is buffered
+    if (gHushFd < 0 || gHushBuf.length == 0) return YES;
+    const char *p = (const char *)gHushBuf.bytes;
+    size_t n = (size_t)gHushBuf.length;
+    while (n > 0) {
+        ssize_t w = write(gHushFd, p, n);
+        if (w <= 0) break;
+        p += w;
+        n -= (size_t)w;
+    }
+    [gHushBuf setLength:0];
+    return YES;
 }
 
 + (void)appendLine:(id)a0 {
     if (![a0 length]) return;
-    NSString *path = [self logFilePath];
     NSData *data = [(NSString *)a0 dataUsingEncoding:NSUTF8StringEncoding];
     if (!data) return;
 
     [gHushLogLock lock];
-    [self rollIfNeeded];
-
-    NSFileManager *fm = [NSFileManager defaultManager];
-    if (![fm fileExistsAtPath:path]) [fm createFileAtPath:path contents:nil attributes:nil];
-
-    NSFileHandle *fh = [NSFileHandle fileHandleForWritingAtPath:path];
-    if (fh) {
-        @try {
-            [fh seekToEndOfFile];
-            [fh writeData:data];
-        } @catch (__unused NSException *e) {
+    [self openFdIfNeeded];
+    if (gHushFd >= 0) {
+        if (!gHushBuf) gHushBuf = [NSMutableData dataWithCapacity:65536];
+        [gHushBuf appendData:data];
+        if (gHushBuf.length >= 65536) {
+            [self flushBuffer];
+            [self rollIfNeeded];
         }
-        [fh closeFile];
     }
     [gHushLogLock unlock];
 }
@@ -158,20 +181,25 @@ static NSLock *gHushLogLock = nil;
     if (!a0) return;
     NSString *line = [self formatLine:a0 levelTag:a1];
     [self appendLine:line];
-    // throttle==YES suppresses the console copy (chatty paths); the file still
-    // gets the line so nothing is lost.
-    //
-    // stderr, not NSLog.  iOS replaces every *argument* of NSLog with
-    // "<private>" in syslog, so the 00:24 export read 295 times
-    // "<Notice>: <private>" with no content at all — NSLog(@"%@", line) is
-    // exactly the shape that gets redacted.  stderr is not subject to that
-    // policy (losing only the level/prefix decoration), and hush.log keeps its
-    // own disk channel either way.
-    //
-    // No "[Hush] " prefix here: every format string already carries its tag
-    // ([Hush] / [Panel] / [Ball]), and prefixing again produced the
-    // "[Hush] [Hush] entry installed" double tag seen in the 23:54 syslog.
-    if (!a2) fprintf(stderr, "[Hush] %s\n", [[a0 description] UTF8String]);
+
+    // Info and above land on disk immediately and mirror to stderr; debug/trace
+    // stay buffered — that is what keeps the panel's title-check spam off the
+    // UI thread's syscall path.
+    BOOL important = ([a1 isEqualToString:@"E"] ||
+                      [a1 isEqualToString:@"W"] ||
+                      [a1 isEqualToString:@"I"]);
+    if (important) {
+        [gHushLogLock lock];
+        [self flushBuffer];
+        [gHushLogLock unlock];
+    }
+
+    // stderr, not NSLog: iOS replaces every NSLog ARGUMENT with "<private>",
+    // which is why the 00:24 syslog export showed 295 rows of "<private>".
+    // throttle==YES (error/warn) suppresses the console copy as before.
+    if (!a2 && important) {
+        fprintf(stderr, "[Hush] %s\n", [[a0 description] UTF8String]);
+    }
 }
 
 + (void)logLevel:(long long)a0 format:(id)a1 {
@@ -193,6 +221,8 @@ static NSLock *gHushLogLock = nil;
 }
 
 + (id)tail:(unsigned long long)a0 {
+    // Buffered lines are only in memory; the panel's "showLog" must see them too.
+    [self flushBuffer];
     NSString *path = [self logFilePath];
     NSData *data = [NSData dataWithContentsOfFile:path];
     if (!data) return @"";
