@@ -221,13 +221,24 @@ static NSMutableData *gHushBuf = nil;
 }
 
 + (id)tail:(unsigned long long)a0 {
-    // Buffered lines are only in memory; the panel's "showLog" must see them too.
-    [self flushBuffer];
+    // Never flush here: tail: runs on the UI thread whenever the panel opens its
+    // log view, and a synchronous 64 KB write there is exactly the kind of stall
+    // that blanked the private-chat page. Instead read what is on disk and splice
+    // in whatever is still sitting in the buffer, so the view is complete either
+    // way: disk content first, then the pending tail.
+    NSString *pending = nil;
+    [gHushLogLock lock];
+    if (gHushBuf.length > 0) {
+        pending = [[NSString alloc] initWithData:gHushBuf encoding:NSUTF8StringEncoding];
+    }
+    [gHushLogLock unlock];
+
     NSString *path = [self logFilePath];
     NSData *data = [NSData dataWithContentsOfFile:path];
-    if (!data) return @"";
-    NSString *all = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if (!all) return @"";
+    NSString *onDisk = data ? [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] : @"";
+    if (!onDisk) onDisk = @"";
+    NSString *all = (pending.length > 0) ? [onDisk stringByAppendingString:pending] : onDisk;
+    if (all.length == 0) return @"";
 
     NSUInteger limit = (a0 == 0 || a0 > 400) ? 400 : (NSUInteger)a0;   // line count
     NSArray<NSString *> *lines = [all componentsSeparatedByString:@"\n"];

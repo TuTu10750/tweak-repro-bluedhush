@@ -72,6 +72,13 @@ static BOOL           gStarted      = NO;
 static BOOL           gEnabled      = NO;   // switch_anti_recall 的缓存
 static BOOL           gEnabledRead  = NO;
 static BOOL           gHostWarned   = NO;
+// 诊断计数器：复制方案与读库都不能静默失败，否则出问题时说不清
+// "15 秒延迟正常" 和 "一直读不到"。全部进 tick 行。
+static int            gCopyOk      = 0;   // 复制+打开副本成功
+static int            gCopyFail    = 0;   // 复制失败（宿主正在写/IO 错）
+static int            gCopyBadMagic= 0;   // 不是明文 sqlite（SQLCipher？）
+static int            gHostBusy    = 0;   // 副本读到一半撞 BUSY/LOCKED
+static double         gOpenMsLast  = 0.0; // 最近一次 复制+open 的毫秒数
 
 #pragma mark - helpers
 
@@ -139,16 +146,24 @@ static sqlite3 *HushAROpenHostCopy(NSString **outTmp) {
                      [NSString stringWithFormat:@"hush_hostcopy_%d.db", (int)getpid()]];
     NSFileManager *fm = [NSFileManager defaultManager];
     [fm removeItemAtPath:tmp error:NULL];
-    if (![fm copyItemAtPath:gHostPath toPath:tmp error:NULL]) return NULL;
+
+    NSTimeInterval t0 = [NSDate timeIntervalSinceReferenceDate];
+    if (![fm copyItemAtPath:gHostPath toPath:tmp error:NULL]) {
+        gCopyFail++;
+        return NULL;
+    }
 
     sqlite3 *db = NULL;
     if (sqlite3_open_v2(tmp.UTF8String, &db,
                         SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, NULL) != SQLITE_OK) {
         if (db) sqlite3_close(db);
         [fm removeItemAtPath:tmp error:NULL];
+        gCopyFail++;
         return NULL;
     }
     sqlite3_busy_timeout(db, 0);
+    gOpenMsLast = ([NSDate timeIntervalSinceReferenceDate] - t0) * 1000.0;
+    gCopyOk++;
     if (outTmp) *outTmp = tmp;
     return db;
 }
@@ -167,7 +182,15 @@ static BOOL HushARProbeHost(NSString *path) {
     NSData *head = [fh readDataOfLength:16];
     [fh closeFile];
     if (head.length < 16) return NO;
-    if (memcmp(head.bytes, "SQLite format 3", 16) != 0) return NO;
+    if (memcmp(head.bytes, "SQLite format 3", 16) != 0) {
+        // 前 16 字节不是 "SQLite format 3"：要么是 SQLCipher 加密库（前 16 字节是盐），
+        // 要么根本不是 sqlite。两种都读不了，但绝不能静默 —— 否则事后无法解释
+        // "为什么没有快照"。
+        gCopyBadMagic++;
+        ARLog(@"[Hush][防撤回] 跳过 %@：不是明文 sqlite（疑似 SQLCipher），无 key 不可读",
+              [path lastPathComponent]);
+        return NO;
+    }
 
     NSString *saved = gHostPath;
     gHostPath = path;
@@ -277,7 +300,8 @@ static NSArray<NSDictionary *> *HushARFetchHost(long long cursor, int limit) {
     if (sqlite3_prepare_v2(db, q, -1, &st, NULL) == SQLITE_OK) {
         sqlite3_bind_int64(st, 1, cursor);
         sqlite3_bind_int(st, 2, limit);
-        while (sqlite3_step(st) == SQLITE_ROW) {
+        int rc = SQLITE_ROW;
+        while ((rc = sqlite3_step(st)) == SQLITE_ROW) {
             const unsigned char *ct = sqlite3_column_text(st, 7);
             const unsigned char *ex = sqlite3_column_text(st, 8);
             [out addObject:@{
@@ -291,6 +315,9 @@ static NSArray<NSDictionary *> *HushARFetchHost(long long cursor, int limit) {
                 @"content": ct ? @((const char *)ct) : @"",
                 @"extra":   ex ? @((const char *)ex) : @"",
             }];
+        }
+        if (rc == SQLITE_BUSY || rc == SQLITE_LOCKED) {
+            gHostBusy++;            // 记次数，不刷屏；tick 行会带出来
         }
     }
     if (st) sqlite3_finalize(st);
@@ -430,8 +457,10 @@ static void HushARPullOnce(void) {
     if (added > 0 || flipped > 0) {
         long long totalSnap = HushARQueryLL(gMineDB, "SELECT COUNT(*) FROM snapshot;");
         long long totalRev  = HushARQueryLL(gMineDB, "SELECT COUNT(*) FROM revoked;");
-        ARLog(@"[Hush][防撤回] tick=%d 快照+%d 撤回+%d 累计=%lld/%lld cursor=%lld",
-              gTicks, added, flipped, totalSnap, totalRev, gCursor);
+        ARLog(@"[Hush][防撤回] tick=%d 快照+%d 撤回+%d 累计=%lld/%lld cursor=%lld"
+              " copy ok=%d fail=%d bad=%d busy=%d open=%.1fms",
+              gTicks, added, flipped, totalSnap, totalRev, gCursor,
+              gCopyOk, gCopyFail, gCopyBadMagic, gHostBusy, gOpenMsLast);
     }
 }
 
@@ -566,6 +595,16 @@ void HushAntiRevokeStart(void) {
 
     dispatch_async(gQueue, ^{
         @autoreleasepool {
+            // 进程崩溃 / 被系统杀掉时 removeItemAtPath 不会执行，126 KB 的副本
+            // 会攒在 tmp 里。启动先清一遍，避免沙盒 tmp 长成几十 MB。
+            NSFileManager *fm0 = [NSFileManager defaultManager];
+            NSString *td = NSTemporaryDirectory();
+            for (NSString *f in [fm0 contentsOfDirectoryAtPath:td error:NULL]) {
+                if ([f hasPrefix:@"hush_hostcopy_"]) {
+                    [fm0 removeItemAtPath:[td stringByAppendingPathComponent:f] error:NULL];
+                }
+            }
+
             if (!HushAROpenMine()) {
                 ARLog(@"[Hush][防撤回] 初始化失败（我方库不可用），模块不启用");
                 return;
