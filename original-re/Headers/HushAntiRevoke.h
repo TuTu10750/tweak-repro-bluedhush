@@ -8,4 +8,12 @@
 // 任一条失效另一条仍然兜得住。
 //
 // 受 switch_anti_recall 开关控制：关着时只保留 timer 心跳，不做任何 IO。
-void HushAntiRevokeStart(void);
+//
+// FOUNDATION_EXPORT, not a bare `void f(void)`: HushEntry.xm goes through the
+// C++ front end, so an unqualified declaration gets mangled to
+// __Z18HushAntiRevokeStartv while the .m emits plain _HushAntiRevokeStart ->
+//   Undefined symbols for architecture arm64: "HushAntiRevokeStart()"
+// FOUNDATION_EXPORT expands to `extern "C" __attribute__((visibility("default")))`
+// under __cplusplus, which is why HushInstallHooks(void) in HushRuntime.h never
+// hit this. Keep the two consistent.
+FOUNDATION_EXPORT void HushAntiRevokeStart(void);
