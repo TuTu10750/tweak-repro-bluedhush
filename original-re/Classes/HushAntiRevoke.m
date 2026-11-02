@@ -75,7 +75,8 @@ static BOOL           gHostWarned   = NO;
 // 诊断计数器：复制方案与读库都不能静默失败，否则出问题时说不清
 // "15 秒延迟正常" 和 "一直读不到"。全部进 tick 行。
 static int            gCopyOk      = 0;   // 复制+打开副本成功
-static int            gCopyFail    = 0;   // 复制失败（宿主正在写/IO 错）
+static int            gFailIo      = 0;   // 复制 IO 失败（磁盘/权限/路径，SQLITE_CANTOPEN）
+static int            gFailCorrupt = 0;   // 副本页级不一致（SQLITE_NOTADB / SQLITE_CORRUPT）
 static int            gCopyBadMagic= 0;   // 不是明文 sqlite（SQLCipher？）
 static int            gHostBusy    = 0;   // 副本读到一半撞 BUSY/LOCKED
 static double         gOpenMsLast  = 0.0; // 最近一次 复制+open 的毫秒数
@@ -149,16 +150,25 @@ static sqlite3 *HushAROpenHostCopy(NSString **outTmp) {
 
     NSTimeInterval t0 = [NSDate timeIntervalSinceReferenceDate];
     if (![fm copyItemAtPath:gHostPath toPath:tmp error:NULL]) {
-        gCopyFail++;
+        gFailIo++;                                  // 文件层失败，与 sqlite 无关
         return NULL;
     }
 
     sqlite3 *db = NULL;
-    if (sqlite3_open_v2(tmp.UTF8String, &db,
-                        SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, NULL) != SQLITE_OK) {
+    int orc = sqlite3_open_v2(tmp.UTF8String, &db,
+                              SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, NULL);
+    if (orc != SQLITE_OK) {
         if (db) sqlite3_close(db);
         [fm removeItemAtPath:tmp error:NULL];
-        gCopyFail++;
+        // 页级不一致：复制时宿主正写到一半，副本头部/页校验不过。
+        // 与磁盘/权限失败处置完全不同（后者重试无意义，前者等宿主空闲再试）。
+        if (orc == SQLITE_NOTADB || orc == SQLITE_CORRUPT) {
+            gFailCorrupt++;
+            ARLog(@"[Hush][防撤回] 副本不可读 rc=%d（NOTADB/CORRUPT，宿主正在写），本轮跳过", orc);
+        } else {
+            gFailIo++;
+            ARLog(@"[Hush][防撤回] 副本打不开 rc=%d（IO/权限），本轮跳过", orc);
+        }
         return NULL;
     }
     sqlite3_busy_timeout(db, 0);
@@ -458,9 +468,9 @@ static void HushARPullOnce(void) {
         long long totalSnap = HushARQueryLL(gMineDB, "SELECT COUNT(*) FROM snapshot;");
         long long totalRev  = HushARQueryLL(gMineDB, "SELECT COUNT(*) FROM revoked;");
         ARLog(@"[Hush][防撤回] tick=%d 快照+%d 撤回+%d 累计=%lld/%lld cursor=%lld"
-              " copy ok=%d fail=%d bad=%d busy=%d open=%.1fms",
+              " copy ok=%d failIo=%d failCorrupt=%d bad=%d busy=%d open=%.1fms",
               gTicks, added, flipped, totalSnap, totalRev, gCursor,
-              gCopyOk, gCopyFail, gCopyBadMagic, gHostBusy, gOpenMsLast);
+              gCopyOk, gFailIo, gFailCorrupt, gCopyBadMagic, gHostBusy, gOpenMsLast);
     }
 }
 

@@ -269,9 +269,64 @@ static void r_chatViewDidAppear(id self, SEL _cmd, BOOL a0) {
     if (o_chatViewDidAppear) o_chatViewDidAppear(self, _cmd, a0);
 }
 
+// ---------------------------------------------------------------- P0 expansion
+// The recall data flow, in the order the host walks it:
+//   deleteMessage:                              ← action entry  (target 4, already own)
+//     → p_filterDeletedMessages:                ← post-recall filter (target 1, already own)
+//     → p_findLeakMessageIdsWithMessages:needAddMsg:   ← find leaked ids
+//     → p_sortAndUniqMessages:descend:          ← re-sort after removal
+//     → updateMessage: / addMessages: / clearMessages  ← the three write paths
+// Fetch side, to see whether a fetch still carries the deleted rows:
+//   fetchMessagesWithStartMsgId:endMsgId:isTempChat:
+//   fetchMoreMessagesFromMessage:isTempChat:isDown:
+// Every one of these is a pure passthrough probe: it stamps HushHit and calls
+// through. Behaviour changes only after the hit table tells us which node the
+// host actually walks on recall.
+static id (*o_findLeakIds)(id, SEL, id, BOOL);
+static id r_findLeakIds(id self, SEL _cmd, id a0, BOOL a1) {
+    HushHit("GJIMMessageService", "p_findLeakMessageIdsWithMessages:needAddMsg:");
+    return o_findLeakIds ? o_findLeakIds(self, _cmd, a0, a1) : nil;
+}
+
+static id (*o_sortUniq)(id, SEL, id, BOOL);
+static id r_sortUniq(id self, SEL _cmd, id a0, BOOL a1) {
+    HushHit("GJIMMessageService", "p_sortAndUniqMessages:descend:");
+    return o_sortUniq ? o_sortUniq(self, _cmd, a0, a1) : nil;
+}
+
+static void (*o_updateMessage)(id, SEL, id);
+static void r_updateMessage(id self, SEL _cmd, id a0) {
+    HushHit("GJIMMessageService", "updateMessage:");
+    if (o_updateMessage) o_updateMessage(self, _cmd, a0);
+}
+
+static void (*o_addMessages)(id, SEL, id);
+static void r_addMessages(id self, SEL _cmd, id a0) {
+    HushHit("GJIMMessageService", "addMessages:");
+    if (o_addMessages) o_addMessages(self, _cmd, a0);
+}
+
+static void (*o_clearMessages)(id, SEL);
+static void r_clearMessages(id self, SEL _cmd) {
+    HushHit("GJIMMessageService", "clearMessages");
+    if (o_clearMessages) o_clearMessages(self, _cmd);
+}
+
+static void (*o_fetchFrom)(id, SEL, unsigned long long, unsigned long long, BOOL);
+static void r_fetchFrom(id self, SEL _cmd, unsigned long long a0, unsigned long long a1, BOOL a2) {
+    HushHit("GJIMMessageService", "fetchMessagesWithStartMsgId:endMsgId:isTempChat:");
+    if (o_fetchFrom) o_fetchFrom(self, _cmd, a0, a1, a2);
+}
+
+static void (*o_fetchMore)(id, SEL, id, BOOL, BOOL);
+static void r_fetchMore(id self, SEL _cmd, id a0, BOOL a1, BOOL a2) {
+    HushHit("GJIMMessageService", "fetchMoreMessagesFromMessage:isTempChat:isDown:");
+    if (o_fetchMore) o_fetchMore(self, _cmd, a0, a1, a2);
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 14
+#define HUSH_TARGET_COUNT 21
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -411,6 +466,51 @@ void HushInstallHooks(void) {
         if (strcmp(r.kind, "MISSING") != 0) o_chatViewDidAppear = (void (*)(id, SEL, BOOL))r.prev;
         hush_report(13, "PrivateChatViewController", "viewDidAppear:", r);
     }
+
+    // ---- P0: recall data flow (7 new probes on GJIMMessageService) -------------
+    if (!s_done[14]) {
+        SEL s = sel_registerName("p_findLeakMessageIdsWithMessages:needAddMsg:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_findLeakIds, "@28@0:8@16B24");
+        if (strcmp(r.kind, "MISSING") != 0) o_findLeakIds = (id (*)(id, SEL, id, BOOL))r.prev;
+        hush_report(14, "GJIMMessageService", "p_findLeakMessageIdsWithMessages:needAddMsg:", r);
+    }
+    if (!s_done[15]) {
+        SEL s = sel_registerName("p_sortAndUniqMessages:descend:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_sortUniq, "@28@0:8@16B24");
+        if (strcmp(r.kind, "MISSING") != 0) o_sortUniq = (id (*)(id, SEL, id, BOOL))r.prev;
+        hush_report(15, "GJIMMessageService", "p_sortAndUniqMessages:descend:", r);
+    }
+    if (!s_done[16]) {
+        SEL s = sel_registerName("updateMessage:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_updateMessage, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_updateMessage = (void (*)(id, SEL, id))r.prev;
+        hush_report(16, "GJIMMessageService", "updateMessage:", r);
+    }
+    if (!s_done[17]) {
+        SEL s = sel_registerName("addMessages:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_addMessages, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_addMessages = (void (*)(id, SEL, id))r.prev;
+        hush_report(17, "GJIMMessageService", "addMessages:", r);
+    }
+    if (!s_done[18]) {
+        SEL s = sel_registerName("clearMessages");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_clearMessages, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_clearMessages = (void (*)(id, SEL))r.prev;
+        hush_report(18, "GJIMMessageService", "clearMessages", r);
+    }
+    if (!s_done[19]) {
+        SEL s = sel_registerName("fetchMessagesWithStartMsgId:endMsgId:isTempChat:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_fetchFrom, "v36@0:8Q16Q24B32");
+        if (strcmp(r.kind, "MISSING") != 0) o_fetchFrom = (void (*)(id, SEL, unsigned long long, unsigned long long, BOOL))r.prev;
+        hush_report(19, "GJIMMessageService", "fetchMessagesWithStartMsgId:endMsgId:isTempChat:", r);
+    }
+    if (!s_done[20]) {
+        SEL s = sel_registerName("fetchMoreMessagesFromMessage:isTempChat:isDown:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_fetchMore, "v32@0:8@16B24B28");
+        if (strcmp(r.kind, "MISSING") != 0) o_fetchMore = (void (*)(id, SEL, id, BOOL, BOOL))r.prev;
+        hush_report(20, "GJIMMessageService", "fetchMoreMessagesFromMessage:isTempChat:isDown:", r);
+    }
+
 
     // Only summarise once every target has reached a final state, so the line the
     // verification table greps for is not printed three times with half the data.
