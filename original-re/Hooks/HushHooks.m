@@ -200,9 +200,78 @@ static void r_removeAllSplash(id self, SEL _cmd, long long a0) {
     if (o_removeAllSplash) o_removeAllSplash(self, _cmd, a0);
 }
 
+
+// ---------------------------------------------------------------- B1 expansion
+// 6. BluedTabBar -p_changeItemStateAtIndex:   (v24@0:8Q16)
+static void (*o_changeItemState)(id, SEL, unsigned long long);
+static void r_changeItemState(id self, SEL _cmd, unsigned long long a0) {
+    HushHit("BluedTabBar", "p_changeItemStateAtIndex:");
+    if (o_changeItemState) o_changeItemState(self, _cmd, a0);
+}
+
+// 7. BluedTabBar -selectItemAtIndex:   (v24@0:8q16)
+static void (*o_selectItem)(id, SEL, long long);
+static void r_selectItem(id self, SEL _cmd, long long a0) {
+    HushHit("BluedTabBar", "selectItemAtIndex:");
+    if (o_selectItem) o_selectItem(self, _cmd, a0);
+}
+
+// 8. BluedTabBar -selectItemAtIndex:subIndex:   (v32@0:8q16q24)
+static void (*o_selectItemSub)(id, SEL, long long, long long);
+static void r_selectItemSub(id self, SEL _cmd, long long a0, long long a1) {
+    HushHit("BluedTabBar", "selectItemAtIndex:subIndex:");
+    if (o_selectItemSub) o_selectItemSub(self, _cmd, a0, a1);
+}
+
+// 9. BluedTabBar -setDynamicImgView:   (v24@0:8@16)
+static void (*o_setDynamicImg)(id, SEL, id);
+static void r_setDynamicImg(id self, SEL _cmd, id a0) {
+    HushHit("BluedTabBar", "setDynamicImgView:");
+    if (o_setDynamicImg) o_setDynamicImg(self, _cmd, a0);
+}
+
+// 10. Blued.BDCustomMenuView -hideMenu     host owners: only BDLongPressMenuView
+//     and LynxTextView, so this one is expected to land on added (prev NULL).
+static void (*o_menuHide)(id, SEL);
+static void r_menuHide(id self, SEL _cmd) {
+    HushHit("Blued.BDCustomMenuView", "hideMenu");
+    if (o_menuHide) o_menuHide(self, _cmd);
+}
+
+// 11. Blued.BDCustomMenuView -layoutSubviews     UIView owns it, the Swift class
+//     is not among the 421 host implementors -> this is the inherit probe.
+static void (*o_menuLayout)(id, SEL);
+static void r_menuLayout(id self, SEL _cmd) {
+    HushHit("Blued.BDCustomMenuView", "layoutSubviews");
+    if (o_menuLayout) o_menuLayout(self, _cmd);
+}
+
+// 12. Blued.BDCustomMenuView -reloadData     inherit if the class is a table
+//     view, otherwise added.
+static void (*o_menuReload)(id, SEL);
+static void r_menuReload(id self, SEL _cmd) {
+    HushHit("Blued.BDCustomMenuView", "reloadData");
+    if (o_menuReload) o_menuReload(self, _cmd);
+}
+
+// 13. PrivateChatViewController -layoutSubviews     UIViewController has no
+//     layoutSubviews, so this is expected added unless the class is a view.
+static void (*o_chatLayout)(id, SEL);
+static void r_chatLayout(id self, SEL _cmd) {
+    HushHit("PrivateChatViewController", "layoutSubviews");
+    if (o_chatLayout) o_chatLayout(self, _cmd);
+}
+
+// 14. PrivateChatViewController -viewDidAppear:   (v20@0:8B16, BOOL argument)
+static void (*o_chatViewDidAppear)(id, SEL, BOOL);
+static void r_chatViewDidAppear(id self, SEL _cmd, BOOL a0) {
+    HushHit("PrivateChatViewController", "viewDidAppear:");
+    if (o_chatViewDidAppear) o_chatViewDidAppear(self, _cmd, a0);
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 5
+#define HUSH_TARGET_COUNT 14
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -252,6 +321,9 @@ void HushInstallHooks(void) {
     Class cDB  = hush_resolve_class("GJIMDBService");
     Class cSes = hush_resolve_class("GJIMSessionService");
     Class cApp = hush_resolve_class("AppDelegateModel");
+    Class cTab  = hush_resolve_class("BluedTabBar");
+    Class cMenu = hush_resolve_class("BDCustomMenuView");
+    Class cChat = hush_resolve_class("PrivateChatViewController");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -282,6 +354,62 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cApp, s, (IMP)&r_removeAllSplash, "v24@0:8q16");
         if (strcmp(r.kind, "MISSING") != 0) o_removeAllSplash = (void (*)(id, SEL, long long))r.prev;
         hush_report(4, "AppDelegateModel", "removeAllSplashAdViews:", r);
+    }
+
+
+    if (!s_done[5]) {
+        SEL s = sel_registerName("p_changeItemStateAtIndex:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_changeItemState, "v24@0:8Q16");
+        if (strcmp(r.kind, "MISSING") != 0) o_changeItemState = (void (*)(id, SEL, unsigned long long))r.prev;
+        hush_report(5, "BluedTabBar", "p_changeItemStateAtIndex:", r);
+    }
+    if (!s_done[6]) {
+        SEL s = sel_registerName("selectItemAtIndex:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_selectItem, "v24@0:8q16");
+        if (strcmp(r.kind, "MISSING") != 0) o_selectItem = (void (*)(id, SEL, long long))r.prev;
+        hush_report(6, "BluedTabBar", "selectItemAtIndex:", r);
+    }
+    if (!s_done[7]) {
+        SEL s = sel_registerName("selectItemAtIndex:subIndex:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_selectItemSub, "v32@0:8q16q24");
+        if (strcmp(r.kind, "MISSING") != 0) o_selectItemSub = (void (*)(id, SEL, long long, long long))r.prev;
+        hush_report(7, "BluedTabBar", "selectItemAtIndex:subIndex:", r);
+    }
+    if (!s_done[8]) {
+        SEL s = sel_registerName("setDynamicImgView:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_setDynamicImg, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_setDynamicImg = (void (*)(id, SEL, id))r.prev;
+        hush_report(8, "BluedTabBar", "setDynamicImgView:", r);
+    }
+    if (!s_done[9]) {
+        SEL s = sel_registerName("hideMenu");
+        hush_installed r = hush_install_impl(cMenu, s, (IMP)&r_menuHide, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_menuHide = (void (*)(id, SEL))r.prev;
+        hush_report(9, "Blued.BDCustomMenuView", "hideMenu", r);
+    }
+    if (!s_done[10]) {
+        SEL s = sel_registerName("layoutSubviews");
+        hush_installed r = hush_install_impl(cMenu, s, (IMP)&r_menuLayout, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_menuLayout = (void (*)(id, SEL))r.prev;
+        hush_report(10, "Blued.BDCustomMenuView", "layoutSubviews", r);
+    }
+    if (!s_done[11]) {
+        SEL s = sel_registerName("reloadData");
+        hush_installed r = hush_install_impl(cMenu, s, (IMP)&r_menuReload, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_menuReload = (void (*)(id, SEL))r.prev;
+        hush_report(11, "Blued.BDCustomMenuView", "reloadData", r);
+    }
+    if (!s_done[12]) {
+        SEL s = sel_registerName("layoutSubviews");
+        hush_installed r = hush_install_impl(cChat, s, (IMP)&r_chatLayout, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_chatLayout = (void (*)(id, SEL))r.prev;
+        hush_report(12, "PrivateChatViewController", "layoutSubviews", r);
+    }
+    if (!s_done[13]) {
+        SEL s = sel_registerName("viewDidAppear:");
+        hush_installed r = hush_install_impl(cChat, s, (IMP)&r_chatViewDidAppear, "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0) o_chatViewDidAppear = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(13, "PrivateChatViewController", "viewDidAppear:", r);
     }
 
     // Only summarise once every target has reached a final state, so the line the

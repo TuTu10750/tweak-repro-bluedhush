@@ -159,7 +159,10 @@ static NSLock *gHushLogLock = nil;
     [self appendLine:line];
     // throttle==YES suppresses the console copy (chatty paths); the file still
     // gets the line so nothing is lost.
-    if (!a2) NSLog(@"[Hush] %@", a0);
+    // No "[Hush] " here: every format string already carries its own tag
+    // ([Hush] / [Panel] / [Ball]), and prefixing again produced the
+    // "[Hush] [Hush] entry installed" double tag seen in the 23:54 syslog.
+    if (!a2) NSLog(@"%@", a0);
 }
 
 + (void)logLevel:(long long)a0 format:(id)a1 {

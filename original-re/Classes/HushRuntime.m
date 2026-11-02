@@ -221,11 +221,15 @@ static const char *gHitKey[HUSH_HIT_CAP];
 static long        gHitCount[HUSH_HIT_CAP];
 static int         gHitUsed;
 static NSLock     *gHitLock;
+static dispatch_once_t gHitOnce;
 
 void HushHit(const char *cls, const char *sel) {
     if (!cls || !sel) return;
     static NSString *joined[HUSH_HIT_CAP];
-    if (!gHitLock) gHitLock = [[NSLock alloc] init];
+    // dispatch_once, not `if (!gHitLock)`: with the B1 expansion the hit table is
+    // reached from background IM queues (dealMessage:array:) as well as the main
+    // thread, so a lazy global could be built twice and then used unlocked.
+    dispatch_once(&gHitOnce, ^{ gHitLock = [[NSLock alloc] init]; });
     [gHitLock lock];
     for (int i = 0; i < gHitUsed; i++) {
         if (gHitKey[i] == cls) {          // literal pointers, one per call site
