@@ -224,6 +224,12 @@ static dispatch_once_t gHushSharedOnce;
     @synchronized (self) {
         _flagCache[a1] = @(a0);
     }
+    // 「日志等级」是唯一一个必须立刻反映到运行时的开关：面板是通用渲染，
+    // 点一下只走 setEnabled:forKey:，从不经过 +persistLevel:，于是 gHushLogLevel
+    // 停着不动 —— 开关能点能存，但一行日志都不变。这里回灌一次补上反方向。
+    if ([a1 isKindOfClass:[NSString class]] && [a1 isEqualToString:@"switch_debug_log"]) {
+        [HushLogger setLevel:(a0 ? 5 : 3)];
+    }
 }
 
 - (id)stringForKey:(id)a0 {

@@ -95,6 +95,11 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
 
     NSLog(@"[Hush] ctor ran, entry installed");
     [HushLogger logLevel:4 format:@"[Hush] entry installed (ball inject armed)"];
+    // 面板上的「日志等级」开关此前是死的：+loadLevelFromConfig 从未被任何地方调用，
+    // gHushLogLevel 永远停在静态初值 4 —— 表现就是 switch_debug_log=0 时 D 级照样输出、
+    // 打开开关也不升高。放在 entry 那行之后调用，让 entry 无论配置如何都先落地，
+    // 再按 switch_debug_log 决定后续级别（关=3 / 开=5）。
+    [HushLogger loadLevelFromConfig];
 
     // 启动快照：把真正读到的开关值落进日志。
     // 用户报「开关开了但功能没生效」时，先看这一行是否与面板一致。
