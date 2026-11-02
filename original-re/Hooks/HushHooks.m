@@ -160,10 +160,13 @@ static hush_installed hush_install_impl(Class c, SEL sel, IMP repl,
 static id (*o_filterDeleted)(id, SEL, id);
 static id r_filterDeleted(id self, SEL _cmd, id a0) {
     HushHit("GJIMMessageService", "p_filterDeletedMessages:");
-    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
-        // Keep the message alive: hand the host an empty "to delete" set.
-        return nil;
-    }
+    // PASSTHROUGH. Returning nil here used to look like "keep everything", but
+    // the selector name says it FILTERS: the host expects the filtered array
+    // back and iterates it. Handing back nil emptied the message list instead
+    // of preserving it -- the private chat showed no history and a sent message
+    // never appeared, while the send itself succeeded. Recall protection lives
+    // in the poller (HushAntiRevoke.m); a hook may only observe until the hit
+    // table proves which node actually carries the recall.
     return o_filterDeleted ? o_filterDeleted(self, _cmd, a0) : nil;
 }
 
@@ -180,7 +183,7 @@ static void r_dealMessage(id self, SEL _cmd, id a0, id a1) {
 static void (*o_clearSessionAndMessage)(id, SEL, id);
 static void r_clearSessionAndMessage(id self, SEL _cmd, id a0) {
     HushHit("GJIMSessionService", "clearSessionAndMessageWithToken:");
-    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) return;
+    // PASSTHROUGH: see r_deleteMessage.
     if (o_clearSessionAndMessage) o_clearSessionAndMessage(self, _cmd, a0);
 }
 
@@ -188,7 +191,8 @@ static void r_clearSessionAndMessage(id self, SEL _cmd, id a0) {
 static void (*o_deleteMessage)(id, SEL, id);
 static void r_deleteMessage(id self, SEL _cmd, id a0) {
     HushHit("GJIMMessageService", "deleteMessage:");
-    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) return;
+    // PASSTHROUGH for now: swallowing the call leaves the host's own message
+    // list and DB out of sync, which is the same "sent but invisible" symptom.
     if (o_deleteMessage) o_deleteMessage(self, _cmd, a0);
 }
 
