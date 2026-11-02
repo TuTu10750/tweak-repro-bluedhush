@@ -18,7 +18,7 @@
 //  —— 也就是「开关没拦住 + 长连接锁住宿主」两个 bug 叠加。
 //
 //  v21 改成三条铁律：
-//    1. 绝不 ATTACH。宿主库用独立短连接：open → prepare → 读到 EOF → finalize
+//    1. 绝不碰宿主库。复制成 tmp 副本再读：copy → open(copy) → prepare → read → close → unlink
 //       → close，全程一个函数内完成，锁的持有时间是微秒级。
 //    2. 宿主连接 `busy_timeout=0` + `PRAGMA query_only=1`：撞锁立刻失败返回，
 //       绝不排队等宿主，绝不参与宿主的锁调度。
@@ -47,6 +47,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
+#import <unistd.h>
 #import <stdio.h>
 #import <stdarg.h>
 
@@ -125,15 +126,56 @@ static NSString *HushARBackupDir(void) {
     return d;
 }
 
-// 只读探一下有没有 messageTable。用完立刻 close。
-static BOOL HushARProbeHost(NSString *path) {
+// Copy the host database to tmp and read THAT.  No connection is ever made
+// against the host file itself.  The host very likely runs its sqlite with
+// locking_mode=EXCLUSIVE -- a second connection makes its own reads/writes
+// fail, which shows up as a blank private-chat page and sent messages never
+// landing.  A file copy is plain POSIX IO: no sqlite, no db lock, so it
+// cannot contend with the host.  If the copy is torn, open/prepare fails and
+// we simply skip this round; the host is untouched either way.
+static sqlite3 *HushAROpenHostCopy(NSString **outTmp) {
+    if (!gHostPath) return NULL;
+    NSString *tmp = [NSTemporaryDirectory() stringByAppendingPathComponent:
+                     [NSString stringWithFormat:@"hush_hostcopy_%d.db", (int)getpid()]];
+    NSFileManager *fm = [NSFileManager defaultManager];
+    [fm removeItemAtPath:tmp error:NULL];
+    if (![fm copyItemAtPath:gHostPath toPath:tmp error:NULL]) return NULL;
+
     sqlite3 *db = NULL;
-    if (sqlite3_open_v2(path.UTF8String, &db,
+    if (sqlite3_open_v2(tmp.UTF8String, &db,
                         SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, NULL) != SQLITE_OK) {
         if (db) sqlite3_close(db);
-        return NO;
+        [fm removeItemAtPath:tmp error:NULL];
+        return NULL;
     }
     sqlite3_busy_timeout(db, 0);
+    if (outTmp) *outTmp = tmp;
+    return db;
+}
+
+static void HushARCloseHostCopy(sqlite3 *db, NSString *tmp) {
+    if (db) sqlite3_close(db);
+    if (tmp) [[NSFileManager defaultManager] removeItemAtPath:tmp error:NULL];
+}
+
+// Does this file carry messageTable?  Goes through a copy, never the host file.
+static BOOL HushARProbeHost(NSString *path) {
+    if (!path) return NO;
+    // Cheap header check first so we never copy an unrelated large file.
+    NSFileHandle *fh = [NSFileHandle fileHandleForReadingAtPath:path];
+    if (!fh) return NO;
+    NSData *head = [fh readDataOfLength:16];
+    [fh closeFile];
+    if (head.length < 16) return NO;
+    if (memcmp(head.bytes, "SQLite format 3", 16) != 0) return NO;
+
+    NSString *saved = gHostPath;
+    gHostPath = path;
+    NSString *tmp = nil;
+    sqlite3 *db = HushAROpenHostCopy(&tmp);
+    gHostPath = saved;
+    if (!db) return NO;
+
     BOOL ok = NO;
     sqlite3_stmt *st = NULL;
     const char *q = "SELECT 1 FROM sqlite_master WHERE type='table' AND name='messageTable'";
@@ -141,7 +183,7 @@ static BOOL HushARProbeHost(NSString *path) {
         ok = (sqlite3_step(st) == SQLITE_ROW);
     }
     if (st) sqlite3_finalize(st);
-    sqlite3_close(db);
+    HushARCloseHostCopy(db, tmp);
     return ok;
 }
 
@@ -211,22 +253,16 @@ static void HushARLoadCursor(void) {
     gCursor = (v < 0) ? 0 : v;
 }
 
-#pragma mark - host read (short-lived connection, no ATTACH)
+#pragma mark - host read (through a file copy, never a connection to the host)
 
 // 从宿主库读一批行。open/close 全在本函数内，锁持有时间 = 一次 SELECT。
 // busy_timeout=0：撞上宿主正在写就立刻返回空，绝不排队（排队才是把宿主拖死的原因）。
 static NSArray<NSDictionary *> *HushARFetchHost(long long cursor, int limit) {
     if (!gHostPath) return nil;
 
-    sqlite3 *db = NULL;
-    int rc = sqlite3_open_v2(gHostPath.UTF8String, &db,
-                             SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, NULL);
-    if (rc != SQLITE_OK) {
-        if (db) sqlite3_close(db);
-        return nil;
-    }
-    sqlite3_busy_timeout(db, 0);
-    sqlite3_exec(db, "PRAGMA query_only=1;", NULL, NULL, NULL);
+    NSString *tmpPath = nil;
+    sqlite3 *db = HushAROpenHostCopy(&tmpPath);
+    if (!db) return nil;
 
     const char *q =
         "SELECT COALESCE(sessionType,0), COALESCE(sessionId,0), messageId,"
@@ -258,21 +294,16 @@ static NSArray<NSDictionary *> *HushARFetchHost(long long cursor, int limit) {
         }
     }
     if (st) sqlite3_finalize(st);
-    sqlite3_close(db);          // ← 关键：一个字节都不多持有
+    HushARCloseHostCopy(db, tmpPath);
     return out;
 }
 
 // 回前台全量：把宿主现有 msgId 读成一个集合，用于发现"我方有、宿主没了"。
 static NSSet<NSNumber *> *HushARFetchHostAllIds(long long since) {
     if (!gHostPath) return nil;
-    sqlite3 *db = NULL;
-    if (sqlite3_open_v2(gHostPath.UTF8String, &db,
-                        SQLITE_OPEN_READONLY | SQLITE_OPEN_NOMUTEX, NULL) != SQLITE_OK) {
-        if (db) sqlite3_close(db);
-        return nil;
-    }
-    sqlite3_busy_timeout(db, 0);
-    sqlite3_exec(db, "PRAGMA query_only=1;", NULL, NULL, NULL);
+    NSString *tmpPath = nil;
+    sqlite3 *db = HushAROpenHostCopy(&tmpPath);
+    if (!db) return nil;
 
     NSMutableSet<NSNumber *> *set = [NSMutableSet setWithCapacity:512];
     sqlite3_stmt *st = NULL;
@@ -284,7 +315,7 @@ static NSSet<NSNumber *> *HushARFetchHostAllIds(long long since) {
         }
     }
     if (st) sqlite3_finalize(st);
-    sqlite3_close(db);
+    HushARCloseHostCopy(db, tmpPath);
     return set;
 }
 
