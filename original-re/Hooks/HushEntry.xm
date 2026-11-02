@@ -17,6 +17,7 @@
 #import "HushRuntime.h"
 #import "HushConfig.h"
 #import "HushLogger.h"
+#import "HushAntiRevoke.h"
 
 static NSInteger gHushPollTicks = 0;
 
@@ -123,4 +124,10 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     // in HushRuntime.m — every behaviour-bearing hook stamps a counter.
     HushInstallHooks();
     HushScheduleHitReports();
+
+    // 防撤回的轮询路径。和 HushInstallHooks() 那条 hook 表互不依赖：
+    // 那条是实时拦截（走宿主方法），这条是 3 秒快照（直读宿主 sqlite）。
+    // 放在 hook 之后启动，是因为它自己完全不碰 hook 状态，先后无所谓；
+    // 但放在后面能让 hooks(min) 那行先落日志，报告里顺序更好读。
+    HushAntiRevokeStart();
 }

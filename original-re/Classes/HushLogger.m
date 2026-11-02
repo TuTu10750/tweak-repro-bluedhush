@@ -11,6 +11,7 @@
 
 #import "HushLogger.h"
 #import "HushConfig.h"
+#import <stdio.h>
 
 static long long gHushLogLevel = 4;          // @0x243e20 in the original
 static unsigned long long gHushFiltered[6] = {0, 0, 0, 0, 0, 0};
@@ -159,10 +160,18 @@ static NSLock *gHushLogLock = nil;
     [self appendLine:line];
     // throttle==YES suppresses the console copy (chatty paths); the file still
     // gets the line so nothing is lost.
-    // No "[Hush] " here: every format string already carries its own tag
+    //
+    // stderr, not NSLog.  iOS replaces every *argument* of NSLog with
+    // "<private>" in syslog, so the 00:24 export read 295 times
+    // "<Notice>: <private>" with no content at all — NSLog(@"%@", line) is
+    // exactly the shape that gets redacted.  stderr is not subject to that
+    // policy (losing only the level/prefix decoration), and hush.log keeps its
+    // own disk channel either way.
+    //
+    // No "[Hush] " prefix here: every format string already carries its tag
     // ([Hush] / [Panel] / [Ball]), and prefixing again produced the
     // "[Hush] [Hush] entry installed" double tag seen in the 23:54 syslog.
-    if (!a2) NSLog(@"%@", a0);
+    if (!a2) fprintf(stderr, "[Hush] %s\n", [[a0 description] UTF8String]);
 }
 
 + (void)logLevel:(long long)a0 format:(id)a1 {
