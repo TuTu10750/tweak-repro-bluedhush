@@ -171,7 +171,20 @@ static const HushDefaultEntry kHushDefaults[] = {
     { "switch_block_live_request", NULL, 0, 1 },
     { "switch_no_data_collect", NULL, 0, 1 },
     { "switch_purify_mine_page", NULL, 0, 1 },
+
+    // ---- recovered from the original boot log -----------------------------
+    // The original prints "Config 开关缓存预热完成（136 键，单次快照）" while
+    // this table held 130 entries.  These six close the gap exactly
+    // (130 + 6 = 136) and were read out of the original key array at 0x238ec0.
+    // The four switches belong to the 17 gated keys; the two runtime_* pair
+    // holds the virtual-location point the panel writes.
+    { "switch_track_instant",   NULL, 0, 1 },
+    { "switch_exchange_unlock", NULL, 0, 1 },
+    { "switch_exchange_peek",   NULL, 0, 1 },
+    { "switch_follow_unlock",   NULL, 0, 1 },
+    { "runtime_custom_lat",     "",   0, 0 },
+    { "runtime_custom_lng",     "",   0, 0 },
 };
-static const int kHushDefaultsCount = 130;
+static const int kHushDefaultsCount = 136;
 
 #endif

@@ -18,6 +18,8 @@
 #import "HushConfig.h"
 #import "HushLogger.h"
 #import "HushAntiRevoke.h"
+#import "HushActivation.h"
+#import "HushVirtualLocation.h"
 
 static NSInteger gHushPollTicks = 0;
 
@@ -87,6 +89,11 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
 }
 
 %ctor {
+    // 授权门控必须先于任何配置读取：HushConfig 在 gHushActivationCacheReady
+    // 还是 NO 时会把受限键一律短路成 NO 并缓存下来，晚一步就会把 17 个开关
+    // 钉死在「关」。原版 boot 块（@0x1bec4）也是先写字节再预热缓存。
+    HushActivationInstall();
+
     CFNotificationCenterAddObserver(CFNotificationCenterGetLocalCenter(),
                                     NULL,
                                     HushOnBecameActive,
@@ -124,6 +131,11 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     // in HushRuntime.m — every behaviour-bearing hook stamps a counter.
     HushInstallHooks();
     HushScheduleHitReports();
+
+    // 虚拟定位：包装 6 个 delegate 的 didUpdateLocations:（原版 [VLocCL] 那 6 行）。
+    // 独立于 HushHooks.m 的固定表，因为它挂在宿主自己的定位 provider 上，
+    // 命中数随 provider 出现时机变化，混进 hooks(min) 会把判据弄脏。
+    HushVirtualLocationInstall();
 
     // 防撤回的轮询路径。和 HushInstallHooks() 那条 hook 表互不依赖：
     // 那条是实时拦截（走宿主方法），这条是 3 秒快照（直读宿主 sqlite）。

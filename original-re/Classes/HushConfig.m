@@ -20,6 +20,7 @@
 // produced nil and every config read silently failed.
 
 #import "HushConfig.h"
+#import "HushActivation.h"
 #import "HushKeys.h"
 #import "HushLogger.h"
 #import <objc/runtime.h>
@@ -28,17 +29,15 @@
 #pragma mark - C-level helpers from the original __text
 
 // @0x130b8 — true when a key must not be honoured until activation has run.
-// The original builds a lazily-cached NSSet once (block @0x201530) and does
-// [set containsObject:key]. We keep the same shape; the set is intentionally
-// empty so that no feature is gated on the activation overlay.
+// The original builds a lazily-cached NSSet once (block @0x201530) from
+// _HushActivationGatedKeys and does [set containsObject:key].  The set is now
+// populated with the 17 recovered keys (see HushActivation.m) instead of being
+// empty: the RE build is activated by default, so membership alone changes
+// nothing — but the mechanism is the original one, and flipping
+// HushActivationSetActive(NO) reproduces the shipped gate exactly.
 BOOL HushKeyNeedsActivation(NSString *key) {
     if ([key length] == 0) return NO;
-    static NSSet *gGated = nil;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{
-        gGated = [NSSet set];
-    });
-    return [gGated containsObject:key];
+    return HushKeyNeedsActivationPair(key);
 }
 
 // @0x120f8 — true when the host build makes a key meaningless.
@@ -176,6 +175,11 @@ static dispatch_once_t gHushSharedOnce;
     if (!gHushActivationCacheReady) {
         if (HushKeyNeedsActivation(key)) return NO;
     }
+
+    // The original's toggle interceptor (@0x1c14c) tested membership first and
+    // the activation byte second; the byte read is inlined there rather than a
+    // call to _HushActivationIsActive. Same order here.
+    if (HushKeyNeedsActivation(key) && !HushActivationIsActive()) return NO;
 
     @synchronized (self) {
         NSNumber *cached = _flagCache[key];
