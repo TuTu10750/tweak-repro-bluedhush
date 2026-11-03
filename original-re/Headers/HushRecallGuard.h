@@ -52,3 +52,15 @@ FOUNDATION_EXPORT void HushRecallGuardSingleWrite(id self, SEL _cmd, id model,
 
 /// How many packets have been held back this session (for the hit report).
 FOUNDATION_EXPORT long HushRecallBlockedCount(void);
+
+/// UI leg: `PrivateChatViewController -updateMessages:updateType:` takes an array
+/// plus a mode. Foreign recall packets are removed before the table reloads, so
+/// the in-memory model never gets a chance to hide the row.
+FOUNDATION_EXPORT void HushRecallFilterArrayForward(id self, SEL _cmd, id msgs,
+                                                    unsigned long long updateType,
+                                                    void (*orig)(id, SEL, id, unsigned long long));
+
+/// UI leg, single-model form (`-receiveNewMessage:`). Dropped means orig is not
+/// called at all: there is only one message in this call.
+FOUNDATION_EXPORT void HushRecallDropSingleForward(id self, SEL _cmd, id model,
+                                                   void (*orig)(id, SEL, id));

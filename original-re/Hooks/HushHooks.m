@@ -106,6 +106,24 @@ static void r_dbUpdateMessage(id self, SEL _cmd, id a0) {
     HushRecallGuardSingleWrite(self, _cmd, a0, o_dbUpdateMessage);
 }
 
+
+// 24/25: the UI leg. hooo1 shows the recall reaching the table view through
+//   ChatVC.receiveNewMessage  /  ChatVC.updateMessages updateType=1 NSArray(4)
+// v27 proved the DB write is blocked and the row survives in sqlite, yet the open
+// chat page still hid the message — the in-memory model is what the table renders,
+// so it has to be filtered here too.
+static void (*o_chatUpdateMessages)(id, SEL, id, unsigned long long);
+static void r_chatUpdateMessages(id self, SEL _cmd, id a0, unsigned long long a1) {
+    HushHit("PrivateChatViewController", "updateMessages:updateType:");
+    HushRecallFilterArrayForward(self, _cmd, a0, a1, o_chatUpdateMessages);
+}
+
+static void (*o_msgVCReceiveNewMessage)(id, SEL, id);
+static void r_msgVCReceiveNewMessage(id self, SEL _cmd, id a0) {
+    HushHit("BDMessageViewController", "receiveNewMessage:");
+    HushRecallDropSingleForward(self, _cmd, a0, o_msgVCReceiveNewMessage);
+}
+
 // ---------------------------------------------------------------- install
 typedef struct {
     IMP         prev;
@@ -347,7 +365,7 @@ static void r_fetchMore(id self, SEL _cmd, id a0, BOOL a1, BOOL a2) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 23
+#define HUSH_TARGET_COUNT 25
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -400,6 +418,7 @@ void HushInstallHooks(void) {
     Class cTab  = hush_resolve_class("BluedTabBar");
     Class cMenu = hush_resolve_class("BDCustomMenuView");
     Class cChat = hush_resolve_class("PrivateChatViewController");
+    Class cMsgVC = hush_resolve_class("BDMessageViewController");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -542,6 +561,18 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cDB, s, (IMP)&r_dbUpdateMessage, "v24@0:8@16");
         if (strcmp(r.kind, "MISSING") != 0) o_dbUpdateMessage = (void (*)(id, SEL, id))r.prev;
         hush_report(22, "GJIMDBService", "p_updateMessage:", r);
+    }
+    if (!s_done[23]) {
+        SEL s = sel_registerName("updateMessages:updateType:");
+        hush_installed r = hush_install_impl(cChat, s, (IMP)&r_chatUpdateMessages, "v32@0:8@16Q24");
+        if (strcmp(r.kind, "MISSING") != 0) o_chatUpdateMessages = (void (*)(id, SEL, id, unsigned long long))r.prev;
+        hush_report(23, "PrivateChatViewController", "updateMessages:updateType:", r);
+    }
+    if (!s_done[24]) {
+        SEL s = sel_registerName("receiveNewMessage:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_msgVCReceiveNewMessage, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_msgVCReceiveNewMessage = (void (*)(id, SEL, id))r.prev;
+        hush_report(24, "BDMessageViewController", "receiveNewMessage:", r);
     }
 
 

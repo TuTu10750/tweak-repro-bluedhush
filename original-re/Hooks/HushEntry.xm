@@ -13,6 +13,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <dispatch/dispatch.h>
 
 #import "HushRuntime.h"
 #import "HushConfig.h"
@@ -34,6 +35,21 @@ static void HushScheduleHitReports(void) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(t[i] * NSEC_PER_SEC)),
                        dispatch_get_main_queue(), ^{ HushHitReport(tags[i]); });
     }
+    // After the first twelve seconds the timed reports are done, and everything
+    // that happens later is invisible. A five-minute heartbeat keeps a long
+    // session readable without flooding the file.
+    static dispatch_source_t hb = NULL;
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,
+                                                     dispatch_get_main_queue());
+    if (timer) {
+        dispatch_source_set_timer(timer,
+            dispatch_time(DISPATCH_TIME_NOW, (int64_t)(300.0 * NSEC_PER_SEC)),
+            (uint64_t)(300.0 * NSEC_PER_SEC), (uint64_t)(1.0 * NSEC_PER_SEC));
+        dispatch_source_set_event_handler(timer, ^{ HushHitReport("t300"); });
+        dispatch_resume(timer);
+        hb = timer;   // keep it alive for the process lifetime
+    }
+    (void)hb;
 }
 
 static void HushPollInject(int64_t delayNs);
@@ -135,7 +151,7 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     // 虚拟定位：包装 6 个 delegate 的 didUpdateLocations:（原版 [VLocCL] 那 6 行）。
     // 独立于 HushHooks.m 的固定表，因为它挂在宿主自己的定位 provider 上，
     // 命中数随 provider 出现时机变化，混进 hooks(min) 会把判据弄脏。
-    HushVirtualLocationInstall();
+    HushVirtualLocationInstallWithRetry();
 
     // 防撤回的轮询路径。和 HushInstallHooks() 那条 hook 表互不依赖：
     // 那条是实时拦截（走宿主方法），这条是 3 秒快照（直读宿主 sqlite）。

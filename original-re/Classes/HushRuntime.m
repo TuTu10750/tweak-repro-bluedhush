@@ -250,6 +250,13 @@ void HushHit(const char *cls, const char *sel) {
     [gHitLock unlock];
 }
 
+void HushHitDumpNow(const char *why) {
+    // Same body as the timed report, but triggered by an event we care about.
+    char tag[64];
+    snprintf(tag, sizeof(tag), "event:%s", why ? why : "");
+    HushHitReport(tag);
+}
+
 void HushHitReport(const char *tag) {
     // gHitLock is created lazily by the first HushHit(). Bailing out when it is
     // still NULL made "not a single hook fired" indistinguishable from "the

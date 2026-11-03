@@ -18,6 +18,8 @@
 #import "HushRecallGuard.h"
 #import "HushConfig.h"
 #import "HushLogger.h"
+#import "HushAntiRevoke.h"
+#import "HushRuntime.h"
 
 #import <objc/runtime.h>
 #import <limits.h>
@@ -146,6 +148,43 @@ BOOL HushRecallIsForeignRecall(id model, long long *outMsgId) {
     return YES;
 }
 
+
+#pragma mark - persistence
+
+static NSArray<NSString *> *HushRecallContentKeys(void) {
+    return @[@"messageContent", @"content", @"text"];
+}
+
+static NSString *HushRecallModelString(id model, NSArray<NSString *> *keys) {
+    for (NSString *k in keys) {
+        if (!HushModelHasKey(model, k)) continue;
+        @try {
+            id v = [model valueForKey:k];
+            if ([v isKindOfClass:[NSString class]]) return v;
+            if (v) return [v description];
+        } @catch (__unused NSException *e) {
+            continue;
+        }
+    }
+    return @"";
+}
+
+// Called on every successful block: write the row into our own DB (so a restart
+// does not lose it) and dump the hit table right away, because the t1/t4/t12
+// reports are long over by the time a user recalls something.
+static void HushRecallNoteBlocked(id model, long long mid, const char *where) {
+    long long st = HushModelLongLong(model, @[@"sessionType"]);
+    long long sid = HushModelLongLong(model, @[@"sessionId"]);
+    long long type = HushModelLongLong(model, HushRecallTypeKeys());
+    if (st == LLONG_MIN) st = 0;
+    if (sid == LLONG_MIN) sid = 0;
+    if (type == LLONG_MIN) type = HUSH_MSG_TYPE_RECALL;
+
+    HushAntiRevokeRecordBlocked(st, sid, mid, type,
+                                HushRecallModelString(model, HushRecallContentKeys()));
+    HushHitDumpNow(where);
+}
+
 #pragma mark - entry points used by the hook table
 
 void HushRecallFilterAndForward(id self, SEL _cmd, id msgs,
@@ -168,6 +207,7 @@ void HushRecallFilterAndForward(id self, SEL _cmd, id msgs,
             sBlocked++;
             [HushLogger logLevel:3 format:[NSString stringWithFormat:
                 @"[Hush][防撤回] 拦截别人撤回 msgId=%lld（不进内存/UI）", mid]];
+            HushRecallNoteBlocked(m, mid, "ui-array");
             continue;
         }
         [kept addObject:m];
@@ -192,6 +232,56 @@ void HushRecallGuardSingleWrite(id self, SEL _cmd, id model,
             sBlocked++;
             [HushLogger logLevel:3 format:[NSString stringWithFormat:
                 @"[Hush][防撤回] 拦下撤回落库 msgId=%lld（本地记录保持原样）", mid]];
+            HushRecallNoteBlocked(model, mid, "db-write");
+            return;
+        }
+    }
+    orig(self, _cmd, model);
+}
+
+void HushRecallFilterArrayForward(id self, SEL _cmd, id msgs,
+                                  unsigned long long updateType,
+                                  void (*orig)(id, SEL, id, unsigned long long)) {
+    if (!orig) return;
+
+    if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
+        || ![msgs isKindOfClass:[NSArray class]]
+        || [(NSArray *)msgs count] == 0) {
+        orig(self, _cmd, msgs, updateType);
+        return;
+    }
+
+    NSArray *in = (NSArray *)msgs;
+    NSMutableArray *kept = [NSMutableArray arrayWithCapacity:in.count];
+    for (id m in in) {
+        long long mid = 0;
+        if (HushRecallIsForeignRecall(m, &mid)) {
+            sBlocked++;
+            [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                @"[Hush][防撤回] 拦截 UI 刷新 updateType=%llu msgId=%lld（不渲染撤回态）",
+                updateType, mid]];
+            HushRecallNoteBlocked(m, mid, "ui-update");
+            continue;
+        }
+        [kept addObject:m];
+    }
+
+    if (kept.count == in.count) { orig(self, _cmd, msgs, updateType); return; }
+    if (kept.count == 0) return;
+    orig(self, _cmd, kept, updateType);
+}
+
+void HushRecallDropSingleForward(id self, SEL _cmd, id model,
+                                 void (*orig)(id, SEL, id)) {
+    if (!orig) return;
+
+    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
+        long long mid = 0;
+        if (HushRecallIsForeignRecall(model, &mid)) {
+            sBlocked++;
+            [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                @"[Hush][防撤回] 拦下新消息入口 msgId=%lld（不进会话列表）", mid]];
+            HushRecallNoteBlocked(model, mid, "ui-single");
             return;
         }
     }

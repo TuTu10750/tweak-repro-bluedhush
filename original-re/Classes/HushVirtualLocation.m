@@ -152,7 +152,7 @@ static void hush_vloc_didUpdate(id self, SEL _cmd, NSArray *locations) {
 
 #pragma mark - public entry
 
-void HushVirtualLocationInstall(void) {
+int HushVirtualLocationInstall(void) {
     static BOOL installed = NO;
     if (installed) return;
     installed = YES;
@@ -216,11 +216,17 @@ void HushVirtualLocationInstall(void) {
         [hooked addObject:name];
     }
 
-    [HushLogger logLevel:3 format:[NSString stringWithFormat:
-        @"[Hush][VLocCL] 已包装 delegate %lu/%lu 个：%@%@",
-        (unsigned long)hooked.count, (unsigned long)names.count,
-        [hooked componentsJoinedByString:@","],
-        missing.count ? [NSString stringWithFormat:@"（未找到：%@）", [missing componentsJoinedByString:@","]] : @""]];
+    // The retry loop calls this once a second; only speak when something changed.
+    static unsigned long sLastLogged = (unsigned long)-1;
+    if (hooked.count != sLastLogged) {
+        sLastLogged = hooked.count;
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][VLocCL] 已包装 delegate %lu/%lu 个：%@%@",
+            (unsigned long)hooked.count, (unsigned long)names.count,
+            [hooked componentsJoinedByString:@","],
+            missing.count ? [NSString stringWithFormat:@"（未找到：%@）", [missing componentsJoinedByString:@","]] : @""]];
+    }
+    return (int)hooked.count;
 }
 
 #pragma mark - teardown (the [VLoc] ①②②b block)
@@ -370,4 +376,35 @@ void HushVirtualLocationHandleSwitchChange(BOOL on) {
 
     sHasPoint = NO;
     sLat = sLng = 0.0;
+}
+
+#pragma mark - late install
+
+// %ctor runs before the map/ads SDK bundles are loaded, so objc_getClass is empty
+// for all six classes at that moment (v27 logged 0/6). The original wrapped them
+// 10.1-15.1 s after launch, i.e. it waited for the SDKs too.
+static void HushVLocTryInstall(int attempt) {
+    int n = HushVirtualLocationInstall();
+    if (n >= HUSH_VLOC_MAX) {
+        [HushLogger logLevel:3 format:@"[Hush][VLocCL] 6 个 delegate 全部挂载完成"];
+        return;
+    }
+    if (attempt >= 40) {
+        [HushLogger logLevel:2 format:[NSString stringWithFormat:
+            @"[Hush][VLocCL] 重试 %d 次仍只挂上 %d/6 个 → 放弃本轮（SDK 未加载或类名不符）",
+            attempt, n]];
+        return;
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)),
+                   dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        HushVLocTryInstall(attempt + 1);
+    });
+}
+
+void HushVirtualLocationInstallWithRetry(void) {
+    // 3 s first: enough for the host to finish launching, early enough to matter.
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC)),
+                   dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        HushVLocTryInstall(1);
+    });
 }

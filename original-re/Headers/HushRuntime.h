@@ -54,4 +54,9 @@ FOUNDATION_EXPORT BOOL gHushActivationCacheReady;
 // this override" without needing a debugger on the device.
 FOUNDATION_EXPORT void HushHit(const char *cls, const char *sel);
 FOUNDATION_EXPORT void HushHitReport(const char *tag);
+
+/// Dump the hit table right now, from the place it matters. The t1/t4/t12
+/// reports only cover the first twelve seconds of a launch; anything that
+/// happens later (a recall ten minutes in) was invisible until this existed.
+FOUNDATION_EXPORT void HushHitDumpNow(const char *why);
 FOUNDATION_EXPORT void HushInstallHooks(void);

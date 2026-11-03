@@ -37,7 +37,11 @@
 #import <Foundation/Foundation.h>
 
 /// Wrap the six location delegates and start injecting. Idempotent.
-FOUNDATION_EXPORT void HushVirtualLocationInstall(void);
+FOUNDATION_EXPORT int HushVirtualLocationInstall(void);
+
+/// Install with a retry loop: at %ctor time the map/ad SDK frameworks have not
+/// registered their delegate classes yet (the original wrapped them 10-15 s in).
+FOUNDATION_EXPORT void HushVirtualLocationInstallWithRetry(void);
 
 /// YES when a usable fake point is configured (both lat and lng parse).
 FOUNDATION_EXPORT BOOL HushVirtualLocationHasPoint(void);

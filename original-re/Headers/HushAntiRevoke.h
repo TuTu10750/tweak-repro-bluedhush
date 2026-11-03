@@ -17,3 +17,12 @@
 // under __cplusplus, which is why HushInstallHooks(void) in HushRuntime.h never
 // hit this. Keep the two consistent.
 FOUNDATION_EXPORT void HushAntiRevokeStart(void);
+
+/// Persist a packet that HushRecallGuard held back. Written to both `snapshot`
+/// (so a restart does not lose the original text) and `revoked` with reason
+/// `hook-blocked`. Safe to call before Start(): it no-ops when the DB is closed.
+FOUNDATION_EXPORT void HushAntiRevokeRecordBlocked(long long sessionType,
+                                                   long long sessionId,
+                                                   long long messageId,
+                                                   long long messageType,
+                                                   NSString *content);

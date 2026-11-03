@@ -422,6 +422,19 @@ static void HushARUpsertRow(NSDictionary *r) {
     sqlite3_finalize(s);
 }
 
+// 拦截点自己落库：不再依赖宿主把 deleteState 写成 1（我们拦住了写，宿主就不会写），
+// 也不依赖 3 秒轮询——拦下的那一刻就记住。
+void HushAntiRevokeRecordBlocked(long long st, long long sid, long long mid,
+                                 long long type, NSString *content) {
+    if (!gMineDB) return;
+    NSDictionary *r = @{ @"st": @(st), @"sid": @(sid), @"mid": @(mid),
+                         @"lid": @(0), @"type": @(type), @"del": @(1),
+                         @"time": @(HushARNow()),
+                         @"content": content ?: @"", @"extra": @"" };
+    HushARRecordRevoke(r, @"hook-blocked");
+    HushARUpsertRow(r);      // 也进 snapshot，重启后照旧能显示原文
+}
+
 #pragma mark - the poll
 
 // 一次完整往返：读宿主（短连接）→ 内存里判定翻转 → 写我方库 → 关宿主
