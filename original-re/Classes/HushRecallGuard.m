@@ -20,6 +20,7 @@
 #import "HushLogger.h"
 
 #import <objc/runtime.h>
+#import <limits.h>
 
 #define HUSH_MSG_TYPE_RECALL 55
 

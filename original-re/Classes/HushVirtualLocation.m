@@ -25,6 +25,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <objc/runtime.h>
+#import <dispatch/dispatch.h>
 
 #pragma mark - configured point
 
