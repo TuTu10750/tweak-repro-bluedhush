@@ -59,4 +59,13 @@ FOUNDATION_EXPORT void HushHitReport(const char *tag);
 /// reports only cover the first twelve seconds of a launch; anything that
 /// happens later (a recall ten minutes in) was invisible until this existed.
 FOUNDATION_EXPORT void HushHitDumpNow(const char *why);
+
+#pragma mark - 主线程面包屑（v30）
+
+/// Record "we are about to do X" in a lock-free slot. The watchdog reads this
+/// when the main queue stops answering, so a freeze names the last step instead
+/// of leaving us guessing. Keep `where` a string literal: the pointer is stored,
+/// not copied.
+FOUNDATION_EXPORT void HushCrumb(const char *where);
+FOUNDATION_EXPORT const char *HushLastCrumb(void);
 FOUNDATION_EXPORT void HushInstallHooks(void);

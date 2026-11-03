@@ -184,7 +184,14 @@ static const HushDefaultEntry kHushDefaults[] = {
     { "switch_follow_unlock",   NULL, 0, 1 },
     { "runtime_custom_lat",     "",   0, 0 },
     { "runtime_custom_lng",     "",   0, 0 },
+
+    // ---- v30 隔离变量（隐藏 key，不在面板里露出）---------------------------
+    // A/B 定位死锁用：把「拦落库」和「拦 UI」拆成两个独立开关，
+    // 一轮只关一个，就能确定卡死到底落在那条腿上。
+    // 138 = 136（对齐原版 boot 的键数）+ 这 2 个。
+    { "switch_ar_db_block",     NULL, 1, 1 },
+    { "switch_ar_ui_block",     NULL, 1, 1 },
 };
-static const int kHushDefaultsCount = 136;
+static const int kHushDefaultsCount = 138;
 
 #endif

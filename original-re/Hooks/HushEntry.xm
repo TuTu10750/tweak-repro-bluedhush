@@ -14,6 +14,7 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <dispatch/dispatch.h>
+#include <stdio.h>
 
 #import "HushRuntime.h"
 #import "HushConfig.h"
@@ -104,6 +105,54 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     });
 }
 
+// ---- 主线程看门狗（v30）--------------------------------------------------
+// v28 卡死时，表面上"什么都没发生"：日志停在那一条之后没有任何输出，连我们自己
+// 紧接着应该打出来的 hit event: 都没有。分不清是「主线程被宿主挂住」还是
+// 「我们自己的 sqlite 写把主线程堵了」——只能猜。这个看门狗把猜变成测：
+// 后台队列每 2 秒往主队列丢一个标记 block，1.2 秒后检查它有没有被执行。
+// 没被执行 = 主队列这 3.2 秒里一次都没轮到我们 → 主线程被占住。
+// 同时把最后一条面包屑打出来，直接指出卡在哪一步。
+static dispatch_source_t gHushWatchdog = NULL;
+
+static void HushStartWatchdog(void) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        dispatch_queue_t q = dispatch_queue_create("hush.watchdog", DISPATCH_QUEUE_SERIAL);
+        gHushWatchdog = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, q);
+        dispatch_source_set_timer(gHushWatchdog,
+                                  dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)),
+                                  (uint64_t)(2.0 * NSEC_PER_SEC),
+                                  (uint64_t)(200 * NSEC_PER_MSEC));
+        dispatch_source_set_event_handler(gHushWatchdog, ^{
+            @autoreleasepool {
+                __block BOOL answered = NO;
+                dispatch_async(dispatch_get_main_queue(), ^{ answered = YES; });
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.2 * NSEC_PER_SEC)), q, ^{
+                    static int strikes = 0;
+                    if (answered) {
+                        if (strikes > 0) {
+                            strikes = 0;
+                            [HushLogger logLevel:3 format:@"[Watchdog] 主线程已恢复响应"];
+                        }
+                        return;
+                    }
+                    strikes++;
+                    // 卡住时会每 2 秒报一次，只报首次 + 每 10 次，避免把日志刷爆。
+                    if (strikes == 1 || strikes % 10 == 0) {
+                        NSString *line = [NSString stringWithFormat:
+                            @"[Watchdog] ⚠️ 主线程阻塞 ≥3.2s（连续第 %d 次），最后面包屑=%s",
+                            strikes, HushLastCrumb()];
+                        fprintf(stderr, "%s\n", line.UTF8String);
+                        // 级别 1：E 级一定会立刻落盘，不依赖 switch_debug_log。
+                        [HushLogger logLevel:1 format:line];
+                    }
+                });
+            }
+        });
+        dispatch_resume(gHushWatchdog);
+    });
+}
+
 %ctor {
     // 授权门控必须先于任何配置读取：HushConfig 在 gHushActivationCacheReady
     // 还是 NO 时会把受限键一律短路成 NO 并缓存下来，晚一步就会把 17 个开关
@@ -158,4 +207,7 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
     // 放在 hook 之后启动，是因为它自己完全不碰 hook 状态，先后无所谓；
     // 但放在后面能让 hooks(min) 那行先落日志，报告里顺序更好读。
     HushAntiRevokeStart();
+
+    // 看门狗最后起：它只负责在卡死时留下证据，不参与任何业务。
+    HushStartWatchdog();
 }

@@ -187,6 +187,164 @@ static void HushRecallNoteBlocked(id model, long long mid, const char *where) {
 
 #pragma mark - entry points used by the hook table
 
+// ===========================================================================
+// v30：从「过滤/提前返回」改成「原地或副本改造 + 无条件调 %orig」
+//
+// v28 的死锁证据链：只拦 DB（v27）页面正常；一旦加上 updateMessages:updateType:
+// 的过滤并在批次被抽空时不调 %orig，主线程在同一秒停摆，连我们紧接着要打的
+// hit event: 都没有 —— 宿主在这条链上等这次调用把状态推进完，我们提前返回
+// 等于把它的状态机悬住。
+//
+// 所以这里立三条规矩，任何一条都不许破：
+//   R1 数组长度/顺序/指针一个都不动（改造只替换元素，不删元素）；
+//   R2 %orig 无条件调用，参数原样；
+//   R3 改造失败（模型没有 setter）→ 完全放行，宁可漏拦也不挂死。
+//
+// 防污染：优先复制一份再改（宿主 DB 拿到的是原对象，不会被写脏）；模型不支持
+// copy 就原地改，并在 p_updateMessage: 的放行分支里把字段还原成 55/3 —— 那条
+// 腿的写库本来就被我们拦着，宿主读不到撤回态，还原只是防止我们自己把 type=1
+// 泄漏进它的库。
+// ===========================================================================
+
+#pragma mark - 数值 setter 调用（按真实 type encoding 分派）
+
+// 传参宽度必须跟 method 的 encoding 一致，否则 ABI 会读错寄存器。
+// GJIMMessageModel: setType: v24@0:8Q16 / setStatus: v20@0:8C16 —— 一个是 Q
+// 一个是 C，用 KVC 会做隐式转换，直接按 IMP 调才稳。
+static char HushArgTypeChar(const char *enc) {
+    if (!enc) return 0;
+    int idx = 0;
+    const char *p = enc;
+    while (*p) {
+        char c = *p;
+        if (c == 'r' || c == 'n' || c == 'N' || c == 'o' || c == 'O'
+            || c == 'R' || c == 'V' || c == 'A') { p++; continue; }
+        if (idx == 3) return c;
+        idx++;
+        p++;
+        while (*p >= '0' && *p <= '9') p++;
+    }
+    return 0;
+}
+
+static BOOL HushCallSetNumber(id obj, SEL sel, long long v) {
+    if (!obj || !sel || ![obj respondsToSelector:sel]) return NO;
+    Method m = class_getInstanceMethod([obj class], sel);
+    if (!m) return NO;
+    char t = HushArgTypeChar(method_getTypeEncoding(m));
+    IMP imp = method_getImplementation(m);
+    if (!imp) return NO;
+    switch (t) {
+        case 'c': ((void (*)(id, SEL, signed char))imp)(obj, sel, (signed char)v);      return YES;
+        case 'C': ((void (*)(id, SEL, unsigned char))imp)(obj, sel, (unsigned char)v);  return YES;
+        case 's': ((void (*)(id, SEL, short))imp)(obj, sel, (short)v);                  return YES;
+        case 'S': ((void (*)(id, SEL, unsigned short))imp)(obj, sel, (unsigned short)v);return YES;
+        case 'i': ((void (*)(id, SEL, int))imp)(obj, sel, (int)v);                      return YES;
+        case 'I': ((void (*)(id, SEL, unsigned int))imp)(obj, sel, (unsigned int)v);    return YES;
+        case 'l': ((void (*)(id, SEL, long))imp)(obj, sel, (long)v);                    return YES;
+        case 'L': ((void (*)(id, SEL, unsigned long))imp)(obj, sel, (unsigned long)v);  return YES;
+        case 'q': ((void (*)(id, SEL, long long))imp)(obj, sel, v);                     return YES;
+        case 'Q': ((void (*)(id, SEL, unsigned long long))imp)(obj, sel, (unsigned long long)v); return YES;
+        case 'B': ((void (*)(id, SEL, BOOL))imp)(obj, sel, v != 0);                     return YES;
+        case 'f': ((void (*)(id, SEL, float))imp)(obj, sel, (float)v);                  return YES;
+        case 'd': ((void (*)(id, SEL, double))imp)(obj, sel, (double)v);                return YES;
+        default: return NO;
+    }
+}
+
+#pragma mark - 原地改动的登记（供 p_updateMessage: 放行分支还原）
+
+static NSMapTable *HushDirtyTable(void) {
+    static NSMapTable *t = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        // key 弱引用（模型归宿主所有），value 强引用一份原始字段。
+        t = [NSMapTable mapTableWithKeyOptions:(NSPointerFunctionsWeakMemory | NSPointerFunctionsObjectPointerPersonality)
+                                  valueOptions:NSPointerFunctionsStrongMemory];
+    });
+    return t;
+}
+
+static NSLock *HushDirtyLock(void) {
+    static NSLock *l = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ l = [[NSLock alloc] init]; });
+    return l;
+}
+
+static void HushMarkDirtyInPlace(id model, long long type, long long status) {
+    if (!model) return;
+    [HushDirtyLock() lock];
+    [HushDirtyTable() setObject:@{ @"type": @(type), @"status": @(status) } forKey:model];
+    [HushDirtyLock() unlock];
+}
+
+static void HushRestoreDirtyInPlace(id model) {
+    if (!model) return;
+    [HushDirtyLock() lock];
+    NSDictionary *orig = [HushDirtyTable() objectForKey:model];
+    [HushDirtyTable() removeObjectForKey:model];
+    [HushDirtyLock() unlock];
+    if (!orig) return;
+    long long t = [orig[@"type"] longLongValue];
+    long long s = [orig[@"status"] longLongValue];
+    HushCallSetNumber(model, @selector(setType:), (t == LLONG_MIN ? HUSH_MSG_TYPE_RECALL : t));
+    HushCallSetNumber(model, @selector(setStatus:), (s == LLONG_MIN ? 3 : s));
+    [HushLogger logLevel:4 format:@"[Hush][防撤回] 放行前已把原地改造的字段还原（防写入宿主库）"];
+}
+
+#pragma mark - 改造一个撤回包
+
+static long sNeutralized = 0;
+
+// 返回要交给 %orig 的对象；改造不了就原样返回（R3）。
+static id HushRecallNeutralize(id model, long long mid, const char *where) {
+    if (!model) return model;
+
+    HushCrumb("neutralize:probe");
+    long long t = HushModelLongLong(model, HushRecallTypeKeys());
+    long long s = HushModelLongLong(model, @[@"status"]);
+    if (t == LLONG_MIN) t = HUSH_MSG_TYPE_RECALL;
+    if (s == LLONG_MIN) s = 3;
+
+    // 优先副本：宿主 DB 那条腿拿到的是原对象，不会被我们写脏。
+    id target = model;
+    BOOL isolated = NO;
+    if ([model respondsToSelector:@selector(copy)]) {
+        @try {
+            id c = [model copy];
+            if (c && c != model) { target = c; isolated = YES; }
+        } @catch (__unused NSException *e) { }
+    }
+
+    // 55 → 1（普通文本），status 3（已撤回）→ 0，让宿主按普通气泡渲染。
+    BOOL ok = HushCallSetNumber(target, @selector(setType:), 1);
+    HushCallSetNumber(target, @selector(setStatus:), 0);
+
+    if (!ok) {
+        static BOOL warned = NO;
+        if (!warned) {
+            warned = YES;
+            [HushLogger logLevel:2 format:
+                @"[Hush][防撤回] 该模型没有可用的 setType:，退回「完全放行」防止挂死"];
+        }
+        if (isolated) { /* 副本没改成，没用上，直接丢 */ }
+        return model;
+    }
+
+    if (!isolated) HushMarkDirtyInPlace(target, t, s);
+    sNeutralized++;
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][防撤回] 改造 type=55→1 msgId=%lld via %s（%s）",
+        mid, where, isolated ? "副本隔离" : "原地改+落库前还原"]];
+    return target;
+}
+
+static NSUInteger HushNeutralizeCount(void) { return (NSUInteger)sNeutralized; }
+
+#pragma mark - 四个入口
+
+// addMessages:（内存）
 void HushRecallFilterAndForward(id self, SEL _cmd, id msgs,
                                 void (*orig)(id, SEL, id)) {
     if (!orig) return;
@@ -194,96 +352,122 @@ void HushRecallFilterAndForward(id self, SEL _cmd, id msgs,
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
         || ![msgs isKindOfClass:[NSArray class]]
         || [(NSArray *)msgs count] == 0) {
-        orig(self, _cmd, msgs);
+        orig(self, _cmd, msgs);            // R2
         return;
     }
 
     NSArray *in = (NSArray *)msgs;
-    NSMutableArray *kept = [NSMutableArray arrayWithCapacity:in.count];
+    NSUInteger n = in.count;
+    BOOL hit = NO;
 
+    // 先扫一遍判断有没有要改造的：没有就原样直传（绝大多数调用走这条路）。
     for (id m in in) {
         long long mid = 0;
-        if (HushRecallIsForeignRecall(m, &mid)) {
-            sBlocked++;
-            [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][防撤回] 拦截别人撤回 msgId=%lld（不进内存/UI）", mid]];
-            HushRecallNoteBlocked(m, mid, "ui-array");
-            continue;
-        }
-        [kept addObject:m];
+        if (HushRecallIsForeignRecall(m, &mid)) { hit = YES; break; }
+    }
+    if (!hit) { orig(self, _cmd, msgs); return; }   // R2
+
+    NSMutableArray *out = [NSMutableArray arrayWithCapacity:n];   // R1：长度不变
+    for (id m in in) {
+        long long mid = 0;
+        if (!HushRecallIsForeignRecall(m, &mid)) { [out addObject:m]; continue; }
+        sBlocked++;
+        id repl = HushRecallNeutralize(m, mid, "addMessages:");
+        [out addObject:(repl ?: m)];
+        HushRecallNoteBlocked(m, mid, "mem-array");       // 原始对象记账
     }
 
-    if (kept.count == in.count) {          // nothing dropped: untouched path
-        orig(self, _cmd, msgs);
-        return;
-    }
-    if (kept.count == 0) return;           // the whole batch was recall packets
-
-    orig(self, _cmd, kept);
+    HushCrumb("mem-array:orig");
+    orig(self, _cmd, out);                 // R2：一定调用，长度与入参一致
 }
 
+// p_updateMessage:（落库）—— v27 已实测这条路「拦掉不调 orig」不会卡，
+// 但按用户要求仍把「拦」与「改」分开：拦的时候不 call orig，放行时先还原字段。
 void HushRecallGuardSingleWrite(id self, SEL _cmd, id model,
                                 void (*orig)(id, SEL, id)) {
     if (!orig) return;
 
-    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
+    BOOL on = [[HushConfig shared] isEnabled:@"switch_anti_recall"];
+    BOOL blockDb = [[HushConfig shared] isEnabled:@"switch_ar_db_block"];
+
+    if (on && blockDb) {
         long long mid = 0;
+        HushCrumb("db:probe");
         if (HushRecallIsForeignRecall(model, &mid)) {
             sBlocked++;
+            HushCrumb("db:record");
             [HushLogger logLevel:3 format:[NSString stringWithFormat:
                 @"[Hush][防撤回] 拦下撤回落库 msgId=%lld（本地记录保持原样）", mid]];
             HushRecallNoteBlocked(model, mid, "db-write");
-            return;
+            return;                        // 拦写：不调 orig（v27 验证安全）
         }
     }
-    orig(self, _cmd, model);
+
+    // 放行：如果这个对象被我们在 UI 腿上原地改造过，先把字段还原成 55/3，
+    // 免得宿主把我们写进去的 type=1 落进它自己的库。
+    if (on) HushRestoreDirtyInPlace(model);
+    orig(self, _cmd, model);               // R2
 }
 
+// updateMessages:updateType:（UI 批次）—— v28 就死在这条上，重点改造对象。
 void HushRecallFilterArrayForward(id self, SEL _cmd, id msgs,
                                   unsigned long long updateType,
                                   void (*orig)(id, SEL, id, unsigned long long)) {
     if (!orig) return;
 
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
+        || ![[HushConfig shared] isEnabled:@"switch_ar_ui_block"]
         || ![msgs isKindOfClass:[NSArray class]]
         || [(NSArray *)msgs count] == 0) {
-        orig(self, _cmd, msgs, updateType);
+        orig(self, _cmd, msgs, updateType);            // R2
         return;
     }
 
     NSArray *in = (NSArray *)msgs;
-    NSMutableArray *kept = [NSMutableArray arrayWithCapacity:in.count];
+    NSUInteger n = in.count;
+    BOOL hit = NO;
     for (id m in in) {
         long long mid = 0;
-        if (HushRecallIsForeignRecall(m, &mid)) {
-            sBlocked++;
-            [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][防撤回] 拦截 UI 刷新 updateType=%llu msgId=%lld（不渲染撤回态）",
-                updateType, mid]];
-            HushRecallNoteBlocked(m, mid, "ui-update");
-            continue;
-        }
-        [kept addObject:m];
+        if (HushRecallIsForeignRecall(m, &mid)) { hit = YES; break; }
+    }
+    if (!hit) { orig(self, _cmd, msgs, updateType); return; }   // R2
+
+    NSMutableArray *out = [NSMutableArray arrayWithCapacity:n];  // R1
+    for (id m in in) {
+        long long mid = 0;
+        if (!HushRecallIsForeignRecall(m, &mid)) { [out addObject:m]; continue; }
+        sBlocked++;
+        id repl = HushRecallNeutralize(m, mid, "ui-update");
+        [out addObject:(repl ?: m)];
+        // 记账放在调 orig 之前：万一宿主在这条链上仍然挂住，hit event: 已经落了。
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][防撤回] UI 批次改造 updateType=%llu msgId=%lld（数量不变 %lu，累计改造 %lu）",
+            updateType, mid, (unsigned long)n, (unsigned long)HushNeutralizeCount()]];
+        HushRecallNoteBlocked(m, mid, "ui-update");
     }
 
-    if (kept.count == in.count) { orig(self, _cmd, msgs, updateType); return; }
-    if (kept.count == 0) return;
-    orig(self, _cmd, kept, updateType);
+    HushCrumb("ui-update:orig");
+    orig(self, _cmd, out, updateType);     // R2：长度与 updateType 都原样
 }
 
+// receiveNewMessage:（单条进会话）
 void HushRecallDropSingleForward(id self, SEL _cmd, id model,
                                  void (*orig)(id, SEL, id)) {
     if (!orig) return;
 
-    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
+    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]
+        && [[HushConfig shared] isEnabled:@"switch_ar_ui_block"]) {
         long long mid = 0;
         if (HushRecallIsForeignRecall(model, &mid)) {
             sBlocked++;
+            id repl = HushRecallNeutralize(model, mid, "receiveNewMessage:");
             [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][防撤回] 拦下新消息入口 msgId=%lld（不进会话列表）", mid]];
+                @"[Hush][防撤回] 单条改造 msgId=%lld（照常进会话，不渲染撤回态）", mid]];
             HushRecallNoteBlocked(model, mid, "ui-single");
+            HushCrumb("ui-single:orig");
+            orig(self, _cmd, repl ?: model);          // R2
             return;
         }
     }
-    orig(self, _cmd, model);
+    orig(self, _cmd, model);                          // R2
 }

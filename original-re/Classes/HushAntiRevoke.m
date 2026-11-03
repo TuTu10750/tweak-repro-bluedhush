@@ -426,13 +426,30 @@ static void HushARUpsertRow(NSDictionary *r) {
 // 也不依赖 3 秒轮询——拦下的那一刻就记住。
 void HushAntiRevokeRecordBlocked(long long st, long long sid, long long mid,
                                  long long type, NSString *content) {
-    if (!gMineDB) return;
-    NSDictionary *r = @{ @"st": @(st), @"sid": @(sid), @"mid": @(mid),
-                         @"lid": @(0), @"type": @(type), @"del": @(1),
-                         @"time": @(HushARNow()),
-                         @"content": content ?: @"", @"extra": @"" };
-    HushARRecordRevoke(r, @"hook-blocked");
-    HushARUpsertRow(r);      // 也进 snapshot，重启后照旧能显示原文
+    // v30：主线程零 sqlite。
+    // v28 卡死时这条路径（拦下撤回落库 → 直接写库 → 打 hit event）是从主线程
+    // 进来的，而轮询线程此时可能正持着 BEGIN IMMEDIATE。两个线程同时用同一个
+    // sqlite 句柄，gMineDB 又是默认 FULLMUTEX 之外的用法，最坏情况就是互相等。
+    // 现在只做「拷一份数据 + 扔进轮询那条串行队列」，真正的写库与轮询共用
+    // 同一个 serial queue，天然互斥，主线程立刻返回。
+    NSString *copy = content ? [content copy] : @"";
+    if (!gStarted) {
+        // Start 还没跑（或已失败）：不排队，避免 Forever 堆积。
+        return;
+    }
+    if (!gQueue) return;
+
+    dispatch_async(gQueue, ^{
+        @autoreleasepool {
+            if (!gMineDB) { if (!HushAROpenMine()) return; }
+            NSDictionary *r = @{ @"st": @(st), @"sid": @(sid), @"mid": @(mid),
+                                 @"lid": @(0), @"type": @(type), @"del": @(1),
+                                 @"time": @(HushARNow()),
+                                 @"content": copy, @"extra": @"" };
+            HushARRecordRevoke(r, @"hook-blocked");
+            HushARUpsertRow(r);   // 也进 snapshot，重启后照旧能显示原文
+        }
+    });
 }
 
 #pragma mark - the poll

@@ -410,14 +410,35 @@ void HushVirtualLocationHandleSwitchChange(BOOL on) {
 
     if (on) {
         HushVLocReloadPoint();
-        [HushLogger logLevel:3 format:[NSString stringWithFormat:
-            @"[Hush][VLoc] 虚拟定位 生效（lat=%.6f lng=%.6f，%lu 个 delegate 已包装）",
-            sLat, sLng, (unsigned long)sSlotCount]];
+        // 文案必须跟真实挂载数一致。v28 在 0 个入口挂载时照样打「虚拟定位 生效」，
+        // 结果用户关开关后宿主弹「已到达新城市」，看起来像生效过 —— 其实是我们在
+        // 收尾里清缓存 + 重启 GPS 造成的。0 挂载就直说没接管。
+        if (sSlotCount > 0) {
+            [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                @"[Hush][VLoc] 已开启且 %d 个入口已挂载 → 虚拟定位生效（lat=%.6f lng=%.6f）",
+                sSlotCount, sLat, sLng]];
+        } else {
+            [HushLogger logLevel:2 format:[NSString stringWithFormat:
+                @"[Hush][VLoc] 已开启，但 0 个入口挂载 → 当前不生效（点位=%.6f,%.6f，等 delegate 出现后自动接管）",
+                sLat, sLng]];
+        }
         return;
     }
 
     if (!sHasPoint) {
         [HushLogger logLevel:3 format:@"[Hush][VLoc] 开关关闭，但当前没有生效中的虚拟点（无需收尾）"];
+        return;
+    }
+
+    // v30：没接管过就别收尾。
+    // 收尾会删宿主持久化键、把定位单例坐标置空、stop+start GPS —— 这些动作本身
+    // 就会让宿主以为「你换了城市」。sSlotCount == 0 表示一个槽都没挂上，等于我们
+    // 从头到尾没改过任何坐标，去做收尾纯属破坏。
+    if (sSlotCount == 0) {
+        [HushLogger logLevel:3 format:
+            @"[Hush][VLoc] 开关关闭，但 0 个入口曾挂载（从未接管坐标）→ 跳过收尾，不动宿主缓存与 GPS"];
+        sHasPoint = NO;
+        sLat = 0.0; sLng = 0.0;
         return;
     }
 

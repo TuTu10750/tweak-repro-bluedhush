@@ -250,6 +250,20 @@ void HushHit(const char *cls, const char *sel) {
     [gHitLock unlock];
 }
 
+// ---- 面包屑 ---------------------------------------------------------------
+// 一个原子指针，写侧不加锁（只存字面量地址，不释放任何东西），读侧给看门狗用。
+// 只在真正会阻塞的路径上打点：进 hook、查 uid、入队、调用 %orig。
+static const char * volatile sHushCrumb = "boot";
+
+void HushCrumb(const char *where) {
+    sHushCrumb = where ? where : "";
+}
+
+const char *HushLastCrumb(void) {
+    const char *p = sHushCrumb;
+    return p ? p : "";
+}
+
 void HushHitDumpNow(const char *why) {
     // Same body as the timed report, but triggered by an event we care about.
     char tag[64];
