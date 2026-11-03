@@ -8,7 +8,10 @@
 //  * The original wraps the delegate the host installs, not CLLocationManager
 //    itself.  Hooking the system class would leak into every framework process
 //    and also miss providers that hand us their own fix (Baidu/KS ad SDKs).
-//    We hook the six classes the reference log names, on `didUpdateLocations:`.
+//    We hook the classes that actually own `locationManager:didUpdateLocations:`
+//    (seven of them, plus startUpdatingLocation and CLLocationManager setDelegate).
+//    The original log prints `didUpdateLocations` as shorthand; the real selector
+//    has the manager prefix — the main binary has zero owners of the shorthand.
 //
 //  * Every wrapper is a table entry so one body can serve all six: the body
 //    looks the receiver's class up in the install table to find its own `prev`.
@@ -87,25 +90,46 @@ BOOL HushVirtualLocationPoint(double *lat, double *lng) {
 
 #pragma mark - install table
 
-#define HUSH_VLOC_MAX 8
+// Three families, one body each.  The slot carries its selector so a receiver
+// whose class appears twice (BDMessageViewController style subclasses) still
+// resolves the original that belongs to that selector.
+#define HUSH_VLOC_MAX 16
+
+// 9 delegate owners + 4 startUpdatingLocation owners + CLLocationManager setDelegate
+#define HUSH_VLOC_EXPECTED 14
+
+enum {
+    HushVLocKindDidUpdate = 0,   // locationManager:didUpdateLocations:
+    HushVLocKindStart,           // startUpdatingLocation
+    HushVLocKindSetDelegate,     // CLLocationManager -setDelegate:
+};
 
 typedef struct {
     __unsafe_unretained Class cls;
     __unsafe_unretained NSString *name;
+    SEL sel;
+    int kind;
     IMP prev;
 } hush_vloc_slot;
 
 static hush_vloc_slot sSlots[HUSH_VLOC_MAX];
 static int sSlotCount = 0;
 
-static IMP HushVLocPrevFor(id self) {
+static IMP HushVLocPrevFor(id self, SEL sel) {
     Class c = object_getClass(self);
     for (Class k = c; k != Nil; k = class_getSuperclass(k)) {
         for (int i = 0; i < sSlotCount; i++) {
-            if (sSlots[i].cls == k) return sSlots[i].prev;
+            if (sSlots[i].cls == k && sSlots[i].sel == sel) return sSlots[i].prev;
         }
     }
     return NULL;
+}
+
+static BOOL HushVLocAlreadyHooked(Class c, SEL sel) {
+    for (int i = 0; i < sSlotCount; i++) {
+        if (sSlots[i].cls == c && sSlots[i].sel == sel) return YES;
+    }
+    return NO;
 }
 
 // Same three-way resolution HushHooks.m uses: ObjC name, then the Swift-mangled
@@ -118,116 +142,195 @@ static Class HushVLocResolveClass(NSString *name) {
     if ([name rangeOfString:@"."].location == NSNotFound) {
         c = NSClassFromString([@"Blued." stringByAppendingString:name]);
         if (c) return c;
+    } else {
+        NSString *tail = [name componentsSeparatedByString:@"."].lastObject;
+        c = objc_getClass(tail.UTF8String);
+        if (c) return c;
+        c = NSClassFromString(tail);
+        if (c) return c;
     }
     return Nil;
 }
 
-#pragma mark - the one hook body
+// The receiver's class already owns this selector, so method_setImplementation
+// gives us the real old IMP.  Anything else is "not present here" — and a
+// delegate protocol method is never worth a synthetic class_addMethod: the host
+// would never call it, so the hook would look installed while doing nothing
+// (v28 shipped exactly that bug on six classes).
+static IMP HushVLocHookOwn(Class c, SEL sel, IMP repl, int kind, NSString *name) {
+    if (HushVLocAlreadyHooked(c, sel)) return (IMP)1;   // already ours, count it
 
-static void hush_vloc_didUpdate(id self, SEL _cmd, NSArray *locations) {
-    IMP prev = HushVLocPrevFor(self);
-    if (!prev) return;
-    void (*orig)(id, SEL, id) = (void (*)(id, SEL, id))prev;
-
-    if (![[HushConfig shared] isEnabled:@"switch_virtual_location"] || !HushVirtualLocationHasPoint()) {
-        orig(self, _cmd, locations);
-        return;
+    unsigned int cnt = 0;
+    Method own = NULL;
+    Method *list = class_copyMethodList(c, &cnt);
+    if (list) {
+        for (unsigned int i = 0; i < cnt; i++) {
+            if (method_getName(list[i]) == sel) { own = list[i]; break; }
+        }
+        free(list);
     }
+    if (!own || sSlotCount >= HUSH_VLOC_MAX) return NULL;
 
-    HushHit(NSStringFromClass(object_getClass(self)).UTF8String, "didUpdateLocations:");
+    IMP prev = method_setImplementation(own, repl);
+    if (!prev || prev == repl) return NULL;
 
-    CLLocation *fake = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(sLat, sLng)
-                                                     altitude:0.0
-                                           horizontalAccuracy:5.0
-                                             verticalAccuracy:5.0
-                                                    timestamp:[NSDate date]];
-    // Replace whatever the provider reported, but keep the callback shape: some
-    // callers index [0] unconditionally and would crash on an empty array.
+    sSlots[sSlotCount].cls = c;
+    sSlots[sSlotCount].name = name;
+    sSlots[sSlotCount].sel = sel;
+    sSlots[sSlotCount].kind = kind;
+    sSlots[sSlotCount].prev = prev;
+    sSlotCount++;
+    return prev;
+}
+
+#pragma mark - the hook bodies
+
+static CLLocation *HushVLocFakeLocation(void) {
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(sLat, sLng)
+                                         altitude:0.0
+                               horizontalAccuracy:5.0
+                                 verticalAccuracy:5.0
+                                        timestamp:[NSDate date]];
+}
+
+static BOOL HushVLocActive(void) {
+    return [[HushConfig shared] isEnabled:@"switch_virtual_location"]
+        && HushVirtualLocationHasPoint();
+}
+
+// reference log: [VLocCL] 主动投递假位置（startUpdatingLocation）
+static void HushVLocDeliverTo(id target, id manager) {
+    if (!target) return;
+    SEL s = sel_registerName("locationManager:didUpdateLocations:");
+    if (![target respondsToSelector:s]) return;
+    CLLocation *fake = HushVLocFakeLocation();
+    [(id)target performSelector:s withObject:manager withObject:@[fake]];
+}
+
+// body 1: the delegate callback the host actually implements
+static void hush_vloc_didUpdate(id self, SEL _cmd, id manager, NSArray *locations) {
+    IMP prev = HushVLocPrevFor(self, _cmd);
+    if (!prev || prev == (IMP)1) return;
+    void (*orig)(id, SEL, id, id) = (void (*)(id, SEL, id, id))prev;
+
+    if (!HushVLocActive()) { orig(self, _cmd, manager, locations); return; }
+
+    HushHit(NSStringFromClass(object_getClass(self)).UTF8String,
+            "locationManager:didUpdateLocations:");
+
+    // Keep the callback shape: some callers index [0] unconditionally and would
+    // crash on an empty array.
     NSUInteger n = locations.count ? locations.count : 1;
     NSMutableArray *out = [NSMutableArray arrayWithCapacity:n];
-    for (NSUInteger i = 0; i < n; i++) [out addObject:fake];
+    for (NSUInteger i = 0; i < n; i++) [out addObject:HushVLocFakeLocation()];
+    orig(self, _cmd, manager, out);
+}
 
-    orig(self, _cmd, out);
+// body 2: the provider starts its own updates — answer the question right away
+// instead of waiting for the first real fix to come back and be replaced.
+static void hush_vloc_start(id self, SEL _cmd) {
+    IMP prev = HushVLocPrevFor(self, _cmd);
+    if (!prev || prev == (IMP)1) return;
+    void (*orig)(id, SEL) = (void (*)(id, SEL))prev;
+    orig(self, _cmd);
+    if (!HushVLocActive()) return;
+    HushHit(NSStringFromClass(object_getClass(self)).UTF8String, "startUpdatingLocation");
+    HushVLocDeliverTo([self valueForKey:@"delegate"], self);
+}
+
+// body 3: the app attaches its delegate after we already know the point.
+static void hush_vloc_setDelegate(id self, SEL _cmd, id delegate) {
+    IMP prev = HushVLocPrevFor(self, _cmd);
+    if (!prev || prev == (IMP)1) return;
+    void (*orig)(id, SEL, id) = (void (*)(id, SEL, id))prev;
+    orig(self, _cmd, delegate);
+    if (!HushVLocActive()) return;
+    HushHit("CLLocationManager", "setDelegate:");
+    HushVLocDeliverTo(delegate, self);
+}
+
+static int HushVLocCountKind(int kind) {
+    int n = 0;
+    for (int i = 0; i < sSlotCount; i++) if (sSlots[i].kind == kind) n++;
+    return n;
 }
 
 #pragma mark - public entry
 
-int HushVirtualLocationInstall(void) {
-    static BOOL installed = NO;
-    if (installed) return;
-    installed = YES;
-
-    HushVLocReloadPoint();
-
-    // Straight from the reference log's [VLocCL] 已包装 delegate … lines.
-    NSArray<NSString *> *names = @[
+// Reference log owners, all v32@0:8@16@24.  The colon-less `didUpdateLocations`
+// in the original's log line is its own print shorthand — the real selector here
+// is the delegate one, and the main binary has zero owners of the shorthand.
+static NSArray<NSString *> *HushVLocDelegateClasses(void) {
+    return @[
         @"SmGpsDelegate",
         @"BMKLocationManager",
         @"BaiduMobAdLocationManager",
         @"BUSDKLocation",
         @"KSAdLocationManager",
         @"GTCGbdLService",
+        @"BDLocationService",
+        @"BDAppleMapViewController",
+        @"BMKGeoFenceManager",
     ];
+}
 
-    SEL sel = @selector(didUpdateLocations:);
-    NSMutableArray *hooked = [NSMutableArray array];
+static NSArray<NSString *> *HushVLocStartClasses(void) {
+    return @[@"BMKLocationManager", @"BMKGeoFenceManager",
+             @"BaiduMobAdLocationManager", @"IphoneGPSMan"];
+}
+
+// Idempotent by design: every call only fills the gaps, so the retry loop can
+// run once a second without re-wrapping what is already ours (v28's
+// `static BOOL installed` turned attempt 2..40 into no-ops).
+int HushVirtualLocationInstall(void) {
+    HushVLocReloadPoint();
+
+    SEL didUpdate = sel_registerName("locationManager:didUpdateLocations:");
+    SEL start = sel_registerName("startUpdatingLocation");
+    SEL setDelegate = sel_registerName("setDelegate:");
+
     NSMutableArray *missing = [NSMutableArray array];
 
-    for (NSString *name in names) {
-        if (sSlotCount >= HUSH_VLOC_MAX) break;
+    for (NSString *name in HushVLocDelegateClasses()) {
         Class c = HushVLocResolveClass(name);
-        if (!c) { [missing addObject:name]; continue; }
-
-        unsigned int cnt = 0;
-        Method own = NULL;
-        Method *list = class_copyMethodList(c, &cnt);
-        if (list) {
-            for (unsigned int i = 0; i < cnt; i++) {
-                if (method_getName(list[i]) == sel) { own = list[i]; break; }
-            }
-            free(list);
+        if (!c) { [missing addObject:[name stringByAppendingString:@"(无此类)"]]; continue; }
+        if (!class_getInstanceMethod(c, didUpdate)) {
+            // Never synthesize a delegate method: nobody would call it.
+            [missing addObject:[name stringByAppendingString:@"(无此方法)"]]; continue;
         }
-
-        IMP prev = NULL;
-        const char *types = NULL;
-        if (own) {
-            // Owns it: only method_setImplementation returns the real old IMP.
-            types = method_getTypeEncoding(own);
-            prev = method_setImplementation(own, (IMP)&hush_vloc_didUpdate);
-        } else {
-            Method inh = class_getInstanceMethod(c, sel);
-            types = inh ? method_getTypeEncoding(inh) : "v24@0:8@16";
-            // Inherited or absent: add an override here and remember the parent
-            // IMP as the thing to call. The parent's Method is never touched.
-            IMP parent = inh ? method_getImplementation(inh) : NULL;
-            if (class_addMethod(c, sel, (IMP)&hush_vloc_didUpdate, types)) {
-                prev = parent;
-            } else {
-                IMP old = class_replaceMethod(c, sel, (IMP)&hush_vloc_didUpdate, types);
-                prev = (old && old != (IMP)&hush_vloc_didUpdate) ? old : NULL;
-            }
-        }
-        if (!prev) { [missing addObject:name]; continue; }
-
-        sSlots[sSlotCount].cls = c;
-        sSlots[sSlotCount].name = name;
-        sSlots[sSlotCount].prev = prev;
-        sSlotCount++;
-        [hooked addObject:name];
+        HushVLocHookOwn(c, didUpdate, (IMP)&hush_vloc_didUpdate,
+                        HushVLocKindDidUpdate, name);
     }
 
-    // The retry loop calls this once a second; only speak when something changed.
-    static unsigned long sLastLogged = (unsigned long)-1;
-    if (hooked.count != sLastLogged) {
-        sLastLogged = hooked.count;
+    for (NSString *name in HushVLocStartClasses()) {
+        Class c = HushVLocResolveClass(name);
+        if (!c) continue;
+        if (!class_getInstanceMethod(c, start)) continue;
+        HushVLocHookOwn(c, start, (IMP)&hush_vloc_start, HushVLocKindStart, name);
+    }
+
+    Class clm = objc_getClass("CLLocationManager");
+    if (clm && class_getInstanceMethod(clm, setDelegate)) {
+        HushVLocHookOwn(clm, setDelegate, (IMP)&hush_vloc_setDelegate,
+                        HushVLocKindSetDelegate, @"CLLocationManager");
+    }
+
+    // Speak only when the number changes: the retry loop calls this every second.
+    static int sLastLogged = -1;
+    if (sSlotCount != sLastLogged) {
+        sLastLogged = sSlotCount;
         [HushLogger logLevel:3 format:[NSString stringWithFormat:
-            @"[Hush][VLocCL] 已包装 delegate %lu/%lu 个：%@%@",
-            (unsigned long)hooked.count, (unsigned long)names.count,
-            [hooked componentsJoinedByString:@","],
-            missing.count ? [NSString stringWithFormat:@"（未找到：%@）", [missing componentsJoinedByString:@","]] : @""]];
+            @"[Hush][VLocCL] 已包装 %d 个入口（delegate %d / start %d / setDelegate %d）%@",
+            sSlotCount,
+            HushVLocCountKind(HushVLocKindDidUpdate),
+            HushVLocCountKind(HushVLocKindStart),
+            HushVLocCountKind(HushVLocKindSetDelegate),
+            missing.count ? [NSString stringWithFormat:@"（缺：%@）",
+                             [missing componentsJoinedByString:@","]] : @""]];
     }
-    return (int)hooked.count;
+    return sSlotCount;
 }
+
 
 #pragma mark - teardown (the [VLoc] ①②②b block)
 
@@ -385,14 +488,15 @@ void HushVirtualLocationHandleSwitchChange(BOOL on) {
 // 10.1-15.1 s after launch, i.e. it waited for the SDKs too.
 static void HushVLocTryInstall(int attempt) {
     int n = HushVirtualLocationInstall();
-    if (n >= HUSH_VLOC_MAX) {
-        [HushLogger logLevel:3 format:@"[Hush][VLocCL] 6 个 delegate 全部挂载完成"];
+    if (n >= HUSH_VLOC_EXPECTED) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][VLocCL] 全部 %d 个入口挂载完成（第 %d 次扫描）", n, attempt]];
         return;
     }
     if (attempt >= 40) {
         [HushLogger logLevel:2 format:[NSString stringWithFormat:
-            @"[Hush][VLocCL] 重试 %d 次仍只挂上 %d/6 个 → 放弃本轮（SDK 未加载或类名不符）",
-            attempt, n]];
+            @"[Hush][VLocCL] 重试 %d 次仍只挂上 %d/%d 个 → 放弃本轮（见上一条「缺」清单）",
+            attempt, n, HUSH_VLOC_EXPECTED]];
         return;
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)),
