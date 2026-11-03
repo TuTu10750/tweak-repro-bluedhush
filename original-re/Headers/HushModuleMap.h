@@ -115,6 +115,8 @@ static const HushToggleEntry kHushToggles[] = {
     { "switch_device_empty", "设备码返回空值", "风控取指纹时返回空值（与上一项二选一）", "立即生效", 8, 1, NULL, 0 },
     { "switch_device_intercept", "拦截设备指纹上传", "阻止把设备指纹上传给服务器", "立即生效", 8, 1, NULL, 0 },
     { "switch_bugly_off", "关闭崩溃上报（诊断）", "关掉 Bugly，崩溃改落系统报告（查完关回）", "立即生效", 8, 1, NULL, 0 },
+    { "switch_ar_db_block", "防撤回·拦落库（诊断）", "A/B 用：关掉后不拦 p_updateMessage，消息会变灰消失但重进还在", "立即生效", 8, 1, NULL, 1 },
+    { "switch_ar_ui_block", "防撤回·拦界面（诊断）", "A/B 用：关掉后不改写批次里的撤回包，界面按宿主原样渲染", "立即生效", 8, 1, NULL, 1 },
     { "purify_nearby_ad", "身边列表广告", "去掉身边列表里插入的推广用户", "立即生效", 0, 1, NULL, 0 },
     { "purify_visitor_ad", "来访页广告", "去掉来访页里的广告位", "立即生效", 0, 1, NULL, 0 },
     { "switch_visitor_unlock", "解锁查看所有访客记录", "非会员也能看全部来访：卡片不模糊、自动加载全部", "立即生效", 2, 1, NULL, 0 },
@@ -151,6 +153,6 @@ static const HushToggleEntry kHushToggles[] = {
     { "switch_no_data_collect", "拦截事件上报", "拦截行为埋点上报", "需重启 App", 0, 1, NULL, 0 },
     { "switch_purify_mine_page", "我的页整体净化", "「我的」页只留核心功能", "立即生效", 0, 1, NULL, 0 },
 };
-static const int kHushToggleCount = 130;
+static const int kHushToggleCount = 132;
 
 #endif
