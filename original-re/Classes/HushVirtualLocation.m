@@ -323,7 +323,7 @@ void HushVirtualLocationHandleSwitchChange(BOOL on) {
     }
     [ud synchronize];
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
-        @"[Hush][VLoc] 观测到「虚拟定位 生效 → 失效」，开始清缓存并刷新真实位置"];
+        @"[Hush][VLoc] 观测到「虚拟定位 生效 → 失效」，开始清缓存并刷新真实位置"]];
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
         @"[Hush][VLoc] ① 已清宿主持久化缓存：%@",
         cleared.count ? [cleared componentsJoinedByString:@", "] : @"（无命中键）"]];
