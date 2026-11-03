@@ -44,3 +44,9 @@ FOUNDATION_EXPORT BOOL HushVirtualLocationHasPoint(void);
 
 /// Current configured point. Returns NO when unset.
 FOUNDATION_EXPORT BOOL HushVirtualLocationPoint(double *lat, double *lng);
+
+/// Called when switch_virtual_location flips. Turning it OFF must tear the fake
+/// fix down, otherwise the host keeps serving the virtual point until relaunch:
+/// that is the original's three-step cleanup (persisted cache → in-memory cache
+/// → restart the real GPS). See the log evidence in HushVirtualLocation.m.
+FOUNDATION_EXPORT void HushVirtualLocationHandleSwitchChange(BOOL on);

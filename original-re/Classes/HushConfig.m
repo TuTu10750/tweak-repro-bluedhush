@@ -21,6 +21,7 @@
 
 #import "HushConfig.h"
 #import "HushActivation.h"
+#import "HushVirtualLocation.h"
 #import "HushKeys.h"
 #import "HushLogger.h"
 #import <objc/runtime.h>
@@ -231,6 +232,11 @@ static dispatch_once_t gHushSharedOnce;
     // 「日志等级」是唯一一个必须立刻反映到运行时的开关：面板是通用渲染，
     // 点一下只走 setEnabled:forKey:，从不经过 +persistLevel:，于是 gHushLogLevel
     // 停着不动 —— 开关能点能存，但一行日志都不变。这里回灌一次补上反方向。
+    // 虚拟定位关掉时必须做收尾，否则假坐标会留到下次冷启动。
+    // 原版在开关由开变关的瞬间打三段日志（①持久化 ②内存 ②b重启 GPS）。
+    if ([a1 isKindOfClass:[NSString class]] && [a1 isEqualToString:@"switch_virtual_location"]) {
+        HushVirtualLocationHandleSwitchChange(a0 ? YES : NO);
+    }
     if ([a1 isKindOfClass:[NSString class]] && [a1 isEqualToString:@"switch_debug_log"]) {
         [HushLogger setLevel:(a0 ? 5 : 3)];
     }

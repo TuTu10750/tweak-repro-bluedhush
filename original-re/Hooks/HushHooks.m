@@ -44,6 +44,7 @@
 #import "HushRuntime.h"
 #import "HushConfig.h"
 #import "HushLogger.h"
+#import "HushRecallGuard.h"
 
 extern void HushHit(const char *cls, const char *sel);
 
@@ -89,6 +90,20 @@ static Class hush_resolve_class(const char *name) {
         if (c) return c;
     }
     return Nil;
+}
+
+// 22/23: the two nodes the reference log says actually carry a recall packet.
+// Both forward instead of swallowing the call — see HushRecallGuard.m.
+static void (*o_sessionAddMessages)(id, SEL, id);
+static void r_sessionAddMessages(id self, SEL _cmd, id a0) {
+    HushHit("GJIMSessionService", "addMessages:");
+    HushRecallFilterAndForward(self, _cmd, a0, o_sessionAddMessages);
+}
+
+static void (*o_dbUpdateMessage)(id, SEL, id);
+static void r_dbUpdateMessage(id self, SEL _cmd, id a0) {
+    HushHit("GJIMDBService", "p_updateMessage:");
+    HushRecallGuardSingleWrite(self, _cmd, a0, o_dbUpdateMessage);
 }
 
 // ---------------------------------------------------------------- install
@@ -332,7 +347,7 @@ static void r_fetchMore(id self, SEL _cmd, id a0, BOOL a1, BOOL a2) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 21
+#define HUSH_TARGET_COUNT 23
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -515,6 +530,18 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_fetchMore, "v32@0:8@16B24B28");
         if (strcmp(r.kind, "MISSING") != 0) o_fetchMore = (void (*)(id, SEL, id, BOOL, BOOL))r.prev;
         hush_report(20, "GJIMMessageService", "fetchMoreMessagesFromMessage:isTempChat:isDown:", r);
+    }
+    if (!s_done[21]) {
+        SEL s = sel_registerName("addMessages:");
+        hush_installed r = hush_install_impl(cSes, s, (IMP)&r_sessionAddMessages, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_sessionAddMessages = (void (*)(id, SEL, id))r.prev;
+        hush_report(21, "GJIMSessionService", "addMessages:", r);
+    }
+    if (!s_done[22]) {
+        SEL s = sel_registerName("p_updateMessage:");
+        hush_installed r = hush_install_impl(cDB, s, (IMP)&r_dbUpdateMessage, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_dbUpdateMessage = (void (*)(id, SEL, id))r.prev;
+        hush_report(22, "GJIMDBService", "p_updateMessage:", r);
     }
 
 
