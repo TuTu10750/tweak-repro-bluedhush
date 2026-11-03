@@ -258,13 +258,15 @@ static void r_menuReload(id self, SEL _cmd) {
     if (o_menuReload) o_menuReload(self, _cmd);
 }
 
-// 13. PrivateChatViewController -layoutSubviews     UIViewController has no
-//     layoutSubviews, so this is expected added unless the class is a view.
-static void (*o_chatLayout)(id, SEL);
-static void r_chatLayout(id self, SEL _cmd) {
-    HushHit("PrivateChatViewController", "layoutSubviews");
-    if (o_chatLayout) o_chatLayout(self, _cmd);
-}
+// 13. PrivateChatViewController -layoutSubviews   *** REMOVED IN v26 ***
+//     This target landed on the `added` branch: the controller has no method of
+//     its own and UIViewController never implements layoutSubviews, so
+//     class_addMethod() put a stub on the controller itself. That stub sits in
+//     front of nothing useful but it does shadow the lookup for every subclass
+//     instance that walks the chain looking for a layout hook. Removing it is
+//     the only way to tell whether the empty private-chat list was caused by
+//     this install or by the recall probes. Slot 12 is kept (marked done) so the
+//     per-target indices of every later probe stay stable.
 
 // 14. PrivateChatViewController -viewDidAppear:   (v20@0:8B16, BOOL argument)
 static void (*o_chatViewDidAppear)(id, SEL, BOOL);
@@ -459,10 +461,10 @@ void HushInstallHooks(void) {
         hush_report(11, "Blued.BDCustomMenuView", "reloadData", r);
     }
     if (!s_done[12]) {
-        SEL s = sel_registerName("layoutSubviews");
-        hush_installed r = hush_install_impl(cChat, s, (IMP)&r_chatLayout, "v16@0:8");
-        if (strcmp(r.kind, "MISSING") != 0) o_chatLayout = (void (*)(id, SEL))r.prev;
-        hush_report(12, "PrivateChatViewController", "layoutSubviews", r);
+        // REMOVED IN v26: see the slot-13 comment above. Marking it done keeps
+        // the "still pending retry" counter at zero and lets the table report
+        // total=20 instead of waiting forever on a probe that no longer runs.
+        s_done[12] = YES;
     }
     if (!s_done[13]) {
         SEL s = sel_registerName("viewDidAppear:");
