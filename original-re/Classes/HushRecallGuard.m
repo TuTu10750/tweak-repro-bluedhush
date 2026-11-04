@@ -754,7 +754,7 @@ static UIViewController *HushRecallTopViewController(void) {
             vc = [[sp viewControllers] lastObject];
             continue;
         }
-        NSArray *kids = [vc children];
+        NSArray *kids = [vc childViewControllers];
         if (kids.count == 0) break;
         vc = [kids lastObject];
     }
@@ -765,7 +765,7 @@ static UIViewController *HushRecallTopViewController(void) {
 // 视图子树（深度 3）。宿主是 BDSessionPageController / 聊天控制器，都在这条链上。
 static UITableView *HushRecallChatTable(void) {
     UIViewController *vc = HushRecallTopViewController();
-    for (int i = 0; i < 6 && vc; i++, vc = [vc parent]) {
+    for (int i = 0; i < 6 && vc; i++, vc = [vc parentViewController]) {
         @try {
             if ([vc respondsToSelector:NSSelectorFromString(@"tableView")]) {
                 id t = [vc valueForKey:@"tableView"];
