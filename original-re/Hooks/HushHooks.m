@@ -213,18 +213,26 @@ static void r_setAlbumBanSave(id self, SEL _cmd, int a0) {
     if (o_setAlbumBanSave) o_setAlbumBanSave(self, _cmd, a0);
 }
 
-// 36: probe only — does the chat table drop the row through UIKit deletion?
-// We do NOT touch behaviour here. If a recall produces a hit on this selector,
-// the next round has a lawful place to veto the deletion; if it never fires, the
-// row was re-rendered instead of deleted and the fix belongs in the cell.
-// BDMessageTableView inherits -deleteRowsAtIndexPaths:withRowAnimation: from
-// UITableView, so this lands in the `inherit` branch with the UIKit IMP as orig.
-static void (*o_tableDeleteRows)(id, SEL, id, long long);
-static void r_tableDeleteRows(id self, SEL _cmd, id a0, long long a1) {
-    HushHit("BDMessageTableView", "deleteRowsAtIndexPaths:withRowAnimation:");
-    if (o_tableDeleteRows) o_tableDeleteRows(self, _cmd, a0, a1);
+// 35: probe only — 同步通道。推送腿吞包之后，断网期间发生的撤回只可能从
+// GJIMMessageService -p_handleSyncRangeMessages:syncType: 进来。这里只数不改：
+// 数到 0 说明同步包不带撤回，数到 >0 就是下一版要拦的第二个投递口。
+static void (*o_syncRange)(id, SEL, id, unsigned long long);
+static void r_syncRange(id self, SEL _cmd, id a0, unsigned long long a1) {
+    HushHit("GJIMMessageService", "p_handleSyncRangeMessages:syncType:");
+    int n = HushRecallScanArrayForRecall(a0);
+    if (n > 0) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][防撤回] 同步批次 syncType=%llu 带 %d 条撤回（第二个投递口）",
+            a1, n]];
+    }
+    if (o_syncRange) o_syncRange(self, _cmd, a0, a1);
 }
 
+// v37: the BDMessageTableView -deleteRowsAtIndexPaths: probe is gone.
+// The reference log never deletes a row for a recall (it swallows the gRPC
+// packet, so the data source never changes), and a probe that only counts hits
+// has no lawful veto. Deleted per review; re-add only with an actual fix.
+//
 // ---------------------------------------------------------------- install
 typedef struct {
     IMP         prev;
@@ -495,7 +503,7 @@ static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 38
+#define HUSH_TARGET_COUNT 37
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -551,7 +559,6 @@ void HushInstallHooks(void) {
     Class cMsgVC = hush_resolve_class("BDMessageViewController");
     Class cCell  = hush_resolve_class("BDChatBasicCell");
     Class cUser  = hush_resolve_class("UserInformation");
-    Class cTable = hush_resolve_class("BDMessageTableView");
     Class cEngine = hush_resolve_class("GJIMEngine");
 
     if (!s_done[0]) {
@@ -710,10 +717,10 @@ void HushInstallHooks(void) {
     }
 
     if (!s_done[35]) {
-        SEL s = sel_registerName("deleteRowsAtIndexPaths:withRowAnimation:");
-        hush_installed r = hush_install_impl(cTable, s, (IMP)&r_tableDeleteRows, "v32@0:8@16q24");
-        if (strcmp(r.kind, "MISSING") != 0) o_tableDeleteRows = (void (*)(id, SEL, id, long long))r.prev;
-        hush_report(35, "BDMessageTableView", "deleteRowsAtIndexPaths:withRowAnimation:", r);
+        SEL s = sel_registerName("p_handleSyncRangeMessages:syncType:");
+        hush_installed r = hush_install_impl(cMsg, s, (IMP)&r_syncRange, "v32@0:8@16Q24");
+        if (strcmp(r.kind, "MISSING") != 0) o_syncRange = (void (*)(id, SEL, id, unsigned long long))r.prev;
+        hush_report(35, "GJIMMessageService", "p_handleSyncRangeMessages:syncType:", r);
     }
 
     // ---- v35: badge / splash / privacy album

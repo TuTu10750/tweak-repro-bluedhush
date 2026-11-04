@@ -67,7 +67,11 @@ FOUNDATION_EXPORT void HushRecallDropSingleForward(id self, SEL _cmd, id model,
 
 /// YES when this model was neutralised by us (type 55 -> 1). Used by the chat
 /// cell hook to decide whether the「已拦截」badge belongs on screen.
-FOUNDATION_EXPORT BOOL HushRecallModelWasIntercepted(id model);
+FOUNDATION_EXPORT // v37 摸底：同步通道（GJIMMessageService -p_handleSyncRangeMessages:syncType:）
+// 是推送之外的第二条投递路径。只统计、不改行为。
+int HushRecallScanArrayForRecall(id arr);
+
+BOOL HushRecallModelWasIntercepted(id model);
 
 /// Attach / hide the「已拦截」badge on a chat cell for `model`. Safe to call for
 /// every model: it hides the badge when the message was not intercepted.

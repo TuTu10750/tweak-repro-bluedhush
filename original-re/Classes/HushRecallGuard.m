@@ -105,9 +105,71 @@ static BOOL HushModelHasKey(id model, NSString *key) {
     }
 }
 
+// 直接按 getter 取整数。
+//
+// -valueForKey: 在 hook 里是颗定时炸弹：撤回包是 gRPC 反序列化出来的对象，
+// 未必是普通属性容器，key 不存在就抛 NSUnknownKeyException —— 钩子层抛出去
+// 没人接，进程直接 abort。所以先 respondsToSelector: + IMP 直调（宽度按
+// method 的返回值 encoding 分派），KVC 只在「没有 getter」时兜底，且 @try 包死。
+static long long HushDirectLongLong(id obj, NSString *key) {
+    if (!obj || key.length == 0) return LLONG_MIN;
+    if (![obj isKindOfClass:[NSObject class]]) return LLONG_MIN;
+
+    SEL g = NSSelectorFromString(key);
+    if (!g || ![obj respondsToSelector:g]) return LLONG_MIN;
+
+    Method m = class_getInstanceMethod([obj class], g);
+    if (!m) return LLONG_MIN;
+    const char *enc = method_getTypeEncoding(m);
+    if (!enc) return LLONG_MIN;
+
+    char r = *enc;
+    while (r == 'r' || r == 'n' || r == 'N' || r == 'o' || r == 'O'
+           || r == 'R' || r == 'V' || r == 'A') {
+        enc++;
+        r = *enc;
+    }
+    if (r == '\0') return LLONG_MIN;
+
+    IMP imp = method_getImplementation(m);
+    if (!imp) return LLONG_MIN;
+
+    @try {
+        switch (r) {
+            case 'c': return (long long)((char (*)(id, SEL))imp)(obj, g);
+            case 'C': return (long long)((unsigned char (*)(id, SEL))imp)(obj, g);
+            case 'B': return (long long)((BOOL (*)(id, SEL))imp)(obj, g);
+            case 's': return (long long)((short (*)(id, SEL))imp)(obj, g);
+            case 'S': return (long long)((unsigned short (*)(id, SEL))imp)(obj, g);
+            case 'i': return (long long)((int (*)(id, SEL))imp)(obj, g);
+            case 'I': return (long long)((unsigned int (*)(id, SEL))imp)(obj, g);
+            case 'l': return (long long)((long (*)(id, SEL))imp)(obj, g);
+            case 'L': return (long long)((unsigned long (*)(id, SEL))imp)(obj, g);
+            case 'q': return ((long long (*)(id, SEL))imp)(obj, g);
+            case 'Q': return (long long)((unsigned long long (*)(id, SEL))imp)(obj, g);
+            case 'f': return (long long)((float (*)(id, SEL))imp)(obj, g);
+            case 'd': return (long long)((double (*)(id, SEL))imp)(obj, g);
+            case '@': {
+                id v = ((id (*)(id, SEL))imp)(obj, g);
+                if ([v respondsToSelector:@selector(longLongValue)]) return [v longLongValue];
+                return LLONG_MIN;
+            }
+            default: return LLONG_MIN;
+        }
+    } @catch (__unused NSException *e) {
+        return LLONG_MIN;
+    }
+}
+
 static long long HushModelLongLong(id model, NSArray<NSString *> *keys) {
+    // 第一轮：getter 直调（不碰 KVC，不会抛）。
     for (NSString *k in keys) {
-        if (!HushModelHasKey(model, k)) continue;
+        long long v = HushDirectLongLong(model, k);
+        if (v != LLONG_MIN) return v;
+    }
+    // 第二轮：只有真的没有 getter 时才走 KVC 兜底。
+    for (NSString *k in keys) {
+        if (![model isKindOfClass:[NSObject class]]) break;
         @try {
             id v = [model valueForKey:k];
             if ([v respondsToSelector:@selector(longLongValue)]) return [v longLongValue];
@@ -424,18 +486,64 @@ BOOL HushRecallModelWasIntercepted(id model) {
     return HushRecallIsIntercepted(mid);
 }
 
-// 在 cell 内容区左上角贴一枚「已拦截」。位置用 frame 写死：气泡自身的 x 会随
-// 左右消息变化，跟着气泡摆会把标签推到屏幕外，这里只求「一眼能看见」。
+// v37 摸底：把同步批次里的撤回消息数出来（不改数组、不改返回值）。
+//
+// 推送腿已经吞掉撤回包，但断网期间对方撤回、之后登录同步，宿主会走
+// GJIMMessageService -p_handleSyncRangeMessages:syncType: 把历史消息重新灌进来 ——
+// 那条 55 完全不经过 GJIMEngine 的包入口。先看它到底带不带 55，再决定要不要拦。
+int HushRecallScanArrayForRecall(id arr) {
+    if (![arr isKindOfClass:[NSArray class]]) return 0;
+    int n = 0;
+    for (id m in (NSArray *)arr) {
+        long long t = HushModelLongLong(m, HushRecallTypeKeys());
+        if (t != HUSH_MSG_TYPE_RECALL) continue;
+        long long mid = HushModelLongLong(m, HushRecallIdKeys());
+        n++;
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][防撤回] 同步通道里出现撤回消息 msgId=%lld（绕过包层吞包）", mid]];
+    }
+    return n;
+}
+
+// 角标锚点：原版锚在 imageContentView(150x200)，挂载层是 Cell 本身 ——
+// 挂在 Cell 上而不是 contentView 上，才不会吃 contentView 的 clipsToBounds。
+static UIView *HushRecallAnchorView(id cell, UIView *host) {
+    @try {
+        if ([cell respondsToSelector:NSSelectorFromString(@"imageContentView")]) {
+            id v = [cell valueForKey:@"imageContentView"];
+            if ([v isKindOfClass:[UIView class]]) return (UIView *)v;
+        }
+    } @catch (__unused NSException *e) { }
+
+    // 退一步：子树里按类名找 *imageContentView*（上限 60 个节点）
+    NSMutableArray *stack = [NSMutableArray arrayWithObject:host];
+    int guard = 0;
+    while (stack.count > 0 && guard++ < 60) {
+        UIView *v = [stack lastObject];
+        [stack removeLastObject];
+        NSString *cn = NSStringFromClass([v class]);
+        if ([cn rangeOfString:@"imageContentView"].location != NSNotFound) return v;
+        [stack addObjectsFromArray:v.subviews];
+    }
+    return nil;
+}
+
+static UIColor *HushRecallBadgeColor(void) {
+    // 原版真值：底色 #407EFD、字号 10
+    return [UIColor colorWithRed:0x40 / 255.0
+                           green:0x7E / 255.0
+                            blue:0xFD / 255.0
+                           alpha:1.0];
+}
+
+// 贴「已拦截」角标：挂 Cell 本身，锚 imageContentView 右上角，字号 10、底色 #407EFD。
 void HushRecallDecorateCell(id cell, id model) {
     if (!cell) return;
-    UIView *content = nil;
-    @try {
-        if ([cell respondsToSelector:@selector(contentView)]) content = [cell contentView];
-    } @catch (__unused NSException *e) { content = nil; }
-    if (!content) return;
+    UIView *host = [cell isKindOfClass:[UIView class]] ? (UIView *)cell : nil;
+    if (!host) return;
 
     UILabel *tag = nil;
-    @try { tag = (UILabel *)[content viewWithTag:kHushInterceptTag]; }
+    @try { tag = (UILabel *)[host viewWithTag:kHushInterceptTag]; }
     @catch (__unused NSException *e) { tag = nil; }
 
     if (!HushRecallModelWasIntercepted(model)) {
@@ -444,22 +552,44 @@ void HushRecallDecorateCell(id cell, id model) {
     }
 
     if (!tag) {
-        tag = [[UILabel alloc] initWithFrame:CGRectMake(8.0, 4.0, 0.0, 0.0)];
+        tag = [[UILabel alloc] initWithFrame:CGRectZero];
         tag.tag = kHushInterceptTag;
         tag.text = @"已拦截";
         tag.font = [UIFont boldSystemFontOfSize:10.0];
-        tag.textColor = [UIColor colorWithRed:1.0 green:0.55 blue:0.1 alpha:1.0];
-        tag.backgroundColor = [UIColor clearColor];
+        tag.textColor = [UIColor whiteColor];
+        tag.backgroundColor = HushRecallBadgeColor();
+        tag.textAlignment = NSTextAlignmentCenter;
+        tag.layer.cornerRadius = 3.0;
+        tag.layer.masksToBounds = YES;
         tag.userInteractionEnabled = NO;
         [tag sizeToFit];
-        [content addSubview:tag];
+        CGRect tf = tag.frame;
+        tf.size.width += 6.0;
+        tf.size.height += 2.0;
+        tag.frame = tf;
+        [host addSubview:tag];
     }
     tag.hidden = NO;
+
+    UIView *anchor = HushRecallAnchorView(cell, host);
     CGRect f = tag.frame;
-    f.origin.x = 8.0;
-    f.origin.y = 4.0;
+    if (anchor && anchor != host) {
+        CGRect a = [anchor convertRect:anchor.bounds toView:host];
+        f.origin.x = CGRectGetMaxX(a) - f.size.width - 2.0;
+        f.origin.y = CGRectGetMinY(a) + 2.0;
+    } else {
+        f.origin.x = 8.0;
+        f.origin.y = 4.0;
+    }
+
+    // 夹在 Cell 自身边界内，避免贴到屏幕外
+    CGRect b = host.bounds;
+    if (f.origin.x < 0.0) f.origin.x = 0.0;
+    if (f.origin.y < 0.0) f.origin.y = 0.0;
+    if (CGRectGetMaxX(f) > b.size.width) f.origin.x = b.size.width - f.size.width;
+    if (CGRectGetMaxY(f) > b.size.height) f.origin.y = b.size.height - f.size.height;
     tag.frame = f;
-    [content bringSubviewToFront:tag];
+    [host bringSubviewToFront:tag];
 }
 
 // 写库前还原：数组形态的写入口（GJIMDBService -dealMessage:array:）也照顾到。
@@ -586,41 +716,115 @@ static void HushRecallToast(NSString *text) {
     });
 }
 
-// 宿主不知道发生过撤回，就不会重画那一行 —— 我们自己去把可见的聊天 cell 巡检
-// 一遍，命中 msgId 集合的贴角标。只走主线程、只读可见 cell、带节点上限。
+// 只在主线程跑。从 keyWindow 的 rootViewController 走到最上层可见控制器，再在
+// 它的视图里找聊天用的 UITableView。比「从 window 起 BFS」准：iOS 13+ 多 Scene
+// 下 keyWindow 可能为 nil 或不是当前窗口，BFS 会捞到无关的表。
+static UITableView *HushRecallFindTable(UIView *root, int maxDepth) {
+    if (!root) return nil;
+    NSMutableArray *layer = [NSMutableArray arrayWithObject:root];
+    for (int d = 0; d <= maxDepth && layer.count > 0; d++) {
+        NSMutableArray *next = [NSMutableArray array];
+        for (UIView *v in layer) {
+            if ([v isKindOfClass:[UITableView class]]) return (UITableView *)v;
+            [next addObjectsFromArray:v.subviews];
+        }
+        layer = next;
+    }
+    return nil;
+}
+
+static UIViewController *HushRecallTopViewController(void) {
+    UIWindow *win = HushRecallKeyWindow();
+    UIViewController *vc = win.rootViewController;
+    while (vc && vc.presentedViewController) vc = vc.presentedViewController;
+
+    for (int i = 0; i < 6 && vc; i++) {
+        if ([vc isKindOfClass:[UITabBarController class]]) {
+            UITabBarController *t = (UITabBarController *)vc;
+            vc = t.selectedViewController ?: [[t viewControllers] firstObject];
+            continue;
+        }
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *n = (UINavigationController *)vc;
+            vc = n.topViewController ?: [[n viewControllers] lastObject];
+            continue;
+        }
+        if ([vc isKindOfClass:[UISplitViewController class]]) {
+            UISplitViewController *sp = (UISplitViewController *)vc;
+            vc = [[sp viewControllers] lastObject];
+            continue;
+        }
+        NSArray *kids = [vc children];
+        if (kids.count == 0) break;
+        vc = [kids lastObject];
+    }
+    return vc;
+}
+
+// 当前聊天页的表：先沿控制器父链找 tableView 属性 / _tableView ivar，再退到
+// 视图子树（深度 3）。宿主是 BDSessionPageController / 聊天控制器，都在这条链上。
+static UITableView *HushRecallChatTable(void) {
+    UIViewController *vc = HushRecallTopViewController();
+    for (int i = 0; i < 6 && vc; i++, vc = [vc parent]) {
+        @try {
+            if ([vc respondsToSelector:NSSelectorFromString(@"tableView")]) {
+                id t = [vc valueForKey:@"tableView"];
+                if ([t isKindOfClass:[UITableView class]]) return (UITableView *)t;
+            }
+        } @catch (__unused NSException *e) { }
+
+        Ivar iv = class_getInstanceVariable([vc class], "_tableView");
+        if (iv) {
+            id t = object_getIvar(vc, iv);
+            if ([t isKindOfClass:[UITableView class]]) return (UITableView *)t;
+        }
+
+        UITableView *t2 = HushRecallFindTable([vc view], 3);
+        if (t2) return t2;
+    }
+    return HushRecallFindTable([[HushRecallKeyWindow() rootViewController] view], 4);
+}
+
 static void HushRecallDecorateVisibleCells(void) {
     dispatch_async(dispatch_get_main_queue(), ^{
         @try {
-            UIWindow *win = HushRecallKeyWindow();
-            if (!win) return;
+            UITableView *table = HushRecallChatTable();
+            if (!table || !table.window) {
+                [HushLogger logLevel:2 format:
+                    @"[Hush][防撤回] 找不到聊天表（可能已离开聊天页），本轮不贴角标"];
+                return;
+            }
 
-            NSMutableArray *stack = [NSMutableArray arrayWithObject:win];
-            NSUInteger guard = 0;
             NSUInteger painted = 0;
-            while (stack.count > 0 && guard++ < 800) {
-                UIView *v = [stack lastObject];
-                [stack removeLastObject];
-                if ([v isKindOfClass:[UITableView class]]) {
-                    for (UITableViewCell *c in [(UITableView *)v visibleCells]) {
-                        id m = nil;
-                        @try {
-                            if ([c respondsToSelector:NSSelectorFromString(@"message")]) {
-                                m = [c valueForKey:@"message"];
-                            }
-                        } @catch (__unused NSException *e) { m = nil; }
-                        if (!m) continue;
-                        HushRecallDecorateCell(c, m);
-                        painted++;
+            for (UITableViewCell *c in [table visibleCells]) {
+                id m = nil;
+                @try {
+                    if ([c respondsToSelector:NSSelectorFromString(@"message")]) {
+                        m = [c valueForKey:@"message"];
                     }
-                    continue;                       // 表内部不再下钻
-                }
-                [stack addObjectsFromArray:v.subviews];
+                } @catch (__unused NSException *e) { m = nil; }
+                if (!m) continue;
+                HushRecallDecorateCell(c, m);
+                painted++;
             }
-            if (painted > 0) {
-                [HushLogger logLevel:4 format:[NSString stringWithFormat:
-                    @"[Hush][防撤回] 巡检可见 cell %lu 个（贴角标用）", (unsigned long)painted]];
+
+            // 宿主没收到包就不会重画这一行：对可见行发一次单行重载，让
+            // -setMessage: 重走一遍（我们的 hook 在那里贴角标）。底层数据没变，
+            // 不会触发 batch update 冲突。
+            NSArray *vis = [table indexPathsForVisibleRows];
+            if (vis.count > 0) {
+                [table reloadRowsAtIndexPaths:vis
+                             withRowAnimation:UITableViewRowAnimationNone];
             }
-        } @catch (__unused NSException *e) { }
+
+            [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                @"[Hush][防撤回] 巡检 %@ 可见 cell %lu 个，已重载 %lu 行（贴角标）",
+                NSStringFromClass([table class]),
+                (unsigned long)painted, (unsigned long)[vis count]]];
+        } @catch (__unused NSException *e) {
+            [HushLogger logLevel:2 format:
+                @"[Hush][防撤回] 巡检聊天表时异常，已忽略（不影响消息本身）"];
+        }
     });
 }
 
@@ -695,7 +899,10 @@ void HushRecallFilterAndForward(id self, SEL _cmd, id msgs,
                                 void (*orig)(id, SEL, id)) {
     if (!orig) return;
 
+    // v37：包层吞包开着（默认开）时这条老腿完全让路。宿主根本收不到撤回包，
+    // 这里再改类型只会制造第二套状态 —— 保留实现仅为排障时手动开回去。
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
+        || [[HushConfig shared] isEnabled:@"switch_ar_packet_block"]
         || ![msgs isKindOfClass:[NSArray class]]
         || [(NSArray *)msgs count] == 0) {
         orig(self, _cmd, msgs);            // R2
@@ -735,8 +942,10 @@ void HushRecallGuardSingleWrite(id self, SEL _cmd, id model,
 
     BOOL on = [[HushConfig shared] isEnabled:@"switch_anti_recall"];
     BOOL blockDb = [[HushConfig shared] isEnabled:@"switch_ar_db_block"];
+    // v37：包层吞包开着时 DB 腿不作主 —— 宿主压根不会发起把消息写成撤回态的写库。
+    BOOL packetLeg = [[HushConfig shared] isEnabled:@"switch_ar_packet_block"];
 
-    if (on && blockDb) {
+    if (on && blockDb && !packetLeg) {
         long long mid = 0;
         HushCrumb("db:probe");
         if (HushRecallIsForeignRecall(model, &mid)) {
@@ -763,6 +972,7 @@ void HushRecallFilterArrayForward(id self, SEL _cmd, id msgs,
 
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
         || ![[HushConfig shared] isEnabled:@"switch_ar_ui_block"]
+        || [[HushConfig shared] isEnabled:@"switch_ar_packet_block"]
         || ![msgs isKindOfClass:[NSArray class]]
         || [(NSArray *)msgs count] == 0) {
         orig(self, _cmd, msgs, updateType);            // R2
@@ -802,7 +1012,8 @@ void HushRecallDropSingleForward(id self, SEL _cmd, id model,
     if (!orig) return;
 
     if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]
-        && [[HushConfig shared] isEnabled:@"switch_ar_ui_block"]) {
+        && [[HushConfig shared] isEnabled:@"switch_ar_ui_block"]
+        && ![[HushConfig shared] isEnabled:@"switch_ar_packet_block"]) {
         long long mid = 0;
         if (HushRecallIsForeignRecall(model, &mid)) {
             sBlocked++;
