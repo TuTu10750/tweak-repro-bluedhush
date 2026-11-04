@@ -263,6 +263,8 @@ static CLLocation *HushVLocFakeLocation(void) {
 // 面板里点「预设定位」/ 手动改经纬度后，NSUserDefaults 会发一条变更通知。
 // 这里只把「已经读过点」的标记打回未读，下一次回调自然重新取值 —— 不缓存、
 // 不复制配置，也不在通知线程里做任何 IO。
+void HushVirtualLocationKickHost(void);   // 定义在下面，通知回调用到
+
 static id sHushVLocDefaultsObserver = nil;
 
 static void HushVLocWatchDefaults(void) {
@@ -275,6 +277,35 @@ static void HushVLocWatchDefaults(void) {
                     (void)note;
                     sPointRead = NO;
                 }];
+    // 面板点「预设定位」会再发一条我们自己的通知，用来「踢宿主一脚」：
+    // 只写 NSUserDefaults 的话，要等宿主下一次真实 GPS 回调（十几秒到几十秒）
+    // 才换坐标，体感就是「点了没反应」。
+    [[NSNotificationCenter defaultCenter]
+        addObserverForName:HushVirtualLocationDidChangeNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *note) {
+                    (void)note;
+                    HushVirtualLocationKickHost();
+                }];
+}
+
+NSString *const HushVirtualLocationDidChangeNotification = @"HushVirtualLocationDidChangeNotification";
+
+// 宿主装了不止一个位置提供者（BMKLocationManager / KSAdLocationManager /
+// BaiduMobAdLocationManager …）。这里只放弱引用：拿不到实例的场景（我们没 hook 到
+// 那个类的 start）自然就不在里面，绝不强留宿主的对象。
+static NSHashTable *HushVLocManagers(void) {
+    static NSHashTable *t = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ t = [NSHashTable weakObjectsHashTable]; });
+    return t;
+}
+
+static void HushVLocRemember(id manager) {
+    if (!manager) return;
+    if (![manager respondsToSelector:@selector(startUpdatingLocation)]) return;
+    [HushVLocManagers() addObject:manager];
 }
 
 static BOOL HushVLocActive(void) {
@@ -361,6 +392,7 @@ static void hush_vloc_start(id self, SEL _cmd) {
     if (!prev || prev == (IMP)1) return;
     void (*orig)(id, SEL) = (void (*)(id, SEL))prev;
     orig(self, _cmd);
+    HushVLocRemember(self);
     if (!HushVLocActive()) return;
     HushHit(NSStringFromClass(object_getClass(self)).UTF8String, "startUpdatingLocation");
     // 用 respondsToSelector + 直接 IMP 取 delegate，绝不走 KVC：
@@ -376,9 +408,47 @@ static void hush_vloc_setDelegate(id self, SEL _cmd, id delegate) {
     if (!prev || prev == (IMP)1) return;
     void (*orig)(id, SEL, id) = (void (*)(id, SEL, id))prev;
     orig(self, _cmd, delegate);
+    HushVLocRemember(self);
     if (!HushVLocActive()) return;
     HushHit("CLLocationManager", "setDelegate:");
     HushVLocDeliverTo(delegate, self);
+}
+
+// 秒级生效：面板写完坐标 → 我们主动投递一次，不等宿主自己那轮 GPS。
+//
+// 两条腿：
+//   1) 对登记过的 provider 直接调它的 delegate 的
+//      -locationManager:didUpdateLocations:，把假点塞进去（宿主内部缓存刷新）；
+//   2) 再挑一个 provider 调一次 -startUpdatingLocation，让「不走 delegate、
+//      只读 manager.location」的消费方也被覆盖。
+// 只踢一个 provider：多个 SDK 同时开 GPS 会让系统频繁调度，得不偿失。
+void HushVirtualLocationKickHost(void) {
+    sPointRead = NO;                       // 坐标可能刚被改过
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray *ms = [HushVLocManagers() allObjects];
+        BOOL active = HushVLocActive();
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][VLocCL] 面板触发主动投递：provider=%lu 个 开关=%d 有坐标=%d",
+            (unsigned long)ms.count,
+            [[HushConfig shared] isEnabled:@"switch_virtual_location"] ? 1 : 0,
+            HushVirtualLocationHasPoint() ? 1 : 0]];
+        if (!active || ms.count == 0) return;
+
+        id kicked = nil;
+        for (id m in ms) {
+            if (!HushVLocManagerLooksUsable(m)) continue;
+            if (![m respondsToSelector:@selector(delegate)]) continue;
+            id (*getDel)(id, SEL) = (id (*)(id, SEL))[m methodForSelector:@selector(delegate)];
+            HushVLocDeliverTo(getDel(m, @selector(delegate)), m);
+            if (!kicked) kicked = m;       // 第一个可用的 provider 负责重启 GPS
+        }
+        if (kicked && [kicked respondsToSelector:@selector(startUpdatingLocation)]) {
+            [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                @"[Hush][VLocCL] 踢一脚：%@ -startUpdatingLocation（不等宿主原定回调）",
+                NSStringFromClass([kicked class])]];
+            [kicked startUpdatingLocation];   // 走我们的 hook，会再投递一次（幂等）
+        }
+    });
 }
 
 static int HushVLocCountKind(int kind) {
@@ -512,6 +582,8 @@ void HushVirtualLocationHandleSwitchChange(BOOL on) {
                 @"[Hush][VLoc] 已开启，但 0 个入口挂载 → 当前不生效（点位=%.6f,%.6f，等 delegate 出现后自动接管）",
                 sLat, sLng]];
         }
+        // 开的那一刻就踢一脚：宿主不一定马上有 GPS 回调，等它自己来会像「没生效」。
+        HushVirtualLocationKickHost();
         return;
     }
 

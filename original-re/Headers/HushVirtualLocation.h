@@ -43,6 +43,13 @@ FOUNDATION_EXPORT int HushVirtualLocationInstall(void);
 /// registered their delegate classes yet (the original wrapped them 10-15 s in).
 FOUNDATION_EXPORT void HushVirtualLocationInstallWithRetry(void);
 
+/// 面板改完坐标后发这条通知；HushVirtualLocation 收到就立刻投递一次假点，
+/// 不等宿主自己的 GPS 回调（那条可能十几秒才来）。
+FOUNDATION_EXPORT NSString *const HushVirtualLocationDidChangeNotification;
+
+/// 主动投递一次（幂等）。拿不到 provider 时只打一行日志、什么都不改。
+FOUNDATION_EXPORT void HushVirtualLocationKickHost(void);
+
 /// YES when a usable fake point is configured (both lat and lng parse).
 FOUNDATION_EXPORT BOOL HushVirtualLocationHasPoint(void);
 

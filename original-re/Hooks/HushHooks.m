@@ -124,6 +124,107 @@ static void r_msgVCReceiveNewMessage(id self, SEL _cmd, id a0) {
     HushRecallDropSingleForward(self, _cmd, a0, o_msgVCReceiveNewMessage);
 }
 
+// 26: chat cell — 「已拦截」badge.
+// hooo1 never shows a badge because the original's recall path was different; the
+// badge is our own affordance, so the rule is: only models WE neutralised
+// (associated flag) get it, and every other message hides it on reuse.
+static void (*o_cellSetMessage)(id, SEL, id);
+static void r_cellSetMessage(id self, SEL _cmd, id a0) {
+    HushHit("BDChatBasicCell", "setMessage:");
+    if (o_cellSetMessage) o_cellSetMessage(self, _cmd, a0);
+    HushRecallDecorateCell(self, a0);
+}
+
+// 27-29: splash ad. removeAllSplashAdViews: alone only removes the views that are
+// already on screen; the cold-launch query and the present call still run, so the
+// ad flashes on fast networks. Short-circuit both, gated by purify_splash_ad.
+static BOOL HushSplashPurifyOn(void) {
+    return [[HushConfig shared] isEnabled:@"purify_splash_ad"];
+}
+
+static void (*o_showSplashAd)(id, SEL, BOOL);
+static void r_showSplashAd(id self, SEL _cmd, BOOL a0) {
+    HushHit("AppDelegateModel", "showSplashAd:");
+    if (HushSplashPurifyOn()) return;          // 不展示开屏
+    if (o_showSplashAd) o_showSplashAd(self, _cmd, a0);
+}
+
+static id (*o_getSplashCold)(id, SEL);
+static id r_getSplashCold(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "getSplashAdForColdLaunch");
+    if (HushSplashPurifyOn()) return nil;      // 冷启动拿不到广告，自然不会展示
+    return o_getSplashCold ? o_getSplashCold(self, _cmd) : nil;
+}
+
+static id (*o_pGetSplashCold)(id, SEL);
+static id r_pGetSplashCold(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "p_getSplashAdvertisementForColdLaunch");
+    if (HushSplashPurifyOn()) return nil;
+    return o_pGetSplashCold ? o_pGetSplashCold(self, _cmd) : nil;
+}
+
+// 30-35: privacy album. The host gates the album on three int flags on
+// UserInformation; the getters are the read side every caller goes through, so
+// forcing 0 there unlocks it. Setters are swallowed too — otherwise the host
+// re-writes 1 the moment it re-syncs the profile and the album locks again.
+static BOOL HushPrivacyUnlockOn(void) {
+    return [[HushConfig shared] isEnabled:@"switch_private_photo"];
+}
+
+static int (*o_isLocked)(id, SEL);
+static int r_isLocked(id self, SEL _cmd) {
+    HushHit("UserInformation", "is_locked");
+    if (HushPrivacyUnlockOn()) return 0;
+    return o_isLocked ? o_isLocked(self, _cmd) : 0;
+}
+
+static int (*o_privPhotoLocked)(id, SEL);
+static int r_privPhotoLocked(id self, SEL _cmd) {
+    HushHit("UserInformation", "privacy_photos_has_locked");
+    if (HushPrivacyUnlockOn()) return 0;
+    return o_privPhotoLocked ? o_privPhotoLocked(self, _cmd) : 0;
+}
+
+static int (*o_albumBanSave)(id, SEL);
+static int r_albumBanSave(id self, SEL _cmd) {
+    HushHit("UserInformation", "album_ban_save");
+    if (HushPrivacyUnlockOn()) return 0;
+    return o_albumBanSave ? o_albumBanSave(self, _cmd) : 0;
+}
+
+static void (*o_setIsLocked)(id, SEL, int);
+static void r_setIsLocked(id self, SEL _cmd, int a0) {
+    HushHit("UserInformation", "setIs_locked:");
+    if (HushPrivacyUnlockOn()) return;         // 不接受宿主写回 1
+    if (o_setIsLocked) o_setIsLocked(self, _cmd, a0);
+}
+
+static void (*o_setPrivPhotoLocked)(id, SEL, int);
+static void r_setPrivPhotoLocked(id self, SEL _cmd, int a0) {
+    HushHit("UserInformation", "setPrivacy_photos_has_locked:");
+    if (HushPrivacyUnlockOn()) return;
+    if (o_setPrivPhotoLocked) o_setPrivPhotoLocked(self, _cmd, a0);
+}
+
+static void (*o_setAlbumBanSave)(id, SEL, int);
+static void r_setAlbumBanSave(id self, SEL _cmd, int a0) {
+    HushHit("UserInformation", "setAlbum_ban_save:");
+    if (HushPrivacyUnlockOn()) return;
+    if (o_setAlbumBanSave) o_setAlbumBanSave(self, _cmd, a0);
+}
+
+// 36: probe only — does the chat table drop the row through UIKit deletion?
+// We do NOT touch behaviour here. If a recall produces a hit on this selector,
+// the next round has a lawful place to veto the deletion; if it never fires, the
+// row was re-rendered instead of deleted and the fix belongs in the cell.
+// BDMessageTableView inherits -deleteRowsAtIndexPaths:withRowAnimation: from
+// UITableView, so this lands in the `inherit` branch with the UIKit IMP as orig.
+static void (*o_tableDeleteRows)(id, SEL, id, long long);
+static void r_tableDeleteRows(id self, SEL _cmd, id a0, long long a1) {
+    HushHit("BDMessageTableView", "deleteRowsAtIndexPaths:withRowAnimation:");
+    if (o_tableDeleteRows) o_tableDeleteRows(self, _cmd, a0, a1);
+}
+
 // ---------------------------------------------------------------- install
 typedef struct {
     IMP         prev;
@@ -207,6 +308,9 @@ static id r_filterDeleted(id self, SEL _cmd, id a0) {
 static void (*o_dealMessage)(id, SEL, id, id);
 static void r_dealMessage(id self, SEL _cmd, id a0, id a1) {
     HushHit("GJIMDBService", "dealMessage:array:");
+    // v35 起 UI 腿是原地改：宿主手里那个对象此刻可能是 type=1 / 补过占位正文。
+    // 这条是写库入口之一，落库前把被我们改过的字段还原，否则占位文案会进库。
+    HushRecallRestoreDirtyArray(a1);
     if (o_dealMessage) o_dealMessage(self, _cmd, a0, a1);
 }
 
@@ -365,7 +469,7 @@ static void r_fetchMore(id self, SEL _cmd, id a0, BOOL a1, BOOL a2) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 25
+#define HUSH_TARGET_COUNT 36
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -419,6 +523,9 @@ void HushInstallHooks(void) {
     Class cMenu = hush_resolve_class("BDCustomMenuView");
     Class cChat = hush_resolve_class("PrivateChatViewController");
     Class cMsgVC = hush_resolve_class("BDMessageViewController");
+    Class cCell  = hush_resolve_class("BDChatBasicCell");
+    Class cUser  = hush_resolve_class("UserInformation");
+    Class cTable = hush_resolve_class("BDMessageTableView");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -573,6 +680,75 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_msgVCReceiveNewMessage, "v24@0:8@16");
         if (strcmp(r.kind, "MISSING") != 0) o_msgVCReceiveNewMessage = (void (*)(id, SEL, id))r.prev;
         hush_report(24, "BDMessageViewController", "receiveNewMessage:", r);
+    }
+
+    if (!s_done[35]) {
+        SEL s = sel_registerName("deleteRowsAtIndexPaths:withRowAnimation:");
+        hush_installed r = hush_install_impl(cTable, s, (IMP)&r_tableDeleteRows, "v32@0:8@16q24");
+        if (strcmp(r.kind, "MISSING") != 0) o_tableDeleteRows = (void (*)(id, SEL, id, long long))r.prev;
+        hush_report(35, "BDMessageTableView", "deleteRowsAtIndexPaths:withRowAnimation:", r);
+    }
+
+    // ---- v35: badge / splash / privacy album
+    if (!s_done[25]) {
+        SEL s = sel_registerName("setMessage:");
+        hush_installed r = hush_install_impl(cCell, s, (IMP)&r_cellSetMessage, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_cellSetMessage = (void (*)(id, SEL, id))r.prev;
+        hush_report(25, "BDChatBasicCell", "setMessage:", r);
+    }
+    if (!s_done[26]) {
+        SEL s = sel_registerName("showSplashAd:");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_showSplashAd, "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0) o_showSplashAd = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(26, "AppDelegateModel", "showSplashAd:", r);
+    }
+    if (!s_done[27]) {
+        SEL s = sel_registerName("getSplashAdForColdLaunch");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_getSplashCold, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_getSplashCold = (id (*)(id, SEL))r.prev;
+        hush_report(27, "AppDelegateModel", "getSplashAdForColdLaunch", r);
+    }
+    if (!s_done[28]) {
+        SEL s = sel_registerName("p_getSplashAdvertisementForColdLaunch");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_pGetSplashCold, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_pGetSplashCold = (id (*)(id, SEL))r.prev;
+        hush_report(28, "AppDelegateModel", "p_getSplashAdvertisementForColdLaunch", r);
+    }
+    if (!s_done[29]) {
+        SEL s = sel_registerName("is_locked");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_isLocked, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_isLocked = (int (*)(id, SEL))r.prev;
+        hush_report(29, "UserInformation", "is_locked", r);
+    }
+    if (!s_done[30]) {
+        SEL s = sel_registerName("privacy_photos_has_locked");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_privPhotoLocked, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_privPhotoLocked = (int (*)(id, SEL))r.prev;
+        hush_report(30, "UserInformation", "privacy_photos_has_locked", r);
+    }
+    if (!s_done[31]) {
+        SEL s = sel_registerName("album_ban_save");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_albumBanSave, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_albumBanSave = (int (*)(id, SEL))r.prev;
+        hush_report(31, "UserInformation", "album_ban_save", r);
+    }
+    if (!s_done[32]) {
+        SEL s = sel_registerName("setIs_locked:");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_setIsLocked, "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0) o_setIsLocked = (void (*)(id, SEL, int))r.prev;
+        hush_report(32, "UserInformation", "setIs_locked:", r);
+    }
+    if (!s_done[33]) {
+        SEL s = sel_registerName("setPrivacy_photos_has_locked:");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_setPrivPhotoLocked, "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0) o_setPrivPhotoLocked = (void (*)(id, SEL, int))r.prev;
+        hush_report(33, "UserInformation", "setPrivacy_photos_has_locked:", r);
+    }
+    if (!s_done[34]) {
+        SEL s = sel_registerName("setAlbum_ban_save:");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_setAlbumBanSave, "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0) o_setAlbumBanSave = (void (*)(id, SEL, int))r.prev;
+        hush_report(34, "UserInformation", "setAlbum_ban_save:", r);
     }
 
 

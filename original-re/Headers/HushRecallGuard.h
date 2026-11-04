@@ -64,3 +64,15 @@ FOUNDATION_EXPORT void HushRecallFilterArrayForward(id self, SEL _cmd, id msgs,
 /// called at all: there is only one message in this call.
 FOUNDATION_EXPORT void HushRecallDropSingleForward(id self, SEL _cmd, id model,
                                                    void (*orig)(id, SEL, id));
+
+/// YES when this model was neutralised by us (type 55 -> 1). Used by the chat
+/// cell hook to decide whether the「已拦截」badge belongs on screen.
+FOUNDATION_EXPORT BOOL HushRecallModelWasIntercepted(id model);
+
+/// Attach / hide the「已拦截」badge on a chat cell for `model`. Safe to call for
+/// every model: it hides the badge when the message was not intercepted.
+FOUNDATION_EXPORT void HushRecallDecorateCell(id cell, id model);
+
+/// Restore every neutralised model in `obj` (array or single model) to the
+/// host's original type / status / content before it reaches a DB writer.
+FOUNDATION_EXPORT void HushRecallRestoreDirtyArray(id obj);

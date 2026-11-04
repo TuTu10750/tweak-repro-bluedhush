@@ -13,6 +13,7 @@
 #import "HushRuntime.h"
 #import "HushModuleMap.h"
 #import "HushKeys.h"
+#import "HushVirtualLocation.h"
 
 static HushSettingsPanel *gHushSharedPanel = nil;
 static dispatch_once_t gHushSharedPanelOnce;
@@ -316,6 +317,10 @@ static dispatch_once_t gHushSharedPanelOnce;
                     [c setString:lngS forKey:@"runtime_custom_lng"];
                     [HushLogger logLevel:3 format:[NSString stringWithFormat:
                         @"[Panel][VLoc] 预设写入 %@ → lat=%@ lng=%@", name, latS, lngS]];
+                    // 写盘只是让下一次回调用新点；想让用户「点完就变」，得显式踢一脚。
+                    [[NSNotificationCenter defaultCenter]
+                        postNotificationName:HushVirtualLocationDidChangeNotification
+                                      object:nil];
                 }];
             [buckets[3] addObject:act];
         }
@@ -328,6 +333,9 @@ static dispatch_once_t gHushSharedPanelOnce;
                 [c setString:nil forKey:@"runtime_custom_lat"];
                 [c setString:nil forKey:@"runtime_custom_lng"];
                 [HushLogger logLevel:3 format:@"[Panel][VLoc] 已清空虚拟坐标，交给真实 GPS"];
+                [[NSNotificationCenter defaultCenter]
+                    postNotificationName:HushVirtualLocationDidChangeNotification
+                                  object:nil];
             }]];
     }
 

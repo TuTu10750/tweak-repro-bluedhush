@@ -22,11 +22,16 @@
 #import "HushRuntime.h"
 
 #import <objc/runtime.h>
+#import <UIKit/UIKit.h>
 #import <limits.h>
 
 #define HUSH_MSG_TYPE_RECALL 55
 
 static long sBlocked = 0;
+
+// 关联对象 key：被我们改造过（type 55 → 1）的消息会挂上它，Cell 的 setMessage:
+// 据此决定要不要贴「已拦截」。声明放在最前面，neutralize 里要用。
+static char kHushInterceptedKey;
 
 long HushRecallBlockedCount(void) {
     return sBlocked;
@@ -343,15 +348,23 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     if (t == LLONG_MIN) t = HUSH_MSG_TYPE_RECALL;
     if (s == LLONG_MIN) s = 3;
 
-    // 优先副本：宿主 DB 那条腿拿到的是原对象，不会被我们写脏。
+    // v35：一律原地改。
+    //
+    // v34 是「copy 一份改副本、再把数组里的指针换成副本」，出发点是不让宿主落库
+    // 那条腿看到被改过的字段。实测代价太大：宿主不认数组里换掉的指针，它自己的
+    // 数据源与行 diff 仍然拿着原对象（type=55 / status=3），于是界面上那一行照样
+    // 被抹掉 —— 日志里 db-write 拦住了、ui-update 也打印了「改造」（数量不变 6），
+    // 屏幕上却还是消失。
+    //
+    // 原地改之后，宿主手里的对象本身就是 type=1，行 diff 找不到「撤回」，行不再
+    // 消失。落库污染改由「写库前还原」兜住：HushRestoreDirtyInPlace 会在
+    // -p_updateMessage: 放行前把 type / status / content 还原成宿主原值。
+    //
+    // 顺序也是安全的：hooo1 的实测顺序是 p_updateMessage → addMessages →
+    // updateMessages，落库永远发生在 UI 改造之前，所以还原不会把已经画好的气泡
+    // 改回撤回态。
     id target = model;
     BOOL isolated = NO;
-    if ([model respondsToSelector:@selector(copy)]) {
-        @try {
-            id c = [model copy];
-            if (c && c != model) { target = c; isolated = YES; }
-        } @catch (__unused NSException *e) { }
-    }
 
     // 55 → 1（普通文本），status 3（已撤回）→ 0，让宿主按普通气泡渲染。
     BOOL ok = HushCallSetNumber(target, @selector(setType:), 1);
@@ -381,7 +394,10 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
         return model;
     }
 
-    if (!isolated) HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
+    HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
+    // 给气泡打标记：Cell 的 setMessage: 会查这个关联对象，命中就贴「已拦截」。
+    objc_setAssociatedObject(target, &kHushInterceptedKey, @YES,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     sNeutralized++;
     // 注意别用 %s 传中文：%s 走的是 C 字符串，日志里会变成乱码
     // （v31 的「ÂâØÊú¨ÈöîÁ¶ª」就是这么来的），中文一律 %@。
@@ -392,6 +408,64 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
 }
 
 static NSUInteger HushNeutralizeCount(void) { return (NSUInteger)sNeutralized; }
+
+#pragma mark - 气泡标记
+
+static const NSInteger kHushInterceptTag = 0x4F3A21;   // 魔数，便于 viewWithTag: 找回
+
+BOOL HushRecallModelWasIntercepted(id model) {
+    if (!model) return NO;
+    id v = objc_getAssociatedObject(model, &kHushInterceptedKey);
+    return [v boolValue];
+}
+
+// 在 cell 内容区左上角贴一枚「已拦截」。位置用 frame 写死：气泡自身的 x 会随
+// 左右消息变化，跟着气泡摆会把标签推到屏幕外，这里只求「一眼能看见」。
+void HushRecallDecorateCell(id cell, id model) {
+    if (!cell) return;
+    UIView *content = nil;
+    @try {
+        if ([cell respondsToSelector:@selector(contentView)]) content = [cell contentView];
+    } @catch (__unused NSException *e) { content = nil; }
+    if (!content) return;
+
+    UILabel *tag = nil;
+    @try { tag = (UILabel *)[content viewWithTag:kHushInterceptTag]; }
+    @catch (__unused NSException *e) { tag = nil; }
+
+    if (!HushRecallModelWasIntercepted(model)) {
+        if (tag && !tag.hidden) tag.hidden = YES;   // 复用到普通消息时收起来
+        return;
+    }
+
+    if (!tag) {
+        tag = [[UILabel alloc] initWithFrame:CGRectMake(8.0, 4.0, 0.0, 0.0)];
+        tag.tag = kHushInterceptTag;
+        tag.text = @"已拦截";
+        tag.font = [UIFont boldSystemFontOfSize:10.0];
+        tag.textColor = [UIColor colorWithRed:1.0 green:0.55 blue:0.1 alpha:1.0];
+        tag.backgroundColor = [UIColor clearColor];
+        tag.userInteractionEnabled = NO;
+        [tag sizeToFit];
+        [content addSubview:tag];
+    }
+    tag.hidden = NO;
+    CGRect f = tag.frame;
+    f.origin.x = 8.0;
+    f.origin.y = 4.0;
+    tag.frame = f;
+    [content bringSubviewToFront:tag];
+}
+
+// 写库前还原：数组形态的写入口（GJIMDBService -dealMessage:array:）也照顾到。
+void HushRecallRestoreDirtyArray(id obj) {
+    if (!obj) return;
+    if ([obj isKindOfClass:[NSArray class]]) {
+        for (id m in (NSArray *)obj) HushRestoreDirtyInPlace(m);
+        return;
+    }
+    HushRestoreDirtyInPlace(obj);
+}
 
 #pragma mark - 四个入口
 
