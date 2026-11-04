@@ -344,11 +344,13 @@ static dispatch_once_t gHushSharedPanelOnce;
 
         // count how many of this module's switches are ON
         NSUInteger onCount = 0;
-        for (id it in items) {
+        for (id obj in items) {
             // 本模块的 items 里同时装着开关行与动作行（v33 的定位预设）。
             // 动作行没有 key，直接发 -key 会抛 unrecognized selector
             // （v33 点悬浮球即崩：-[HushActionItem key]），所以先判类型。
-            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
+            // 注意必须先判再强转：id 上不能写点语法，编译器会报 property not found。
+            if (![obj isKindOfClass:[HushSwitchItem class]]) continue;
+            HushSwitchItem *it = (HushSwitchItem *)obj;
             const HushToggleEntry *e = NULL;
             const char *k = [it.key UTF8String];
             for (int i = 0; i < kHushToggleCount; i++) {
@@ -359,8 +361,9 @@ static dispatch_once_t gHushSharedPanelOnce;
         }
 
         NSUInteger boolTotal = 0;
-        for (id it in items) {
-            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
+        for (id obj in items) {
+            if (![obj isKindOfClass:[HushSwitchItem class]]) continue;
+            HushSwitchItem *it = (HushSwitchItem *)obj;
             for (int i = 0; i < kHushToggleCount; i++) {
                 if (strcmp(kHushToggles[i].key, [it.key UTF8String]) == 0) {
                     if (kHushToggles[i].isBool) boolTotal++;
@@ -404,8 +407,9 @@ static dispatch_once_t gHushSharedPanelOnce;
     NSMutableArray<HushSwitchItem *> *ui = [NSMutableArray array];
     NSMutableArray<HushSwitchItem *> *net = [NSMutableArray array];
 
-    for (id it in items) {
-        if (![it isKindOfClass:[HushSwitchItem class]]) continue;
+    for (id obj in items) {
+        if (![obj isKindOfClass:[HushSwitchItem class]]) continue;
+        HushSwitchItem *it = (HushSwitchItem *)obj;
         NSString *k = it.key;
         if ([k isEqualToString:@"purify_master"]) { [purify insertObject:it atIndex:0]; }
         else if ([k hasPrefix:@"purify_"]) { [purify addObject:it]; }
@@ -437,10 +441,10 @@ static dispatch_once_t gHushSharedPanelOnce;
 - (void)rebuildSearchIndex {
     NSMutableArray *idx = [NSMutableArray array];
     for (HushModuleEntry *mod in _modules) {
-        for (id it in mod.items) {
+        for (id obj in mod.items) {
             // 只索引开关/文本行；动作行（预设定位等）没有 key，也不能被搜索。
-            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
-            [idx addObject:@[it, mod.title ?: @""]];
+            if (![obj isKindOfClass:[HushSwitchItem class]]) continue;
+            [idx addObject:@[(HushSwitchItem *)obj, mod.title ?: @""]];
         }
     }
     _searchIndex = idx;
@@ -499,8 +503,9 @@ static dispatch_once_t gHushSharedPanelOnce;
         NSMutableArray *hits = [NSMutableArray array];
         for (NSArray *pair in _searchIndex) {
             if (![pair isKindOfClass:[NSArray class]] || [pair count] < 2) continue;
-            id it = pair[0];
-            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
+            id obj = pair[0];
+            if (![obj isKindOfClass:[HushSwitchItem class]]) continue;
+            HushSwitchItem *it = (HushSwitchItem *)obj;
             NSString *mod = pair[1];
             NSString *hay = [NSString stringWithFormat:@"%@ %@ %@ %@",
                              it.key ?: @"", it.title ?: @"", it.subtitle ?: @"", mod];
