@@ -266,7 +266,13 @@ static dispatch_once_t gHushSharedPanelOnce;
         const HushToggleEntry *e = &kHushToggles[i];
         if (e->module < 0 || e->module >= kHushModuleCount) continue;
         // 原版把生效方式拼在说明前面：「立即生效 · 首页「交友」右侧入口显隐…」
-        NSString *sub = [NSString stringWithFormat:@"%s · %s", e->effect, e->desc];
+        // 这两段文案是中文，必须走 stringWithUTF8String:；用 %s 交给
+        // stringWithFormat: 会被当成本地编码解释，面板里整行变乱码（v31 之前
+        // 那批「菜单中文乱码」就是这么来的）。
+        NSString *effText  = e->effect ? [NSString stringWithUTF8String:e->effect] : @"";
+        NSString *descText = e->desc   ? [NSString stringWithUTF8String:e->desc]   : @"";
+        NSString *sub = [effText length] ? [NSString stringWithFormat:@"%@ · %@", effText, descText]
+                                         : descText;
         HushSwitchItem *it = [HushSwitchItem key:[NSString stringWithUTF8String:e->key]
                                            title:[NSString stringWithUTF8String:e->title]
                                         subtitle:sub
@@ -285,6 +291,40 @@ static dispatch_once_t gHushSharedPanelOnce;
         for (NSArray<NSString *> *r in runtimeRows) {
             [buckets[3] addObject:[HushSwitchItem key:r[0] title:r[1] subtitle:r[2]]];
         }
+
+        // v33: 快捷预设。手输坐标差一位就落到「坐标越界，拒绝使用」，交付自检时
+        // 太容易吵。这三个按钮直接写 runtime_custom_lat / lng，写完面板会自己
+        // reload（本文件的 buildModel 监听 NSUserDefaultsDidChangeNotification）。
+        NSArray<NSArray<NSString *> *> *vlocPresets = @[
+            @[@"深圳", @"22.547917", @"114.124485", @"与真实位置重合，仅作对照基准"],
+            @[@"上海", @"31.266600", @"121.501900", @"人民广场一带"],
+            @[@"北京", @"39.904200", @"116.407400", @"天安门一带"],
+        ];
+        for (NSArray<NSString *> *p in vlocPresets) {
+            NSString *name = p[0], *latS = p[1], *lngS = p[2], *note = p[3];
+            HushActionItem *act = [HushActionItem
+                title:[NSString stringWithFormat:@"预设定位：%@", name]
+             subtitle:[NSString stringWithFormat:@"%@, %@ · %@", latS, lngS, note]
+            actionLabel:@"写入"
+                handler:^{
+                    HushConfig *c = [HushConfig shared];
+                    [c setString:latS forKey:@"runtime_custom_lat"];
+                    [c setString:lngS forKey:@"runtime_custom_lng"];
+                    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                        @"[Panel][VLoc] 预设写入 %@ → lat=%@ lng=%@", name, latS, lngS]];
+                }];
+            [buckets[3] addObject:act];
+        }
+        [buckets[3] addObject:[HushActionItem
+            title:@"恢复真实定位"
+         subtitle:@"清空经纬度；下一轮 GPS 回调即为真实坐标，不需要重启"
+        actionLabel:@"清空"
+            handler:^{
+                HushConfig *c = [HushConfig shared];
+                [c setString:nil forKey:@"runtime_custom_lat"];
+                [c setString:nil forKey:@"runtime_custom_lng"];
+                [HushLogger logLevel:3 format:@"[Panel][VLoc] 已清空虚拟坐标，交给真实 GPS"];
+            }]];
     }
 
     for (int m = 0; m < kHushModuleCount; m++) {

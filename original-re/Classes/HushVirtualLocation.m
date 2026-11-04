@@ -37,11 +37,11 @@ static double sLat = 0.0;
 static double sLng = 0.0;
 static BOOL  sPointRead = NO;
 
-// 出厂默认点：上海人民广场一带（GCJ-02）。用户真实位置在深圳，所以只要这里是
-// 生效的，界面上的位置一定肉眼可见地跳过去；如果面板里填过 runtime_custom_lat/lng
+// 出厂默认点：北京天安门一带（GCJ-02）。用户的真实位置在深圳，只要这里是生效
+// 的，界面上的位置一定肉眼可见地跳过去；如果面板里填过 runtime_custom_lat/lng
 // 就用填的，填的和默认一样时也照常打日志说明来源。
-static const double HUSH_VLOC_DEFAULT_LAT = 31.2666;
-static const double HUSH_VLOC_DEFAULT_LNG = 121.5019;
+static const double HUSH_VLOC_DEFAULT_LAT = 39.9042;
+static const double HUSH_VLOC_DEFAULT_LNG = 116.4074;
 
 static BOOL HushVLocParseCoord(NSString *s, double *out) {
     if (![s isKindOfClass:[NSString class]]) return NO;
@@ -118,7 +118,7 @@ static void HushVLocReloadPoint(void) {
     if (!okLat || !okLng) {
         lat = HUSH_VLOC_DEFAULT_LAT;
         lng = HUSH_VLOC_DEFAULT_LNG;
-        src = @"出厂默认（上海人民广场）";
+        src = @"出厂默认（北京天安门）";
     }
     if (fabs(lat) > 90.0 || fabs(lng) > 180.0) {
         [HushLogger logLevel:2 format:[NSString stringWithFormat:
@@ -260,6 +260,23 @@ static CLLocation *HushVLocFakeLocation(void) {
                                         timestamp:[NSDate date]];
 }
 
+// 面板里点「预设定位」/ 手动改经纬度后，NSUserDefaults 会发一条变更通知。
+// 这里只把「已经读过点」的标记打回未读，下一次回调自然重新取值 —— 不缓存、
+// 不复制配置，也不在通知线程里做任何 IO。
+static id sHushVLocDefaultsObserver = nil;
+
+static void HushVLocWatchDefaults(void) {
+    if (sHushVLocDefaultsObserver) return;
+    sHushVLocDefaultsObserver = [[NSNotificationCenter defaultCenter]
+        addObserverForName:NSUserDefaultsDidChangeNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *note) {
+                    (void)note;
+                    sPointRead = NO;
+                }];
+}
+
 static BOOL HushVLocActive(void) {
     return [[HushConfig shared] isEnabled:@"switch_virtual_location"]
         && HushVirtualLocationHasPoint();
@@ -398,6 +415,9 @@ static NSArray<NSString *> *HushVLocStartClasses(void) {
 // run once a second without re-wrapping what is already ours (v28's
 // `static BOOL installed` turned attempt 2..40 into no-ops).
 int HushVirtualLocationInstall(void) {
+    if (!sHushVLocDefaultsObserver) {
+        dispatch_async(dispatch_get_main_queue(), ^{ HushVLocWatchDefaults(); });
+    }
     HushVLocReloadPoint();
 
     SEL didUpdate = sel_registerName("locationManager:didUpdateLocations:");

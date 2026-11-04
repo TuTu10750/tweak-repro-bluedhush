@@ -13,7 +13,10 @@ BluedHushRE_FILES = $(wildcard Classes/*.m)
 BluedHushRE_FILES += Hooks/HushEntry.xm
 BluedHushRE_FILES += Hooks/SubstrateShim.m
 BluedHushRE_FILES += Hooks/HushHooks.m
-BluedHushRE_CFLAGS = -I$(THEOS_PROJECT_DIR)/Headers -fobjc-arc -Wno-everything -Wno-objc-method-access
+# 源文件一律 UTF-8 无 BOM；显式钉死输入/执行字符集，避免不同机器的
+# locale 让 kHushToggles 里的中文（const char *）编译成乱码。
+BluedHushRE_CFLAGS = -I$(THEOS_PROJECT_DIR)/Headers -fobjc-arc -Wno-everything -Wno-objc-method-access \
+                     -finput-charset=UTF-8 -fexec-charset=UTF-8
 
 # ---------------------------------------------------------------------------
 # The hook layer is compiled WITHOUT ARC on purpose.
