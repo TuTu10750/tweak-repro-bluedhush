@@ -24,6 +24,11 @@
     return item;
 }
 
+// 见头文件：动作行没有配置键，返回空串只作兜底，永远不要拿它去查配置。
+- (NSString *)key {
+    return @"";
+}
+
 - (NSString *)description {
     return [NSString stringWithFormat:@"<HushActionItem '%@' label=%@>", _title, _actionLabel];
 }

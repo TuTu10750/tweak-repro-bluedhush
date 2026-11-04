@@ -103,6 +103,11 @@
 + (id)title:(id)a0 subtitle:(id)a1 actionLabel:(id)a2 handler:(id /* ^block */)a3;
 + (id)title:(id)a0 subtitle:(id)a1 icon:(id)a2 actionLabel:(id)a3 handler:(id /* ^block */)a4;
 
+// 兜底：动作行不是配置项，没有 key。面板/搜索里按「开关行」遍历的地方必须先
+// isKindOfClass: 判类型（v33 点悬浮球崩溃就是漏判：-[HushActionItem key]）。
+// 这里返回空串而不是 nil，任何没来的及加判断的 strcmp/长度检查都不会炸。
+- (NSString *)key;
+
 @end
 
 #endif

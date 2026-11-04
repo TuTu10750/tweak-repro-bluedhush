@@ -85,6 +85,9 @@ static dispatch_once_t gHushSharedPanelOnce;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 面包屑：v33 那次「主线程阻塞 ≥3.2s，面包屑=boot」说明看门狗只能报
+    // 「最后已知位置」，面板自身没有打点。这里补上三段，下次再卡就能指名道姓。
+    HushCrumb("panel:viewDidLoad");
 
     self.title = @"BluedHush";
     _hushFooterInsetX = 20.0;
@@ -242,6 +245,7 @@ static dispatch_once_t gHushSharedPanelOnce;
 }
 
 - (void)buildModel {
+    HushCrumb("panel:build:begin");
     // Prove at runtime what the panel is actually about to render. If this line
     // shows mojibake the generator is at fault; if it shows correct Chinese the
     // strings were fine and the bad glyphs came from somewhere else.
@@ -327,6 +331,7 @@ static dispatch_once_t gHushSharedPanelOnce;
             }]];
     }
 
+    HushCrumb("panel:build:sections");
     for (int m = 0; m < kHushModuleCount; m++) {
         const HushModuleMeta *meta = &kHushModules[m];
         HushModuleEntry *entry = [[HushModuleEntry alloc] init];
@@ -339,7 +344,11 @@ static dispatch_once_t gHushSharedPanelOnce;
 
         // count how many of this module's switches are ON
         NSUInteger onCount = 0;
-        for (HushSwitchItem *it in items) {
+        for (id it in items) {
+            // 本模块的 items 里同时装着开关行与动作行（v33 的定位预设）。
+            // 动作行没有 key，直接发 -key 会抛 unrecognized selector
+            // （v33 点悬浮球即崩：-[HushActionItem key]），所以先判类型。
+            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
             const HushToggleEntry *e = NULL;
             const char *k = [it.key UTF8String];
             for (int i = 0; i < kHushToggleCount; i++) {
@@ -350,7 +359,8 @@ static dispatch_once_t gHushSharedPanelOnce;
         }
 
         NSUInteger boolTotal = 0;
-        for (HushSwitchItem *it in items) {
+        for (id it in items) {
+            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
             for (int i = 0; i < kHushToggleCount; i++) {
                 if (strcmp(kHushToggles[i].key, [it.key UTF8String]) == 0) {
                     if (kHushToggles[i].isBool) boolTotal++;
@@ -377,6 +387,7 @@ static dispatch_once_t gHushSharedPanelOnce;
     }
 
     _modules = mods;
+    HushCrumb("panel:build:done");
 }
 
 - (NSArray<HushModuleSection *> *)hushSectionsForModule:(int)m items:(NSArray<HushSwitchItem *> *)items {
@@ -393,7 +404,8 @@ static dispatch_once_t gHushSharedPanelOnce;
     NSMutableArray<HushSwitchItem *> *ui = [NSMutableArray array];
     NSMutableArray<HushSwitchItem *> *net = [NSMutableArray array];
 
-    for (HushSwitchItem *it in items) {
+    for (id it in items) {
+        if (![it isKindOfClass:[HushSwitchItem class]]) continue;
         NSString *k = it.key;
         if ([k isEqualToString:@"purify_master"]) { [purify insertObject:it atIndex:0]; }
         else if ([k hasPrefix:@"purify_"]) { [purify addObject:it]; }
@@ -425,7 +437,9 @@ static dispatch_once_t gHushSharedPanelOnce;
 - (void)rebuildSearchIndex {
     NSMutableArray *idx = [NSMutableArray array];
     for (HushModuleEntry *mod in _modules) {
-        for (HushSwitchItem *it in mod.items) {
+        for (id it in mod.items) {
+            // 只索引开关/文本行；动作行（预设定位等）没有 key，也不能被搜索。
+            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
             [idx addObject:@[it, mod.title ?: @""]];
         }
     }
@@ -484,7 +498,9 @@ static dispatch_once_t gHushSharedPanelOnce;
     } else {
         NSMutableArray *hits = [NSMutableArray array];
         for (NSArray *pair in _searchIndex) {
-            HushSwitchItem *it = pair[0];
+            if (![pair isKindOfClass:[NSArray class]] || [pair count] < 2) continue;
+            id it = pair[0];
+            if (![it isKindOfClass:[HushSwitchItem class]]) continue;
             NSString *mod = pair[1];
             NSString *hay = [NSString stringWithFormat:@"%@ %@ %@ %@",
                              it.key ?: @"", it.title ?: @"", it.subtitle ?: @"", mod];
