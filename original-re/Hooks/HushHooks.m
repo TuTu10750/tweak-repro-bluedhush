@@ -503,7 +503,7 @@ static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 37
+#define HUSH_TARGET_COUNT 38
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
