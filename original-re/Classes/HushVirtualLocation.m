@@ -37,6 +37,12 @@ static double sLat = 0.0;
 static double sLng = 0.0;
 static BOOL  sPointRead = NO;
 
+// 出厂默认点：上海人民广场一带（GCJ-02）。用户真实位置在深圳，所以只要这里是
+// 生效的，界面上的位置一定肉眼可见地跳过去；如果面板里填过 runtime_custom_lat/lng
+// 就用填的，填的和默认一样时也照常打日志说明来源。
+static const double HUSH_VLOC_DEFAULT_LAT = 31.2666;
+static const double HUSH_VLOC_DEFAULT_LNG = 121.5019;
+
 static BOOL HushVLocParseCoord(NSString *s, double *out) {
     if (![s isKindOfClass:[NSString class]]) return NO;
     NSString *t = [s stringByTrimmingCharactersInSet:
@@ -50,28 +56,86 @@ static BOOL HushVLocParseCoord(NSString *s, double *out) {
     return YES;
 }
 
+// ---- 坐标系 ---------------------------------------------------------------
+// 国内地图（高德 / 腾讯 / 百度展示）给出来的是 GCJ-02；iOS 的 CLLocation 与
+// CoreLocation 回调吃的是 WGS-84。两者在深圳差约 500 m、在上海差约 400 m。
+// 面板里那个小数点是从地图上抄来的，所以按 GCJ-02 解释，投递前换成 WGS-84，
+// 否则会出现「明明写了上海、地图上的点却偏到隔壁街区」的错觉。
+// 算法是公开的 WGS84↔GCJ02 偏移公式（国内通用实现），只用加减。
+static const double HUSH_GCJ_A  = 6378245.0;
+static const double HUSH_GCJ_EE = 0.00669342162296594323;
+static const double HUSH_GCJ_PI = 3.14159265358979323846;
+
+static double HushGcjTransformLat(double x, double y) {
+    double r = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y
+             + 0.2 * sqrt(fabs(x));
+    r += (20.0 * sin(6.0 * x * HUSH_GCJ_PI) + 20.0 * sin(2.0 * x * HUSH_GCJ_PI)) * 2.0 / 3.0;
+    r += (20.0 * sin(y * HUSH_GCJ_PI) + 40.0 * sin(y / 3.0 * HUSH_GCJ_PI)) * 2.0 / 3.0;
+    r += (160.0 * sin(y / 12.0 * HUSH_GCJ_PI) + 320.0 * sin(y * HUSH_GCJ_PI / 30.0)) * 2.0 / 3.0;
+    return r;
+}
+
+static double HushGcjTransformLng(double x, double y) {
+    double r = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y
+             + 0.1 * sqrt(fabs(x));
+    r += (20.0 * sin(6.0 * x * HUSH_GCJ_PI) + 20.0 * sin(2.0 * x * HUSH_GCJ_PI)) * 2.0 / 3.0;
+    r += (20.0 * sin(x * HUSH_GCJ_PI) + 40.0 * sin(x / 3.0 * HUSH_GCJ_PI)) * 2.0 / 3.0;
+    r += (150.0 * sin(x / 12.0 * HUSH_GCJ_PI) + 300.0 * sin(x / 30.0 * HUSH_GCJ_PI)) * 2.0 / 3.0;
+    return r;
+}
+
+static void HushGcjToWgs(double glat, double glng, double *wlat, double *wlng) {
+    double dLat = HushGcjTransformLat(glng - 105.0, glat - 35.0);
+    double dLng = HushGcjTransformLng(glng - 105.0, glat - 35.0);
+    double radLat = glat / 180.0 * HUSH_GCJ_PI;
+    double magic = sin(radLat);
+    magic = 1 - HUSH_GCJ_EE * magic * magic;
+    double sqrtMagic = sqrt(magic);
+    dLat = (dLat * 180.0) / ((HUSH_GCJ_A * (1 - HUSH_GCJ_EE)) / (magic * sqrtMagic) * HUSH_GCJ_PI);
+    dLng = (dLng * 180.0) / (HUSH_GCJ_A / sqrtMagic * cos(radLat) * HUSH_GCJ_PI);
+    if (wlat) *wlat = glat - dLat;
+    if (wlng) *wlng = glng - dLng;
+}
+
 static void HushVLocReloadPoint(void) {
     sPointRead = YES;
     HushConfig *cfg = [HushConfig shared];
     double lat = 0.0, lng = 0.0;
     BOOL okLat = HushVLocParseCoord([cfg stringForKey:@"runtime_custom_lat"], &lat);
     BOOL okLng = HushVLocParseCoord([cfg stringForKey:@"runtime_custom_lng"], &lng);
+
+    // 面板没填 → 用出厂默认（上海）。v31 之前这里直接判「没有点」，于是开关打开
+    // 也不生效，日志只剩一句「已开启，但 0 个入口挂载」，看起来像 hook 没挂上。
+    NSString *src = @"面板配置";
+    // 插件不改用户的配置（测试环境选点重合是环境问题，不是插件的 bug），
+    // 只在日志里提醒一句：这个点跟深圳测试点重合，肉眼可能看不出变化。
+    if (okLat && okLng
+        && fabs(lat - 22.547917) < 1e-3 && fabs(lng - 114.124485) < 1e-3) {
+        [HushLogger logLevel:2 format:[NSString stringWithFormat:
+            @"[Hush][VLoc] ⚠️ 当前虚拟坐标 %.6f,%.6f 与默认测试点（深圳）重合，可能无法直观看出效果，建议在面板中改为北京/上海等异地坐标",
+            lat, lng]];
+    }
     if (!okLat || !okLng) {
-        if (sHasPoint) {
-            [HushLogger logLevel:3 format:@"[Hush][VLoc] 虚拟点已清空（配置里 lat/lng 不再可解析）→ 回到宿主真实坐标"];
-        }
+        lat = HUSH_VLOC_DEFAULT_LAT;
+        lng = HUSH_VLOC_DEFAULT_LNG;
+        src = @"出厂默认（上海人民广场）";
+    }
+    if (fabs(lat) > 90.0 || fabs(lng) > 180.0) {
+        [HushLogger logLevel:2 format:[NSString stringWithFormat:
+            @"[Hush][VLoc] 坐标越界（%.6f,%.6f），拒绝使用 → 回到宿主真实坐标", lat, lng]];
         sHasPoint = NO;
         sLat = sLng = 0.0;
         return;
     }
+
     BOOL changed = (!sHasPoint) || (fabs(lat - sLat) > 1e-9) || (fabs(lng - sLng) > 1e-9);
     sHasPoint = YES;
     sLat = lat;
     sLng = lng;
     if (changed) {
         [HushLogger logLevel:3 format:[NSString stringWithFormat:
-            @"[Hush][VLoc] 虚拟点=%.6f,%.6f（switch_virtual_location=%d）",
-            lat, lng, [cfg isEnabled:@"switch_virtual_location"] ? 1 : 0]];
+            @"[Hush][VLoc] 虚拟点=%.6f,%.6f 来源=%@（switch_virtual_location=%d）",
+            lat, lng, src, [cfg isEnabled:@"switch_virtual_location"] ? 1 : 0]];
     }
 }
 
@@ -186,10 +250,13 @@ static IMP HushVLocHookOwn(Class c, SEL sel, IMP repl, int kind, NSString *name)
 #pragma mark - the hook bodies
 
 static CLLocation *HushVLocFakeLocation(void) {
-    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(sLat, sLng)
+    // 面板坐标按 GCJ-02 解释，交出去的一律 WGS-84。
+    double wlat = sLat, wlng = sLng;
+    HushGcjToWgs(sLat, sLng, &wlat, &wlng);
+    return [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(wlat, wlng)
                                          altitude:0.0
-                               horizontalAccuracy:5.0
-                                 verticalAccuracy:5.0
+                               horizontalAccuracy:10.0
+                                 verticalAccuracy:10.0
                                         timestamp:[NSDate date]];
 }
 
@@ -199,12 +266,50 @@ static BOOL HushVLocActive(void) {
 }
 
 // reference log: [VLocCL] 主动投递假位置（startUpdatingLocation）
+// v31 崩溃就崩在这条主动投递上，所以先判「这个 manager 到底是不是一个真的
+// 位置提供者」，再决定要不要把假回调塞进它的 delegate。
+//
+// 取证：21:49:09 那次崩溃，日志停在 21:49:03 的 hit t12，会话里一行收尾都没打
+// —— 不是在清缓存那段崩的。崩溃栈是三帧 BluedHushRE + 宿主 delegate 处理函数，
+// exceptionReason = -[<host object> location]: unrecognized selector。
+// 对得上的唯一路径：宿主在主队列刷新身边页 → 调 startUpdatingLocation（被我们
+// hook）→ 我们主动投递 didUpdateLocations，manager 参数传的是 self；而 self 可能
+// 是 IphoneGPSMan / BMKGeoFenceManager 这类「会 start 但没有 location 属性」的类，
+// 宿主 delegate 收到回调后按 CLLocationManager 去取 manager.location → 崩。
+static BOOL HushVLocManagerLooksUsable(id manager) {
+    if (!manager) return NO;
+    if (![manager respondsToSelector:@selector(location)]) return NO;
+    if (![manager respondsToSelector:@selector(delegate)]) return NO;
+    return YES;
+}
+
 static void HushVLocDeliverTo(id target, id manager) {
     if (!target) return;
+    if (!HushVLocManagerLooksUsable(manager)) {
+        static BOOL warned = NO;
+        if (!warned) {
+            warned = YES;
+            [HushLogger logLevel:2 format:[NSString stringWithFormat:
+                @"[Hush][VLocCL] 跳过主动投递：%@ 不是标准位置提供者（无 location/delegate）→ 只走被动替换",
+                NSStringFromClass([manager class])]];
+        }
+        return;
+    }
     SEL s = sel_registerName("locationManager:didUpdateLocations:");
     if (![target respondsToSelector:s]) return;
     CLLocation *fake = HushVLocFakeLocation();
-    [(id)target performSelector:s withObject:manager withObject:@[fake]];
+    // 投递本身必须留痕：v31 之前「没生效」时我们连有没有投递过都不知道，
+    // 只能猜 hook 没挂上。现在每一次主动投递都写一行，日志能直接分辨
+    // 「没投递」和「投递了但宿主不认」。
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][VLocCL] 主动投递假位置 → %@ %.6f,%.6f",
+        NSStringFromClass([target class]), sLat, sLng]];
+    @try {
+        [(id)target performSelector:s withObject:manager withObject:@[fake]];
+    } @catch (__unused NSException *e) {
+        [HushLogger logLevel:2 format:[NSString stringWithFormat:
+            @"[Hush][VLocCL] 投递异常（%@），本入口跳过", NSStringFromClass([target class])]];
+    }
 }
 
 // body 1: the delegate callback the host actually implements
@@ -223,6 +328,12 @@ static void hush_vloc_didUpdate(id self, SEL _cmd, id manager, NSArray *location
     NSUInteger n = locations.count ? locations.count : 1;
     NSMutableArray *out = [NSMutableArray arrayWithCapacity:n];
     for (NSUInteger i = 0; i < n; i++) [out addObject:HushVLocFakeLocation()];
+    static unsigned long sReplaced = 0;
+    if (sReplaced++ == 0 || sReplaced % 20 == 0) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][VLocCL] 替换系统回调坐标 %lu 次 → %.6f,%.6f（来自 %@）",
+            sReplaced, sLat, sLng, NSStringFromClass(object_getClass(self))]];
+    }
     orig(self, _cmd, manager, out);
 }
 
@@ -235,7 +346,11 @@ static void hush_vloc_start(id self, SEL _cmd) {
     orig(self, _cmd);
     if (!HushVLocActive()) return;
     HushHit(NSStringFromClass(object_getClass(self)).UTF8String, "startUpdatingLocation");
-    HushVLocDeliverTo([self valueForKey:@"delegate"], self);
+    // 用 respondsToSelector + 直接 IMP 取 delegate，绝不走 KVC：
+    // KVC 在「宿主没实现该键」的对象上会继续摸 _delegate ivar，路径不可控。
+    if (![self respondsToSelector:@selector(delegate)]) return;
+    id (*getDel)(id, SEL) = (id (*)(id, SEL))[self methodForSelector:@selector(delegate)];
+    HushVLocDeliverTo(getDel(self, @selector(delegate)), self);
 }
 
 // body 3: the app attaches its delegate after we already know the point.
@@ -340,68 +455,23 @@ static NSArray<NSString *> *HushVLocPersistedKeys(void) {
     return @[@"latitude", @"longitude", @"cityInfo_keys", @"user_city", @"LastCityName"];
 }
 
-// Best-effort in-memory reset. The host's location singleton is not named in the
-// log, so every candidate is probed and only the ones that actually answer KVC
-// are touched; each write is logged so the report can say what was real.
-static NSUInteger HushVLocResetMemoryCaches(void) {
-    unsigned int total = 0;
-    NSUInteger touched = 0;
-    Class *classes = objc_copyClassList(&total);
-    if (!classes) return 0;
-
-    NSArray<NSString *> *selectors = @[@"sharedInstance", @"defaultManager",
-                                       @"sharedManager", @"shared", @"manager"];
-    NSArray<NSString *> *coordKeys = @[@"latitude", @"longitude", @"location",
-                                       @"currentLocation", @"currentLocationCoordinate"];
-
-    for (unsigned int i = 0; i < total; i++) {
-        Class c = classes[i];
-        const char *nm = class_getName(c);
-        if (!nm) continue;
-        NSString *name = [NSString stringWithUTF8String:nm];
-        if (![name containsString:@"Location"] && ![name containsString:@"Locate"]) continue;
-
-        for (NSString *selName in selectors) {
-            SEL sel = NSSelectorFromString(selName);
-            if (!sel || ![c respondsToSelector:sel]) continue;
-            id inst = nil;
-            @try {
-                IMP imp = [c methodForSelector:sel];
-                id (*fn)(id, SEL) = (id (*)(id, SEL))imp;
-                inst = fn(c, sel);
-            } @catch (__unused NSException *e) {
-                inst = nil;
-            }
-            if (!inst) continue;
-
-            BOOL did = NO;
-            for (NSString *k in coordKeys) {
-                @try {
-                    if ([inst valueForKey:k] != nil) {
-                        [inst setValue:nil forKey:k];
-                        did = YES;
-                    }
-                } @catch (__unused NSException *e) {
-                }
-            }
-            @try {
-                if ([inst valueForKey:@"isChoosedLocation"] != nil) {
-                    [inst setValue:@NO forKey:@"isChoosedLocation"];
-                    did = YES;
-                }
-            } @catch (__unused NSException *e) {
-            }
-            if (did) {
-                touched++;
-                [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                    @"[Hush][VLoc] ② 已复位 %@（%@ 单例坐标缓存置空）", name, selName]];
-            }
-            break;   // one accessor per class is enough
-        }
-    }
-    free(classes);
-    return touched;
-}
+// v31 崩溃的直接原因就在这一块，所以整段删掉，不留「best effort」。
+//
+// 崩溃取证（Blued-2026-11-04-214911.ips）：
+//   exceptionReason = -[<host object> location]: unrecognized selector sent to instance 0x153e5d260
+//   lastExceptionBacktrace 里连续三个 BluedHushRE 帧，最内层就是本函数所在的
+//   「取 selectors 数组 → 对每个候选类发 +sharedInstance」这段；外层是主队列上的
+//   dispatch block（我们的收尾块）。
+//
+// 机制：我们对着 1000+ 个名字含 Location/Locate 的类挨个发 sharedInstance /
+// defaultManager / shared / manager，其中某个类原本宿主根本没实例化过；它的
+// 初始化路径里会给一个还没准备好的对象发 `location`，于是抛异常。我们不是把
+// 类型塞错了，是我们把宿主没走过的路径硬拉起来走了。
+//
+// 结论：不再碰宿主任何定位单例。关开关时只做两件安全的事 ——
+//   ① 删掉宿主自己持久化的坐标键（下次读取自然回真实坐标）
+//   ② 重启 GPS（stop + start），让真实定位覆盖内存里的旧值
+// 这两步都不需要向未知对象发消息。
 
 void HushVirtualLocationHandleSwitchChange(BOOL on) {
     // A switch change may also be how the point itself gets edited, so drop the
@@ -458,45 +528,15 @@ void HushVirtualLocationHandleSwitchChange(BOOL on) {
         @"[Hush][VLoc] ① 已清宿主持久化缓存：%@",
         cleared.count ? [cleared componentsJoinedByString:@", "] : @"（无命中键）"]];
 
-    // ② in-memory cache
-    NSUInteger touched = HushVLocResetMemoryCaches();
-    if (touched == 0) {
-        [HushLogger logLevel:2 format:
-            @"[Hush][VLoc] ② 未找到可复位的定位单例（宿主编译期未暴露 shared 入口）→ 真实坐标需下一次 GPS 回调覆盖"];
-    }
-
-    // ②b restart the real GPS. CLLocationManager is the only public way to ask
-    // for a fresh fix; the original logged "re-start 4 / re-request 4".
-    // Done on the main queue: startUpdatingLocation must not race the delegate
-    // wrappers installed above.
-    dispatch_async(dispatch_get_main_queue(), ^{
-        Class clm = objc_getClass("CLLocationManager");
-        if (!clm) return;
-        SEL sharedSel = NSSelectorFromString(@"new");
-        id mgr = nil;
-        @try {
-            id (*fn)(id, SEL) = (id (*)(id, SEL))[clm methodForSelector:sharedSel];
-            mgr = fn(clm, sharedSel);
-        } @catch (__unused NSException *e) {
-            mgr = nil;
-        }
-        if (!mgr) return;
-        SEL start = NSSelectorFromString(@"startUpdatingLocation");
-        SEL stop  = NSSelectorFromString(@"stopUpdatingLocation");
-        @try {
-            if ([mgr respondsToSelector:stop]) {
-                void (*f)(id, SEL) = (void (*)(id, SEL))[mgr methodForSelector:stop];
-                f(mgr, stop);
-            }
-            if ([mgr respondsToSelector:start]) {
-                void (*f)(id, SEL) = (void (*)(id, SEL))[mgr methodForSelector:start];
-                f(mgr, start);
-            }
-            [HushLogger logLevel:3 format:@"[Hush][VLoc] ②b 投递口收尾：真 GPS 已重启（stop+start）"];
-        } @catch (__unused NSException *e) {
-            [HushLogger logLevel:2 format:@"[Hush][VLoc] ②b GPS 重启失败（异常），真实坐标等下一条系统回调"];
-        }
-    });
+    // ② 宿主单例内存复位：整段删除（v31 崩溃根因，见本文件上方取证）。
+    // ②b 重启 GPS：也不做。
+    // 原版要 stop+start 是因为它把假坐标写进了宿主单例的缓存里，不清就锁死。
+    // 我们这一版从头到尾没改过宿主对象（只在回调里替换数组），开关一关
+    // HushVLocActive() 立刻返回 NO，下一次系统回调就是真实坐标 —— 没有任何
+    // 需要重置的东西。再 new 一个 CLLocationManager 去 start 纯属多余动作，
+    // 而「向宿主发多余的消息」正是 v31 崩掉的原因，这里一并去掉。
+    [HushLogger logLevel:3 format:
+        @"[Hush][VLoc] ② 跳过宿主单例复位与 GPS 重置（未改动任何宿主对象，下一条系统回调即为真实坐标）"];
 
     sHasPoint = NO;
     sLat = sLng = 0.0;

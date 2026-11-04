@@ -252,6 +252,30 @@ static BOOL HushCallSetNumber(id obj, SEL sel, long long v) {
     }
 }
 
+// 对象 setter（setContent: 之类）。只有当参数编码真的是 '@' 才发，
+// 避免把 nil 塞进非对象参数（v31 之前 KVC 乱塞 nil 就是这个坑的邻居）。
+static BOOL HushCallSetObject(id obj, SEL sel, id value) {
+    if (!obj || !sel || ![obj respondsToSelector:sel]) return NO;
+    Method m = class_getInstanceMethod([obj class], sel);
+    if (!m) return NO;
+    if (HushArgTypeChar(method_getTypeEncoding(m)) != '@') return NO;
+    IMP imp = method_getImplementation(m);
+    if (!imp) return NO;
+    ((void (*)(id, SEL, id))imp)(obj, sel, value);
+    return YES;
+}
+
+static NSString *HushModelString(id model, NSArray<NSString *> *keys) {
+    for (NSString *k in keys) {
+        if (!HushModelHasKey(model, k)) continue;
+        @try {
+            id v = [model valueForKey:k];
+            if ([v isKindOfClass:[NSString class]] && [(NSString *)v length] > 0) return v;
+        } @catch (__unused NSException *e) { continue; }
+    }
+    return nil;
+}
+
 #pragma mark - 原地改动的登记（供 p_updateMessage: 放行分支还原）
 
 static NSMapTable *HushDirtyTable(void) {
@@ -272,10 +296,16 @@ static NSLock *HushDirtyLock(void) {
     return l;
 }
 
-static void HushMarkDirtyInPlace(id model, long long type, long long status) {
+static void HushMarkDirtyInPlace(id model, long long type, long long status,
+                                 BOOL contentFilled, NSString *origContent) {
     if (!model) return;
+    NSMutableDictionary *rec = [NSMutableDictionary dictionary];
+    rec[@"type"] = @(type);
+    rec[@"status"] = @(status);
+    rec[@"filled"] = @(contentFilled);
+    if (contentFilled) rec[@"content"] = origContent ?: @"";
     [HushDirtyLock() lock];
-    [HushDirtyTable() setObject:@{ @"type": @(type), @"status": @(status) } forKey:model];
+    [HushDirtyTable() setObject:rec forKey:model];
     [HushDirtyLock() unlock];
 }
 
@@ -290,7 +320,13 @@ static void HushRestoreDirtyInPlace(id model) {
     long long s = [orig[@"status"] longLongValue];
     HushCallSetNumber(model, @selector(setType:), (t == LLONG_MIN ? HUSH_MSG_TYPE_RECALL : t));
     HushCallSetNumber(model, @selector(setStatus:), (s == LLONG_MIN ? 3 : s));
-    [HushLogger logLevel:4 format:@"[Hush][防撤回] 放行前已把原地改造的字段还原（防写入宿主库）"];
+    // 正文也要还原：占位符只该出现在界面上，不能跟着这条消息落进宿主库
+    // （否则用户重启后看到自己的消息变成「对方试图撤回…」，那是数据污染）。
+    if ([orig[@"filled"] boolValue]) {
+        NSString *c = orig[@"content"];
+        HushCallSetObject(model, @selector(setContent:), c.length ? c : @"");
+    }
+    [HushLogger logLevel:4 format:@"[Hush][防撤回] 放行前已把原地改造的字段（type/status/content）还原，防写入宿主库"];
 }
 
 #pragma mark - 改造一个撤回包
@@ -321,6 +357,19 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     BOOL ok = HushCallSetNumber(target, @selector(setType:), 1);
     HushCallSetNumber(target, @selector(setStatus:), 0);
 
+    // 空白气泡：撤回包自己不带正文（正文在宿主库里那条原消息上，靠撤回态的
+    // 排版逻辑去取）。我们把撤回态抹掉之后，宿主就没有理由再去取正文了，
+    // 于是渲染成一条什么都没有的气泡。这里补一句占位说明；
+    // 只有原本就没有正文时才补，正常消息不受影响。
+    BOOL filled = NO;
+    NSString *body = HushModelString(model, @[@"content", @"messageContent", @"text"]);
+    NSString *bodyForRestore = body;
+    if (body.length == 0) {
+        filled = HushCallSetObject(target, @selector(setContent:),
+                                   @"[对方试图撤回一条消息，已被拦截]");
+        if (!filled) bodyForRestore = nil;
+    }
+
     if (!ok) {
         static BOOL warned = NO;
         if (!warned) {
@@ -332,11 +381,13 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
         return model;
     }
 
-    if (!isolated) HushMarkDirtyInPlace(target, t, s);
+    if (!isolated) HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
     sNeutralized++;
+    // 注意别用 %s 传中文：%s 走的是 C 字符串，日志里会变成乱码
+    // （v31 的「ÂâØÊú¨ÈöîÁ¶ª」就是这么来的），中文一律 %@。
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
-        @"[Hush][防撤回] 改造 type=55→1 msgId=%lld via %s（%s）",
-        mid, where, isolated ? "副本隔离" : "原地改+落库前还原"]];
+        @"[Hush][防撤回] 改造 type=55→1 msgId=%lld 入口=%s 方式=%@ 补正文=%d",
+        mid, where, isolated ? @"副本隔离" : @"原地改+落库前还原", filled ? 1 : 0]];
     return target;
 }
 
