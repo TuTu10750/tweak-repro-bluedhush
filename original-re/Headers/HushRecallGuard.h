@@ -76,3 +76,25 @@ FOUNDATION_EXPORT void HushRecallDecorateCell(id cell, id model);
 /// Restore every neutralised model in `obj` (array or single model) to the
 /// host's original type / status / content before it reaches a DB writer.
 FOUNDATION_EXPORT void HushRecallRestoreDirtyArray(id obj);
+
+#pragma mark - packet layer (v36)
+
+/// Packet entry. Returns YES when the packet was swallowed and `orig` must NOT be
+/// called. The reference log does exactly this — it never lets a `messageType=55`
+/// packet reach the model layer, so the host keeps its in-memory list, its SQLite
+/// row and its table diff untouched:
+///
+///     [Chat] 已拦截撤回（吞掉 type=55 推送包）msgId=75 sessionId=… from=…
+///
+/// A recall of our own message, an unknown login state and a packet without an id
+/// are all forwarded (fail open), same as the reference.
+FOUNDATION_EXPORT BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg,
+                                                      void (*orig)(id, SEL, id));
+
+/// Remember / query a msgId swallowed at the packet layer. The host never marks
+/// those messages, so the chat cell hook uses this set to decide on the badge.
+FOUNDATION_EXPORT void HushRecallMarkIntercepted(long long mid);
+FOUNDATION_EXPORT BOOL HushRecallIsIntercepted(long long mid);
+
+/// Observation only: log the host's own `-p_checkIfNeedBlockPackage:` verdict.
+FOUNDATION_EXPORT void HushRecallProbeBlockDecision(id pkg, BOOL verdict);

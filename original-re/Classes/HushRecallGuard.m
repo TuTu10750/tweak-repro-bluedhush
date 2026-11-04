@@ -23,6 +23,7 @@
 
 #import <objc/runtime.h>
 #import <UIKit/UIKit.h>
+#import <QuartzCore/QuartzCore.h>
 #import <limits.h>
 
 #define HUSH_MSG_TYPE_RECALL 55
@@ -416,7 +417,11 @@ static const NSInteger kHushInterceptTag = 0x4F3A21;   // 魔数，便于 viewWi
 BOOL HushRecallModelWasIntercepted(id model) {
     if (!model) return NO;
     id v = objc_getAssociatedObject(model, &kHushInterceptedKey);
-    return [v boolValue];
+    if ([v boolValue]) return YES;
+    // 包层拦下的那条消息，宿主根本没把它改成撤回态，模型上自然没有关联标记；
+    // 只认 msgId 集合，这样 setMessage: 一被调用就能贴上角标。
+    long long mid = HushModelLongLong(model, HushRecallIdKeys());
+    return HushRecallIsIntercepted(mid);
 }
 
 // 在 cell 内容区左上角贴一枚「已拦截」。位置用 frame 写死：气泡自身的 x 会随
@@ -465,6 +470,222 @@ void HushRecallRestoreDirtyArray(id obj) {
         return;
     }
     HushRestoreDirtyInPlace(obj);
+}
+
+#pragma mark - 包层：在数据流源头吞掉撤回包（v36）
+
+// 原版的做法（hooo1 对照日志 23:39:10，同一毫秒四行）：
+//
+//   GJIMEngine.handleingGRPCPrivatePackage PushPackage messageType=55 type=0 messageId=75 …
+//   [Chat] 撤回通知到达 type=55（普通撤回）
+//   [Chat][防撤回] ★ 已提示拦截（Toast）msgId=75
+//   [Chat] 已拦截撤回（吞掉 type=55 推送包）msgId=75 sessionId=… from=…
+//
+// 它既不写库、也不改 updateMessages: 的数组，而是在「宿主还没解析出模型」的入口
+// 直接不往下传。宿主从此完全不知道发生过撤回：内存列表、本地库、行 diff 全是
+// 原样，所以既不需要退出重进，也不会出现空白气泡。
+//
+// 这一层取代了 v34/v35 的「改 type + 拦 p_updateMessage」，那两条腿留在代码里
+// 只作为 A/B 诊断（switch_ar_db_block / switch_ar_ui_block 现已默认关闭）。
+
+static NSMutableSet *sInterceptedIds = nil;
+static NSLock *sInterceptedLock = nil;
+static BOOL sPackageShapeLogged = NO;
+
+static NSLock *HushInterceptLock(void) {
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ sInterceptedLock = [[NSLock alloc] init]; });
+    return sInterceptedLock;
+}
+
+void HushRecallMarkIntercepted(long long mid) {
+    if (mid <= 0) return;
+    NSLock *l = HushInterceptLock();
+    [l lock];
+    if (!sInterceptedIds) sInterceptedIds = [[NSMutableSet alloc] init];
+    [sInterceptedIds addObject:@(mid)];
+    [l unlock];
+}
+
+BOOL HushRecallIsIntercepted(long long mid) {
+    if (mid <= 0) return NO;
+    NSLock *l = HushInterceptLock();
+    [l lock];
+    BOOL hit = [sInterceptedIds containsObject:@(mid)];
+    [l unlock];
+    return hit;
+}
+
+// PushPackage 是 protobuf 生成的类，字段名以原版日志的打印为准：
+// `PushPackage messageType=2 type=0 messageId=75 sess=<len=8,…> from=<len=8,…> extra{…}`。
+// 注意 type 与 messageType 是两个不同字段 —— 撤回看的是 messageType。
+static NSArray<NSString *> *HushPktTypeKeys(void) { return @[@"messageType", @"type"]; }
+static NSArray<NSString *> *HushPktFromKeys(void) { return @[@"from", @"fromId", @"senderId", @"uid"]; }
+static NSArray<NSString *> *HushPktIdKeys(void)   { return @[@"messageId", @"msgId", @"msgLocalId"]; }
+static NSArray<NSString *> *HushPktSessKeys(void) { return @[@"sess", @"sessionId", @"to"]; }
+
+// 首次见到包对象时把它到底有哪些字段打一次。原版没告诉我们类名与字段布局，
+// 这一行是「下一个版本该按哪个 key 读」的唯一依据。
+static void HushPktLogShapeOnce(id pkg) {
+    if (sPackageShapeLogged || !pkg) return;
+    sPackageShapeLogged = YES;
+    NSMutableString *keys = [NSMutableString string];
+    NSArray *probe = @[@"messageType", @"type", @"messageId", @"msgId", @"from",
+                       @"fromId", @"sess", @"sessionId", @"extra", @"status",
+                       @"recallType", @"is_super_recall", @"content"];
+    for (NSString *k in probe) {
+        [keys appendFormat:@"%@=%@ ", k, HushModelHasKey(pkg, k) ? @"y" : @"n"];
+    }
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][防撤回] 包对象形状 %@ | %@", NSStringFromClass([pkg class]), keys]];
+}
+
+#pragma mark - 包层：提示与气泡刷新
+
+static UIWindow *HushRecallKeyWindow(void) {
+    UIApplication *app = [UIApplication sharedApplication];
+    for (UIWindow *w in [app windows]) { if (w.isKeyWindow) return w; }
+    NSArray *all = [app windows];
+    return all.count > 0 ? (UIWindow *)[all firstObject] : nil;
+}
+
+// 一条轻提示（原版是 Toast）。只用 UIKit 最小集，全部包在 @try 里：提示失败
+// 绝不能连累消息链路。
+static void HushRecallToast(NSString *text) {
+    if (text.length == 0) return;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            UIWindow *win = HushRecallKeyWindow();
+            if (!win) return;
+
+            UILabel *lab = [[UILabel alloc] initWithFrame:CGRectZero];
+            lab.text = text;
+            lab.font = [UIFont boldSystemFontOfSize:13.0];
+            lab.textColor = [UIColor whiteColor];
+            lab.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.78];
+            lab.textAlignment = NSTextAlignmentCenter;
+            lab.numberOfLines = 1;
+            lab.layer.cornerRadius = 14.0;
+            lab.layer.masksToBounds = YES;
+            [lab sizeToFit];
+            CGRect f = lab.frame;
+            f.size.width += 28.0;
+            f.size.height = 28.0;
+            f.origin.x = (win.bounds.size.width - f.size.width) / 2.0;
+            f.origin.y = win.bounds.size.height * 0.22;
+            lab.frame = f;
+            lab.alpha = 0.0;
+            [win addSubview:lab];
+            [UIView animateWithDuration:0.18 animations:^{ lab.alpha = 1.0; }
+                             completion:^(BOOL done) {
+                [UIView animateWithDuration:0.35 delay:1.1 options:0 animations:^{
+                    lab.alpha = 0.0;
+                } completion:^(BOOL d2) { [lab removeFromSuperview]; }];
+            }];
+        } @catch (__unused NSException *e) { }
+    });
+}
+
+// 宿主不知道发生过撤回，就不会重画那一行 —— 我们自己去把可见的聊天 cell 巡检
+// 一遍，命中 msgId 集合的贴角标。只走主线程、只读可见 cell、带节点上限。
+static void HushRecallDecorateVisibleCells(void) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        @try {
+            UIWindow *win = HushRecallKeyWindow();
+            if (!win) return;
+
+            NSMutableArray *stack = [NSMutableArray arrayWithObject:win];
+            NSUInteger guard = 0;
+            NSUInteger painted = 0;
+            while (stack.count > 0 && guard++ < 800) {
+                UIView *v = [stack lastObject];
+                [stack removeLastObject];
+                if ([v isKindOfClass:[UITableView class]]) {
+                    for (UITableViewCell *c in [(UITableView *)v visibleCells]) {
+                        id m = nil;
+                        @try {
+                            if ([c respondsToSelector:NSSelectorFromString(@"message")]) {
+                                m = [c valueForKey:@"message"];
+                            }
+                        } @catch (__unused NSException *e) { m = nil; }
+                        if (!m) continue;
+                        HushRecallDecorateCell(c, m);
+                        painted++;
+                    }
+                    continue;                       // 表内部不再下钻
+                }
+                [stack addObjectsFromArray:v.subviews];
+            }
+            if (painted > 0) {
+                [HushLogger logLevel:4 format:[NSString stringWithFormat:
+                    @"[Hush][防撤回] 巡检可见 cell %lu 个（贴角标用）", (unsigned long)painted]];
+            }
+        } @catch (__unused NSException *e) { }
+    });
+}
+
+#pragma mark - 包层入口
+
+BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg, void (*orig)(id, SEL, id)) {
+    (void)self; (void)_cmd; (void)orig;
+
+    if (!pkg) return NO;
+    HushPktLogShapeOnce(pkg);
+
+    if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]) return NO;
+    if (![[HushConfig shared] isEnabled:@"switch_ar_packet_block"]) return NO;
+
+    long long t = HushModelLongLong(pkg, HushPktTypeKeys());
+    if (t != HUSH_MSG_TYPE_RECALL) return NO;       // 只处理撤回包，其它一律放行
+
+    long long mid  = HushModelLongLong(pkg, HushPktIdKeys());
+    long long from = HushModelLongLong(pkg, HushPktFromKeys());
+    long long sid  = HushModelLongLong(pkg, HushPktSessKeys());
+    long long me   = HushRecallCurrentUid();
+
+    // 与自己撤回 / 登录态未知同一条口径：拿不准就放行（原版也是这么写的：
+    // `撤回包来自自己（from=100938367），放行` / `登录态不可用（me=0），按 fail-safe 放行不拦`）。
+    if (me == 0) {
+        [HushLogger logLevel:2 format:
+            @"[Hush][防撤回] 收到撤回包但登录态未知（me=0）→ fail-safe 放行不吞"];
+        return NO;
+    }
+    if (from == me) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][防撤回] 撤回包来自自己（from=%lld），放行", from]];
+        return NO;
+    }
+    if (mid <= 0) {
+        [HushLogger logLevel:2 format:
+            @"[Hush][防撤回] 撤回包读不到 messageId → 无法记账，放行"];
+        return NO;
+    }
+
+    sBlocked++;
+    HushRecallMarkIntercepted(mid);
+    HushAntiRevokeRecordBlocked(sid, 0, mid, HUSH_MSG_TYPE_RECALL, @"");
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][防撤回] ★ 吞掉撤回包 msgId=%lld sessionId=%lld from=%lld（宿主不知情，消息原样保留）",
+        mid, sid, from]];
+    if ([[HushConfig shared] isEnabled:@"switch_ar_toast"]) {
+        HushRecallToast(@"已拦截一条撤回");
+    }
+    HushRecallDecorateVisibleCells();
+    return YES;                                      // 关键：不调 orig
+}
+
+// 探针：宿主自己也有一个「这条包要不要拦」的判断（GJIMEngine -p_checkIfNeedBlockPackage:）。
+// 只记录、不改返回值 —— 先看它平时判什么，再决定下一版能不能借它。
+void HushRecallProbeBlockDecision(id pkg, BOOL verdict) {
+    if (!pkg) return;
+    long long t = HushModelLongLong(pkg, HushPktTypeKeys());
+    long long mid = HushModelLongLong(pkg, HushPktIdKeys());
+    static int n = 0;
+    n++;
+    if (!verdict && t != HUSH_MSG_TYPE_RECALL && n > 5) return;   // 正常包不刷屏
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][防撤回] 宿主自负判断 p_checkIfNeedBlockPackage → %d（type=%lld msgId=%lld，第 %d 次）",
+        verdict ? 1 : 0, t, mid, n]];
 }
 
 #pragma mark - 四个入口

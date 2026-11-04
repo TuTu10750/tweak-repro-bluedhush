@@ -189,9 +189,11 @@ static const HushDefaultEntry kHushDefaults[] = {
     // A/B 定位死锁用：把「拦落库」和「拦 UI」拆成两个独立开关，
     // 一轮只关一个，就能确定卡死到底落在那条腿上。
     // 138 = 136（对齐原版 boot 的键数）+ 这 2 个。
-    { "switch_ar_db_block",     NULL, 1, 1 },
-    { "switch_ar_ui_block",     NULL, 1, 1 },
+    { "switch_ar_db_block",     NULL, 0, 1 },
+    { "switch_ar_ui_block",     NULL, 0, 1 },
+    { "switch_ar_packet_block", NULL, 1, 1 },
+    { "switch_ar_toast",        NULL, 1, 1 },
 };
-static const int kHushDefaultsCount = 138;
+static const int kHushDefaultsCount = 140;
 
 #endif

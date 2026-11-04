@@ -467,9 +467,35 @@ static void r_fetchMore(id self, SEL _cmd, id a0, BOOL a1, BOOL a2) {
     if (o_fetchMore) o_fetchMore(self, _cmd, a0, a1, a2);
 }
 
+// 37: the packet entry — where the reference log actually kills a recall.
+//   GJIMEngine.handleingGRPCPrivatePackage PushPackage messageType=55 … messageId=75
+//   [Chat] 已拦截撤回（吞掉 type=55 推送包）msgId=75
+// Swallowing here means the host never builds a model, never writes SQLite and
+// never touches the table diff, which is why the reference needs no re-enter and
+// shows no blank bubble. One owner only (`GJIMEngine`), encoding `v24@0:8@16`.
+static void (*o_engineGRPCPrivate)(id, SEL, id);
+static void r_engineGRPCPrivate(id self, SEL _cmd, id a0) {
+    HushHit("GJIMEngine", "handleingGRPCPrivatePackage:");
+    if (HushRecallHandlePrivatePackage(self, _cmd, a0, o_engineGRPCPrivate)) {
+        return;                                  // 吞掉：不调 orig
+    }
+    if (o_engineGRPCPrivate) o_engineGRPCPrivate(self, _cmd, a0);
+}
+
+// 38: probe only — the host's own "should this package be blocked" gate.
+// Returning its value untouched; we only want to know what it decides in practice
+// before borrowing it in a later version.
+static BOOL (*o_checkBlockPkg)(id, SEL, id);
+static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
+    HushHit("GJIMEngine", "p_checkIfNeedBlockPackage:");
+    BOOL r = o_checkBlockPkg ? o_checkBlockPkg(self, _cmd, a0) : NO;
+    HushRecallProbeBlockDecision(a0, r);
+    return r;
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 36
+#define HUSH_TARGET_COUNT 38
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -526,6 +552,7 @@ void HushInstallHooks(void) {
     Class cCell  = hush_resolve_class("BDChatBasicCell");
     Class cUser  = hush_resolve_class("UserInformation");
     Class cTable = hush_resolve_class("BDMessageTableView");
+    Class cEngine = hush_resolve_class("GJIMEngine");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -751,6 +778,20 @@ void HushInstallHooks(void) {
         hush_report(34, "UserInformation", "setAlbum_ban_save:", r);
     }
 
+
+    // ---- v36: the packet layer (the place the reference log actually blocks)
+    if (!s_done[36]) {
+        SEL s = sel_registerName("handleingGRPCPrivatePackage:");
+        hush_installed r = hush_install_impl(cEngine, s, (IMP)&r_engineGRPCPrivate, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_engineGRPCPrivate = (void (*)(id, SEL, id))r.prev;
+        hush_report(36, "GJIMEngine", "handleingGRPCPrivatePackage:", r);
+    }
+    if (!s_done[37]) {
+        SEL s = sel_registerName("p_checkIfNeedBlockPackage:");
+        hush_installed r = hush_install_impl(cEngine, s, (IMP)&r_checkBlockPkg, "B24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_checkBlockPkg = (BOOL (*)(id, SEL, id))r.prev;
+        hush_report(37, "GJIMEngine", "p_checkIfNeedBlockPackage:", r);
+    }
 
     // Only summarise once every target has reached a final state, so the line the
     // verification table greps for is not printed three times with half the data.
