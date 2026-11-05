@@ -527,9 +527,24 @@ static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
     return r;
 }
 
+// v41: showAutoDestroyImage: — 闪照的点开动作。
+//
+// 只摘遮罩是假象：用户点一下，宿主内部依然走这条，然后自己起销毁倒计时
+// （把图换回模糊占位 / 标成已查看）。所以这里必须 %orig（要它去解密铺图），
+// 但在它之后把销毁面重新拆一遍 —— 展示归你，销毁权没收。
+//
+// 只挂在 BDDestoryChatCell 上（sel_index: `showAutoDestroyImage:` v24@0:8@16，
+// BDDestoryChatCell 与 BDMessageViewController 上都有；这里取前者，离画面最近）。
+static void (*o_destoryShowAuto)(id, SEL, id);
+static void r_destoryShowAuto(id self, SEL _cmd, id a0) {
+    HushHit("BDDestoryChatCell", "showAutoDestroyImage:");
+    if (o_destoryShowAuto) o_destoryShowAuto(self, _cmd, a0);
+    HushAutoDestroyKeepAlive(self);
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 39
+#define HUSH_TARGET_COUNT 40
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -587,6 +602,7 @@ void HushInstallHooks(void) {
     Class cUser  = hush_resolve_class("UserInformation");
     Class cEngine = hush_resolve_class("GJIMEngine");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
+    Class cDestory = hush_resolve_class("BDDestoryChatCell");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -780,6 +796,12 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cCovers, s, (IMP)&r_hasNoneSplashShow, "B16@0:8");
         if (strcmp(r.kind, "MISSING") != 0) o_hasNoneSplashShow = (BOOL (*)(id, SEL))r.prev;
         hush_report(38, "BDIndexPageCoversManager", "hasNoneSplashShow", r);
+    }
+    if (!s_done[39]) {
+        SEL s = sel_registerName("showAutoDestroyImage:");
+        hush_installed r = hush_install_impl(cDestory, s, (IMP)&r_destoryShowAuto, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_destoryShowAuto = (void (*)(id, SEL, id))r.prev;
+        hush_report(39, "BDDestoryChatCell", "showAutoDestroyImage:", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");

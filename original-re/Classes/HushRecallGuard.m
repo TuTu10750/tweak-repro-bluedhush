@@ -413,6 +413,76 @@ static void HushRestoreDirtyInPlace(id model) {
     [HushLogger logLevel:4 format:@"[Hush][防撤回] 放行前已把原地改造的字段（type/status/content）还原，防写入宿主库"];
 }
 
+// v41：历史撤回洗白。
+//
+// 「吞包」只防新消息。聊天记录里早就在的那批 type=55 是宿主自己标的
+// （v40 真机日志：type=55 / del=1 / intc=0 共 26 条，mid 4/9/10/11/12/14/15…），
+// 每次进聊天页都被渲染成灰色占位条 —— 这就是"历史记录还会变灰"的由来。
+// 原内容服务端已经删了，恢复不出来；只能把类型码洗成普通文本、清掉删除标记，
+// 让它渲染成正常气泡而不是「对方撤回了一条消息」。
+//
+// 默认关：洗出来长什么样（content 可能是空串）得先在真机上看一眼再说。
+BOOL HushRecallIsIntercepted(long long mid);   // 真定义在下面，这里先用
+
+static void HushHistoricalRecallPurify(id model) {
+    if (!model) return;
+    // 这个键还没进 kHushToggles（HushModuleMap.h 是 _work/gen_module_map.py 生成的，
+    // 手改会被下次重生成冲掉），所以面板里没有它 —— 先默认打开，验过渲染效果再补进面板。
+    // 用户在 defaults 里手写 false 也拦得住（isEnabled:default: 优先读存储值）。
+    if (![[HushConfig shared] isEnabled:@"switch_recall_history_purify" default:YES]) return;
+    long long t = HushModelLongLong(model, HushRecallTypeKeys());
+    if (t != HUSH_MSG_TYPE_RECALL) return;
+    long long mid = HushModelLongLong(model, HushRecallIdKeys());
+    if (mid != LLONG_MIN && mid > 0 && HushRecallIsIntercepted(mid)) return;   // 我们吞过的走另一条还原链
+    long long del = HushModelLongLong(model, @[@"deleteStatus"]);
+    if (del == LLONG_MIN || del == 0) return;                                  // 已经洗干净了
+
+    // 原类型早就没了：type=55 是宿主在撤回时盖上去的，原始 type 没有留档。
+    // 只能从残留字段反推 —— image / destroyUrl 有值就是图，否则按文本处理。
+    // (sel_index: GJIMMessageModel 上有 image @16@0:8 / destroyUrl @16@0:8 /
+    //  imageType i16@0:8 / autoDestroy B16@0:8，没有 pic_url。)
+    NSString *img  = HushModelString(model, @[@"image"]);
+    NSString *durl = HushModelString(model, @[@"destroyUrl"]);
+    NSString *body = HushModelString(model, @[@"content", @"selectedContent"]);
+    BOOL isImage = (img.length > 0 || durl.length > 0);
+
+    // 撤回态的三件套一起清：光改 type 不动 recallType / isSuperRecallTip，
+    // 宿主照样可能按撤回气泡排版（v40 日志 TRUTH 里 rc=0 tip=0 是常态，
+    // 但那是本机数据；别人的库里这两项可能是 1）。
+    HushCallSetNumber(model, @selector(setDeleteStatus:), 0);
+    HushCallSetNumber(model, @selector(setStatus:), 0);
+    HushCallSetNumber(model, @selector(setRecallType:), 0);
+    HushCallSetNumber(model, @selector(setIsSuperRecallTip:), 0);
+
+    long long targetType;
+    BOOL filled = NO;
+    if (isImage) {
+        targetType = 2;                       // 图片：按图渲染，不动正文
+        HushCallSetNumber(model, @selector(setType:), targetType);
+    } else {
+        targetType = 1;                       // 文本
+        HushCallSetNumber(model, @selector(setType:), targetType);
+        if (body.length == 0) {
+            // 正文服务端已删，本地也没留 —— 不塞兜底串就是一个空气泡（高度 0，看着像 bug）
+            HushCallSetObject(model, @selector(setContent:), @"[历史消息已防撤回]");
+            filled = YES;
+        }
+    }
+
+    static int n = 0;
+    n++;
+    if (n <= 10) {
+        NSString *line = [NSString stringWithFormat:
+            @"[Hush][防撤回] WASH#%d mid=%lld type 55->%lld kind=%@ imgLen=%lu durlLen=%lu "
+            @"bodyLen=%lu filled=%d",
+            n, mid, targetType, isImage ? @"image" : @"text",
+            (unsigned long)img.length, (unsigned long)durl.length,
+            (unsigned long)body.length, filled ? 1 : 0];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
 #pragma mark - 改造一个撤回包
 
 static long sNeutralized = 0;
@@ -491,6 +561,7 @@ static NSUInteger HushNeutralizeCount(void) { return (NSUInteger)sNeutralized; }
 #pragma mark - 气泡标记
 
 static const NSInteger kHushInterceptTag = 0x4F3A21;   // 魔数，便于 viewWithTag: 找回
+static const NSInteger kHushBurnTag      = 0x4F3A22;   // v41：「闪照」标记，挂在气泡图上
 
 BOOL HushRecallModelWasIntercepted(id model) {
     if (!model) return NO;
@@ -793,6 +864,134 @@ static UIView *HushRecallAnchorView(id cell, UIView *host, NSString **outName) {
     return nil;
 }
 
+// ===========================================================================
+// v41：闪照 / 闪文解锁
+// ===========================================================================
+//
+// 真值（v40 真机日志 21:30:54）：type=282 就是阅后即焚，跟 time_limited_status
+// 没有关系 —— 那条消息 extra 里 tls=0 / tlrt=0，类型码照样是 282。宿主认的是
+// 类型码 + Cell 类：BDDestoryChatCell（含 *PrivateOther 子类）负责渲染遮罩
+// 「点击查看」，点开走 -showAutoDestroyImage: 再起倒计时销毁。
+//
+// 所以洗白不能靠改文案，得把遮罩摘掉、把倒计时掐死。
+// sel_index 确认以下 ivar 全部挂在 BDDestoryChatCell 上（51 个 selector）：
+//   destoryCellMaskView / destoryIconBtn / destoryAlterLab / bubbleImgView
+// 注意 BDDestoryChatCellPrivateOther 自己 0 个 selector、全部继承 —— 不同子类的
+// ivar 集合并不一致（_timer 只在 BDChatTextAndFaceCell 上），裸 valueForKey: 会抛
+// NSUnknownKeyException 直接把 App 打死，所以每个取值都包 @try。
+
+static id HushSafeKVC(id obj, NSString *key) {
+    if (!obj) return nil;
+    @try { return [obj valueForKey:key]; }
+    @catch (__unused NSException *e) { return nil; }
+}
+
+static void HushHideView(id obj, BOOL hide) {
+    if (![obj isKindOfClass:[UIView class]]) return;
+    ((UIView *)obj).hidden = hide;
+}
+
+void HushAutoDestroyUnlock(id cell, id model) {
+    if (!cell || !model) return;
+    long long t = HushModelLongLong(model, HushRecallTypeKeys());
+    if (t != HUSH_MSG_TYPE_TIME_LIMITED) return;   // 只认 282
+
+    // 1. 倒计时。文本闪文在 BDChatTextAndFaceCell 上叫 _timer；
+    //    图片闪照走 BDDestoryChatCell 的 videoPlayManager 那套。取不到就算了。
+    id timer = HushSafeKVC(cell, @"_timer");
+    if ([timer isKindOfClass:[NSTimer class]]) {
+        [(NSTimer *)timer invalidate];
+        @try { [cell setValue:nil forKey:@"_timer"]; }
+        @catch (__unused NSException *e) {}
+    }
+
+    // 2. 摘掉遮罩三件套，亮出真图。
+    HushHideView(HushSafeKVC(cell, @"_destoryCellMaskView"), YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryIconBtn"),      YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),    YES);
+    id img = HushSafeKVC(cell, @"_bubbleImgView");
+    HushHideView(img, NO);
+
+    // 3. 挂个「闪照」小标，让它自己说明身份 —— 否则用户会当普通图片看。
+    if (![img isKindOfClass:[UIView class]]) return;
+    UIView *container = (UIView *)img;
+    UILabel *mark = nil;
+    @try { mark = (UILabel *)[container viewWithTag:kHushBurnTag]; }
+    @catch (__unused NSException *e) { mark = nil; }
+    if (!mark) {
+        mark = [[UILabel alloc] initWithFrame:CGRectZero];
+        mark.tag = kHushBurnTag;
+        mark.text = @"闪照";
+        mark.font = [UIFont systemFontOfSize:10.0 weight:UIFontWeightMedium];
+        mark.textColor = [UIColor whiteColor];
+        mark.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
+        mark.textAlignment = NSTextAlignmentCenter;
+        mark.layer.cornerRadius = 3.0;
+        mark.clipsToBounds = YES;
+        mark.userInteractionEnabled = NO;
+        [container addSubview:mark];
+    }
+    [mark sizeToFit];
+    CGRect mf = mark.frame;
+    mf.size.width  += 6.0;
+    mf.size.height += 2.0;
+    mf.origin.x = 4.0;
+    mf.origin.y = 4.0;
+    mark.frame = mf;
+    mark.hidden = NO;
+
+    static int burnLogs = 0;
+    burnLogs++;
+    if (burnLogs <= 10 || (burnLogs % 10) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] BURN#%d cell=%@ img=%@ mask=%@ timer=%@",
+            burnLogs, NSStringFromClass([cell class]),
+            NSStringFromClass([container class]),
+            HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
+            timer ? @"y" : @"n"];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
+// v41: showAutoDestroyImage: 放行之后收尾。
+//
+// 「我让你展示，但我剥夺你销毁的权力」：%orig 必须走 —— 它负责真正解析/解密图片、
+// 把内容铺到 _bubbleImgView 上。但它在内部会顺手起自己的销毁流程（重挂遮罩、
+// 重开倒计时、把图换回模糊占位）。所以这里在 %orig 之后再把销毁面拆一遍。
+//
+// 不判 model 类型：这条 hook 只挂在 BDDestoryChatCell 上，能进来就说明是闪照。
+// v40 日志确认 BDDestoryChatCellPrivateOther 自己 0 个 selector、51 个全继承父类，
+// 所以 _destoryCellMaskView 等 KVC 会落到父类 ivar —— 但仍然每个都要 @try 兜。
+void HushAutoDestroyKeepAlive(id cell) {
+    if (!cell) return;
+
+    id timer = HushSafeKVC(cell, @"_timer");
+    if ([timer isKindOfClass:[NSTimer class]]) {
+        [(NSTimer *)timer invalidate];
+        @try { [cell setValue:nil forKey:@"_timer"]; }
+        @catch (__unused NSException *e) {}
+    }
+
+    HushHideView(HushSafeKVC(cell, @"_destoryCellMaskView"), YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryIconBtn"),      YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),    YES);
+    HushHideView(HushSafeKVC(cell, @"_bubbleImgView"),       NO);
+
+    static int keepLogs = 0;
+    keepLogs++;
+    if (keepLogs <= 10 || (keepLogs % 10) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] KEEP#%d cell=%@ mask=%@ img=%@ timer=%@（orig 已展示，销毁面已拆）",
+            keepLogs, NSStringFromClass([cell class]),
+            HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
+            HushSafeKVC(cell, @"_bubbleImgView") ? @"y" : @"n",
+            timer ? @"y" : @"n"];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
 // 贴「已拦截」角标：挂 Cell 本身，锚气泡内侧左上角，9pt Medium 深灰字、无底色。
 //
 // v40 把底色 #407EFD + 白色粗体 10 号去掉了 —— 那是从原版抄来的常量，贴到浅色
@@ -816,6 +1015,11 @@ void HushRecallDecorateCell(id cell, id model) {
     // 「撤回包被吞、宿主完全不知情」时压根不会触发 —— v39 真机日志已证实两者
     // 的 hit 计数为 0，TRUTH# 一条都打不出来。
     HushRecallTruthDump(model, "ui");
+
+    // v41：闪照先解锁，再走角标逻辑。
+    // 放在 -ModelWasIntercepted 判断之前 —— 闪照不需要被我们拦截过，只要它是
+    // type=282 就该洗白；如果放到后面，未被拦截的闪照永远进不来。
+    HushAutoDestroyUnlock(cell, model);
 
     UILabel *tag = nil;
     @try { tag = (UILabel *)[host viewWithTag:kHushInterceptTag]; }
@@ -866,10 +1070,13 @@ void HushRecallDecorateCell(id cell, id model) {
     tag.hidden = NO;
     CGRect a = [anchor convertRect:anchor.bounds toView:host];
     CGRect f = tag.frame;
-    // v40：贴气泡最内侧左上角，内缩 4pt。相对气泡本身定位，不依赖 Cell 整宽，
-    // 所以对方在左、己方在右两种气泡都成立。
-    f.origin.x = CGRectGetMinX(a) + 4.0;
-    f.origin.y = CGRectGetMinY(a) + 4.0;
+    // v41：贴气泡最内侧左上角，内缩 6pt（v40 是 4pt）。
+    // _bubbleImgView 是九宫格拉伸的 UIImageView，它的 bounds 比肉眼看到的气泡
+    // 多出一圈透明边距 / 阴影，4pt 正好卡在视觉边缘上 —— 真机截图里看着「飞」。
+    // 再往里推 2pt 就落在气泡可视区里了。
+    // 相对气泡本身定位，不依赖 Cell 整宽，所以对方在左、己方在右两种气泡都成立。
+    f.origin.x = CGRectGetMinX(a) + 6.0;
+    f.origin.y = CGRectGetMinY(a) + 6.0;
 
     // 夹在 Cell 自身边界内，避免贴到屏幕外
     CGRect b = host.bounds;
@@ -910,10 +1117,14 @@ void HushRecallRestoreDirtyArray(id obj) {
     if (!obj) return;
     HushRecallTruthDump(obj, "db-write");   // P0-2b：写库入口真值
     if ([obj isKindOfClass:[NSArray class]]) {
-        for (id m in (NSArray *)obj) HushRestoreDirtyInPlace(m);
+        for (id m in (NSArray *)obj) {
+            HushRestoreDirtyInPlace(m);
+            HushHistoricalRecallPurify(m);   // v41：历史 55 洗白（switch_recall_history_purify 控制）
+        }
         return;
     }
     HushRestoreDirtyInPlace(obj);
+    HushHistoricalRecallPurify(obj);
 }
 
 #pragma mark - 包层：在数据流源头吞掉撤回包（v36）

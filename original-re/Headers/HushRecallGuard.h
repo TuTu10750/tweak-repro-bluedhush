@@ -77,6 +77,15 @@ BOOL HushRecallModelWasIntercepted(id model);
 /// every model: it hides the badge when the message was not intercepted.
 FOUNDATION_EXPORT void HushRecallDecorateCell(id cell, id model);
 
+/// v41: 闪照（type=282）解锁。摘遮罩/杀倒计时/亮图/挂「闪照」标。
+/// 由 BDChatBasicCell -setMessage: 那条腿调用，模型不是 282 时直接返回。
+FOUNDATION_EXPORT void HushAutoDestroyUnlock(id cell, id model);
+
+/// v41: `BDDestoryChatCell -showAutoDestroyImage:` 放行之后的收尾。
+/// 原版那次调用负责真正解密/铺图，但会顺手重挂遮罩、重开倒计时 —— 这里再拆一遍。
+/// 不判模型类型：能进这条 hook 就说明是闪照 cell。
+FOUNDATION_EXPORT void HushAutoDestroyKeepAlive(id cell);
+
 /// Restore every neutralised model in `obj` (array or single model) to the
 /// host's original type / status / content before it reaches a DB writer.
 FOUNDATION_EXPORT void HushRecallRestoreDirtyArray(id obj);
