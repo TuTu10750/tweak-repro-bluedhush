@@ -25,6 +25,8 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <limits.h>
+#import <stdio.h>          // P0-2a 探针：fprintf(stderr) 绕开 NSLog 的 <private>
+#import <stdlib.h>         // P0-2a 探针：free(class_copyIvarList(...))
 
 #define HUSH_MSG_TYPE_RECALL 55
 
@@ -785,6 +787,84 @@ static UITableView *HushRecallChatTable(void) {
     return HushRecallFindTable([[HushRecallKeyWindow() rootViewController] view], 4);
 }
 
+#pragma mark - P0-2a 探针（临时，出结论后收敛成 P0-2b）
+
+// 直调 getter，完全不碰 KVC。
+// KVC 的 valueForKey: 在 cell 的 message 是 weak / 返回非 NSObject 包装 /
+// ivar 名与属性名不一致时会抛或返回 nil，而原代码用 @catch 吞掉异常后就
+// 得到 painted=0 —— 这正是这次要证伪的假设。
+static id HushProbeGet(id obj, NSString *selName) {
+    if (!obj) return nil;
+    SEL s = NSSelectorFromString(selName);
+    if (![obj respondsToSelector:s]) return nil;
+    IMP imp = [obj methodForSelector:s];
+    if (!imp) return nil;
+    return ((id (*)(id, SEL))imp)(obj, s);
+}
+
+// 探针统一出口：stderr 给控制台明文，HushLogger 给磁盘。
+// iOS 会把 NSLog 的每个格式参数替换成 <private>，NSLog 等于废的。
+// level 2(W) 而非 3(I)：loadLevelFromConfig 在关日志时把 gHushLogLevel 压到 3，
+// level 3 刚好卡在边界，2 更稳，且 E/W/I 会立刻 flush 出 64KB 缓冲。
+static void HushProbeEmit(NSString *s) {
+    if (![s length]) return;
+    fprintf(stderr, "%s\n", [s UTF8String]);
+    [HushLogger logLevel:2 format:s];
+}
+
+// 动态扫 ivar。不硬编码 _isInBatchUpdate —— 这个名字在不同 iOS / 宿主版本
+// 之间会变（_inBatchUpdate / _updateCount / _batchUpdateDepth / _animating）。
+static NSString *HushProbeIvars(Class cls) {
+    if (!cls) return @"<nil class>";
+    unsigned int n = 0;
+    Ivar *ivs = class_copyIvarList(cls, &n);
+    if (!ivs) return @"<no ivars>";
+
+    NSMutableArray *hits = [NSMutableArray array];
+    NSMutableArray *all  = [NSMutableArray array];
+    for (unsigned int i = 0; i < n; i++) {
+        const char *nm = ivar_getName(ivs[i]);
+        const char *tp = ivar_getTypeEncoding(ivs[i]);
+        NSString *name = nm ? [NSString stringWithUTF8String:nm] : @"?";
+        if ([all count] < 40) {
+            [all addObject:[NSString stringWithFormat:@"%@:%s", name, tp ? tp : "?"]];
+        }
+        NSString *low = [name lowercaseString];
+        if ([low containsString:@"batch"] || [low containsString:@"update"] ||
+            [low containsString:@"anim"]) {
+            [hits addObject:name];
+        }
+    }
+    free(ivs);
+
+    return [NSString stringWithFormat:@"{batch/update=%@ total=%u} %@%@",
+            [hits count] ? [hits componentsJoinedByString:@","] : @"-",
+            n,
+            [all componentsJoinedByString:@" "],
+            n > 40 ? @" …" : @""];
+}
+
+static NSString *HushProbeScene(UIWindow *win) {
+    if (!win) return @"no-window";
+    NSString *act = @"pre-iOS13";
+    if (@available(iOS 13.0, *)) {
+        UIWindowScene *sc = win.windowScene;
+        if (!sc) {
+            act = @"windowScene=nil";
+        } else {
+            switch (sc.activationState) {
+                case UISceneActivationStateForegroundActive:   act = @"fgActive";   break;
+                case UISceneActivationStateForegroundInactive: act = @"fgInactive"; break;
+                case UISceneActivationStateBackground:         act = @"bg";         break;
+                case UISceneActivationStateUnattached:         act = @"unattached"; break;
+                default:                                       act = @"unknown";    break;
+            }
+        }
+    }
+    return [NSString stringWithFormat:@"%@ hidden=%d alpha=%.2f level=%.0f",
+            act, (int)win.hidden, (double)win.alpha, (double)win.windowLevel];
+}
+
 static void HushRecallDecorateVisibleCells(void) {
     dispatch_async(dispatch_get_main_queue(), ^{
         @try {
@@ -795,32 +875,98 @@ static void HushRecallDecorateVisibleCells(void) {
                 return;
             }
 
-            NSUInteger painted = 0;
-            for (UITableViewCell *c in [table visibleCells]) {
-                id m = nil;
+            NSArray *cells = [table visibleCells];
+            NSArray *vis   = [table indexPathsForVisibleRows];
+            UIWindow *win  = table.window;
+
+            // 整表快照，只打一次。dispatch_once 放在 window 判空之后 ——
+            // 否则第一次巡检时不在聊天页就会把 once 白白吃掉，探针永远打不出来。
+            static dispatch_once_t onceTable;
+            dispatch_once(&onceTable, ^{
+                HushProbeEmit([NSString stringWithFormat:
+                    @"[P0-2a] TABLE cls=%@ win=%@ scene=[%@] sections=%ld "
+                    @"visRows=%lu cells=%lu off=%.1f adj=%.1f",
+                    NSStringFromClass([table class]),
+                    NSStringFromClass([win class]),
+                    HushProbeScene(win),
+                    (long)[table numberOfSections],
+                    (unsigned long)[vis count],
+                    (unsigned long)[cells count],
+                    (double)table.contentOffset.y,
+                    (double)table.contentInset.top]);
+                HushProbeEmit([NSString stringWithFormat:
+                    @"[P0-2a] TABLE-IVARS %@", HushProbeIvars([table class])]);
+            });
+
+            // 按 cell 类名逐个 dump，每类一次。一屏里通常混着文本 cell、
+            // 系统 cell、时间分隔 cell —— 只有逐类看才知道 painted=0 是
+            // 「某一类没有 message getter」还是「全部都没有」。
+            static NSMutableSet *seen = nil;   // 只在主队列访问，无需加锁
+            if (!seen) seen = [NSMutableSet set];
+
+            NSUInteger paintedKVC = 0, paintedIMP = 0;
+
+            for (UITableViewCell *c in cells) {
+                Class cc = [c class];
+                NSString *cname = NSStringFromClass(cc);
+
+                if (![seen containsObject:cname]) {
+                    [seen addObject:cname];
+
+                    BOOL hasGet = [c respondsToSelector:NSSelectorFromString(@"message")];
+                    BOOL hasSet = [c respondsToSelector:NSSelectorFromString(@"setMessage:")];
+
+                    id kvc = nil;
+                    NSString *kvcErr = @"-";
+                    @try {
+                        if (hasGet) kvc = [c valueForKey:@"message"];
+                    } @catch (NSException *e) {
+                        kvcErr = e.name ?: @"exception";
+                    }
+                    id impVal = hasGet ? HushProbeGet(c, @"message") : nil;
+
+                    HushProbeEmit([NSString stringWithFormat:
+                        @"[P0-2a] CELL %@ super=%@ getter=%d setter=%d "
+                        @"kvc=%@(err=%@) imp=%@ idx=%@",
+                        cname,
+                        NSStringFromClass([cc superclass]),
+                        (int)hasGet, (int)hasSet,
+                        kvc    ? NSStringFromClass([kvc class])    : @"nil",
+                        kvcErr,
+                        impVal ? NSStringFromClass([impVal class]) : @"nil",
+                        [table indexPathForCell:c]]);
+                    HushProbeEmit([NSString stringWithFormat:
+                        @"[P0-2a] CELL-IVARS %@ %@", cname, HushProbeIvars(cc)]);
+                }
+
+                // 两条取值路径并行统计，直接对比命中率
                 @try {
                     if ([c respondsToSelector:NSSelectorFromString(@"message")]) {
-                        m = [c valueForKey:@"message"];
+                        if ([c valueForKey:@"message"]) paintedKVC++;
                     }
-                } @catch (__unused NSException *e) { m = nil; }
-                if (!m) continue;
-                HushRecallDecorateCell(c, m);
-                painted++;
+                } @catch (__unused NSException *e) { }
+
+                id m = HushProbeGet(c, @"message");
+                if (m) {
+                    paintedIMP++;
+                    HushRecallDecorateCell(c, m);
+                }
             }
 
-            // 宿主没收到包就不会重画这一行：对可见行发一次单行重载，让
-            // -setMessage: 重走一遍（我们的 hook 在那里贴角标）。底层数据没变，
-            // 不会触发 batch update 冲突。
-            NSArray *vis = [table indexPathsForVisibleRows];
-            if (vis.count > 0) {
-                [table reloadRowsAtIndexPaths:vis
-                             withRowAnimation:UITableViewRowAnimationNone];
+            // 每批汇总，节流 5 次。reloadRowsAtIndexPaths 已删除：原 :814-818
+            // 那段本来就是冗余的第二次重画（:799 的遍历已经画完），且与宿主
+            // 批量 updateType 撞车会 "Invalid update" 崩。
+            static int summaries = 0;
+            if (summaries < 5) {
+                summaries++;
+                HushProbeEmit([NSString stringWithFormat:
+                    @"[P0-2a] SUMMARY#%d cells=%lu painted_kvc=%lu painted_imp=%lu",
+                    summaries,
+                    (unsigned long)[cells count],
+                    (unsigned long)paintedKVC,
+                    (unsigned long)paintedIMP]);
             }
 
-            [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][防撤回] 巡检 %@ 可见 cell %lu 个，已重载 %lu 行（贴角标）",
-                NSStringFromClass([table class]),
-                (unsigned long)painted, (unsigned long)[vis count]]];
         } @catch (__unused NSException *e) {
             [HushLogger logLevel:2 format:
                 @"[Hush][防撤回] 巡检聊天表时异常，已忽略（不影响消息本身）"];
