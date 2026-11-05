@@ -29,6 +29,9 @@
 #import <stdlib.h>         // P0-2a 探针：free(class_copyIvarList(...))
 
 #define HUSH_MSG_TYPE_RECALL 55
+// 阅后即焚（闪照/闪文）。v39a 真机日志里它只在影子更新对象上出现过一次
+// （TRUTH#7/#8 mid=3），真消息那条还没采到 —— v40 先让探针认得它。
+#define HUSH_MSG_TYPE_TIME_LIMITED 282
 
 static long sBlocked = 0;
 
@@ -190,8 +193,19 @@ static NSArray<NSString *> *HushRecallFromKeys(void) {
     return @[@"fromId", @"from", @"senderId", @"uid"];
 }
 
+// v40：msgLocalId 从主 ID 链里踢出去。
+//
+// 上一版把它当兜底，结果宿主的影子更新对象（_shadowUpdatesController 里那批）
+// 只有 msgLocalId、msgId 恒 0，于是被当成「真消息」打了出来：v39a 日志里
+// TRUTH#1–#16 全是它们（mid=0~7、deleteStatus 恒 1），30 批探针额度被吃掉一半，
+// 真消息被挤到 TRUTH#17 之后，还顺带把 deleteStatus 判据带歪。
+// 本地自增 ID 只在需要区分「同一 msgId 的不同本地副本」时才用，单独一条链。
 static NSArray<NSString *> *HushRecallIdKeys(void) {
-    return @[@"msgId", @"messageId", @"msgLocalId"];
+    return @[@"msgId", @"messageId"];
+}
+
+static NSArray<NSString *> *HushRecallLocalIdKeys(void) {
+    return @[@"msgLocalId"];
 }
 
 BOOL HushRecallIsForeignRecall(id model, long long *outMsgId) {
@@ -507,6 +521,7 @@ BOOL HushRecallModelWasIntercepted(id model) {
 // 而这里的调用点是写库入口（更靠前）。
 // ===========================================================================
 static int sTruthDumps = 0;
+static int sShadowBatches = 0;   // v40：整批影子的丢弃次数（只报前 3 次，防刷屏）
 
 // HushModelLongLong 拿不到字段时返回 LLONG_MIN。直接 %lld 会打出一串
 // -9223372036854775808，看着像真值 —— 必须显式区分「没有这个字段」。
@@ -571,20 +586,45 @@ static void HushRecallTruthDump(id obj, const char *where) {
     if ([obj isKindOfClass:[NSArray class]]) arr = (NSArray *)obj;
     else if (obj) arr = @[obj];
     if (!arr || arr.count == 0) return;
-    if (sTruthDumps >= 30) return;
+    if (sTruthDumps >= 60) return;
 
-    // 判可疑。除了宿主自己标的撤回态，还有一种必须算进来：
-    // ★ 被我们在包层吞掉、宿主完全不知情的那条 —— 它的 status 仍然是 0，
-    //   type 仍然是 1，光看字段永远不像「撤回」，只能靠 msgId 命中集合认出它。
+    // v40 洗尘：msgId <= 0 的是宿主的影子更新对象，不是真实消息。
+    // 它们在 v39a 日志里占了 TRUTH#1–#16（deleteStatus 恒 1、msgId 恒 0），
+    // 既烧额度又让判据失灵。这里整批过滤 —— 一条额度都不占，也不进明细。
+    NSMutableArray *real = [NSMutableArray arrayWithCapacity:arr.count];
+    for (id m in arr) {
+        long long mid0 = HushModelLongLong(m, HushRecallIdKeys());
+        if (mid0 != LLONG_MIN && mid0 > 0) [real addObject:m];
+    }
+    if (real.count == 0) {
+        if (sShadowBatches < 3) {
+            sShadowBatches++;
+            NSString *line = [NSString stringWithFormat:
+                @"[P0-2b] SHADOW#%d where=%s 整批 %lu 条无 msgId（影子更新对象），整批跳过",
+                sShadowBatches, where, (unsigned long)arr.count];
+            fprintf(stderr, "%s\n", [line UTF8String]);
+            [HushLogger logLevel:2 format:line];
+        }
+        return;
+    }
+    arr = real;
+
+    // 判可疑。v40 收窄了判据。
+    //
+    // 老版把 status / deleteStatus 任意非 0 都算可疑，实测是错的：真消息的
+    // status 普遍是 3 或 4（图片/文本的正常态），deleteStatus 又只在影子对象上
+    // 是 1 —— 两者一叠加，等于「全都可疑」，判了跟没判一样。
+    // 现在只认三件真事：撤回包、阅后即焚、被我们在包层吞过的那条。
+    // 最后一条最要紧：它 status 仍是 0、type 仍是 1，光看字段永远不像撤回，
+    // 只能靠 msgId 命中已拦截集合认出来。
     BOOL suspicious = NO;
     for (id m in arr) {
-        long long t  = HushModelLongLong(m, HushRecallTypeKeys());
-        long long s  = HushModelLongLong(m, @[@"status"]);
-        long long rt = HushModelLongLong(m, @[@"recallType"]);
-        long long ds = HushModelLongLong(m, @[@"deleteStatus"]);
+        long long t   = HushModelLongLong(m, HushRecallTypeKeys());
+        long long rt  = HushModelLongLong(m, @[@"recallType"]);
         long long mid = HushModelLongLong(m, HushRecallIdKeys());
-        if (t == HUSH_MSG_TYPE_RECALL || (s != LLONG_MIN && s != 0)
-            || (rt != LLONG_MIN && rt != 0) || (ds != LLONG_MIN && ds != 0)
+        if (t == HUSH_MSG_TYPE_RECALL
+            || t == HUSH_MSG_TYPE_TIME_LIMITED
+            || (rt != LLONG_MIN && rt != 0)
             || (mid != LLONG_MIN && mid > 0 && HushRecallIsIntercepted(mid))) {
             suspicious = YES;
             break;
@@ -604,6 +644,7 @@ static void HushRecallTruthDump(id obj, const char *where) {
     for (NSUInteger i = 0; i < lim; i++) {
         id m = arr[i];
         long long mid  = HushModelLongLong(m, HushRecallIdKeys());
+        long long lid  = HushModelLongLong(m, HushRecallLocalIdKeys());
         long long t    = HushModelLongLong(m, HushRecallTypeKeys());
         long long s    = HushModelLongLong(m, @[@"status"]);
         long long rt   = HushModelLongLong(m, @[@"recallType"]);
@@ -639,12 +680,12 @@ static void HushRecallTruthDump(id obj, const char *where) {
         if (tlrt == LLONG_MIN && extraStr.length) tlrt = HushRecallJsonInt(extraStr, @"time_limited_msg_read_time");
 
         [lines addObject:[NSString stringWithFormat:
-            @"[P0-2b]   m[%lu] %@ mid=%@ sid=%@ from=%@ type=%@ status=%@ "
+            @"[P0-2b]   m[%lu] %@ mid=%@ lid=%@ sid=%@ from=%@ type=%@ status=%@ "
             @"rc=%@ del=%@ tip=%@ ui=%@ face=%@ exOv=%@ pt=%@ "
             @"tls=%@ tlrt=%@ intc=%d exObj=%@ exLen=%lu",
             (unsigned long)i,
             NSStringFromClass([m class]),
-            HushNumStr(mid), HushNumStr(sid), HushNumStr(from),
+            HushNumStr(mid), HushNumStr(lid), HushNumStr(sid), HushNumStr(from),
             HushNumStr(t), HushNumStr(s),
 
             HushNumStr(rt), HushNumStr(ds), HushNumStr(st),
@@ -752,15 +793,11 @@ static UIView *HushRecallAnchorView(id cell, UIView *host, NSString **outName) {
     return nil;
 }
 
-static UIColor *HushRecallBadgeColor(void) {
-    // 原版真值：底色 #407EFD、字号 10
-    return [UIColor colorWithRed:0x40 / 255.0
-                           green:0x7E / 255.0
-                            blue:0xFD / 255.0
-                           alpha:1.0];
-}
-
-// 贴「已拦截」角标：挂 Cell 本身，锚气泡右上角，字号 10、底色 #407EFD。
+// 贴「已拦截」角标：挂 Cell 本身，锚气泡内侧左上角，9pt Medium 深灰字、无底色。
+//
+// v40 把底色 #407EFD + 白色粗体 10 号去掉了 —— 那是从原版抄来的常量，贴到浅色
+// 气泡上像一块牌子，而且亮蓝比宿主自己的任何 UI 都跳。现在只留文字，靠字号和
+// 灰度融进气泡。
 //
 // 挂载层刻意留在 Cell 上（而不是直接 addSubview 到气泡里）：
 //   - viewWithTag: 的 owner 唯一，Cell 复用时不会叠出第二个标签；
@@ -793,17 +830,17 @@ void HushRecallDecorateCell(id cell, id model) {
         tag = [[UILabel alloc] initWithFrame:CGRectZero];
         tag.tag = kHushInterceptTag;
         tag.text = @"已拦截";
-        tag.font = [UIFont boldSystemFontOfSize:10.0];
-        tag.textColor = [UIColor whiteColor];
-        tag.backgroundColor = HushRecallBadgeColor();
+        // v40：跟原生气泡一个调子。宿主自己极少用系统色，亮橙在气泡里尤其扎眼；
+        // 改成无背景 + 9pt Medium 深灰字，看起来像气泡自带的角标而不是外挂。
+        tag.font = [UIFont systemFontOfSize:9.0 weight:UIFontWeightMedium];
+        tag.textColor = [UIColor colorWithWhite:0.55 alpha:1.0];
+        tag.backgroundColor = [UIColor clearColor];
         tag.textAlignment = NSTextAlignmentCenter;
-        tag.layer.cornerRadius = 3.0;
-        tag.layer.masksToBounds = YES;
         tag.userInteractionEnabled = NO;
         [tag sizeToFit];
         CGRect tf = tag.frame;
-        tf.size.width += 6.0;
-        tf.size.height += 2.0;
+        tf.size.width += 2.0;   // 无背景，只留一点呼吸位，不给边框
+        tf.size.height += 1.0;
         tag.frame = tf;
         [host addSubview:tag];
     } else if (tag.superview != host) {
@@ -811,22 +848,28 @@ void HushRecallDecorateCell(id cell, id model) {
         [tag removeFromSuperview];
         [host addSubview:tag];
     }
-    tag.hidden = NO;
 
+    // v40：锚点拿不到就不贴 —— 这是「角标飞到左上角」的唯一解。
+    //
+    // setMessage: 先在 BDChatBasicCell 基类上跑一遍，此时 Cell 还没被子类化，
+    // BDChatTextAndFaceCellPrivateOther / BDChatImageCellPrivateOther 的锚点一个都
+    // 拿不到。老版在这里兜底 (8,4)，画出来正好压在头像上方 —— v39a 日志
+    // TAG#1 cell=BDChatBasicCell anchor=nil ok=0 tagFrame=(8.0,4.0,...) 就是它。
+    // 宿主随后换成真子类重设 message，那一次锚点就有了，角标自然会贴对。
     NSString *anchorName = @"-";
     UIView *anchor = HushRecallAnchorView(cell, host, &anchorName);
-    CGRect f = tag.frame;
-    CGRect a = CGRectZero;
-    if (anchor && anchor != host) {
-        a = [anchor convertRect:anchor.bounds toView:host];
-        // 贴气泡右上角、内缩 2pt。对方消息气泡在左、己方在右，这个公式两边都对
-        // —— 它是相对气泡本身定位的，不依赖 Cell 整宽。
-        f.origin.x = CGRectGetMaxX(a) - f.size.width - 2.0;
-        f.origin.y = CGRectGetMinY(a) + 2.0;
-    } else {
-        f.origin.x = 8.0;
-        f.origin.y = 4.0;
+    if (!anchor || anchor == host) {
+        tag.hidden = YES;
+        return;
     }
+
+    tag.hidden = NO;
+    CGRect a = [anchor convertRect:anchor.bounds toView:host];
+    CGRect f = tag.frame;
+    // v40：贴气泡最内侧左上角，内缩 4pt。相对气泡本身定位，不依赖 Cell 整宽，
+    // 所以对方在左、己方在右两种气泡都成立。
+    f.origin.x = CGRectGetMinX(a) + 4.0;
+    f.origin.y = CGRectGetMinY(a) + 4.0;
 
     // 夹在 Cell 自身边界内，避免贴到屏幕外
     CGRect b = host.bounds;

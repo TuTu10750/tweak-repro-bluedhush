@@ -149,6 +149,22 @@ static void r_showSplashAd(id self, SEL _cmd, BOOL a0) {
     if (o_showSplashAd) o_showSplashAd(self, _cmd, a0);
 }
 
+// v40: hasNoneSplashShow — 开屏盖板的「是否需要展示」总闸。
+//
+// 前面那两个 cold-launch *query* 只能拿掉广告数据，宿主拿不到数据后仍会走自己的
+// 兜底路径（默认启动图 / 品牌页），所以「卡 logo」没被真正解决。这个方法在
+// BDIndexPageCoversManager 上，sel_index 确认签名是 `B16@0:8`（无参、BOOL 返回），
+// 语义就是「有没有一个不需要放 ad 的开屏」。恒 YES = 告诉宿主「别铺盖板了，直接
+// 进主页」，比我方在 showSplashAd: 里吞要早一整层 —— 盖板根本没被创建。
+//
+// 纯 getter，无副作用，关掉配置就走原版。
+static BOOL (*o_hasNoneSplashShow)(id, SEL);
+static BOOL r_hasNoneSplashShow(id self, SEL _cmd) {
+    HushHit("BDIndexPageCoversManager", "hasNoneSplashShow");
+    if (HushSplashPurifyOn()) return YES;
+    return o_hasNoneSplashShow ? o_hasNoneSplashShow(self, _cmd) : NO;
+}
+
 // v39 fix: the two cold-launch *queries* must pass through.
 //
 // They used to return nil when purify_splash_ad was on. purify_* keys inherit
@@ -513,7 +529,7 @@ static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 38
+#define HUSH_TARGET_COUNT 39
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -570,6 +586,7 @@ void HushInstallHooks(void) {
     Class cCell  = hush_resolve_class("BDChatBasicCell");
     Class cUser  = hush_resolve_class("UserInformation");
     Class cEngine = hush_resolve_class("GJIMEngine");
+    Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -757,6 +774,12 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cApp, s, (IMP)&r_pGetSplashCold, "v16@0:8");
         if (strcmp(r.kind, "MISSING") != 0) o_pGetSplashCold = (id (*)(id, SEL))r.prev;
         hush_report(28, "AppDelegateModel", "p_getSplashAdvertisementForColdLaunch", r);
+    }
+    if (!s_done[38]) {
+        SEL s = sel_registerName("hasNoneSplashShow");
+        hush_installed r = hush_install_impl(cCovers, s, (IMP)&r_hasNoneSplashShow, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_hasNoneSplashShow = (BOOL (*)(id, SEL))r.prev;
+        hush_report(38, "BDIndexPageCoversManager", "hasNoneSplashShow", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");
