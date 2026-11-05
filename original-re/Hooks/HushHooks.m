@@ -149,17 +149,27 @@ static void r_showSplashAd(id self, SEL _cmd, BOOL a0) {
     if (o_showSplashAd) o_showSplashAd(self, _cmd, a0);
 }
 
+// v39 fix: the two cold-launch *queries* must pass through.
+//
+// They used to return nil when purify_splash_ad was on. purify_* keys inherit
+// purify_master's value (HushConfig.m:201), and purify_master defaults to 1 —
+// so in practice both getters always returned nil. The host takes that nil and
+// keeps waiting on it during launch, which is exactly the "stuck on the logo"
+// symptom reported on device (hush.log 20:41–20:42, watchdog silent, so it was
+// never a main-thread block).
+//
+// Suppressing *presentation* is safe — showSplashAd: returns void and nobody
+// waits for a callback — so the purify switch now only guards r_showSplashAd.
+// removeAllSplashAdViews: stays hooked on its own to clean up any leftover view.
 static id (*o_getSplashCold)(id, SEL);
 static id r_getSplashCold(id self, SEL _cmd) {
     HushHit("AppDelegateModel", "getSplashAdForColdLaunch");
-    if (HushSplashPurifyOn()) return nil;      // 冷启动拿不到广告，自然不会展示
     return o_getSplashCold ? o_getSplashCold(self, _cmd) : nil;
 }
 
 static id (*o_pGetSplashCold)(id, SEL);
 static id r_pGetSplashCold(id self, SEL _cmd) {
     HushHit("AppDelegateModel", "p_getSplashAdvertisementForColdLaunch");
-    if (HushSplashPurifyOn()) return nil;
     return o_pGetSplashCold ? o_pGetSplashCold(self, _cmd) : nil;
 }
 

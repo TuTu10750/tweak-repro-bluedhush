@@ -514,28 +514,84 @@ static NSString *HushNumStr(long long v) {
     return (v == LLONG_MIN) ? @"n/a" : [NSString stringWithFormat:@"%lld", v];
 }
 
+// 取任意对象字段（不像 HushModelLongLong 那样限定数值）。
+static id HushRecallModelObject(id model, NSArray<NSString *> *keys) {
+    if (!model) return nil;
+    for (NSString *k in keys) {
+        if (![model respondsToSelector:NSSelectorFromString(k)]) continue;
+        @try {
+            id v = [model valueForKey:k];
+            if (v && ![v isKindOfClass:[NSNull class]]) return v;
+        } @catch (__unused NSException *e) { }
+    }
+    return nil;
+}
+
+// 从 JSON 文本里抠一个整数 key。不做完整解析 —— 只在 msgExtraModel 为 nil 时
+// 让探针仍能看到 time_limited_status 的值。找不到就返回 LLONG_MIN，
+// 和「字段不存在」保持同一个哨兵，日志里统一显示 n/a。
+static long long HushRecallJsonInt(NSString *json, NSString *key) {
+    if (json.length == 0 || key.length == 0) return LLONG_MIN;
+    NSString *needle = [NSString stringWithFormat:@"\"%@\"", key];
+    NSRange r = [json rangeOfString:needle];
+    if (r.location == NSNotFound) return LLONG_MIN;
+
+    NSUInteger i = NSMaxRange(r), n = json.length;
+    while (i < n) {
+        unichar c = [json characterAtIndex:i];
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') i++; else break;
+    }
+    if (i >= n || [json characterAtIndex:i] != ':') return LLONG_MIN;
+    i++;
+    while (i < n) {
+        unichar c = [json characterAtIndex:i];
+        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') i++;
+        else if (c == '\"') { i++; break; }      // 值可能是字符串 "1"
+        else break;
+    }
+    BOOL neg = NO;
+    if (i < n && [json characterAtIndex:i] == '-') { neg = YES; i++; }
+    long long v = 0; BOOL any = NO;
+    while (i < n) {
+        unichar c = [json characterAtIndex:i];
+        if (c < '0' || c > '9') break;
+        v = v * 10 + (long long)(c - '0');
+        any = YES; i++;
+        if (v > 1000000000LL) break;             // 防溢出，探针不需要精确到那一步
+    }
+    if (!any) return LLONG_MIN;
+    return neg ? -v : v;
+}
+
+// 定义在文件后段（:821），这里要用 —— 补上声明，别再靠隐式 int 返回值。
+BOOL HushRecallIsIntercepted(long long mid);
+
 static void HushRecallTruthDump(id obj, const char *where) {
     NSArray *arr = nil;
     if ([obj isKindOfClass:[NSArray class]]) arr = (NSArray *)obj;
     else if (obj) arr = @[obj];
     if (!arr || arr.count == 0) return;
-    if (sTruthDumps >= 40) return;
+    if (sTruthDumps >= 30) return;
 
-    // 先判可疑：type==55，或 status / recallType / deleteStatus 任一非零。
+    // 判可疑。除了宿主自己标的撤回态，还有一种必须算进来：
+    // ★ 被我们在包层吞掉、宿主完全不知情的那条 —— 它的 status 仍然是 0，
+    //   type 仍然是 1，光看字段永远不像「撤回」，只能靠 msgId 命中集合认出它。
     BOOL suspicious = NO;
     for (id m in arr) {
         long long t  = HushModelLongLong(m, HushRecallTypeKeys());
         long long s  = HushModelLongLong(m, @[@"status"]);
         long long rt = HushModelLongLong(m, @[@"recallType"]);
         long long ds = HushModelLongLong(m, @[@"deleteStatus"]);
+        long long mid = HushModelLongLong(m, HushRecallIdKeys());
         if (t == HUSH_MSG_TYPE_RECALL || (s != LLONG_MIN && s != 0)
-            || (rt != LLONG_MIN && rt != 0) || (ds != LLONG_MIN && ds != 0)) {
+            || (rt != LLONG_MIN && rt != 0) || (ds != LLONG_MIN && ds != 0)
+            || (mid != LLONG_MIN && mid > 0 && HushRecallIsIntercepted(mid))) {
             suspicious = YES;
             break;
         }
     }
-    // 第一批无条件打：用来建立「正常消息长什么样」的基线。
-    if (!suspicious && sTruthDumps > 0) return;
+    // 前两批无条件打：建立「正常消息长什么样」的基线。之后只打可疑批次。
+    if (!suspicious && sTruthDumps >= 2) return;
 
     sTruthDumps++;
 
@@ -544,7 +600,7 @@ static void HushRecallTruthDump(id obj, const char *where) {
         @"[P0-2b] TRUTH#%d where=%s arr=%lu suspicious=%d",
         sTruthDumps, where, (unsigned long)arr.count, suspicious ? 1 : 0]];
 
-    NSUInteger lim = arr.count < 20 ? arr.count : 20;
+    NSUInteger lim = arr.count < 8 ? arr.count : 8;
     for (NSUInteger i = 0; i < lim; i++) {
         id m = arr[i];
         long long mid  = HushModelLongLong(m, HushRecallIdKeys());
@@ -555,25 +611,58 @@ static void HushRecallTruthDump(id obj, const char *where) {
         long long st   = HushModelLongLong(m, @[@"isSuperRecallTip"]);
         long long sid  = HushModelLongLong(m, @[@"sessionId"]);
         long long from = HushModelLongLong(m, HushRecallFromKeys());
+        long long ui   = HushModelLongLong(m, @[@"uiType"]);
+        long long face = HushModelLongLong(m, @[@"o_face_status"]);
+        long long exOv = HushModelLongLong(m, @[@"isExchangeOvertime"]);
+        long long pt   = HushModelLongLong(m, @[@"promptType"]);
+        BOOL intc      = (mid != LLONG_MIN && mid > 0 && HushRecallIsIntercepted(mid));
 
-        id extra = nil;
-        @try { extra = [m valueForKey:@"msgExtraModel"]; }
-        @catch (__unused NSException *e) { extra = nil; }
-        long long tls = extra ? HushModelLongLong(extra, @[@"time_limited_status"]) : LLONG_MIN;
+        // ---- 三层降级取闪照真值 ----
+        // - msgExtraModel：宿主自己解析好的 GJIMMessageModelExtra
+        //    （sel_index 确认它只有 5 个 selector：time_limited_status /
+        //      time_limited_msg_read_time / gji_msgExtraModelDict + 两个 setter）
+        // - msgExtra：没解析时的原始对象
+        // - gji_msgExtraStr：JSON 字符串，直接从文本里抠 key
+        id extraObj = HushRecallModelObject(m, @[@"msgExtraModel"]);
+        id extraRaw = extraObj ? nil : HushRecallModelObject(m, @[@"msgExtra"]);
 
-        NSString *extraStr = HushRecallModelString(m, @[@"gji_msgExtraStr", @"msgExtra"]);
-        if (extraStr.length > 120) extraStr = [extraStr substringToIndex:120];
+        NSString *extraStr = HushRecallModelString(m, @[@"gji_msgExtraStr"]);
+        if (extraStr.length == 0 && extraRaw) {
+            // msgExtra 可能是原始 dict / protobuf 对象 —— description 总比丢掉强。
+            extraStr = [extraRaw isKindOfClass:[NSString class]]
+                     ? (NSString *)extraRaw : [extraRaw description];
+        }
+
+        long long tls  = extraObj ? HushModelLongLong(extraObj, @[@"time_limited_status"])        : LLONG_MIN;
+        long long tlrt = extraObj ? HushModelLongLong(extraObj, @[@"time_limited_msg_read_time"]) : LLONG_MIN;
+        if (tls  == LLONG_MIN && extraStr.length) tls  = HushRecallJsonInt(extraStr, @"time_limited_status");
+        if (tlrt == LLONG_MIN && extraStr.length) tlrt = HushRecallJsonInt(extraStr, @"time_limited_msg_read_time");
 
         [lines addObject:[NSString stringWithFormat:
             @"[P0-2b]   m[%lu] %@ mid=%@ sid=%@ from=%@ type=%@ status=%@ "
-            @"recallType=%@ del=%@ superTip=%@ tls=%@ extraLen=%lu extra=%@",
+            @"rc=%@ del=%@ tip=%@ ui=%@ face=%@ exOv=%@ pt=%@ "
+            @"tls=%@ tlrt=%@ intc=%d exObj=%@ exLen=%lu",
             (unsigned long)i,
             NSStringFromClass([m class]),
             HushNumStr(mid), HushNumStr(sid), HushNumStr(from),
-            HushNumStr(t), HushNumStr(s), HushNumStr(rt), HushNumStr(ds),
-            HushNumStr(st), HushNumStr(tls),
-            (unsigned long)extraStr.length,
-            extraStr.length ? extraStr : @"-"]];
+            HushNumStr(t), HushNumStr(s),
+
+            HushNumStr(rt), HushNumStr(ds), HushNumStr(st),
+            HushNumStr(ui), HushNumStr(face), HushNumStr(exOv), HushNumStr(pt),
+            HushNumStr(tls), HushNumStr(tlrt),
+            intc ? 1 : 0,
+            extraObj ? NSStringFromClass([extraObj class]) : (extraRaw ? @"raw" : @"nil"),
+            (unsigned long)extraStr.length]];
+
+        // extra 原文单独一行：闪照标记可能藏在后半段，所以不再只截 120 字符。
+        // 只在「有值」或「本批第一条」时打，控制体积。
+        BOOL wantRaw = (extraStr.length > 0) && (tls != LLONG_MIN || i == 0);
+        if (wantRaw) {
+            NSString *show = extraStr;
+            if (show.length > 400) show = [show substringToIndex:400];
+            [lines addObject:[NSString stringWithFormat:
+                @"[P0-2b]     m[%lu] extra=%@", (unsigned long)i, show]];
+        }
     }
 
     if (arr.count > lim) {
@@ -608,24 +697,56 @@ int HushRecallScanArrayForRecall(id arr) {
     return n;
 }
 
-// 角标锚点：原版锚在 imageContentView(150x200)，挂载层是 Cell 本身 ——
-// 挂在 Cell 上而不是 contentView 上，才不会吃 contentView 的 clipsToBounds。
-static UIView *HushRecallAnchorView(id cell, UIView *host) {
+// 锚点取值的统一入口：respondsToSelector 先挡、KVC 再兜 try。
+// 只接受 UIView —— 有些 cell 的同名 getter 返回 NSNumber/NSString，不能当锚点。
+static UIView *HushRecallViewByGetter(id obj, NSString *sel) {
+    if (!obj || sel.length == 0) return nil;
+    if (![obj respondsToSelector:NSSelectorFromString(sel)]) return nil;
     @try {
-        if ([cell respondsToSelector:NSSelectorFromString(@"imageContentView")]) {
-            id v = [cell valueForKey:@"imageContentView"];
-            if ([v isKindOfClass:[UIView class]]) return (UIView *)v;
-        }
+        id v = [obj valueForKey:sel];
+        if ([v isKindOfClass:[UIView class]]) return (UIView *)v;
     } @catch (__unused NSException *e) { }
+    return nil;
+}
 
-    // 退一步：子树里按类名找 *imageContentView*（上限 60 个节点）
+// 角标锚点。原版锚在 imageContentView(150x200)，挂载层是 Cell 本身 ——
+// 挂在 Cell 上而不是 contentView 上，才不会吃 contentView 的 clipsToBounds。
+//
+// v39 修的 bug：旧实现只找 imageContentView，而 sel_index 反查全库，
+// 这个 selector 只存在于三个图片类：
+//     BDChatRecentImageNewCell / BDMsgBigImageCell / BDChatImageCell
+// 文本 cell（BDChatTextAndFaceCellPrivateOther）根本没有 —— 于是锚点恒为 nil，
+// 调用方兜底贴 (8,4)，正好落在头像上方。真机上看到「角标飞到左边」就是这个。
+//
+// 现在的优先级链（每个名字都在 sel_index 里核对过是真的 selector）：
+//     bubble            BDChatTextAndFaceCell(PrivateOther) —— 文本 / 文本+闪照的气泡本体
+//     imageContentView  BDChatRecentImageNewCell / BDMsgBigImageCell / BDChatImageCell
+//     bubbleView        BDDestoryChatCell 系 —— 独立闪照、视频
+//     bubbleImgView     同上，气泡底图
+// 全落空才走类名子树扫描，再落空交回调用方兜底。
+static UIView *HushRecallAnchorView(id cell, UIView *host, NSString **outName) {
+    NSString *cands[4] = { @"bubble", @"imageContentView",
+                           @"bubbleView", @"bubbleImgView" };
+    for (int i = 0; i < 4; i++) {
+        UIView *v = HushRecallViewByGetter(cell, cands[i]);
+        if (v && v != host) {
+            if (outName) *outName = cands[i];
+            return v;
+        }
+    }
+
+    // 退一步：子树里按类名找 *BubbleView* / *imageContentView*（上限 60 个节点）
     NSMutableArray *stack = [NSMutableArray arrayWithObject:host];
     int guard = 0;
     while (stack.count > 0 && guard++ < 60) {
         UIView *v = [stack lastObject];
         [stack removeLastObject];
         NSString *cn = NSStringFromClass([v class]);
-        if ([cn rangeOfString:@"imageContentView"].location != NSNotFound) return v;
+        if ([cn rangeOfString:@"BubbleView"].location != NSNotFound
+            || [cn rangeOfString:@"imageContentView"].location != NSNotFound) {
+            if (outName) *outName = @"subview-scan";
+            return v;
+        }
         [stack addObjectsFromArray:v.subviews];
     }
     return nil;
@@ -639,11 +760,25 @@ static UIColor *HushRecallBadgeColor(void) {
                            alpha:1.0];
 }
 
-// 贴「已拦截」角标：挂 Cell 本身，锚 imageContentView 右上角，字号 10、底色 #407EFD。
+// 贴「已拦截」角标：挂 Cell 本身，锚气泡右上角，字号 10、底色 #407EFD。
+//
+// 挂载层刻意留在 Cell 上（而不是直接 addSubview 到气泡里）：
+//   - viewWithTag: 的 owner 唯一，Cell 复用时不会叠出第二个标签；
+//   - 不吃气泡自身的 clipsToBounds —— 气泡圆角 + masksToBounds 会把角标切掉；
+//   - 宿主内部重建气泡视图时标签不受牵连。
+// 锚点只用来算坐标：convertRect:toView:host 会跨层级换算，气泡藏在 contentView
+// 里几层都不影响结果。
 void HushRecallDecorateCell(id cell, id model) {
     if (!cell) return;
     UIView *host = [cell isKindOfClass:[UIView class]] ? (UIView *)cell : nil;
     if (!host) return;
+
+    // P0-2b：屏幕上一出现就必中 —— 这是唯一 100% 拿得到活体 GJIMMessageModel 的
+    // 入口。包层（HandlePrivatePackage）只有 PushPackage 没有模型；写库层
+    // （dealMessage:array:）和同步层（p_handleSyncRangeMessages:syncType:）在
+    // 「撤回包被吞、宿主完全不知情」时压根不会触发 —— v39 真机日志已证实两者
+    // 的 hit 计数为 0，TRUTH# 一条都打不出来。
+    HushRecallTruthDump(model, "ui");
 
     UILabel *tag = nil;
     @try { tag = (UILabel *)[host viewWithTag:kHushInterceptTag]; }
@@ -671,13 +806,21 @@ void HushRecallDecorateCell(id cell, id model) {
         tf.size.height += 2.0;
         tag.frame = tf;
         [host addSubview:tag];
+    } else if (tag.superview != host) {
+        // 老版本可能把标签挂到了气泡上；统一收回 Cell，避免复用后两处各留一个。
+        [tag removeFromSuperview];
+        [host addSubview:tag];
     }
     tag.hidden = NO;
 
-    UIView *anchor = HushRecallAnchorView(cell, host);
+    NSString *anchorName = @"-";
+    UIView *anchor = HushRecallAnchorView(cell, host, &anchorName);
     CGRect f = tag.frame;
+    CGRect a = CGRectZero;
     if (anchor && anchor != host) {
-        CGRect a = [anchor convertRect:anchor.bounds toView:host];
+        a = [anchor convertRect:anchor.bounds toView:host];
+        // 贴气泡右上角、内缩 2pt。对方消息气泡在左、己方在右，这个公式两边都对
+        // —— 它是相对气泡本身定位的，不依赖 Cell 整宽。
         f.origin.x = CGRectGetMaxX(a) - f.size.width - 2.0;
         f.origin.y = CGRectGetMinY(a) + 2.0;
     } else {
@@ -693,6 +836,30 @@ void HushRecallDecorateCell(id cell, id model) {
     if (CGRectGetMaxY(f) > b.size.height) f.origin.y = b.size.height - f.size.height;
     tag.frame = f;
     [host bringSubviewToFront:tag];
+
+    // 角标一直是黑盒：贴没贴、贴哪、锚点拿到没，只能靠肉眼。这里一次打全。
+    // 出口用 fprintf + HushLogger 而不是 HushProbeEmit —— 后者定义在本文件后半段，
+    // 这里的调用点更靠前，直接调会撞未声明。
+    static int tagLogs = 0;
+    tagLogs++;
+    if (tagLogs <= 20 || (tagLogs % 10) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] TAG#%d cell=%@ anchor=%@ name=%@ ok=%d "
+            @"anchorRect=(%.1f,%.1f,%.1f,%.1f) tagFrame=(%.1f,%.1f,%.1f,%.1f) "
+            @"cellH=%.1f",
+            tagLogs,
+            NSStringFromClass([cell class]),
+            anchor ? NSStringFromClass([anchor class]) : @"nil",
+            anchorName,
+            anchor ? 1 : 0,
+            (double)a.origin.x, (double)a.origin.y,
+            (double)a.size.width, (double)a.size.height,
+            (double)f.origin.x, (double)f.origin.y,
+            (double)f.size.width, (double)f.size.height,
+            (double)b.size.height];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
 }
 
 // 写库前还原：数组形态的写入口（GJIMDBService -dealMessage:array:）也照顾到。
@@ -1027,32 +1194,42 @@ static void HushProbeEmit(NSString *s) {
 // 之间会变（_inBatchUpdate / _updateCount / _batchUpdateDepth / _animating）。
 static NSString *HushProbeIvars(Class cls) {
     if (!cls) return @"<nil class>";
-    unsigned int n = 0;
-    Ivar *ivs = class_copyIvarList(cls, &n);
-    if (!ivs) return @"<no ivars>";
 
     NSMutableArray *hits = [NSMutableArray array];
     NSMutableArray *all  = [NSMutableArray array];
-    for (unsigned int i = 0; i < n; i++) {
-        const char *nm = ivar_getName(ivs[i]);
-        const char *tp = ivar_getTypeEncoding(ivs[i]);
-        NSString *name = nm ? [NSString stringWithUTF8String:nm] : @"?";
-        if ([all count] < 40) {
-            [all addObject:[NSString stringWithFormat:@"%@:%s", name, tp ? tp : "?"]];
+    unsigned int total = 0;
+
+    // 扫自己 + 最多两层父类。子类常把 ivar 全放在父类上 ——
+    // BDDestoryChatCellPrivateOther 自家 0 个，全在 BDDestoryChatCell（51 个 selector）。
+    // 只看自己那一层会打出 <no ivars>，等于什么都没看到。
+    Class cur = cls;
+    for (int depth = 0; depth < 3 && cur && cur != [NSObject class]; depth++) {
+        unsigned int n = 0;
+        Ivar *ivs = class_copyIvarList(cur, &n);
+        if (ivs) {
+            for (unsigned int i = 0; i < n && total < 60; i++, total++) {
+                const char *nm = ivar_getName(ivs[i]);
+                const char *tp = ivar_getTypeEncoding(ivs[i]);
+                NSString *name = nm ? [NSString stringWithUTF8String:nm] : @"?";
+                [all addObject:[NSString stringWithFormat:@"%@:%s", name, tp ? tp : "?"]];
+                NSString *low = [name lowercaseString];
+                if ([low containsString:@"batch"] || [low containsString:@"update"] ||
+                    [low containsString:@"anim"]) {
+                    [hits addObject:name];
+                }
+            }
+            free(ivs);
         }
-        NSString *low = [name lowercaseString];
-        if ([low containsString:@"batch"] || [low containsString:@"update"] ||
-            [low containsString:@"anim"]) {
-            [hits addObject:name];
-        }
+        cur = [cur superclass];
     }
-    free(ivs);
+
+    if (total == 0) return @"<no ivars>";
 
     return [NSString stringWithFormat:@"{batch/update=%@ total=%u} %@%@",
             [hits count] ? [hits componentsJoinedByString:@","] : @"-",
-            n,
+            total,
             [all componentsJoinedByString:@" "],
-            n > 40 ? @" …" : @""];
+            total >= 60 ? @" …" : @""];
 }
 
 static NSString *HushProbeScene(UIWindow *win) {
