@@ -609,9 +609,183 @@ static void r_destroyBigClick(id self, SEL _cmd, id a0, id a1) {
     }
 }
 
+// ---------------------------------------------------------------- v42 点击探针
+//
+// v41d 真机事实：用户点白板「毫无反应」，而 VC 上那两个双参方法
+// （destoryImageCell:clickMsg: / destroyBigImageCell:clickMessage:）一次都没被
+// 调用，KEEP# 与 VCKEEP# 也全是 0。说明点击要么在 cell 内部就被 action 接走，
+// 要么走的是 VC 上别的分支。
+//
+// 所以这一版把五个候选一次性全挂上，只留痕不改行为：
+//   cell 层：BDDestoryChatCell -playBtnTapped  （51 个 selector 里唯一无参 action）
+//            BDChatBasicCell   -clickTipBtn
+//   VC   层：-markImageReadCell:clickMsg:   （标记已读，闪照点开最可能走这条）
+//            -warnImageCell:clickMsg:
+//            -showBigImageCell:clickMsg:
+// 哪个 CLICK# 亮，洗白就写在哪。
+#define HUSH_CLICK0(slot, which, o_var, cls_name, sel_name)                        \
+    static void (*o_var)(id, SEL);                                                 \
+    static void r_##slot(id self, SEL _cmd) {                                      \
+        HushHit(cls_name, sel_name);                                               \
+        if (o_var) o_var(self, _cmd);                                              \
+        static int n = 0;                                                          \
+        n++;                                                                       \
+        if (n <= 10 || (n % 10) == 0) {                                            \
+            NSString *line = [NSString stringWithFormat:                            \
+                @"[P0-2b] CLICK#%d which=" which @" cell=%@", n,                    \
+                NSStringFromClass([self class])];                                   \
+            fprintf(stderr, "%s\n", [line UTF8String]);                            \
+            [HushLogger logLevel:2 format:line];                                   \
+        }                                                                          \
+    }
+
+#define HUSH_CLICK2(slot, which, o_var, cls_name, sel_name)                        \
+    static void (*o_var)(id, SEL, id, id);                                         \
+    static void r_##slot(id self, SEL _cmd, id a0, id a1) {                        \
+        HushHit(cls_name, sel_name);                                               \
+        if (o_var) o_var(self, _cmd, a0, a1);                                      \
+        static int n = 0;                                                          \
+        n++;                                                                       \
+        if (n <= 10 || (n % 10) == 0) {                                            \
+            NSString *line = [NSString stringWithFormat:                            \
+                @"[P0-2b] CLICK#%d which=" which @" cell=%@ msg=%@", n,             \
+                a0 ? NSStringFromClass([a0 class]) : @"nil",                        \
+                a1 ? NSStringFromClass([a1 class]) : @"nil"];                       \
+            fprintf(stderr, "%s\n", [line UTF8String]);                            \
+            [HushLogger logLevel:2 format:line];                                   \
+        }                                                                          \
+    }
+
+HUSH_CLICK0(playBtnTapped, "playBtnTapped", o_playBtnTapped,
+            "BDDestoryChatCell", "playBtnTapped")
+HUSH_CLICK0(clickTipBtn, "clickTipBtn", o_clickTipBtn,
+            "BDChatBasicCell", "clickTipBtn")
+HUSH_CLICK2(markReadClick, "markImageRead", o_markReadClick,
+            "BDMessageViewController", "markImageReadCell:clickMsg:")
+HUSH_CLICK2(warnClick, "warnImage", o_warnClick,
+            "BDMessageViewController", "warnImageCell:clickMsg:")
+HUSH_CLICK2(showBigClick, "showBigImage", o_showBigClick,
+            "BDMessageViewController", "showBigImageCell:clickMsg:")
+
+// ---------------------------------------------------------------- v42 网络探针
+//
+// 闪照的图片 URL 不在模型里 —— v41c 与 v41d 两份真机日志里，type=282 的
+// extra 只有 played / playedBefore / time_limited_status / matchAnimationType，
+// 一个 URL 都没有。宿主是**点击之后**才去拉图，所以只能在网络层截。
+//
+// NSURLSession 是 App 全部网络出口，是绝对的性能热路径。三条硬规矩：
+//   - 过滤只用 NSString rangeOfString，不建字典、不拼日志、不额外分配
+//   - 不命中的请求立刻原样转发，连一个 NSString 都不拼
+//   - 命中的也只是在 completionHandler 里落盘，绝不阻塞调用方线程
+//
+// 只认闪照/销毁相关的路径词。别把整个 App 的流量记下来 —— 那是自杀。
+typedef void (^HushNetHandler)(NSData *, NSURLResponse *, NSError *);
+
+static NSString *HushNetURLString(id req) {
+    if (!req) return nil;
+    @try {
+        id url = [req valueForKey:@"URL"];
+        if ([url isKindOfClass:[NSURL class]]) return [(NSURL *)url absoluteString];
+        if ([url isKindOfClass:[NSString class]]) return (NSString *)url;
+    } @catch (__unused NSException *e) {}
+    return nil;
+}
+
+static NSString *HushNetURLOf(id url) {
+    if (!url) return nil;
+    @try {
+        if ([url isKindOfClass:[NSURL class]]) return [(NSURL *)url absoluteString];
+        if ([url isKindOfClass:[NSString class]]) return (NSString *)url;
+    } @catch (__unused NSException *e) {}
+    return nil;
+}
+
+static BOOL HushFlashNetWanted(NSString *u) {
+    if (u.length < 8 || u.length > 2048) return NO;
+    if ([u rangeOfString:@"cheat"].location        != NSNotFound) return YES;
+    if ([u rangeOfString:@"destroy"].location      != NSNotFound) return YES;
+    if ([u rangeOfString:@"burn"].location         != NSNotFound) return YES;
+    if ([u rangeOfString:@"secret"].location       != NSNotFound) return YES;
+    if ([u rangeOfString:@"time_limited"].location != NSNotFound) return YES;
+    return NO;
+}
+
+static void HushNetNote(int seq, NSString *phase, NSString *url, NSData *data, NSURLResponse *resp) {
+    NSString *mime = @"?";
+    @try {
+        NSString *m = [resp MIMEType];
+        if ([m isKindOfClass:[NSString class]] && m.length) mime = m;
+    } @catch (__unused NSException *e) {}
+    NSString *line = [NSString stringWithFormat:
+        @"[P0-2b] NET#%d %@ url=%@ bytes=%lu mime=%@",
+        seq, phase, url ? url : @"(nil)", (unsigned long)(data ? data.length : 0), mime];
+    fprintf(stderr, "%s\n", [line UTF8String]);
+    [HushLogger logLevel:2 format:line];
+}
+
+// 落盘只做一件最小的事：给后续离线分析留一份原始响应体。
+// 不解析、不转码、不猜格式 —— 服务端到底回 JSON 还是二进制流，看文件头就知道。
+static void HushNetSave(int seq, NSData *data) {
+    if (data.length == 0 || data.length > (8 * 1024 * 1024)) return;
+    @try {
+        NSArray *docs = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        if (docs.count == 0) return;
+        NSString *dir = [[docs objectAtIndex:0] stringByAppendingPathComponent:@"bluedbackups/images"];
+        NSFileManager *fm = [NSFileManager defaultManager];
+        if (![fm fileExistsAtPath:dir]) {
+            [fm createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:NULL];
+        }
+        NSString *name = [NSString stringWithFormat:@"net_%d_%lu.bin", seq, (unsigned long)data.length];
+        [data writeToFile:[dir stringByAppendingPathComponent:name] atomically:YES];
+    } @catch (__unused NSException *e) {}
+}
+
+// MRC：栈上的 block 传给别人之前必须搬到堆上，否则 dataTask 还没跑完它就没了。
+static HushNetHandler HushNetWrap(int seq, NSString *url, NSURLRequest *req,
+                                  HushNetHandler handler) {
+    (void)req;
+    HushNetHandler raw = ^(NSData *data, NSURLResponse *resp, NSError *err) {
+        if (data.length > 0 && !err) {
+            HushNetNote(seq, @"resp", url, data, resp);
+            HushNetSave(seq, data);
+        } else if (err) {
+            HushNetNote(seq, @"err", url, nil, nil);
+        }
+        if (handler) handler(data, resp, err);   // 必须原样回调，绝不能吞
+    };
+    return [[raw copy] autorelease];
+}
+
+static id (*o_dataTaskReq)(id, SEL, id, HushNetHandler);
+static id r_dataTaskReq(id self, SEL _cmd, id req, HushNetHandler handler) {
+    NSString *u = HushNetURLString(req);
+    if (!HushFlashNetWanted(u)) {
+        if (!o_dataTaskReq) return nil;
+        return o_dataTaskReq(self, _cmd, req, handler);
+    }
+    static int seq = 0;
+    int my = ++seq;
+    HushNetNote(my, @"req", u, nil, nil);
+    NSURLRequest *r = (NSURLRequest *)req;
+    return o_dataTaskReq ? o_dataTaskReq(self, _cmd, req, HushNetWrap(my, u, r, handler)) : nil;
+}
+
+static id (*o_dataTaskURL)(id, SEL, id, HushNetHandler);
+static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
+    NSString *u = HushNetURLOf(url);
+    if (!HushFlashNetWanted(u)) {
+        if (!o_dataTaskURL) return nil;
+        return o_dataTaskURL(self, _cmd, url, handler);
+    }
+    static int seq = 0;
+    int my = ++seq;
+    HushNetNote(my, @"req", u, nil, nil);
+    return o_dataTaskURL ? o_dataTaskURL(self, _cmd, url, HushNetWrap(my, u, nil, handler)) : nil;
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 43
+#define HUSH_TARGET_COUNT 50
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -670,6 +844,9 @@ void HushInstallHooks(void) {
     Class cEngine = hush_resolve_class("GJIMEngine");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
     Class cDestory = hush_resolve_class("BDDestoryChatCell");
+    // v42：NSURLSession 是系统类，hush_resolve_class 先走 objc_getClass 就够了
+    // （Swift 那两条拼 "Blued." 的分支只对宿主自己的类有意义，走不到这里）。
+    Class cNetSession = hush_resolve_class("NSURLSession");
 
     if (!s_done[0]) {
         SEL s = sel_registerName("p_filterDeletedMessages:");
@@ -887,6 +1064,48 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_destroyBigClick, "v32@0:8@16@24");
         if (strcmp(r.kind, "MISSING") != 0) o_destroyBigClick = (void (*)(id, SEL, id, id))r.prev;
         hush_report(42, "BDMessageViewController", "destroyBigImageCell:clickMessage:", r);
+    }
+    if (!s_done[43]) {
+        SEL s = sel_registerName("playBtnTapped");
+        hush_installed r = hush_install_impl(cDestory, s, (IMP)&r_playBtnTapped, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_playBtnTapped = (void (*)(id, SEL))r.prev;
+        hush_report(43, "BDDestoryChatCell", "playBtnTapped", r);
+    }
+    if (!s_done[44]) {
+        SEL s = sel_registerName("clickTipBtn");
+        hush_installed r = hush_install_impl(cCell, s, (IMP)&r_clickTipBtn, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_clickTipBtn = (void (*)(id, SEL))r.prev;
+        hush_report(44, "BDChatBasicCell", "clickTipBtn", r);
+    }
+    if (!s_done[45]) {
+        SEL s = sel_registerName("markImageReadCell:clickMsg:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_markReadClick, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_markReadClick = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(45, "BDMessageViewController", "markImageReadCell:clickMsg:", r);
+    }
+    if (!s_done[46]) {
+        SEL s = sel_registerName("warnImageCell:clickMsg:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_warnClick, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_warnClick = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(46, "BDMessageViewController", "warnImageCell:clickMsg:", r);
+    }
+    if (!s_done[47]) {
+        SEL s = sel_registerName("showBigImageCell:clickMsg:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_showBigClick, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_showBigClick = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(47, "BDMessageViewController", "showBigImageCell:clickMsg:", r);
+    }
+    if (!s_done[48]) {
+        SEL s = sel_registerName("dataTaskWithRequest:completionHandler:");
+        hush_installed r = hush_install_impl(cNetSession, s, (IMP)&r_dataTaskReq, "@32@0:8@16@?24");
+        if (strcmp(r.kind, "MISSING") != 0) o_dataTaskReq = (id (*)(id, SEL, id, HushNetHandler))r.prev;
+        hush_report(48, "NSURLSession", "dataTaskWithRequest:completionHandler:", r);
+    }
+    if (!s_done[49]) {
+        SEL s = sel_registerName("dataTaskWithURL:completionHandler:");
+        hush_installed r = hush_install_impl(cNetSession, s, (IMP)&r_dataTaskURL, "@32@0:8@16@?24");
+        if (strcmp(r.kind, "MISSING") != 0) o_dataTaskURL = (id (*)(id, SEL, id, HushNetHandler))r.prev;
+        hush_report(49, "NSURLSession", "dataTaskWithURL:completionHandler:", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");

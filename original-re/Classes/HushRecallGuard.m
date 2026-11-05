@@ -939,8 +939,19 @@ static BOOL HushFlashUnlockOn(void) {
 // 所以这一步默认关：先让宿主恢复原状（点击能正常走），靠 A2 的点击回调探针
 // 定位真正入口，再决定洗白的落点。switch_flash_thumb 是面板里既有的键，
 // 此前同样是死键（全仓零读取）。
-static BOOL HushFlashStripOn(void) {
-    return [[HushConfig shared] isEnabled:@"switch_flash_thumb"];
+// v42：strip 的语义此前是反的 —— 开关一开就拆遮罩，结果拆出一块没有图的死
+// 白板（v41d 真机实证：mask=y img=y 但模型上没有任何 URL；更糟的是
+// _destoryIconBtn 被一起 hidden，点击入口也没了，所以「点了毫无反应」）。
+//
+// 正确语义：拆遮罩的唯一目的是「看图」，所以只有确实拿得到图时才拆：
+//   - 模型上已有 image / destroyUrl / pic_url —— 拆了立刻能渲染
+// 拿不到就返回 NO，保持宿主原样（「点击查看」按钮在），把入口留给点击探针。
+// 本轮还没有任何一条闪照拿到过 URL（v41c/v41d 的 extra 全是空 URL），
+// 所以这里事实上恒为 NO —— 这是预期行为，不是没生效。
+static BOOL HushFlashStripOn(id model) {
+    if (![[HushConfig shared] isEnabled:@"switch_flash_thumb"]) return NO;
+    if (!model) return NO;
+    return HushModelString(model, @[@"image", @"destroyUrl", @"pic_url", @"picUrl"]) != nil;
 }
 
 void HushAutoDestroyUnlock(id cell, id model) {
@@ -966,7 +977,7 @@ void HushAutoDestroyUnlock(id cell, id model) {
     if (!byType && !byCell && !byMask) return;
 
     BOOL unlockOn = HushFlashUnlockOn();
-    BOOL strip    = HushFlashStripOn();
+    BOOL strip    = HushFlashStripOn(model);
 
     // v41d（A1）：BURN# 提到闸门之后、开关之前 —— 只要命中就无条件打。
     //
@@ -978,12 +989,16 @@ void HushAutoDestroyUnlock(id cell, id model) {
     if (burnLogs <= 12 || (burnLogs % 10) == 0) {
         long long tRaw  = model ? HushModelLLRaw(model, @"type")        : LLONG_MIN;
         long long mtRaw = model ? HushModelLLRaw(model, @"messageType") : LLONG_MIN;
+        // v42：BURN# 补 mid。此前 13 条 BURN 只能靠时间戳猜对应哪条消息，
+        // 结果把「同一 mid 的两份 model 实例（282 与 24）」误读成「宿主改写 type」。
+        long long midRaw = model ? HushModelLongLong(model, HushRecallIdKeys()) : LLONG_MIN;
         NSString *line = [NSString stringWithFormat:
-            @"[P0-2b] BURN#%d cell=%@ cls=%@ t=%@ mt=%@ mix=%@ by=%@ "
+            @"[P0-2b] BURN#%d cell=%@ cls=%@ mid=%@ t=%@ mt=%@ mix=%@ by=%@ "
             @"unlock=%d strip=%d mask=%@ img=%@ timer=%@",
             burnLogs,
             NSStringFromClass([cell class]),
             model ? NSStringFromClass([model class]) : @"nil",
+            HushNumStr(midRaw),
             HushNumStr(tRaw), HushNumStr(mtRaw), HushNumStr(t),
             byType ? @"type282" : (byCell ? @"destoryCell" : @"isMask"),
             unlockOn ? 1 : 0, strip ? 1 : 0,
@@ -1074,9 +1089,9 @@ void HushAutoDestroyKeepAlive(id cell) {
     if (!cell) return;
     if (!HushFlashUnlockOn()) return;   // 开关关着就让它正常销毁，别偷偷改宿主行为
 
-    // v41d：拆遮罩这步跟 HushAutoDestroyUnlock 共用同一个 strip 开关。
-    // 默认关 —— 拆了 _destoryIconBtn 会把点击入口一起吃掉，白板还点不动。
-    if (!HushFlashStripOn()) return;
+    // v42：strip 现在要求「确实拿得到图」才拆，所以得先把 model 取出来。
+    // showAutoDestroyImage: 是点开之后才调的，此刻 cell 上已经挂好 message。
+    if (!HushFlashStripOn(HushSafeKVC(cell, @"message"))) return;
 
     id timer = HushSafeKVC(cell, @"_timer");
     if ([timer isKindOfClass:[NSTimer class]]) {
