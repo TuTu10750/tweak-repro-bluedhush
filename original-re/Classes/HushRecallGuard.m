@@ -488,6 +488,106 @@ BOOL HushRecallModelWasIntercepted(id model) {
     return HushRecallIsIntercepted(mid);
 }
 
+// ===========================================================================
+// P0-2b / S4 前置：把「撤回」在模型里的真值挖出来。
+//
+// 已知字段（sel_index 反查 GJIMMessageModel 的 213 个 selector）：
+//   type              Q   55 = 撤回包
+//   status            C   疑似 3 = 已撤回（v35 的还原逻辑按 3 兜底）
+//   recallType        i   真值未验证
+//   deleteStatus      C   真值未验证
+//   isSuperRecallTip  B   超级撤回提示
+//   闪照标记在 GJIMMessageModelExtra.time_limited_status（i），不在主模型上
+//
+// 三条通道都打：包层 / 同步（ScanArrayForRecall）/ 写库（RestoreDirtyArray）。
+// 只有看到「同一条消息从 type=1&status=0 变成 type=1&status=X」才算抓到真正
+// 要洗的目标 —— 那才是全量同步覆盖 push 抹白的机制。
+//
+// 独立出口（fprintf + HushLogger），不依赖 HushProbeEmit：后者定义在文件后半段，
+// 而这里的调用点是写库入口（更靠前）。
+// ===========================================================================
+static int sTruthDumps = 0;
+
+// HushModelLongLong 拿不到字段时返回 LLONG_MIN。直接 %lld 会打出一串
+// -9223372036854775808，看着像真值 —— 必须显式区分「没有这个字段」。
+static NSString *HushNumStr(long long v) {
+    return (v == LLONG_MIN) ? @"n/a" : [NSString stringWithFormat:@"%lld", v];
+}
+
+static void HushRecallTruthDump(id obj, const char *where) {
+    NSArray *arr = nil;
+    if ([obj isKindOfClass:[NSArray class]]) arr = (NSArray *)obj;
+    else if (obj) arr = @[obj];
+    if (!arr || arr.count == 0) return;
+    if (sTruthDumps >= 40) return;
+
+    // 先判可疑：type==55，或 status / recallType / deleteStatus 任一非零。
+    BOOL suspicious = NO;
+    for (id m in arr) {
+        long long t  = HushModelLongLong(m, HushRecallTypeKeys());
+        long long s  = HushModelLongLong(m, @[@"status"]);
+        long long rt = HushModelLongLong(m, @[@"recallType"]);
+        long long ds = HushModelLongLong(m, @[@"deleteStatus"]);
+        if (t == HUSH_MSG_TYPE_RECALL || (s != LLONG_MIN && s != 0)
+            || (rt != LLONG_MIN && rt != 0) || (ds != LLONG_MIN && ds != 0)) {
+            suspicious = YES;
+            break;
+        }
+    }
+    // 第一批无条件打：用来建立「正常消息长什么样」的基线。
+    if (!suspicious && sTruthDumps > 0) return;
+
+    sTruthDumps++;
+
+    NSMutableArray *lines = [NSMutableArray array];
+    [lines addObject:[NSString stringWithFormat:
+        @"[P0-2b] TRUTH#%d where=%s arr=%lu suspicious=%d",
+        sTruthDumps, where, (unsigned long)arr.count, suspicious ? 1 : 0]];
+
+    NSUInteger lim = arr.count < 20 ? arr.count : 20;
+    for (NSUInteger i = 0; i < lim; i++) {
+        id m = arr[i];
+        long long mid  = HushModelLongLong(m, HushRecallIdKeys());
+        long long t    = HushModelLongLong(m, HushRecallTypeKeys());
+        long long s    = HushModelLongLong(m, @[@"status"]);
+        long long rt   = HushModelLongLong(m, @[@"recallType"]);
+        long long ds   = HushModelLongLong(m, @[@"deleteStatus"]);
+        long long st   = HushModelLongLong(m, @[@"isSuperRecallTip"]);
+        long long sid  = HushModelLongLong(m, @[@"sessionId"]);
+        long long from = HushModelLongLong(m, HushRecallFromKeys());
+
+        id extra = nil;
+        @try { extra = [m valueForKey:@"msgExtraModel"]; }
+        @catch (__unused NSException *e) { extra = nil; }
+        long long tls = extra ? HushModelLongLong(extra, @[@"time_limited_status"]) : LLONG_MIN;
+
+        NSString *extraStr = HushRecallModelString(m, @[@"gji_msgExtraStr", @"msgExtra"]);
+        if (extraStr.length > 120) extraStr = [extraStr substringToIndex:120];
+
+        [lines addObject:[NSString stringWithFormat:
+            @"[P0-2b]   m[%lu] %@ mid=%@ sid=%@ from=%@ type=%@ status=%@ "
+            @"recallType=%@ del=%@ superTip=%@ tls=%@ extraLen=%lu extra=%@",
+            (unsigned long)i,
+            NSStringFromClass([m class]),
+            HushNumStr(mid), HushNumStr(sid), HushNumStr(from),
+            HushNumStr(t), HushNumStr(s), HushNumStr(rt), HushNumStr(ds),
+            HushNumStr(st), HushNumStr(tls),
+            (unsigned long)extraStr.length,
+            extraStr.length ? extraStr : @"-"]];
+    }
+
+    if (arr.count > lim) {
+        [lines addObject:[NSString stringWithFormat:
+            @"[P0-2b]   …（本批共 %lu 条，只打前 %lu）",
+            (unsigned long)arr.count, (unsigned long)lim]];
+    }
+
+    for (NSString *line in lines) {
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
 // v37 摸底：把同步批次里的撤回消息数出来（不改数组、不改返回值）。
 //
 // 推送腿已经吞掉撤回包，但断网期间对方撤回、之后登录同步，宿主会走
@@ -495,6 +595,7 @@ BOOL HushRecallModelWasIntercepted(id model) {
 // 那条 55 完全不经过 GJIMEngine 的包入口。先看它到底带不带 55，再决定要不要拦。
 int HushRecallScanArrayForRecall(id arr) {
     if (![arr isKindOfClass:[NSArray class]]) return 0;
+    HushRecallTruthDump(arr, "sync");       // P0-2b：同步通道真值
     int n = 0;
     for (id m in (NSArray *)arr) {
         long long t = HushModelLongLong(m, HushRecallTypeKeys());
@@ -597,6 +698,7 @@ void HushRecallDecorateCell(id cell, id model) {
 // 写库前还原：数组形态的写入口（GJIMDBService -dealMessage:array:）也照顾到。
 void HushRecallRestoreDirtyArray(id obj) {
     if (!obj) return;
+    HushRecallTruthDump(obj, "db-write");   // P0-2b：写库入口真值
     if ([obj isKindOfClass:[NSArray class]]) {
         for (id m in (NSArray *)obj) HushRestoreDirtyInPlace(m);
         return;
@@ -718,21 +820,107 @@ static void HushRecallToast(NSString *text) {
     });
 }
 
-// 只在主线程跑。从 keyWindow 的 rootViewController 走到最上层可见控制器，再在
-// 它的视图里找聊天用的 UITableView。比「从 window 起 BFS」准：iOS 13+ 多 Scene
-// 下 keyWindow 可能为 nil 或不是当前窗口，BFS 会捞到无关的表。
-static UITableView *HushRecallFindTable(UIView *root, int maxDepth) {
-    if (!root) return nil;
+// ===========================================================================
+// P0-2b：只认聊天表
+//
+// v38 真机证据（20:15:25.812）：
+//   [P0-2a] TABLE cls=UITableView cells=9
+//   [P0-2a] CELL BDSessionCell getter=0 setter=0 imp=nil
+// 旧实现在 6 层父链全落空后，从 rootVC.view 起做限深 BFS，返回「第一个碰到的
+// UITableView」—— 那是会话列表的裸 UITableView。它的 cell 是 BDSessionCell，
+// 没有 message，所以 painted 恒为 0；更糟的是在别人的表上 reloadRowsAtIndexPaths
+// 会撞宿主的批量 update（该表 ivar 里有 _currentUpdate / _updateCount）。
+//
+// 真值（sel_index 121653 条反查）：
+//   LiveMessagesView          : tableView / setTableView:  ← 唯一持有聊天表的容器；
+//                               它是 UIView，不在 VC 父链上，所以父链永远找不到它
+//   BDMessageTableView        : 6 个 selector（reloadData 等）—— 聊天表本体
+//   PrivateChatViewController : 385 个 selector 里没有 tableView getter
+//
+// 定位顺序：LiveMessagesView(类名 + tableView) → BDMessageTableView(严格类名)。
+// 任何一步都不再返回裸 UITableView —— 宁可 nil，也不在别人的表上动手。
+// ===========================================================================
+
+static Class HushMsgTableClass(void) {
+    static Class c = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ c = NSClassFromString(@"BDMessageTableView"); });
+    return c;
+}
+
+static Class HushLiveMsgsClass(void) {
+    static Class c = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{ c = NSClassFromString(@"LiveMessagesView"); });
+    return c;
+}
+
+// 收口：接受任意 id，只放行「确实是聊天表」的那一个。
+// BDMessageTableView 类不存在时（宿主改名 / 懒加载未触发）退化为普通 UITable-
+// View 判断 —— 那是已知的降级，会被调用方日志标记出来。
+static UITableView *HushAsMsgTable(id t) {
+    if (!t) return nil;
+    if (![t isKindOfClass:[UITableView class]]) return nil;
+    Class mc = HushMsgTableClass();
+    if (mc && ![t isKindOfClass:mc]) return nil;
+    return (UITableView *)t;
+}
+
+// 限深限节点捞 LiveMessagesView 实例。缓存不存在的类 → 直接空数组。
+static NSArray<UIView *> *HushFindLiveMessagesViews(UIView *root, int maxDepth, int maxNodes) {
+    NSMutableArray *out = [NSMutableArray array];
+    Class lv = HushLiveMsgsClass();
+    if (!root || !lv) return out;
+
     NSMutableArray *layer = [NSMutableArray arrayWithObject:root];
-    for (int d = 0; d <= maxDepth && layer.count > 0; d++) {
+    int seen = 0;
+    BOOL stop = NO;
+    for (int d = 0; d <= maxDepth && layer.count > 0 && !stop; d++) {
         NSMutableArray *next = [NSMutableArray array];
         for (UIView *v in layer) {
-            if ([v isKindOfClass:[UITableView class]]) return (UITableView *)v;
+            if (seen >= maxNodes) { stop = YES; break; }
+            seen++;
+            if ([v isKindOfClass:lv]) [out addObject:v];
+            [next addObjectsFromArray:v.subviews];
+        }
+        layer = next;
+    }
+    return out;
+}
+
+// 限深限节点捞 BDMessageTableView。
+static UITableView *HushFindMsgTable(UIView *root, int maxDepth, int maxNodes) {
+    Class mc = HushMsgTableClass();
+    if (!root || !mc) return nil;
+
+    NSMutableArray *layer = [NSMutableArray arrayWithObject:root];
+    int seen = 0;
+    BOOL stop = NO;
+    for (int d = 0; d <= maxDepth && layer.count > 0 && !stop; d++) {
+        NSMutableArray *next = [NSMutableArray array];
+        for (UIView *v in layer) {
+            if (seen >= maxNodes) { stop = YES; break; }
+            seen++;
+            if ([v isKindOfClass:mc]) return (UITableView *)v;
             [next addObjectsFromArray:v.subviews];
         }
         layer = next;
     }
     return nil;
+}
+
+// LiveMessagesView.tableView，且必须过 HushAsMsgTable 的类校验。
+static UITableView *HushTableFromLiveView(UIView *lv) {
+    if (!lv) return nil;
+    id t = nil;
+    if ([lv respondsToSelector:NSSelectorFromString(@"tableView")]) {
+        @try { t = [lv valueForKey:@"tableView"]; } @catch (__unused NSException *e) { t = nil; }
+    }
+    if (!t) {
+        Ivar iv = class_getInstanceVariable([lv class], "_tableView");
+        if (iv) t = object_getIvar(lv, iv);
+    }
+    return HushAsMsgTable(t);
 }
 
 static UIViewController *HushRecallTopViewController(void) {
@@ -763,28 +951,51 @@ static UIViewController *HushRecallTopViewController(void) {
     return vc;
 }
 
-// 当前聊天页的表：先沿控制器父链找 tableView 属性 / _tableView ivar，再退到
-// 视图子树（深度 3）。宿主是 BDSessionPageController / 聊天控制器，都在这条链上。
+// 当前聊天页的表。四段式：
+//   ① 父链 6 层，每层先试 VC 自己的 tableView 属性 / _tableView ivar；
+//   ② 同一层 VC 的子视图中找 LiveMessagesView，取它的 tableView；
+//   ③ 同一层 VC 的子视图中直接找 BDMessageTableView（深度 6）；
+//   ④ 整个 keyWindow（浮层 / 二级容器）再扫一遍。
+// 全部落空返回 nil —— 绝不再兜到「第一个 UITableView」。
 static UITableView *HushRecallChatTable(void) {
-    UIViewController *vc = HushRecallTopViewController();
+    UIViewController *top = HushRecallTopViewController();
+    UIWindow *win = HushRecallKeyWindow();
+
+    UIViewController *vc = top;
     for (int i = 0; i < 6 && vc; i++, vc = [vc parentViewController]) {
         @try {
             if ([vc respondsToSelector:NSSelectorFromString(@"tableView")]) {
-                id t = [vc valueForKey:@"tableView"];
-                if ([t isKindOfClass:[UITableView class]]) return (UITableView *)t;
+                UITableView *t = HushAsMsgTable([vc valueForKey:@"tableView"]);
+                if (t) return t;
             }
         } @catch (__unused NSException *e) { }
 
         Ivar iv = class_getInstanceVariable([vc class], "_tableView");
         if (iv) {
-            id t = object_getIvar(vc, iv);
-            if ([t isKindOfClass:[UITableView class]]) return (UITableView *)t;
+            UITableView *t = HushAsMsgTable(object_getIvar(vc, iv));
+            if (t) return t;
         }
 
-        UITableView *t2 = HushRecallFindTable([vc view], 3);
-        if (t2) return t2;
+        UIView *rv = [vc view];
+        for (UIView *lv in HushFindLiveMessagesViews(rv, 4, 400)) {
+            UITableView *t = HushTableFromLiveView(lv);
+            if (t) return t;
+        }
+
+        UITableView *t3 = HushFindMsgTable(rv, 6, 600);
+        if (t3) return t3;
     }
-    return HushRecallFindTable([[HushRecallKeyWindow() rootViewController] view], 4);
+
+    if (win) {
+        for (UIView *lv in HushFindLiveMessagesViews(win, 6, 800)) {
+            UITableView *t = HushTableFromLiveView(lv);
+            if (t) return t;
+        }
+        UITableView *t = HushFindMsgTable(win, 8, 1500);
+        if (t) return t;
+    }
+
+    return nil;
 }
 
 #pragma mark - P0-2a 探针（临时，出结论后收敛成 P0-2b）
@@ -865,6 +1076,97 @@ static NSString *HushProbeScene(UIWindow *win) {
             act, (int)win.hidden, (double)win.alpha, (double)win.windowLevel];
 }
 
+// 视图树摘要：类名 + 每层节点数 + 有没有 UITableView / BDMessageTableView /
+// LiveMessagesView。深度与节点双限，避免一屏几十个 view 把日志撑爆。
+// 标记：<T>=UITableView  <MT>=BDMessageTableView  <LV>=LiveMessagesView
+static NSString *HushProbeViewTree(UIView *root, int maxDepth, int maxNodes) {
+    if (!root) return @"<nil view>";
+    Class mc = HushMsgTableClass();
+    Class lv = HushLiveMsgsClass();
+
+    NSMutableString *sb = [NSMutableString string];
+    NSMutableArray *layer = [NSMutableArray arrayWithObject:root];
+    int seen = 0, tables = 0, msgTables = 0, lives = 0, deepest = 0;
+    BOOL stop = NO;
+
+    for (int d = 0; d <= maxDepth && layer.count > 0 && !stop; d++) {
+        NSMutableArray *next = [NSMutableArray array];
+        [sb appendFormat:@"\n        d%d:", d];
+        for (UIView *v in layer) {
+            if (seen >= maxNodes) { [sb appendString:@" …"]; stop = YES; break; }
+            seen++;
+            NSString *cn = NSStringFromClass([v class]);
+            BOOL isT = [v isKindOfClass:[UITableView class]];
+            BOOL isM = mc ? [v isKindOfClass:mc] : NO;
+            BOOL isL = lv ? [v isKindOfClass:lv] : NO;
+            if (isT) tables++;
+            if (isM) msgTables++;
+            if (isL) lives++;
+            if (d > deepest) deepest = d;
+            [sb appendFormat:@" %@%@%@%@", cn,
+                isT ? @"<T>" : @"", isM ? @"<MT>" : @"", isL ? @"<LV>" : @""];
+            [next addObjectsFromArray:v.subviews];
+        }
+        layer = next;
+    }
+
+    return [NSString stringWithFormat:
+        @"(nodes=%d deepest=%d tables=%d msgTables=%d live=%d)%@",
+        seen, deepest, tables, msgTables, lives, sb];
+}
+
+// 拿不到聊天表时的全方位诊断。前 3 次全打，之后每 20 次一次 ——
+// 没有它，Q1「人在聊天页却返回 nil」永远只能靠猜。
+static void HushProbeChatTableMiss(void) {
+    static int n = 0;
+    n++;
+    // 新定位链在「不在聊天页」时也会返回 nil（旧实现在那种情况返回错的表），
+    // 所以 nil 会变成常态而非异常 —— 必须限总量，否则一晚上几万行树 dump。
+    if (n > 40) return;                      // 总上限
+    if (n > 3 && (n % 5) != 0) return;       // 前 3 次全打，之后每 5 次一次
+
+    UIViewController *top = HushRecallTopViewController();
+    UIWindow *win = HushRecallKeyWindow();
+    UIViewController *rootVC = [win rootViewController];
+
+    NSMutableArray *chain = [NSMutableArray array];
+    for (UIViewController *v = top; v && chain.count < 8; v = [v parentViewController]) {
+        [chain addObject:NSStringFromClass([v class])];
+    }
+
+    NSMutableString *perVC = [NSMutableString string];
+    for (UIViewController *v = top; v; v = [v parentViewController]) {
+        UIView *rv = [v view];
+        NSUInteger nLive = [HushFindLiveMessagesViews(rv, 6, 600) count];
+        NSUInteger nMsg  = HushFindMsgTable(rv, 6, 600) ? 1 : 0;
+        [perVC appendFormat:@" %@(msgTbl=%lu live=%lu)",
+            NSStringFromClass([v class]), (unsigned long)nMsg, (unsigned long)nLive];
+    }
+
+    HushProbeEmit([NSString stringWithFormat:
+        @"[P0-2b] NIL#%d top=%@ chain=[%@] win=%@ scene=[%@] msgTableCls=%@ liveCls=%@",
+        n,
+        top ? NSStringFromClass([top class]) : @"<nil>",
+        [chain componentsJoinedByString:@" > "],
+        win ? NSStringFromClass([win class]) : @"<nil>",
+        HushProbeScene(win),
+        HushMsgTableClass() ? NSStringFromClass(HushMsgTableClass()) : @"<NSClassFromString=nil>",
+        HushLiveMsgsClass() ? NSStringFromClass(HushLiveMsgsClass()) : @"<NSClassFromString=nil>"]);
+
+    HushProbeEmit([NSString stringWithFormat:@"[P0-2b] NIL#%d perVC:%@", n, perVC]);
+
+    if (top) {
+        HushProbeEmit([NSString stringWithFormat:@"[P0-2b] NIL#%d topVC.view-tree %@",
+            n, HushProbeViewTree([top view], 6, 160)]);
+    }
+
+    if (rootVC && [rootVC view] && [rootVC view] != [top view]) {
+        HushProbeEmit([NSString stringWithFormat:@"[P0-2b] NIL#%d rootVC(%@).view-tree %@",
+            n, NSStringFromClass([rootVC class]),
+            HushProbeViewTree([rootVC view], 8, 260)]);
+    }
+}
+
 static void HushRecallDecorateVisibleCells(void) {
     dispatch_async(dispatch_get_main_queue(), ^{
         @try {
@@ -872,6 +1174,8 @@ static void HushRecallDecorateVisibleCells(void) {
             if (!table || !table.window) {
                 [HushLogger logLevel:2 format:
                     @"[Hush][防撤回] 找不到聊天表（可能已离开聊天页），本轮不贴角标"];
+                // P0-2b：nil 分支必须留证 —— 否则「人在聊天页却返回 nil」只能靠猜。
+                HushProbeChatTableMiss();
                 return;
             }
 
@@ -1009,6 +1313,15 @@ BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg, void (*orig)(id, 
         [HushLogger logLevel:2 format:
             @"[Hush][防撤回] 撤回包读不到 messageId → 无法记账，放行"];
         return NO;
+    }
+
+    // 命中缓存 → 仍然吞掉，但不再记账、不再弹 Toast、不再重画。
+    // 实测证据：msgId=15 在 20:14:44 与 20:15:25 各来一次（间隔 41 秒）。
+    if (HushRecallIsIntercepted(mid)) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][防撤回] 命中缓存，跳过重推 msgId=%lld sessionId=%lld（仍吞，不弹窗不重画）",
+            mid, sid]];
+        return YES;                                  // 仍然不调 orig
     }
 
     sBlocked++;
