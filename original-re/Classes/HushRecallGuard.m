@@ -891,10 +891,31 @@ static void HushHideView(id obj, BOOL hide) {
     ((UIView *)obj).hidden = hide;
 }
 
+// v41: 闪照解锁总闸。
+//
+// 面板里「闪照转照片 / 闪文转普通消息」这两个键（switch_flash_photo /
+// switch_flash_text）此前**一处读取都没有** —— 纯死键，点了没反应。这里接上：
+// 两个都是「闪照变可反复查看」，任意一个开着就放行（用户开哪个说明他要那个）。
+// 默认都是 NO，所以关着的时候行为跟原版一致，不会偷偷改宿主渲染。
+static BOOL HushFlashUnlockOn(void) {
+    HushConfig *c = [HushConfig shared];
+    return [c isEnabled:@"switch_flash_photo"] || [c isEnabled:@"switch_flash_text"];
+}
+
 void HushAutoDestroyUnlock(id cell, id model) {
     if (!cell || !model) return;
     long long t = HushModelLongLong(model, HushRecallTypeKeys());
     if (t != HUSH_MSG_TYPE_TIME_LIMITED) return;   // 只认 282
+    if (!HushFlashUnlockOn()) {
+        static BOOL warned = NO;
+        if (!warned) {
+            warned = YES;
+            [HushLogger logLevel:2 format:
+                @"[Hush][闪照] 命中 type=282，但「闪照转照片 / 闪文转普通消息」都关着，"
+                @"不解锁（去面板打开任一项后重进会话）"];
+        }
+        return;
+    }
 
     // 1. 倒计时。文本闪文在 BDChatTextAndFaceCell 上叫 _timer；
     //    图片闪照走 BDDestoryChatCell 的 videoPlayManager 那套。取不到就算了。
@@ -965,6 +986,7 @@ void HushAutoDestroyUnlock(id cell, id model) {
 // 所以 _destoryCellMaskView 等 KVC 会落到父类 ivar —— 但仍然每个都要 @try 兜。
 void HushAutoDestroyKeepAlive(id cell) {
     if (!cell) return;
+    if (!HushFlashUnlockOn()) return;   // 开关关着就让它正常销毁，别偷偷改宿主行为
 
     id timer = HushSafeKVC(cell, @"_timer");
     if ([timer isKindOfClass:[NSTimer class]]) {
