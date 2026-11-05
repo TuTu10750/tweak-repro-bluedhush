@@ -715,6 +715,10 @@ static void HushRecallTruthDump(id obj, const char *where) {
         long long mid = HushModelLongLong(m, HushRecallIdKeys());
         if (t == HUSH_MSG_TYPE_RECALL
             || t == HUSH_MSG_TYPE_TIME_LIMITED
+            // v45：24 也要进 —— Destory cell 全程给的是 t=24，不收 24 就等于
+            // 永远看不到这条渲染路径的任何真值。为了防日志爆炸，下面明细行
+            // 对 t==24 走精简分支（只打 mid/t/img/dur）。
+            || t == 24
             || (rt != LLONG_MIN && rt != 0)
             || (mid != LLONG_MIN && mid > 0 && HushRecallIsIntercepted(mid))) {
             suspicious = YES;
@@ -754,6 +758,45 @@ static void HushRecallTruthDump(id obj, const char *where) {
         long long pt   = HushModelLongLong(m, @[@"promptType"]);
         BOOL intc      = (mid != LLONG_MIN && mid > 0 && HushRecallIsIntercepted(mid));
 
+        // ---- v44 P1 / v45：模型上的图片字段 ----
+        // GJIMMessageModel 213 个 selector 里有 image / destroyUrl / content /
+        // selectedContent / imageType / treasureImage 六个，v40-v43 一个都没打过。
+        // 关键问题：闪照状态下 image 到底有没有值？
+        //   有 → 原版那条「第二入口」就是从模型直取，sources 的 162 字节密文不用碰
+        //   没有 → 只能靠点开之后从 VC 的 imageURL getter 捞（v45 P3 已实现）
+        // v45 提前到明细行之前算：t==24 要走精简分支，必须先有值。
+        NSString *img = HushModelString(m, @[@"image"]);
+        NSString *dur = HushModelString(m, @[@"destroyUrl"]);
+        NSString *ct  = HushModelString(m, @[@"content"]);
+        NSString *sct = HushModelString(m, @[@"selectedContent"]);
+        NSString *trs = HushModelString(m, @[@"treasureImage"]);
+        long long it  = HushModelLongLong(m, @[@"imageType"]);
+
+        // v45：t==24 只打关键字段。宿主给 Destory cell 的就是这个类型，
+        // 打满屏的 sid/status/face/tls 全是 n/a，纯噪音。
+        if (t == 24) {
+            [lines addObject:[NSString stringWithFormat:
+                @"[P0-2b]   m[%lu] LEAN mid=%@ t=24 img=%@ dur=%@ ctLen=%lu",
+                (unsigned long)i, HushNumStr(mid),
+                img.length ? img : @"-",
+                dur.length ? dur : @"-",
+                (unsigned long)ct.length]];
+            continue;
+        }
+
+        // 非 24（282 / 有图的普通消息）：打全六字段。
+        if (t == HUSH_MSG_TYPE_TIME_LIMITED || img.length > 0 || dur.length > 0) {
+            [lines addObject:[NSString stringWithFormat:
+                @"[P0-2b]   m[%lu] img=%@ dur=%@ it=%@ ctLen=%lu sctLen=%lu trs=%@",
+                (unsigned long)i,
+                img.length ? img : @"-",
+                dur.length ? dur : @"-",
+                HushNumStr(it),
+                (unsigned long)ct.length,
+                (unsigned long)sct.length,
+                trs.length ? trs : @"-"]];
+        }
+
         // ---- 三层降级取闪照真值 ----
         // - msgExtraModel：宿主自己解析好的 GJIMMessageModelExtra
         //    （sel_index 确认它只有 5 个 selector：time_limited_status /
@@ -791,32 +834,6 @@ static void HushRecallTruthDump(id obj, const char *where) {
             intc ? 1 : 0,
             extraObj ? NSStringFromClass([extraObj class]) : (extraRaw ? @"raw" : @"nil"),
             (unsigned long)extraStr.length]];
-
-        // ---- v44 P1：模型上的图片字段 ----
-        // GJIMMessageModel 213 个 selector 里有 image / destroyUrl / content /
-        // selectedContent / imageType / treasureImage 六个，v40-v43 一个都没打过。
-        // 关键问题：type=282 状态下 image 有没有值？
-        //   有 → 原版那条「第二入口」就是从模型直取，sources 的 162 字节密文不用碰
-        //   没有 → 只能去逆 sources 解密
-        NSString *img = HushModelString(m, @[@"image"]);
-        NSString *dur = HushModelString(m, @[@"destroyUrl"]);
-        NSString *ct  = HushModelString(m, @[@"content"]);
-        NSString *sct = HushModelString(m, @[@"selectedContent"]);
-        NSString *trs = HushModelString(m, @[@"treasureImage"]);
-        long long it  = HushModelLongLong(m, @[@"imageType"]);
-        BOOL wantImg  = (t == HUSH_MSG_TYPE_TIME_LIMITED)
-                     || img.length > 0 || dur.length > 0;
-        if (wantImg) {
-            [lines addObject:[NSString stringWithFormat:
-                @"[P0-2b]   m[%lu] img=%@ dur=%@ it=%@ ctLen=%lu sctLen=%lu trs=%@",
-                (unsigned long)i,
-                img.length ? img : @"-",
-                dur.length ? dur : @"-",
-                HushNumStr(it),
-                (unsigned long)ct.length,
-                (unsigned long)sct.length,
-                trs.length ? trs : @"-"]];
-        }
 
         // extra 原文单独一行：闪照标记可能藏在后半段，所以不再只截 120 字符。
         // 只在「有值」或「本批第一条」时打，控制体积。
@@ -991,7 +1008,10 @@ void HushAutoDestroyUnlock(id cell, id model) {
     //     和 BDChatTextAndFaceCell*，一条 BDDestoryChatCell 都没有）
     // 三处都要认：宿主用哪个类渲染闪照是它自己的实现细节，只认一个必漏。
     long long t = model ? HushModelLongLong(model, HushRecallTypeKeys()) : LLONG_MIN;
-    BOOL byType = (t == HUSH_MSG_TYPE_TIME_LIMITED);
+    // v45：type=24 也要认。v44 真机日志里 Destory cell 拿到的 model 一直是 t=24
+    // （BURN#1-3: mid=674 t=24 mt=n/a mix=24），而 type=282 全文一次都没出现。
+    // 只认 282 会把真实渲染路径整条漏掉。
+    BOOL byType = (t == HUSH_MSG_TYPE_TIME_LIMITED) || (t == 24);
     BOOL byCell = NO;
     Class dc = NSClassFromString(@"BDDestoryChatCell");
     if (dc && [cell isKindOfClass:dc]) byCell = YES;
@@ -1159,6 +1179,93 @@ void HushAutoDestroyKeepAlive(id cell) {
 // 里几层都不影响结果。
 // HushHooks.m 里的闪照记忆池（v44 P2）：靠 uid + sendTime 反查 mid。
 extern void HushFlashRemember(long long mid, long long from, long long ts);
+// v45：mid -> 本地原图路径（HushHooks.m 里的映射表）
+extern NSString *HushFlashMapPath(long long mid);
+
+// v45 P5：渲染层塞图 —— 全程不动 model、不碰 DB。
+//
+// 为什么不改 model 的 type/image：
+//   GJIMMessageModel 是宿主的活对象，BDMessageTableView 上还挂着
+//   _shadowUpdatesController，改完下一次 updateMessages: 很可能被冲回来；
+//   写进 DB 更不可回滚。所以只在 cell 层把本地图铺上去 —— 宿主怎么刷新，
+//   下一次 HushRecallDecorateCell 都会重新铺一遍，退出重进照样有效。
+//
+// 前置：HushHooks.m 的 startLoadingResource hook 已经在点开那一刻把
+//   明文 imageURL 抓下来、下载到 Documents/bluedbackups/burn/<mid>.jpg。
+void HushBurnApplyImage(id cell, id model) {
+    if (!cell || !model) return;
+    if (!HushFlashUnlockOn()) return;          // 面板开关关着就完全不介入
+
+    long long mid = HushModelLongLong(model, HushRecallIdKeys());
+    if (mid <= 0) return;
+
+    NSString *path = HushFlashMapPath(mid);
+    if (path.length == 0) return;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) return;
+
+    id img = HushSafeKVC(cell, @"_bubbleImgView");
+    if (![img isKindOfClass:[UIImageView class]]) return;
+
+    UIImage *im = [UIImage imageWithContentsOfFile:path];
+    if (!im) return;
+
+    UIImageView *iv = (UIImageView *)img;
+    // 宿主没给这张图算过尺寸（它原本是「按住才能看」的占位），直接塞会把
+    // 气泡撑爆 / 压扁。AspectFill + clipsToBounds 是唯一稳妥的组合。
+    iv.contentMode = UIViewContentModeScaleAspectFill;
+    iv.clipsToBounds = YES;
+    @try { [iv setImage:im]; } @catch (__unused NSException *e) {}
+    iv.hidden = NO;
+
+    // 图有了，销毁面就没必要留（此时点不点得动已经不重要）
+    HushHideView(HushSafeKVC(cell, @"_destoryCellMaskView"), YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryIconBtn"),      YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),    YES);
+
+    id timer = HushSafeKVC(cell, @"_timer");
+    if ([timer isKindOfClass:[NSTimer class]]) {
+        [(NSTimer *)timer invalidate];
+        @try { [cell setValue:nil forKey:@"_timer"]; }
+        @catch (__unused NSException *e) {}
+    }
+
+    // 「闪照」小标：跟 HushAutoDestroyUnlock 同一套视觉
+    UILabel *mark = nil;
+    @try { mark = (UILabel *)[iv viewWithTag:kHushBurnTag]; }
+    @catch (__unused NSException *e) { mark = nil; }
+    if (!mark) {
+        mark = [[UILabel alloc] initWithFrame:CGRectZero];
+        mark.tag = kHushBurnTag;
+        mark.text = @"闪照";
+        mark.font = [UIFont systemFontOfSize:10.0 weight:UIFontWeightMedium];
+        mark.textColor = [UIColor whiteColor];
+        mark.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.4];
+        mark.textAlignment = NSTextAlignmentCenter;
+        mark.layer.cornerRadius = 3.0;
+        mark.clipsToBounds = YES;
+        mark.userInteractionEnabled = NO;
+        [iv addSubview:mark];
+    }
+    [mark sizeToFit];
+    CGRect mf = mark.frame;
+    mf.size.width  += 6.0;
+    mf.size.height += 2.0;
+    mf.origin.x = 4.0;
+    mf.origin.y = 4.0;
+    mark.frame = mf;
+    mark.hidden = NO;
+
+    static int paintLogs = 0;
+    paintLogs++;
+    if (paintLogs <= 12 || (paintLogs % 10) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] BURNPAINT#%d cell=%@ mid=%lld size=%.0fx%.0f file=%@",
+            paintLogs, NSStringFromClass([cell class]), mid,
+            im.size.width, im.size.height, [path lastPathComponent]];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
 
 void HushRecallDecorateCell(id cell, id model) {
     if (!cell) return;
@@ -1172,21 +1279,33 @@ void HushRecallDecorateCell(id cell, id model) {
     // 的 hit 计数为 0，TRUTH# 一条都打不出来。
     HushRecallTruthDump(model, "ui");
 
-    // v44 P2：把这条闪照记进池子，供 BDAutoDestoryImageViewController 那边
-    // 用 targetUid + msgTime 反查 mid（那个 VC 身上根本没有 mid ivar）。
-    if (model) {
-        long long mT = HushModelLongLong(model, HushRecallTypeKeys());
-        if (mT == HUSH_MSG_TYPE_TIME_LIMITED) {
-            HushFlashRemember(HushModelLongLong(model, HushRecallIdKeys()),
-                              HushModelLongLong(model, HushRecallFromKeys()),
-                              HushModelLongLong(model, @[@"sendTime"]));
-        }
+    // v45 P1：闪照判据此前写死在 type==282，但 v44 真机把这条路证伪了 ——
+    // Destory cell 拿到的 model 一直是 t=24（BURN#1-3: mid=674 t=24 mt=n/a），
+    // 全文 type=282 一次都没出现。判据与实际类型脱节，导致 HushFlashRemember
+    // 一次没进、池子永远空、BURNSTART# 的 mid 恒为 n/a。
+    // 现在跟 HushAutoDestroyUnlock 对齐，三路 OR。
+    long long mT = model ? HushModelLongLong(model, HushRecallTypeKeys()) : LLONG_MIN;
+    BOOL burnByType = (mT == HUSH_MSG_TYPE_TIME_LIMITED) || (mT == 24);
+    BOOL burnByCell = NO;
+    Class dcCls = NSClassFromString(@"BDDestoryChatCell");
+    if (dcCls && [cell isKindOfClass:dcCls]) burnByCell = YES;
+    BOOL burnish = burnByType || burnByCell;
+
+    // v44 P2 → v45 P1：把这条闪照记进池子，供 BDAutoDestoryImageViewController
+    // 那边用 targetUid + msgTime 反查 mid（那个 VC 身上根本没有 mid ivar）。
+    if (burnish && model) {
+        HushFlashRemember(HushModelLongLong(model, HushRecallIdKeys()),
+                          HushModelLongLong(model, HushRecallFromKeys()),
+                          HushModelLongLong(model, @[@"sendTime"]));
     }
 
     // v41：闪照先解锁，再走角标逻辑。
     // 放在 -ModelWasIntercepted 判断之前 —— 闪照不需要被我们拦截过，只要它是
-    // type=282 就该洗白；如果放到后面，未被拦截的闪照永远进不来。
+    // 闪照就该洗白；如果放到后面，未被拦截的闪照永远进不来。
     HushAutoDestroyUnlock(cell, model);
+
+    // v45 P5：映射表里已经有本地原图就直接铺上去（不动 model、不碰 DB）。
+    if (burnish) HushBurnApplyImage(cell, model);
 
     UILabel *tag = nil;
     @try { tag = (UILabel *)[host viewWithTag:kHushInterceptTag]; }

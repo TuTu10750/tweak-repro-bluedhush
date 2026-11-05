@@ -42,6 +42,7 @@
 #import <string.h>
 #import <stdio.h>
 #import <stdlib.h>
+#import <dispatch/dispatch.h>
 
 #import "HushRuntime.h"
 #import "HushConfig.h"
@@ -538,17 +539,59 @@ static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
 // clickMessage: / mainTableView）。它是「点开闪照 → 全屏展示」这一跳的入口。
 // self 是 VC 不是 cell，拿不到 _destoryCellMaskView 那套 ivar，所以这里只留痕、
 // 不拆销毁面 —— 它的作用就是回答一个问题：点开闪照到底走没走这条路。
+// v45 P2：点击时截获的 mid。
+//
+// BDAutoDestoryImageViewController 身上没有 mid ivar，只有 targetUid + msgTime
+// （sel_index: targetUid @16@0:8 / msgTime Q16@0:8）。v44 想靠「DecorateCell 填池
+// + uid/时间戳反查」，但 DecorateCell 的判据写死在 type==282、实际 model 是 24，
+// 池子永远是空的，所以 BURNSTART# 的 mid 恒为 n/a。
+//
+// 真正稳的落点是点击入口本身：BDMessageViewController -showAutoDestroyImage: 的
+// 参数就是 BDDestoryChatCell，而 cell 上挂着 message（GJIMMessageModel），
+// msgId / sendTime 全在里面。这条 hook 实测有 VCKEEP#1 触发，不是死路。
+static long long gHushLastClickMsgId = 0;
+static long long gHushLastClickTs    = 0;
+
 static void (*o_msgVCShowAuto)(id, SEL, id);
 static void r_msgVCShowAuto(id self, SEL _cmd, id a0) {
     HushHit("BDMessageViewController", "showAutoDestroyImage:");
     if (o_msgVCShowAuto) o_msgVCShowAuto(self, _cmd, a0);
+
+    // v45 P2：从 cell.message 里抠 mid + sendTime，存成全局给
+    // BDAutoDestoryImageViewController 的 startLoadingResource 用。
+    long long mid = 0, ts = 0;
+    if (a0) {
+        id msg = nil;
+        @try { msg = [a0 valueForKey:@"message"]; }
+        @catch (__unused NSException *e) { msg = nil; }
+        if (msg) {
+            for (NSString *k in @[ @"msgId", @"messageId" ]) {
+                @try {
+                    id v = [msg valueForKey:k];
+                    if ([v isKindOfClass:[NSNumber class]]) {
+                        long long x = [(NSNumber *)v longLongValue];
+                        if (x > 0) { mid = x; break; }
+                    }
+                } @catch (__unused NSException *e) {}
+            }
+            @try {
+                id v = [msg valueForKey:@"sendTime"];
+                if ([v isKindOfClass:[NSNumber class]]) ts = [(NSNumber *)v longLongValue];
+            } @catch (__unused NSException *e) {}
+        }
+    }
+    if (mid > 0) {
+        gHushLastClickMsgId = mid;
+        gHushLastClickTs    = ts;
+    }
+
     static int n = 0;
     n++;
     if (n <= 10 || (n % 10) == 0) {
         // HushLogger 的 logLevel:format: 只收一个拼好的 NSString，不是 printf。
         NSString *line = [NSString stringWithFormat:
-            @"[P0-2b] VCKEEP#%d vc=%@ arg=%@（点开闪照走了全屏展示）",
-            n, NSStringFromClass([self class]), NSStringFromClass([a0 class])];
+            @"[P0-2b] VCKEEP#%d vc=%@ arg=%@ mid=%lld ts=%lld",
+            n, NSStringFromClass([self class]), NSStringFromClass([a0 class]), mid, ts];
         fprintf(stderr, "%s\n", [line UTF8String]);
         [HushLogger logLevel:2 format:line];
     }
@@ -801,6 +844,8 @@ static NSString *HushBurnState(id self) {
     } @catch (__unused NSException *e) {}
     long long m2  = HushFlashLookupMid(uid, mts);
     [out appendFormat:@" mid=%@", HushBurnNum(m2)];
+    // v45 P2：点击时截获的 mid，比 uid+时间戳反查稳得多
+    [out appendFormat:@" gMid=%lld", gHushLastClickMsgId];
     return out;
 }
 
@@ -852,6 +897,106 @@ static void HushBurnSalvage(id self) {
     HushBurnNote([NSString stringWithFormat:
         @"[P0-2b] SALVAGE src=%lu copied=%d dir=%@",
         (unsigned long)srcs.count, copied, dst]);
+}
+
+// ---- v45：mid -> 本地原图 的映射表
+//
+// 持久化到 Documents/bluedbackups/burn/map.json。
+// 不放 NSUserDefaults —— 那是 HushConfig 的地盘（_flagCache 会搅），而且
+// 闪照映射是纯数据，跟配置无关。
+static NSMutableDictionary *sFlashMap = nil;
+
+static NSObject *HushFlashMapLock(void) {
+    static NSObject *o = nil;
+    if (!o) o = [[NSObject alloc] init];
+    return o;
+}
+
+static NSString *HushFlashMapFile(void) {
+    NSString *d = HushBurnDir();
+    if (!d) return nil;
+    return [d stringByAppendingPathComponent:@"map.json"];
+}
+
+static void HushFlashMapLoad(void) {
+    if (sFlashMap) return;
+    sFlashMap = [[NSMutableDictionary alloc] init];
+    NSString *f = HushFlashMapFile();
+    if (!f) return;
+    NSData *d = [NSData dataWithContentsOfFile:f];
+    if (!d || d.length == 0) return;
+    id obj = [NSJSONSerialization JSONObjectWithData:d options:0 error:NULL];
+    if ([obj isKindOfClass:[NSDictionary class]]) {
+        [sFlashMap addEntriesFromDictionary:(NSDictionary *)obj];
+    }
+}
+
+static void HushFlashMapFlush(void) {
+    NSString *f = HushFlashMapFile();
+    if (!f || !sFlashMap) return;
+    NSData *d = [NSJSONSerialization dataWithJSONObject:sFlashMap options:0 error:NULL];
+    if (d) [d writeToFile:f atomically:YES];
+}
+
+static void HushFlashMapSet(long long mid, NSString *url, NSString *path) {
+    if (mid <= 0 || url.length == 0) return;
+    @synchronized (HushFlashMapLock()) {
+        HushFlashMapLoad();
+        NSMutableDictionary *e = [NSMutableDictionary dictionary];
+        [e setObject:url forKey:@"url"];
+        if (path.length) [e setObject:path forKey:@"path"];
+        [e setObject:@((long long)[[NSDate date] timeIntervalSince1970]) forKey:@"at"];
+        [sFlashMap setObject:e forKey:[NSString stringWithFormat:@"%lld", mid]];
+        HushFlashMapFlush();
+    }
+}
+
+// 给 HushRecallGuard.m 的 HushBurnApplyImage 查本地图
+NSString *HushFlashMapPath(long long mid) {
+    if (mid <= 0) return nil;
+    @synchronized (HushFlashMapLock()) {
+        HushFlashMapLoad();
+        NSDictionary *e = [sFlashMap objectForKey:[NSString stringWithFormat:@"%lld", mid]];
+        if (![e isKindOfClass:[NSDictionary class]]) return nil;
+        id p = [(NSDictionary *)e objectForKey:@"path"];
+        if (![p isKindOfClass:[NSString class]]) return nil;
+        return (NSString *)p;
+    }
+}
+
+// v45 P3 补丁 B：下载 + 落盘全放后台队列，文件名固定 <mid>.jpg ——
+// 同一张图不论点开多少次只存一份，不会堆几十个重复大文件。
+static void HushFlashDownload(long long mid, NSString *url) {
+    if (mid <= 0 || url.length == 0) return;
+    NSString *dir = HushBurnDir();
+    if (!dir) return;
+    NSString *dst = [dir stringByAppendingPathComponent:
+                     [NSString stringWithFormat:@"%lld.jpg", mid]];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:dst]) {
+        HushFlashMapSet(mid, url, dst);   // 已下过，直接登记
+        return;
+    }
+    NSURL *u = [NSURL URLWithString:url];
+    if (!u) return;
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+        NSData *data = [NSData dataWithContentsOfURL:u];
+        NSUInteger len = data.length;
+        if (!data || len < 1024) {
+            HushBurnNote([NSString stringWithFormat:
+                @"[P0-2b] BURNDL#fail mid=%lld bytes=%lu", mid, (unsigned long)len]);
+            return;
+        }
+        if ([data writeToFile:dst atomically:YES]) {
+            HushFlashMapSet(mid, url, dst);
+            HushBurnNote([NSString stringWithFormat:
+                @"[P0-2b] BURNDL#ok mid=%lld bytes=%lu file=%@",
+                mid, (unsigned long)len, [dst lastPathComponent]]);
+        } else {
+            HushBurnNote([NSString stringWithFormat:
+                @"[P0-2b] BURNDL#write-fail mid=%lld", mid]);
+        }
+    });
 }
 
 // ---- slot 39: setImageURL:needDecryption:   ← 本轮的命门
@@ -932,6 +1077,43 @@ static void r_burnLoadImage(id self, SEL _cmd) {
 static void (*o_burnStartLoad)(id, SEL);
 static void r_burnStartLoad(id self, SEL _cmd) {
     HushHit("BDAutoDestoryImageViewController", "startLoadingResource");
+
+    // ---- v45 P3：在这里抢明文 URL ----
+    //
+    // v44 实测：setImageURL: 收到的是 162 字节 AES 密文
+    // （BURNSETURL#1 url=RUV+iJmKj0...），但 imageURL 这个 getter 返回的是
+    // https://burn-chatfiles.bldimg.cn/... 明文。解密发生在 getter 里 ——
+    // 宿主自己解好了，不用碰那块硬骨头。
+    NSString *u = nil;
+    @try {
+        id v = [self valueForKey:@"imageURL"];
+        if ([v isKindOfClass:[NSURL class]])         u = [(NSURL *)v absoluteString];
+        else if ([v isKindOfClass:[NSString class]]) u = (NSString *)v;
+    } @catch (__unused NSException *e) { u = nil; }
+
+    // mid 优先用点击时截获的那个（v45 P2）；截不到再退回 uid+时间戳反查。
+    long long mid = gHushLastClickMsgId;
+    if (mid <= 0) {
+        long long uid = 0, mt = 0;
+        @try {
+            id v = [self valueForKey:@"targetUid"];
+            if ([v isKindOfClass:[NSNumber class]]) uid = [(NSNumber *)v longLongValue];
+            v = [self valueForKey:@"msgTime"];
+            if ([v isKindOfClass:[NSNumber class]]) mt = [(NSNumber *)v longLongValue];
+        } @catch (__unused NSException *e) {}
+        if (uid != 0 && mt != 0) mid = HushFlashLookupMid(uid, mt);
+    }
+
+    if (mid > 0 && u.length >= 8) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNGRAB mid=%lld url=%@", mid, u]);
+        HushFlashDownload(mid, u);
+    } else {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNGRAB miss mid=%lld urlLen=%lu",
+            mid, (unsigned long)u.length]);
+    }
+
     static int n = 0;
     n++;
     if (n <= 12 || (n % 10) == 0) {
