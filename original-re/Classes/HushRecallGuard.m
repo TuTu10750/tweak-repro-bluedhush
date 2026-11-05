@@ -903,16 +903,27 @@ static BOOL HushFlashUnlockOn(void) {
 }
 
 void HushAutoDestroyUnlock(id cell, id model) {
-    if (!cell || !model) return;
-    long long t = HushModelLongLong(model, HushRecallTypeKeys());
-    if (t != HUSH_MSG_TYPE_TIME_LIMITED) return;   // 只认 282
+    if (!cell) return;
+
+    // 两道闸，任意一道过就算闪照：
+    //   - model.type == 282（宿主对新消息偶尔会用这个类型码）
+    //   - cell 本身是 BDDestoryChatCell 子类
+    // 为什么 cell 类名也认：宿主渲染闪照时可能不给 model 换 type，只是把它分配给
+    // Destory 系列的 Cell 去画（cell 类名才是渲染路径的真凭据）。只认 type 会漏。
+    long long t = model ? HushModelLongLong(model, HushRecallTypeKeys()) : LLONG_MIN;
+    BOOL byType = (t == HUSH_MSG_TYPE_TIME_LIMITED);
+    BOOL byCell = NO;
+    Class dc = NSClassFromString(@"BDDestoryChatCell");
+    if (dc && [cell isKindOfClass:dc]) byCell = YES;
+    if (!byType && !byCell) return;
+
     if (!HushFlashUnlockOn()) {
         static BOOL warned = NO;
         if (!warned) {
             warned = YES;
             [HushLogger logLevel:2 format:
-                @"[Hush][闪照] 命中 type=282，但「闪照转照片 / 闪文转普通消息」都关着，"
-                @"不解锁（去面板打开任一项后重进会话）"];
+                @"[Hush][闪照] 命中闪照（type=282 或 DestoryCell），但「闪照转照片 / "
+                @"闪文转普通消息」都关着，不解锁（去面板打开任一项后重进会话）"];
         }
         return;
     }
@@ -965,11 +976,12 @@ void HushAutoDestroyUnlock(id cell, id model) {
     burnLogs++;
     if (burnLogs <= 10 || (burnLogs % 10) == 0) {
         NSString *line = [NSString stringWithFormat:
-            @"[P0-2b] BURN#%d cell=%@ img=%@ mask=%@ timer=%@",
+            @"[P0-2b] BURN#%d cell=%@ img=%@ mask=%@ timer=%@ type=%@ by=%@",
             burnLogs, NSStringFromClass([cell class]),
             NSStringFromClass([container class]),
             HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
-            timer ? @"y" : @"n"];
+            timer ? @"y" : @"n",
+            HushNumStr(t), byType ? @"type282" : @"cellClass"];
         fprintf(stderr, "%s\n", [line UTF8String]);
         [HushLogger logLevel:2 format:line];
     }
