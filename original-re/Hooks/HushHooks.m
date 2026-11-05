@@ -40,6 +40,8 @@
 #import <objc/message.h>
 #import <UIKit/UIKit.h>
 #import <string.h>
+#import <stdio.h>
+#import <stdlib.h>
 
 #import "HushRuntime.h"
 #import "HushConfig.h"
@@ -527,20 +529,9 @@ static BOOL r_checkBlockPkg(id self, SEL _cmd, id a0) {
     return r;
 }
 
-// v41: showAutoDestroyImage: — 闪照的点开动作。
-//
-// 只摘遮罩是假象：用户点一下，宿主内部依然走这条，然后自己起销毁倒计时
-// （把图换回模糊占位 / 标成已查看）。所以这里必须 %orig（要它去解密铺图），
-// 但在它之后把销毁面重新拆一遍 —— 展示归你，销毁权没收。
-//
-// 只挂在 BDDestoryChatCell 上（sel_index: `showAutoDestroyImage:` v24@0:8@16，
-// BDDestoryChatCell 与 BDMessageViewController 上都有；这里取前者，离画面最近）。
-static void (*o_destoryShowAuto)(id, SEL, id);
-static void r_destoryShowAuto(id self, SEL _cmd, id a0) {
-    HushHit("BDDestoryChatCell", "showAutoDestroyImage:");
-    if (o_destoryShowAuto) o_destoryShowAuto(self, _cmd, a0);
-    HushAutoDestroyKeepAlive(self);
-}
+// v41 的 BDDestoryChatCell -showAutoDestroyImage: 探针已删（v43）。
+// v42 真机日志里 KEEP# 一次都没出，说明点击根本不走 cell 这条，
+// 真正的中转站是 BDMessageViewController 那条（下面这个，已实证 VCKEEP#1）。
 
 // BDMessageViewController 上也有一个同名 showAutoDestroyImage:（sel_index:
 // 598 个 selector，同列还有 destoryImageCell:clickMsg: / destroyBigImageCell:
@@ -656,16 +647,308 @@ static void r_destroyBigClick(id self, SEL _cmd, id a0, id a1) {
         }                                                                          \
     }
 
-HUSH_CLICK0(playBtnTapped, "playBtnTapped", o_playBtnTapped,
-            "BDDestoryChatCell", "playBtnTapped")
-HUSH_CLICK0(clickTipBtn, "clickTipBtn", o_clickTipBtn,
-            "BDChatBasicCell", "clickTipBtn")
 HUSH_CLICK2(markReadClick, "markImageRead", o_markReadClick,
             "BDMessageViewController", "markImageReadCell:clickMsg:")
 HUSH_CLICK2(warnClick, "warnImage", o_warnClick,
             "BDMessageViewController", "warnImageCell:clickMsg:")
 HUSH_CLICK2(showBigClick, "showBigImage", o_showBigClick,
             "BDMessageViewController", "showBigImageCell:clickMsg:")
+// v42 真机判决：playBtnTapped / clickTipBtn / BDDestoryChatCell::showAutoDestroyImage:
+// 三个探针 CLICK# 与 KEEP# 双双为 0 —— 点击根本不走它们。已删。
+
+// ---------------------------------------------------------------- v43 阅后即焚
+//
+// v42 真机日志把整条链钉死了：点开闪照只产生一条 VCKEEP#1
+// （BDMessageViewController -showAutoDestroyImage:，参数是 cell），
+// 随后 94 秒零业务网络请求。你说的「按住屏幕阅读 / 松手即销毁」
+// 出自 BDAutoDestoryImageViewController（sel_index 109 个 selector）：
+//
+//   touchesBegan:withEvent:        ← 「按住」
+//   startLoadingResource
+//   requestServerUrl:compelete:    ← 向服务器要地址（gRPC，不是 NSURLSession）
+//   setImageURL:needDecryption:    ← 拿到的是【密文】
+//   loadImage
+//   countDown                      ← 15 秒倒计时
+//   touchesEnded:withEvent:        ← 「松手」
+//   finishReview → clearCache      ← 清盘
+//
+// 所以 NSURLSession 一条都抓不到。真正的 URL 在 setImageURL: 的第一个参数上。
+//
+// 两条铁律（用户点名）：
+//   - 破坏性动作（拦松手、拦倒计时、拦 clearCache）全在 switch_flash_keep 后面，默认关
+//   - 不在 touchesEnded: 里截图（视频层/GL 层会全黑）；要抢救就走 clearCache 拷文件
+static BOOL HushFlashKeepOn(void) {
+    return [[HushConfig shared] isEnabled:@"switch_flash_keep"];
+}
+
+static void HushBurnNote(NSString *line) {
+    if (!line) return;
+    fprintf(stderr, "%s\n", [line UTF8String]);
+    [HushLogger logLevel:2 format:line];
+}
+
+// 打一个字符串字段，nil / 空串直接跳过 —— 日志里全是 text=(null) 没法看。
+static void HushBurnAppend(NSMutableString *out, id obj, NSString *key) {
+    if (!out || !obj) return;
+    id v = nil;
+    @try { v = [obj valueForKey:key]; } @catch (__unused NSException *e) { return; }
+    if (!v) return;
+    NSString *s = nil;
+    if ([v isKindOfClass:[NSString class]])      s = (NSString *)v;
+    else if ([v isKindOfClass:[NSURL class]])    s = [(NSURL *)v absoluteString];
+    else if ([v isKindOfClass:[NSNumber class]]) s = [(NSNumber *)v stringValue];
+    if (s.length == 0) return;
+    [out appendFormat:@" %@=%@", key, s];
+}
+
+// 把这个 VC 身上所有带 url/path/dir/file 字样的 ivar 挖出来。
+// sel_index 已证实这些字段真实存在：imageURL / videoURL / videoDir /
+// videoOutputPath / webServicePort / targetUid / msgTime。
+static NSString *HushBurnState(id self) {
+    if (!self) return @"nil";
+    NSMutableString *out = [NSMutableString stringWithFormat:@"cls=%@",
+                            NSStringFromClass([self class])];
+    NSArray *keys = @[ @"imageURL", @"videoURL", @"videoDir", @"videoOutputPath",
+                       @"webServicePort", @"targetUid", @"msgTime",
+                       @"isExchangePhoto", @"isFromSelf", @"isVertify" ];
+    for (NSString *k in keys) HushBurnAppend(out, self, k);
+    // 兜底：类里将来加了新字段也不至于漏。最多扫 120 个 ivar。
+    unsigned int n = 0;
+    Ivar *ivars = class_copyIvarList([self class], &n);
+    if (ivars) {
+        int shown = 0;
+        for (unsigned int i = 0; i < n && shown < 120; i++) {
+            const char *nm = ivar_getName(ivars[i]);
+            if (!nm) continue;
+            NSString *ns = [NSString stringWithUTF8String:nm];
+            if (!ns) continue;
+            NSString *low = [ns lowercaseString];
+            if ([low rangeOfString:@"url"].location == NSNotFound &&
+                [low rangeOfString:@"path"].location == NSNotFound &&
+                [low rangeOfString:@"dir"].location == NSNotFound &&
+                [low rangeOfString:@"file"].location == NSNotFound) continue;
+            // 上面 keys 已经打过的跳过
+            NSString *bare = [ns hasPrefix:@"_"] ? [ns substringFromIndex:1] : ns;
+            if ([keys containsObject:bare]) continue;
+            HushBurnAppend(out, self, bare);
+            shown++;
+        }
+        free(ivars);
+    }
+    return out;
+}
+
+#define HUSH_BURN_DIR  @"bluedbackups/burn"
+static NSString *HushBurnDir(void) {
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *doc = paths.count ? [paths objectAtIndex:0] : nil;
+    if (!doc) return nil;
+    NSString *d = [doc stringByAppendingPathComponent:HUSH_BURN_DIR];
+    [[NSFileManager defaultManager] createDirectoryAtPath:d
+                              withIntermediateDirectories:YES
+                                               attributes:nil
+                                                    error:NULL];
+    return d;
+}
+
+// clearCache / finishReview 之前把本地落盘的东西抢下来。
+// 只拷单个文件与一层目录内容，绝不递归整个沙盒 —— 那是自杀。
+static void HushBurnSalvage(id self) {
+    NSString *dst = HushBurnDir();
+    if (!dst) return;
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSMutableArray *srcs = [NSMutableArray array];
+    for (NSString *k in @[ @"videoDir", @"videoOutputPath", @"imageURL", @"videoURL" ]) {
+        id v = nil;
+        @try { v = [self valueForKey:k]; } @catch (__unused NSException *e) { continue; }
+        if ([v isKindOfClass:[NSURL class]]) v = [(NSURL *)v path];
+        // 只处理本地路径；http(s) 交给 setImageURL 那条线
+        if ([v isKindOfClass:[NSString class]] && [(NSString *)v hasPrefix:@"/"]) {
+            [srcs addObject:v];
+        }
+    }
+    int copied = 0;
+    for (NSString *src in srcs) {
+        BOOL isDir = NO;
+        if (![fm fileExistsAtPath:src isDirectory:&isDir]) continue;
+        NSArray *items = isDir ? [fm contentsOfDirectoryAtPath:src error:NULL]
+                               : @[ src ];
+        for (NSString *it in items) {
+            NSString *full = isDir ? [src stringByAppendingPathComponent:it] : it;
+            NSString *to = [dst stringByAppendingPathComponent:
+                            [NSString stringWithFormat:@"%d_%@", copied, [full lastPathComponent]]];
+            if ([fm fileExistsAtPath:to]) continue;
+            if ([fm copyItemAtPath:full toPath:to error:NULL]) copied++;
+            if (copied >= 12) break;
+        }
+        if (copied >= 12) break;
+    }
+    HushBurnNote([NSString stringWithFormat:
+        @"[P0-2b] SALVAGE src=%lu copied=%d dir=%@",
+        (unsigned long)srcs.count, copied, dst]);
+}
+
+// ---- slot 39: setImageURL:needDecryption:   ← 本轮的命门
+static void (*o_burnSetImageURL)(id, SEL, id, BOOL);
+static void r_burnSetImageURL(id self, SEL _cmd, id url, BOOL needDec) {
+    HushHit("BDAutoDestoryImageViewController", "setImageURL:needDecryption:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        NSString *u = nil;
+        @try {
+            if ([url isKindOfClass:[NSURL class]])   u = [(NSURL *)url absoluteString];
+            else if ([url isKindOfClass:[NSString class]]) u = (NSString *)url;
+            else if (url) u = [url description];
+        } @catch (__unused NSException *e) {}
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNURL#%d url=%@ needDec=%d %@",
+            n, u ? u : @"nil", (int)needDec, HushBurnState(self)]);
+    }
+    if (o_burnSetImageURL) o_burnSetImageURL(self, _cmd, url, needDec);
+}
+
+// ---- slot 43: setVideoURL:needDecryption:
+static void (*o_burnSetVideoURL)(id, SEL, id, BOOL);
+static void r_burnSetVideoURL(id self, SEL _cmd, id url, BOOL needDec) {
+    HushHit("BDAutoDestoryImageViewController", "setVideoURL:needDecryption:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        NSString *u = nil;
+        @try {
+            if ([url isKindOfClass:[NSURL class]])   u = [(NSURL *)url absoluteString];
+            else if ([url isKindOfClass:[NSString class]]) u = (NSString *)url;
+            else if (url) u = [url description];
+        } @catch (__unused NSException *e) {}
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNVID#%d url=%@ needDec=%d %@",
+            n, u ? u : @"nil", (int)needDec, HushBurnState(self)]);
+    }
+    if (o_burnSetVideoURL) o_burnSetVideoURL(self, _cmd, url, needDec);
+}
+
+// ---- slot 44: requestServerUrl:compelete:
+//
+// block 签名未知，包一层转发会崩（MRC 下变参 block 无法安全复制）。
+// 这里只留痕 + dump self 状态 —— 地址最终一定会走 setImageURL:，那条够了。
+static void (*o_burnRequestUrl)(id, SEL, id, id);
+static void r_burnRequestUrl(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDAutoDestoryImageViewController", "requestServerUrl:compelete:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        NSString *s0 = nil;
+        @try { s0 = a0 ? [a0 description] : nil; } @catch (__unused NSException *e) {}
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNREQ#%d arg=%@ blk=%@ %@",
+            n, s0 ? s0 : @"nil",
+            a1 ? NSStringFromClass([a1 class]) : @"nil",
+            HushBurnState(self)]);
+    }
+    if (o_burnRequestUrl) o_burnRequestUrl(self, _cmd, a0, a1);
+}
+
+// ---- slot 50: loadImage
+static void (*o_burnLoadImage)(id, SEL);
+static void r_burnLoadImage(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "loadImage");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNLOAD#%d %@", n, HushBurnState(self)]);
+    }
+    if (o_burnLoadImage) o_burnLoadImage(self, _cmd);
+}
+
+// ---- slot 51: startLoadingResource
+static void (*o_burnStartLoad)(id, SEL);
+static void r_burnStartLoad(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "startLoadingResource");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNSTART#%d %@", n, HushBurnState(self)]);
+    }
+    if (o_burnStartLoad) o_burnStartLoad(self, _cmd);
+}
+
+// ---- slot 52: countDown   （switch_flash_keep 开则停表）
+static void (*o_burnCountDown)(id, SEL);
+static void r_burnCountDown(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "countDown");
+    if (HushFlashKeepOn()) {
+        static int n = 0;
+        n++;
+        if (n <= 10 || (n % 10) == 0) {
+            HushBurnNote([NSString stringWithFormat:
+                @"[P0-2b] BURNSTOP#%d countDown 已拦，倒计时不跑", n]);
+        }
+        return;
+    }
+    if (o_burnCountDown) o_burnCountDown(self, _cmd);
+}
+
+// ---- slot 53: clearCache （switch_flash_keep 开则先抢救文件）
+static void (*o_burnClearCache)(id, SEL);
+static void r_burnClearCache(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "clearCache");
+    if (HushFlashKeepOn()) HushBurnSalvage(self);
+    if (o_burnClearCache) o_burnClearCache(self, _cmd);
+}
+
+// ---- slot 54: finishReview （switch_flash_keep 开则不结束）
+static void (*o_burnFinishReview)(id, SEL);
+static void r_burnFinishReview(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "finishReview");
+    if (HushFlashKeepOn()) {
+        HushBurnSalvage(self);
+        static int n = 0;
+        n++;
+        if (n <= 10 || (n % 10) == 0) {
+            HushBurnNote([NSString stringWithFormat:
+                @"[P0-2b] BURNKEEP#%d finishReview 已拦，不销毁 %@", n, HushBurnState(self)]);
+        }
+        return;
+    }
+    if (o_burnFinishReview) o_burnFinishReview(self, _cmd);
+}
+
+// ---- slot 55: touchesEnded:withEvent:   （只留痕；按用户要求不在这里截图）
+static void (*o_burnTouchesEnded)(id, SEL, id, id);
+static void r_burnTouchesEnded(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDAutoDestoryImageViewController", "touchesEnded:withEvent:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNTEND#%d keep=%d %@", n, (int)HushFlashKeepOn(), HushBurnState(self)]);
+    }
+    if (o_burnTouchesEnded) o_burnTouchesEnded(self, _cmd, a0, a1);
+}
+
+// ---- slot 56: initWithFileType:sources:   ← 最上游的一站
+//
+// sources 里很可能直接装着 imageURL / msgId / 解密 key（用户的判断）。
+// 这里只读不写：把整个描述打出来，长度截 1200 字符防止刷爆日志。
+static id (*o_burnInit)(id, SEL, unsigned long long, id);
+static id r_burnInit(id self, SEL _cmd, unsigned long long ft, id sources) {
+    HushHit("BDAutoDestoryImageViewController", "initWithFileType:sources:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        NSString *s = nil;
+        @try { s = sources ? [sources description] : nil; } @catch (__unused NSException *e) {}
+        if (s.length > 1200) s = [s substringToIndex:1200];
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNINIT#%d fileType=%llu sources=%@",
+            n, ft, s ? s : @"nil"]);
+    }
+    if (o_burnInit) return o_burnInit(self, _cmd, ft, sources);
+    return nil;
+}
 
 // ---------------------------------------------------------------- v42 网络探针
 //
@@ -785,7 +1068,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 50
+#define HUSH_TARGET_COUNT 57
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -843,7 +1126,9 @@ void HushInstallHooks(void) {
     Class cUser  = hush_resolve_class("UserInformation");
     Class cEngine = hush_resolve_class("GJIMEngine");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
-    Class cDestory = hush_resolve_class("BDDestoryChatCell");
+    // v43：阅后即焚的全屏查看页 —— 「按住屏幕阅读 / 松手销毁」的真身。
+    // 原来那个 BDDestoryChatCell 变量已随死探针一起删除（v42 实测零命中）。
+    Class cBurn = hush_resolve_class("BDAutoDestoryImageViewController");
     // v42：NSURLSession 是系统类，hush_resolve_class 先走 objc_getClass 就够了
     // （Swift 那两条拼 "Blued." 的分支只对宿主自己的类有意义，走不到这里）。
     Class cNetSession = hush_resolve_class("NSURLSession");
@@ -1042,10 +1327,10 @@ void HushInstallHooks(void) {
         hush_report(38, "BDIndexPageCoversManager", "hasNoneSplashShow", r);
     }
     if (!s_done[39]) {
-        SEL s = sel_registerName("showAutoDestroyImage:");
-        hush_installed r = hush_install_impl(cDestory, s, (IMP)&r_destoryShowAuto, "v24@0:8@16");
-        if (strcmp(r.kind, "MISSING") != 0) o_destoryShowAuto = (void (*)(id, SEL, id))r.prev;
-        hush_report(39, "BDDestoryChatCell", "showAutoDestroyImage:", r);
+        SEL s = sel_registerName("setImageURL:needDecryption:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnSetImageURL, "v28@0:8@16B24");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnSetImageURL = (void (*)(id, SEL, id, BOOL))r.prev;
+        hush_report(39, "BDAutoDestoryImageViewController", "setImageURL:needDecryption:", r);
     }
     if (!s_done[40]) {
         SEL s = sel_registerName("showAutoDestroyImage:");
@@ -1066,16 +1351,16 @@ void HushInstallHooks(void) {
         hush_report(42, "BDMessageViewController", "destroyBigImageCell:clickMessage:", r);
     }
     if (!s_done[43]) {
-        SEL s = sel_registerName("playBtnTapped");
-        hush_installed r = hush_install_impl(cDestory, s, (IMP)&r_playBtnTapped, "v16@0:8");
-        if (strcmp(r.kind, "MISSING") != 0) o_playBtnTapped = (void (*)(id, SEL))r.prev;
-        hush_report(43, "BDDestoryChatCell", "playBtnTapped", r);
+        SEL s = sel_registerName("setVideoURL:needDecryption:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnSetVideoURL, "v28@0:8@16B24");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnSetVideoURL = (void (*)(id, SEL, id, BOOL))r.prev;
+        hush_report(43, "BDAutoDestoryImageViewController", "setVideoURL:needDecryption:", r);
     }
     if (!s_done[44]) {
-        SEL s = sel_registerName("clickTipBtn");
-        hush_installed r = hush_install_impl(cCell, s, (IMP)&r_clickTipBtn, "v16@0:8");
-        if (strcmp(r.kind, "MISSING") != 0) o_clickTipBtn = (void (*)(id, SEL))r.prev;
-        hush_report(44, "BDChatBasicCell", "clickTipBtn", r);
+        SEL s = sel_registerName("requestServerUrl:compelete:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnRequestUrl, "v32@0:8@16@?24");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnRequestUrl = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(44, "BDAutoDestoryImageViewController", "requestServerUrl:compelete:", r);
     }
     if (!s_done[45]) {
         SEL s = sel_registerName("markImageReadCell:clickMsg:");
@@ -1106,6 +1391,49 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cNetSession, s, (IMP)&r_dataTaskURL, "@32@0:8@16@?24");
         if (strcmp(r.kind, "MISSING") != 0) o_dataTaskURL = (id (*)(id, SEL, id, HushNetHandler))r.prev;
         hush_report(49, "NSURLSession", "dataTaskWithURL:completionHandler:", r);
+    }
+    // ---- v43：阅后即焚查看页的加载 / 销毁四个面
+    if (!s_done[50]) {
+        SEL s = sel_registerName("loadImage");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnLoadImage, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnLoadImage = (void (*)(id, SEL))r.prev;
+        hush_report(50, "BDAutoDestoryImageViewController", "loadImage", r);
+    }
+    if (!s_done[51]) {
+        SEL s = sel_registerName("startLoadingResource");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnStartLoad, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnStartLoad = (void (*)(id, SEL))r.prev;
+        hush_report(51, "BDAutoDestoryImageViewController", "startLoadingResource", r);
+    }
+    if (!s_done[52]) {
+        SEL s = sel_registerName("countDown");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnCountDown, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnCountDown = (void (*)(id, SEL))r.prev;
+        hush_report(52, "BDAutoDestoryImageViewController", "countDown", r);
+    }
+    if (!s_done[53]) {
+        SEL s = sel_registerName("clearCache");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnClearCache, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnClearCache = (void (*)(id, SEL))r.prev;
+        hush_report(53, "BDAutoDestoryImageViewController", "clearCache", r);
+    }
+    if (!s_done[54]) {
+        SEL s = sel_registerName("finishReview");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnFinishReview, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnFinishReview = (void (*)(id, SEL))r.prev;
+        hush_report(54, "BDAutoDestoryImageViewController", "finishReview", r);
+    }
+    if (!s_done[55]) {
+        SEL s = sel_registerName("touchesEnded:withEvent:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnTouchesEnded, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnTouchesEnded = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(55, "BDAutoDestoryImageViewController", "touchesEnded:withEvent:", r);
+    }
+    if (!s_done[56]) {
+        SEL s = sel_registerName("initWithFileType:sources:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnInit, "@32@0:8Q16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnInit = (id (*)(id, SEL, unsigned long long, id))r.prev;
+        hush_report(56, "BDAutoDestoryImageViewController", "initWithFileType:sources:", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");

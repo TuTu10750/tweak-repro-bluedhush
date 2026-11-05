@@ -60,6 +60,10 @@ static const HushDefaultEntry kHushDefaults[] = {
     { "switch_blacklist_jump", NULL, 0, 1 },
     { "switch_flash_thumb", NULL, 0, 1 },
     { "switch_flash_ad_skip", NULL, 0, 1 },
+    // v43：阅后即焚「留住」。读的是 BDAutoDestoryImageViewController 的
+    // countDown / clearCache / finishReview / touchesEnded 四个销毁面。
+    // 默认关 —— 打开后闪照松手不销毁、倒计时不跑、缓存不删。
+    { "switch_flash_keep", NULL, 0, 1 },
     { "switch_unlimited_burn", NULL, 0, 1 },
     { "switch_nearby_chat", NULL, 0, 1 },
     { "switch_nearby_album", NULL, 0, 1 },
