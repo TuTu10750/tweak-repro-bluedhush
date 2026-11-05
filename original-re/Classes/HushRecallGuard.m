@@ -792,6 +792,32 @@ static void HushRecallTruthDump(id obj, const char *where) {
             extraObj ? NSStringFromClass([extraObj class]) : (extraRaw ? @"raw" : @"nil"),
             (unsigned long)extraStr.length]];
 
+        // ---- v44 P1：模型上的图片字段 ----
+        // GJIMMessageModel 213 个 selector 里有 image / destroyUrl / content /
+        // selectedContent / imageType / treasureImage 六个，v40-v43 一个都没打过。
+        // 关键问题：type=282 状态下 image 有没有值？
+        //   有 → 原版那条「第二入口」就是从模型直取，sources 的 162 字节密文不用碰
+        //   没有 → 只能去逆 sources 解密
+        NSString *img = HushModelString(m, @[@"image"]);
+        NSString *dur = HushModelString(m, @[@"destroyUrl"]);
+        NSString *ct  = HushModelString(m, @[@"content"]);
+        NSString *sct = HushModelString(m, @[@"selectedContent"]);
+        NSString *trs = HushModelString(m, @[@"treasureImage"]);
+        long long it  = HushModelLongLong(m, @[@"imageType"]);
+        BOOL wantImg  = (t == HUSH_MSG_TYPE_TIME_LIMITED)
+                     || img.length > 0 || dur.length > 0;
+        if (wantImg) {
+            [lines addObject:[NSString stringWithFormat:
+                @"[P0-2b]   m[%lu] img=%@ dur=%@ it=%@ ctLen=%lu sctLen=%lu trs=%@",
+                (unsigned long)i,
+                img.length ? img : @"-",
+                dur.length ? dur : @"-",
+                HushNumStr(it),
+                (unsigned long)ct.length,
+                (unsigned long)sct.length,
+                trs.length ? trs : @"-"]];
+        }
+
         // extra 原文单独一行：闪照标记可能藏在后半段，所以不再只截 120 字符。
         // 只在「有值」或「本批第一条」时打，控制体积。
         BOOL wantRaw = (extraStr.length > 0) && (tls != LLONG_MIN || i == 0);
@@ -1131,6 +1157,9 @@ void HushAutoDestroyKeepAlive(id cell) {
 //   - 宿主内部重建气泡视图时标签不受牵连。
 // 锚点只用来算坐标：convertRect:toView:host 会跨层级换算，气泡藏在 contentView
 // 里几层都不影响结果。
+// HushHooks.m 里的闪照记忆池（v44 P2）：靠 uid + sendTime 反查 mid。
+extern void HushFlashRemember(long long mid, long long from, long long ts);
+
 void HushRecallDecorateCell(id cell, id model) {
     if (!cell) return;
     UIView *host = [cell isKindOfClass:[UIView class]] ? (UIView *)cell : nil;
@@ -1142,6 +1171,17 @@ void HushRecallDecorateCell(id cell, id model) {
     // 「撤回包被吞、宿主完全不知情」时压根不会触发 —— v39 真机日志已证实两者
     // 的 hit 计数为 0，TRUTH# 一条都打不出来。
     HushRecallTruthDump(model, "ui");
+
+    // v44 P2：把这条闪照记进池子，供 BDAutoDestoryImageViewController 那边
+    // 用 targetUid + msgTime 反查 mid（那个 VC 身上根本没有 mid ivar）。
+    if (model) {
+        long long mT = HushModelLongLong(model, HushRecallTypeKeys());
+        if (mT == HUSH_MSG_TYPE_TIME_LIMITED) {
+            HushFlashRemember(HushModelLongLong(model, HushRecallIdKeys()),
+                              HushModelLongLong(model, HushRecallFromKeys()),
+                              HushModelLongLong(model, @[@"sendTime"]));
+        }
+    }
 
     // v41：闪照先解锁，再走角标逻辑。
     // 放在 -ModelWasIntercepted 判断之前 —— 闪照不需要被我们拦截过，只要它是

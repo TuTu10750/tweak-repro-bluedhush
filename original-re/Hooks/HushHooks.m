@@ -677,6 +677,61 @@ HUSH_CLICK2(showBigClick, "showBigImage", o_showBigClick,
 // 两条铁律（用户点名）：
 //   - 破坏性动作（拦松手、拦倒计时、拦 clearCache）全在 switch_flash_keep 后面，默认关
 //   - 不在 touchesEnded: 里截图（视频层/GL 层会全黑）；要抢救就走 clearCache 拷文件
+// v44 P2：BDAutoDestoryImageViewController 身上没有 mid，只有 targetUid 与
+// msgTime（sel_index: targetUid @16@0:8 / msgTime Q16@0:8）。
+// 所以维护一个「最近见过的 type=282 消息」环形池，靠 uid + 时间戳反查。
+// model 上的时间字段是 sendTime（I16@0:8，unsigned int）。
+//
+// 反查窗口取 ±8 秒：BURNSTART# 的 msgTime=1793886935，
+// 而 imageURL 里的时间戳段是 1793886933 —— 差 2 秒，不能再紧了。
+static NSMutableArray *sFlashRecent = nil;
+
+// 锁对象：MRC 下 @synchronized(nil) 不锁，必须给个真实对象。
+static NSObject *HushFlashLockObj(void) {
+    static NSObject *o = nil;
+    if (!o) o = [[NSObject alloc] init];
+    return o;
+}
+
+// HushNumStr 是 HushRecallGuard.m 里的 static，这边拿不到，写个本地版。
+static NSString *HushBurnNum(long long v) {
+    if (v == LLONG_MIN) return @"n/a";
+    return [NSString stringWithFormat:@"%lld", v];
+}
+
+void HushFlashRemember(long long mid, long long from, long long ts) {
+    if (mid <= 0) return;
+    @synchronized (HushFlashLockObj()) {
+        if (!sFlashRecent) sFlashRecent = [[NSMutableArray alloc] init];
+        for (NSDictionary *d in sFlashRecent) {
+            if ([[d objectForKey:@"mid"] longLongValue] == mid) return;
+        }
+        [sFlashRecent addObject:@{ @"mid":  @(mid),
+                                   @"from": @(from),
+                                   @"ts":   @(ts) }];
+        while (sFlashRecent.count > 24) [sFlashRecent removeObjectAtIndex:0];
+    }
+}
+
+static long long HushFlashLookupMid(long long uid, long long ts) {
+    if (uid <= 0 || ts <= 0) return LLONG_MIN;
+    @synchronized (HushFlashLockObj()) {
+        long long best = LLONG_MIN;
+        long long bestDelta = LLONG_MAX;
+        for (NSDictionary *d in sFlashRecent) {
+            long long f = [[d objectForKey:@"from"] longLongValue];
+            if (f != uid) continue;
+            long long t = [[d objectForKey:@"ts"] longLongValue];
+            long long delta = t > ts ? (t - ts) : (ts - t);
+            if (delta <= 8 && delta < bestDelta) {
+                bestDelta = delta;
+                best = [[d objectForKey:@"mid"] longLongValue];
+            }
+        }
+        return best;
+    }
+}
+
 static BOOL HushFlashKeepOn(void) {
     return [[HushConfig shared] isEnabled:@"switch_flash_keep"];
 }
@@ -735,6 +790,17 @@ static NSString *HushBurnState(id self) {
         }
         free(ivars);
     }
+    // v44 P2：用 targetUid + msgTime 反查这条闪照属于哪个 mid。
+    // 这里不能用 HushModelLongLong —— 它是 HushRecallGuard.m 里的 static，这边拿不到。
+    long long uid = 0, mts = 0;
+    @try {
+        id v1 = [self valueForKey:@"targetUid"];
+        id v2 = [self valueForKey:@"msgTime"];
+        if ([v1 isKindOfClass:[NSNumber class]]) uid = [(NSNumber *)v1 longLongValue];
+        if ([v2 isKindOfClass:[NSNumber class]]) mts = [(NSNumber *)v2 longLongValue];
+    } @catch (__unused NSException *e) {}
+    long long m2  = HushFlashLookupMid(uid, mts);
+    [out appendFormat:@" mid=%@", HushBurnNum(m2)];
     return out;
 }
 
@@ -950,6 +1016,66 @@ static id r_burnInit(id self, SEL _cmd, unsigned long long ft, id sources) {
     return nil;
 }
 
+// ---- slot 57: setImageURL:（单参）  ← v44 实测：这才是真赋值点
+//
+// v43 只挂了双参 setImageURL:needDecryption:，BURNURL# 一条都没出，
+// 但 BURNSTART# 打出来的 imageURL 已经有值 —— 说明赋值走的是这条。
+static void (*o_burnSetImageURL1)(id, SEL, id);
+static void r_burnSetImageURL1(id self, SEL _cmd, id url) {
+    HushHit("BDAutoDestoryImageViewController", "setImageURL:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        NSString *u = nil;
+        @try {
+            if ([url isKindOfClass:[NSURL class]])         u = [(NSURL *)url absoluteString];
+            else if ([url isKindOfClass:[NSString class]]) u = (NSString *)url;
+            else if (url)                                  u = [url description];
+        } @catch (__unused NSException *e) {}
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNSETURL#%d url=%@ %@",
+            n, u ? u : @"nil", HushBurnState(self)]);
+    }
+    if (o_burnSetImageURL1) o_burnSetImageURL1(self, _cmd, url);
+}
+
+// ---- slot 58: setVideoURL:（单参）
+static void (*o_burnSetVideoURL1)(id, SEL, id);
+static void r_burnSetVideoURL1(id self, SEL _cmd, id url) {
+    HushHit("BDAutoDestoryImageViewController", "setVideoURL:");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        NSString *u = nil;
+        @try {
+            if ([url isKindOfClass:[NSURL class]])         u = [(NSURL *)url absoluteString];
+            else if ([url isKindOfClass:[NSString class]]) u = (NSString *)url;
+            else if (url)                                  u = [url description];
+        } @catch (__unused NSException *e) {}
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNSETVID#%d url=%@ %@",
+            n, u ? u : @"nil", HushBurnState(self)]);
+    }
+    if (o_burnSetVideoURL1) o_burnSetVideoURL1(self, _cmd, url);
+}
+
+// ---- slot 59: p_handleWebServer   ← 8999 那台本地服务的处理入口
+//
+// v44 真机日志：webServicePort=8999。WKWebView 向 127.0.0.1:8999 要图，
+// 服务内部再用自己的 HTTP 栈去 COS 拉 —— 这就是 NSURLSession 一条都抓不到的原因。
+// 这里只留痕，看它被调用时的状态（含 imageURL / videoOutputPath / videoDir）。
+static void (*o_burnWebServer)(id, SEL);
+static void r_burnWebServer(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "p_handleWebServer");
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNWS#%d %@", n, HushBurnState(self)]);
+    }
+    if (o_burnWebServer) o_burnWebServer(self, _cmd);
+}
+
 // ---------------------------------------------------------------- v42 网络探针
 //
 // 闪照的图片 URL 不在模型里 —— v41c 与 v41d 两份真机日志里，type=282 的
@@ -1068,7 +1194,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 57
+#define HUSH_TARGET_COUNT 60
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -1434,6 +1560,24 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnInit, "@32@0:8Q16@24");
         if (strcmp(r.kind, "MISSING") != 0) o_burnInit = (id (*)(id, SEL, unsigned long long, id))r.prev;
         hush_report(56, "BDAutoDestoryImageViewController", "initWithFileType:sources:", r);
+    }
+    if (!s_done[57]) {
+        SEL s = sel_registerName("setImageURL:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnSetImageURL1, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnSetImageURL1 = (void (*)(id, SEL, id))r.prev;
+        hush_report(57, "BDAutoDestoryImageViewController", "setImageURL:", r);
+    }
+    if (!s_done[58]) {
+        SEL s = sel_registerName("setVideoURL:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnSetVideoURL1, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnSetVideoURL1 = (void (*)(id, SEL, id))r.prev;
+        hush_report(58, "BDAutoDestoryImageViewController", "setVideoURL:", r);
+    }
+    if (!s_done[59]) {
+        SEL s = sel_registerName("p_handleWebServer");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnWebServer, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnWebServer = (void (*)(id, SEL))r.prev;
+        hush_report(59, "BDAutoDestoryImageViewController", "p_handleWebServer", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");
