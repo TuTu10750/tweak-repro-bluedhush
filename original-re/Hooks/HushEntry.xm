@@ -66,7 +66,9 @@ static void HushPollStep(void) {
             // ever put it back until the app was backgrounded.
             if (!loggedPresent) {
                 loggedPresent = YES;
-                NSLog(@"[Hush] ball on screen after %ld ticks (heartbeat armed)", (long)gHushPollTicks);
+                if ([[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+                    NSLog(@"[Hush] ball on screen after %ld ticks (heartbeat armed)", (long)gHushPollTicks);
+                }
             }
             HushBallEnsureOnTop();          // a sheet or push can land above it
             HushPollInject((int64_t)(1.0 * NSEC_PER_SEC));
@@ -80,7 +82,9 @@ static void HushPollStep(void) {
         // Fast ticks first so the ball lands as soon as a window exists, then a
         // cheap 1 s heartbeat that re-attaches it after any controller rebuild.
         double delay = (gHushPollTicks <= 30) ? 0.30 : 1.00;
-        if (gHushPollTicks == 31) NSLog(@"[Hush] ball still absent, switching to 1s heartbeat");
+        if (gHushPollTicks == 31 && [[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+            NSLog(@"[Hush] ball still absent, switching to 1s heartbeat");
+        }
         HushPollInject((int64_t)(delay * NSEC_PER_SEC));
     });
 }
@@ -98,7 +102,9 @@ static void HushOnBecameActive(CFNotificationCenterRef center,
                                CFDictionaryRef userInfo) {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (HushBallIsPresent()) return;
-        NSLog(@"[Hush] became-active -> inject");
+        if ([[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+            NSLog(@"[Hush] became-active -> inject");
+        }
         gHushPollTicks = 0;
         HushGalInjectBallFromKeyWindow();
         HushPollInject((int64_t)(0.30 * NSEC_PER_SEC));
@@ -166,7 +172,9 @@ static void HushStartWatchdog(void) {
                                     NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately);
 
-    NSLog(@"[Hush] ctor ran, entry installed");
+    if ([[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+        NSLog(@"[Hush] ctor ran, entry installed");
+    }
     [HushLogger logLevel:4 format:@"[Hush] entry installed (ball inject armed)"];
     // 面板上的「日志等级」开关此前是死的：+loadLevelFromConfig 从未被任何地方调用，
     // gHushLogLevel 永远停在静态初值 4 —— 表现就是 switch_debug_log=0 时 D 级照样输出、
@@ -185,7 +193,9 @@ static void HushStartWatchdog(void) {
         for (NSString *k in keys) {
             [dump appendFormat:@" %@=%d", k, (int)[[HushConfig shared] isEnabled:k]];
         }
-        NSLog(@"%@", dump);
+        if ([[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+            NSLog(@"%@", dump);
+        }
         [HushLogger logLevel:3 format:dump];
     }
 

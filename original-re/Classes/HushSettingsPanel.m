@@ -134,21 +134,17 @@ static dispatch_once_t gHushSharedPanelOnce;
     [self buildModel];
     [self rebuildSearchIndex];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(hushActivationDidChange)
-                                                 name:NSUserDefaultsDidChangeNotification
-                                               object:nil];
+    // v38: 不再注册 NSUserDefaultsDidChangeNotification。
+    // object:nil 会收下宿主对 defaults 的任意写入（登录态、埋点、缓存都在写），
+    // 面板因此每秒重建十几次整表，主线程被拖死。面板状态只有两个驱动点：
+    //   - viewWillAppear: 进来时建一次；
+    //   - 面板自己写 defaults 的动作（预设定位等）在 handler 里显式刷一次。
+    // 局部实时刷新等后续自建轻量通知，不回全局监听。
 }
 
 - (void)dealloc {
+    // 保留：万一后续局部监听又注册了什么，这里兜底摘干净。
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)hushActivationDidChange {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self buildModel];
-        [_table reloadData];
-    });
 }
 
 - (void)viewWillAppear:(BOOL)a0 {
@@ -247,20 +243,11 @@ static dispatch_once_t gHushSharedPanelOnce;
 
 - (void)buildModel {
     HushCrumb("panel:build:begin");
-    // Prove at runtime what the panel is actually about to render. If this line
-    // shows mojibake the generator is at fault; if it shows correct Chinese the
-    // strings were fine and the bad glyphs came from somewhere else.
-    // %s 在 NSString stringWithFormat: 里按系统编码解释 C 字符串，UTF-8 中文会被
-    // 拆成一堆 Latin-1 字符（日志里就是 ÊÇ¨ÊµÆÁêÉ…）。必须先转成 NSString 再用 %@。
-    if (kHushToggleCount >= 2) {
-        NSString *k0 = [NSString stringWithUTF8String:kHushToggles[0].key];
-        NSString *t0 = [NSString stringWithUTF8String:kHushToggles[0].title];
-        NSString *k1 = [NSString stringWithUTF8String:kHushToggles[1].key];
-        NSString *t1 = [NSString stringWithUTF8String:kHushToggles[1].title];
-        [HushLogger logLevel:4 format:[NSString stringWithFormat:
-            @"[Panel] title check: %@=%@ | %@=%@", k0, t0, k1, t1]];
-    }
-
+    // v38: title check 已删。它唯一的使命是证明 UTF-8 文案表没被 %s 拆坏，
+    // 该结论已经通过修 HushModuleMap.h 的生成路径坐实；留在 buildModel 里等于
+    // 每次调用都多两次 stringWithUTF8String + 一次格式化——而 buildModel
+    // 曾经每秒被调十几次，这就是那条日志刷屏的来源。
+    __weak typeof(self) weakSelf = self;
 
     HushConfig *cfg = [HushConfig shared];
     NSMutableArray<HushModuleEntry *> *mods = [NSMutableArray arrayWithCapacity:kHushModuleCount];
@@ -298,8 +285,8 @@ static dispatch_once_t gHushSharedPanelOnce;
         }
 
         // v33: 快捷预设。手输坐标差一位就落到「坐标越界，拒绝使用」，交付自检时
-        // 太容易吵。这三个按钮直接写 runtime_custom_lat / lng，写完面板会自己
-        // reload（本文件的 buildModel 监听 NSUserDefaultsDidChangeNotification）。
+        // 太容易吵。这三个按钮直接写 runtime_custom_lat / lng。
+        // v38: 面板已不再监听全局 defaults 通知，写完必须自己刷一次（见 handler 尾部）。
         NSArray<NSArray<NSString *> *> *vlocPresets = @[
             @[@"深圳", @"22.547917", @"114.124485", @"与真实位置重合，仅作对照基准"],
             @[@"上海", @"31.266600", @"121.501900", @"人民广场一带"],
@@ -321,6 +308,13 @@ static dispatch_once_t gHushSharedPanelOnce;
                     [[NSNotificationCenter defaultCenter]
                         postNotificationName:HushVirtualLocationDidChangeNotification
                                       object:nil];
+                    // v38: 面板已砍掉全局 defaults 监听，自己写完自己刷一次。
+                    // 用 weak self，避免 model → action block → self 的强引用环。
+                    __strong typeof(weakSelf) ss = weakSelf;
+                    if (ss) {
+                        [ss buildModel];
+                        [ss->_table reloadData];
+                    }
                 }];
             [buckets[3] addObject:act];
         }

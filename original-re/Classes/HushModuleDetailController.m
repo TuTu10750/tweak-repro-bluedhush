@@ -54,20 +54,19 @@ static BOOL HushKeyNeedsRestart(NSString *key) {
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.estimatedRowHeight = 56.0;
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(hushActivationDidChange)
-                                                 name:NSUserDefaultsDidChangeNotification
-                                               object:nil];
+    // v38: 与面板同构的自激源，一并砍掉。原先在 object:nil 上收全局 defaults
+    // 通知，宿主任何一次写档（登录态、埋点、缓存）都会让本页在主线程整表
+    // reloadData —— 停在这个页面时就是肉眼可见的卡。
+    // 改为只在进来时刷一次；本页的数据是构造时传入的快照，不需要外部驱动。
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)hushActivationDidChange {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
+- (void)viewWillAppear:(BOOL)a0 {
+    [super viewWillAppear:a0];
+    [self.tableView reloadData];
 }
 
 #pragma mark - table

@@ -92,13 +92,19 @@ void HushGalInjectBallFromKeyWindow(void) {
     // first version of this function did) makes the ball vanish the moment that
     // controller is replaced -- which is exactly what happened on device.
     UIWindow *key = HushCurrentKeyWindow();
-    NSLog(@"[Hush] inject: keyWindow=%p bounds=%@ rootVC=%@",
-          key, key ? NSStringFromCGRect([key bounds]) : @"nil",
-          key ? NSStringFromClass([[key rootViewController] class]) : @"nil");
+    // v38: 注入过程日志只在 switch_debug_log 打开时输出；这是调试用探针，
+    // 不是失败证据，默认静音。
+    if ([[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+        NSLog(@"[Hush] inject: keyWindow=%p bounds=%@ rootVC=%@",
+              key, key ? NSStringFromCGRect([key bounds]) : @"nil",
+              key ? NSStringFromClass([[key rootViewController] class]) : @"nil");
+    }
     if (key) {
         HushInjectBallIntoView(key);
         if (gHushBall) {
-            NSLog(@"[Hush] inject: ball attached to window, frame=%@", NSStringFromCGRect(gHushBall.frame));
+            if ([[HushConfig shared] isEnabled:@"switch_debug_log"]) {
+                NSLog(@"[Hush] inject: ball attached to window, frame=%@", NSStringFromCGRect(gHushBall.frame));
+            }
             return;
         }
     }

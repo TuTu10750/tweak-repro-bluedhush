@@ -100,10 +100,11 @@ static dispatch_once_t gHushSharedOnce;
     _flagCache = [NSMutableDictionary dictionary];
     [self registerDefaults];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                            selector:@selector(hush_clearFlagCache)
-                                                name:NSUserDefaultsDidChangeNotification
-                                              object:nil];
+    // v38: 不再监听 NSUserDefaultsDidChangeNotification。
+    // 挂在 object:nil 上意味着宿主每写一次 defaults（登录态、埋点、心跳缓存）
+    // 就清空整张 140 键的 _flagCache，下一次读任何开关都要重新走 snapshot +
+    // 磁盘，缓存等于白做。改为由本文件的写入口精确失效（见 setEnabled: /
+    // setString: / resetToDefaults）。
     return self;
 }
 
@@ -227,6 +228,7 @@ static dispatch_once_t gHushSharedOnce;
     [_defaults setBool:a0 forKey:a1];
     [_defaults synchronize];
     @synchronized (self) {
+        // v38: 精确写回本键。全局 defaults 监听已删，缓存的正确性由此处保证。
         _flagCache[a1] = @(a0);
     }
     // 「日志等级」是唯一一个必须立刻反映到运行时的开关：面板是通用渲染，
@@ -258,6 +260,11 @@ static dispatch_once_t gHushSharedOnce;
         [_defaults removeObjectForKey:a1];
     }
     [_defaults synchronize];
+    @synchronized (self) {
+        // 字符串键本身不进 _flagCache，但同一个 key 可能此前被 isEnabled:
+        // 缓存过一个 bool（先查后写），这里一并摘掉，防止读到旧值。
+        [_flagCache removeObjectForKey:a1];
+    }
 }
 
 // @0xf0b4
