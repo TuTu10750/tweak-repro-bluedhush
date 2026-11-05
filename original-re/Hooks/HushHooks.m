@@ -554,9 +554,12 @@ static void r_msgVCShowAuto(id self, SEL _cmd, id a0) {
     static int n = 0;
     n++;
     if (n <= 10 || (n % 10) == 0) {
-        [HushLogger logLevel:2 format:
+        // HushLogger 的 logLevel:format: 只收一个拼好的 NSString，不是 printf。
+        NSString *line = [NSString stringWithFormat:
             @"[P0-2b] VCKEEP#%d vc=%@ arg=%@（点开闪照走了全屏展示）",
             n, NSStringFromClass([self class]), NSStringFromClass([a0 class])];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
     }
 }
 
