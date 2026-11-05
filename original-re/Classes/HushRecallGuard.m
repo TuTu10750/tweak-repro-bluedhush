@@ -905,24 +905,31 @@ static BOOL HushFlashUnlockOn(void) {
 void HushAutoDestroyUnlock(id cell, id model) {
     if (!cell) return;
 
-    // 两道闸，任意一道过就算闪照：
+    // 三道闸，任意一道过就算闪照：
     //   - model.type == 282（宿主对新消息偶尔会用这个类型码）
-    //   - cell 本身是 BDDestoryChatCell 子类
-    // 为什么 cell 类名也认：宿主渲染闪照时可能不给 model 换 type，只是把它分配给
-    // Destory 系列的 Cell 去画（cell 类名才是渲染路径的真凭据）。只认 type 会漏。
+    //   - cell 是 BDDestoryChatCell 子类（已销毁 / 待点开态）
+    //   - cell 自己 respondsToSelector:isMask 且值为 YES（列表里被遮罩挡住的态，
+    //     BDChatImageCell 系就是这样画的 —— 日志里 20 条 TAG 全是 BDChatImageCell*
+    //     和 BDChatTextAndFaceCell*，一条 BDDestoryChatCell 都没有）
+    // 三处都要认：宿主用哪个类渲染闪照是它自己的实现细节，只认一个必漏。
     long long t = model ? HushModelLongLong(model, HushRecallTypeKeys()) : LLONG_MIN;
     BOOL byType = (t == HUSH_MSG_TYPE_TIME_LIMITED);
     BOOL byCell = NO;
     Class dc = NSClassFromString(@"BDDestoryChatCell");
     if (dc && [cell isKindOfClass:dc]) byCell = YES;
-    if (!byType && !byCell) return;
+    BOOL byMask = NO;
+    if ([cell respondsToSelector:NSSelectorFromString(@"isMask")]) {
+        id mv = HushSafeKVC(cell, @"isMask");
+        if ([mv isKindOfClass:[NSNumber class]] && [mv boolValue]) byMask = YES;
+    }
+    if (!byType && !byCell && !byMask) return;
 
     if (!HushFlashUnlockOn()) {
         static BOOL warned = NO;
         if (!warned) {
             warned = YES;
             [HushLogger logLevel:2 format:
-                @"[Hush][闪照] 命中闪照（type=282 或 DestoryCell），但「闪照转照片 / "
+                @"[Hush][闪照] 命中闪照（type=282 / DestoryCell / isMask），但「闪照转照片 / "
                 @"闪文转普通消息」都关着，不解锁（去面板打开任一项后重进会话）"];
         }
         return;
@@ -981,7 +988,8 @@ void HushAutoDestroyUnlock(id cell, id model) {
             NSStringFromClass([container class]),
             HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
             timer ? @"y" : @"n",
-            HushNumStr(t), byType ? @"type282" : @"cellClass"];
+            HushNumStr(t),
+            byType ? @"type282" : (byCell ? @"destoryCell" : @"isMask")];
         fprintf(stderr, "%s\n", [line UTF8String]);
         [HushLogger logLevel:2 format:line];
     }

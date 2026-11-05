@@ -542,9 +542,27 @@ static void r_destoryShowAuto(id self, SEL _cmd, id a0) {
     HushAutoDestroyKeepAlive(self);
 }
 
+// BDMessageViewController 上也有一个同名 showAutoDestroyImage:（sel_index:
+// 598 个 selector，同列还有 destoryImageCell:clickMsg: / destroyBigImageCell:
+// clickMessage: / mainTableView）。它是「点开闪照 → 全屏展示」这一跳的入口。
+// self 是 VC 不是 cell，拿不到 _destoryCellMaskView 那套 ivar，所以这里只留痕、
+// 不拆销毁面 —— 它的作用就是回答一个问题：点开闪照到底走没走这条路。
+static void (*o_msgVCShowAuto)(id, SEL, id);
+static void r_msgVCShowAuto(id self, SEL _cmd, id a0) {
+    HushHit("BDMessageViewController", "showAutoDestroyImage:");
+    if (o_msgVCShowAuto) o_msgVCShowAuto(self, _cmd, a0);
+    static int n = 0;
+    n++;
+    if (n <= 10 || (n % 10) == 0) {
+        [HushLogger logLevel:2 format:
+            @"[P0-2b] VCKEEP#%d vc=%@ arg=%@（点开闪照走了全屏展示）",
+            n, NSStringFromClass([self class]), NSStringFromClass([a0 class])];
+    }
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 40
+#define HUSH_TARGET_COUNT 41
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -802,6 +820,12 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cDestory, s, (IMP)&r_destoryShowAuto, "v24@0:8@16");
         if (strcmp(r.kind, "MISSING") != 0) o_destoryShowAuto = (void (*)(id, SEL, id))r.prev;
         hush_report(39, "BDDestoryChatCell", "showAutoDestroyImage:", r);
+    }
+    if (!s_done[40]) {
+        SEL s = sel_registerName("showAutoDestroyImage:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_msgVCShowAuto, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_msgVCShowAuto = (void (*)(id, SEL, id))r.prev;
+        hush_report(40, "BDMessageViewController", "showAutoDestroyImage:", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");
