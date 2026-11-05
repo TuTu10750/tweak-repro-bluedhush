@@ -185,6 +185,26 @@ static long long HushModelLongLong(id model, NSArray<NSString *> *keys) {
     return LLONG_MIN;
 }
 
+// v41d（A1）：单键精确取，绝不跨键兜底。
+//
+// HushModelLongLong 会在 `type` 取不到时悄悄退到 `messageType`，诊断时这层兜底
+// 会把两个语义完全不同的字段混成一个数。v41c 日志里 BURN# 的 `type=24` 就是
+// 这么来的 —— TRUTH 明细里全量 60 条没有一条 type=24，24 只可能是 messageType。
+// 要判断「这个 model 上 type 到底有没有」，必须两个键分开取。
+static long long HushModelLLRaw(id model, NSString *key) {
+    if (!model || !key) return LLONG_MIN;
+    long long v = HushDirectLongLong(model, key);
+    if (v != LLONG_MIN) return v;
+    if (![model isKindOfClass:[NSObject class]]) return LLONG_MIN;
+    @try {
+        id o = [model valueForKey:key];
+        if ([o respondsToSelector:@selector(longLongValue)]) return [o longLongValue];
+    } @catch (__unused NSException *e) {
+        return LLONG_MIN;
+    }
+    return LLONG_MIN;
+}
+
 static NSArray<NSString *> *HushRecallTypeKeys(void) {
     return @[@"type", @"messageType"];
 }
@@ -717,6 +737,11 @@ static void HushRecallTruthDump(id obj, const char *where) {
         long long mid  = HushModelLongLong(m, HushRecallIdKeys());
         long long lid  = HushModelLongLong(m, HushRecallLocalIdKeys());
         long long t    = HushModelLongLong(m, HushRecallTypeKeys());
+        // v41d（A4）：type 与 messageType 分开打原值，不兜底。
+        // 光看兜底后的 t 无法判断「这个 model 上到底有没有 type」，
+        // v41c 的 type=24 就是这么被误读成「普通图片类型」的。
+        long long tr   = HushModelLLRaw(m, @"type");
+        long long mt   = HushModelLLRaw(m, @"messageType");
         long long s    = HushModelLongLong(m, @[@"status"]);
         long long rt   = HushModelLongLong(m, @[@"recallType"]);
         long long ds   = HushModelLongLong(m, @[@"deleteStatus"]);
@@ -751,13 +776,14 @@ static void HushRecallTruthDump(id obj, const char *where) {
         if (tlrt == LLONG_MIN && extraStr.length) tlrt = HushRecallJsonInt(extraStr, @"time_limited_msg_read_time");
 
         [lines addObject:[NSString stringWithFormat:
-            @"[P0-2b]   m[%lu] %@ mid=%@ lid=%@ sid=%@ from=%@ type=%@ status=%@ "
+            @"[P0-2b]   m[%lu] %@ mid=%@ lid=%@ sid=%@ from=%@ type=%@ "
+            @"tr=%@ mt=%@ status=%@ "
             @"rc=%@ del=%@ tip=%@ ui=%@ face=%@ exOv=%@ pt=%@ "
             @"tls=%@ tlrt=%@ intc=%d exObj=%@ exLen=%lu",
             (unsigned long)i,
             NSStringFromClass([m class]),
             HushNumStr(mid), HushNumStr(lid), HushNumStr(sid), HushNumStr(from),
-            HushNumStr(t), HushNumStr(s),
+            HushNumStr(t), HushNumStr(tr), HushNumStr(mt), HushNumStr(s),
 
             HushNumStr(rt), HushNumStr(ds), HushNumStr(st),
             HushNumStr(ui), HushNumStr(face), HushNumStr(exOv), HushNumStr(pt),
@@ -902,6 +928,21 @@ static BOOL HushFlashUnlockOn(void) {
     return [c isEnabled:@"switch_flash_photo"] || [c isEnabled:@"switch_flash_text"];
 }
 
+// v41d（A3）：「直接拆遮罩」是临时手段，不是解法，这里把它挂到独立开关后面
+// 并默认关。
+//
+// v41c 真机事实：用户点白板「毫无反应，没放大也没卡死」。原因是
+// HushAutoDestroyUnlock 把 _destoryIconBtn（就是那个「点击查看」按钮）也
+// hidden 了 —— hidden 的 UIView 不参与 hitTest，触摸事件被整层吃掉。
+// 拆遮罩不等于解锁，是把入口连同出口一起拆了。
+//
+// 所以这一步默认关：先让宿主恢复原状（点击能正常走），靠 A2 的点击回调探针
+// 定位真正入口，再决定洗白的落点。switch_flash_thumb 是面板里既有的键，
+// 此前同样是死键（全仓零读取）。
+static BOOL HushFlashStripOn(void) {
+    return [[HushConfig shared] isEnabled:@"switch_flash_thumb"];
+}
+
 void HushAutoDestroyUnlock(id cell, id model) {
     if (!cell) return;
 
@@ -924,7 +965,36 @@ void HushAutoDestroyUnlock(id cell, id model) {
     }
     if (!byType && !byCell && !byMask) return;
 
-    if (!HushFlashUnlockOn()) {
+    BOOL unlockOn = HushFlashUnlockOn();
+    BOOL strip    = HushFlashStripOn();
+
+    // v41d（A1）：BURN# 提到闸门之后、开关之前 —— 只要命中就无条件打。
+    //
+    // v41c 版把日志放在函数末尾，前面任何一步提前 return（比如 img 不是 UIView）
+    // 都会把它吞掉；而且它打的是「兜底后」的 type，看不出 type 与 messageType
+    // 到底哪个有值 —— 用户就是靠那个 24 推出了错误的洗白目标类型。
+    static int burnLogs = 0;
+    burnLogs++;
+    if (burnLogs <= 12 || (burnLogs % 10) == 0) {
+        long long tRaw  = model ? HushModelLLRaw(model, @"type")        : LLONG_MIN;
+        long long mtRaw = model ? HushModelLLRaw(model, @"messageType") : LLONG_MIN;
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] BURN#%d cell=%@ cls=%@ t=%@ mt=%@ mix=%@ by=%@ "
+            @"unlock=%d strip=%d mask=%@ img=%@ timer=%@",
+            burnLogs,
+            NSStringFromClass([cell class]),
+            model ? NSStringFromClass([model class]) : @"nil",
+            HushNumStr(tRaw), HushNumStr(mtRaw), HushNumStr(t),
+            byType ? @"type282" : (byCell ? @"destoryCell" : @"isMask"),
+            unlockOn ? 1 : 0, strip ? 1 : 0,
+            HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
+            HushSafeKVC(cell, @"_bubbleImgView") ? @"y" : @"n",
+            HushSafeKVC(cell, @"_timer") ? @"y" : @"n"];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+
+    if (!unlockOn) {
         static BOOL warned = NO;
         if (!warned) {
             warned = YES;
@@ -944,11 +1014,22 @@ void HushAutoDestroyUnlock(id cell, id model) {
         @catch (__unused NSException *e) {}
     }
 
-    // 2. 摘掉遮罩三件套，亮出真图。
+    // 2. 拆遮罩 —— 只在 switch_flash_thumb 开着时才做（v41d 默认关）。
+    //
+    // 这里 set 了 hidden 的三样，少一样都不行：
+    //   _destoryCellMaskView  半透明黑罩，盖在图上面
+    //   _destoryIconBtn       就是「点击查看」那个按钮 —— **hidden 它的同时把
+    //                         整颗 cell 的点击入口也拆了**，用户点下去毫无反应，
+    //                         没放大也没卡死（v41c 真机原话）。这是 v41d 把它
+    //                         关掉的直接原因。
+    //   _destoryAlterLab      「点击查看闪照」那行提示文字
+    // 顺序上先拿 img 再隐藏，因为 _bubbleImgView 拿不到时后面挂标要早退。
+    if (!strip) return;
+
+    id img = HushSafeKVC(cell, @"_bubbleImgView");
     HushHideView(HushSafeKVC(cell, @"_destoryCellMaskView"), YES);
     HushHideView(HushSafeKVC(cell, @"_destoryIconBtn"),      YES);
     HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),    YES);
-    id img = HushSafeKVC(cell, @"_bubbleImgView");
     HushHideView(img, NO);
 
     // 3. 挂个「闪照」小标，让它自己说明身份 —— 否则用户会当普通图片看。
@@ -978,21 +1059,6 @@ void HushAutoDestroyUnlock(id cell, id model) {
     mf.origin.y = 4.0;
     mark.frame = mf;
     mark.hidden = NO;
-
-    static int burnLogs = 0;
-    burnLogs++;
-    if (burnLogs <= 10 || (burnLogs % 10) == 0) {
-        NSString *line = [NSString stringWithFormat:
-            @"[P0-2b] BURN#%d cell=%@ img=%@ mask=%@ timer=%@ type=%@ by=%@",
-            burnLogs, NSStringFromClass([cell class]),
-            NSStringFromClass([container class]),
-            HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
-            timer ? @"y" : @"n",
-            HushNumStr(t),
-            byType ? @"type282" : (byCell ? @"destoryCell" : @"isMask")];
-        fprintf(stderr, "%s\n", [line UTF8String]);
-        [HushLogger logLevel:2 format:line];
-    }
 }
 
 // v41: showAutoDestroyImage: 放行之后收尾。
@@ -1007,6 +1073,10 @@ void HushAutoDestroyUnlock(id cell, id model) {
 void HushAutoDestroyKeepAlive(id cell) {
     if (!cell) return;
     if (!HushFlashUnlockOn()) return;   // 开关关着就让它正常销毁，别偷偷改宿主行为
+
+    // v41d：拆遮罩这步跟 HushAutoDestroyUnlock 共用同一个 strip 开关。
+    // 默认关 —— 拆了 _destoryIconBtn 会把点击入口一起吃掉，白板还点不动。
+    if (!HushFlashStripOn()) return;
 
     id timer = HushSafeKVC(cell, @"_timer");
     if ([timer isKindOfClass:[NSTimer class]]) {

@@ -563,9 +563,55 @@ static void r_msgVCShowAuto(id self, SEL _cmd, id a0) {
     }
 }
 
+// v41d（A2）：点开闪照到底走哪条路？
+//
+// v41c 真机事实：用户点白板「毫无反应，没放大也没卡死」，而 KEEP# 与
+// VCKEEP# 都是 0 —— 两个 showAutoDestroyImage: 一次都没被调用。说明点击
+// 在更外层就被接走了（或者被我们 hidden 掉的 _destoryIconBtn 吃掉了，
+// 这正是 HushAutoDestroyUnlock 现在默认不拆遮罩的原因）。
+//
+// BDMessageViewController 上跟「点开闪照」直接相关的双参方法只有这两个
+// （sel_index 实证 598 个 selector 里的 v32@0:8@16@24）：
+//   -destoryImageCell:clickMsg:
+//   -destroyBigImageCell:clickMessage:
+// 这里只留痕、不改行为，目的就是看哪个亮。哪个亮就在哪个里做洗白。
+static void (*o_destoryClick)(id, SEL, id, id);
+static void r_destoryClick(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDMessageViewController", "destoryImageCell:clickMsg:");
+    if (o_destoryClick) o_destoryClick(self, _cmd, a0, a1);
+    static int n = 0;
+    n++;
+    if (n <= 10 || (n % 10) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] CLICK#%d which=destoryImage cell=%@ msg=%@",
+            n,
+            a0 ? NSStringFromClass([a0 class]) : @"nil",
+            a1 ? NSStringFromClass([a1 class]) : @"nil"];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
+static void (*o_destroyBigClick)(id, SEL, id, id);
+static void r_destroyBigClick(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDMessageViewController", "destroyBigImageCell:clickMessage:");
+    if (o_destroyBigClick) o_destroyBigClick(self, _cmd, a0, a1);
+    static int n = 0;
+    n++;
+    if (n <= 10 || (n % 10) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[P0-2b] CLICK#%d which=destroyBigImage cell=%@ msg=%@",
+            n,
+            a0 ? NSStringFromClass([a0 class]) : @"nil",
+            a1 ? NSStringFromClass([a1 class]) : @"nil"];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 41
+#define HUSH_TARGET_COUNT 43
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -829,6 +875,18 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_msgVCShowAuto, "v24@0:8@16");
         if (strcmp(r.kind, "MISSING") != 0) o_msgVCShowAuto = (void (*)(id, SEL, id))r.prev;
         hush_report(40, "BDMessageViewController", "showAutoDestroyImage:", r);
+    }
+    if (!s_done[41]) {
+        SEL s = sel_registerName("destoryImageCell:clickMsg:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_destoryClick, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_destoryClick = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(41, "BDMessageViewController", "destoryImageCell:clickMsg:", r);
+    }
+    if (!s_done[42]) {
+        SEL s = sel_registerName("destroyBigImageCell:clickMessage:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_destroyBigClick, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_destroyBigClick = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(42, "BDMessageViewController", "destroyBigImageCell:clickMessage:", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");
