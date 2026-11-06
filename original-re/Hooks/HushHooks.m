@@ -776,7 +776,14 @@ static long long HushFlashLookupMid(long long uid, long long ts) {
 }
 
 static BOOL HushFlashKeepOn(void) {
-    return [[HushConfig shared] isEnabled:@"switch_flash_keep"];
+    // v49 A：switch_flash_keep 从来没有进过面板。
+    // HushModuleMap.h 是 _work/gen_module_map.py 生成的（文件头 DO NOT EDIT），
+    // 这一版只往 HushKeys.h 加了键，没重新跑生成器 —— 面板上根本看不到这个开关，
+    // 用户无论怎么点都开不了，isEnabled: 永远走 defBool=0。
+    // v48 日志 BURNTEND#1 keep=0 就是铁证：用户以为开着，实际是死的。
+    // 现在让它跟随「闪照转照片」：开了闪照解锁就等于开了防销毁。
+    if ([[HushConfig shared] isEnabled:@"switch_flash_keep"]) return YES;
+    return [[HushConfig shared] isEnabled:@"switch_flash_photo"];
 }
 
 static void HushBurnNote(NSString *line) {
@@ -1273,6 +1280,70 @@ static void r_burnWebServer(id self, SEL _cmd) {
     if (o_burnWebServer) o_burnWebServer(self, _cmd);
 }
 
+// ---- v49 D: slot 60 —— 全屏页的图被换掉时能看到 ----
+// 用户 m03034 的观察：按住能看图（8999 端口拉到 1080x2340 原图），
+// 松手立刻变成「包含敏感内容」。switch_flash_keep 开着也没用，
+// 说明宿主不走 finishReview/touchesEnded 那条，而是直接把 contentImage 抹了。
+// 这里挂 setContentImage: 看它到底传了什么进来。
+// keep 开 + 传进来的是小尺寸图（占位图通常 < 200pt）→ 拒绝替换。
+static void (*o_burnSetContentImage)(id, SEL, id);
+static void r_burnSetContentImage(id self, SEL _cmd, id img) {
+    HushHit("BDAutoDestoryImageViewController", "setContentImage:");
+
+    int keep = (int)HushFlashKeepOn();
+    CGFloat w = -1.0, h = -1.0;
+    if ([img isKindOfClass:[UIImage class]]) {
+        w = ((UIImage *)img).size.width;
+        h = ((UIImage *)img).size.height;
+    }
+    static int n = 0;
+    n++;
+    if (n <= 12 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] CONTENTIMG#%d cls=%@ size=%.0fx%.0f keep=%d",
+            n, img ? NSStringFromClass([img class]) : @"nil", w, h, keep]);
+    }
+    if (keep && [img isKindOfClass:[UIImage class]]
+        && w > 0.0 && w < 200.0 && h < 200.0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] CONTENTBLOCK#%d 拒绝用 %.0fx%.0f 的小图替换原图（keep 已开）",
+            n, w, h]);
+        return;
+    }
+    if (o_burnSetContentImage) o_burnSetContentImage(self, _cmd, img);
+}
+
+// ---- v49 D: slot 61/62 —— 敏感判定探针（只留痕，本版不拦） ----
+// 目前只抓到 content=[害羞] 这种表情消息，没抓到真正的敏感拦截，
+// 先确认松手时这两个方法有没有被调，再决定拦哪个。
+static void (*o_pornAlert)(id, SEL, id, id);
+static void r_pornAlert(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDMessageViewController", "p_showPornAlertForReceiveAutoDestroy:message:");
+    static int n = 0;
+    n++;
+    if (n <= 10 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] PORN#%d which=alert cell=%@ msg=%@",
+            n, a0 ? NSStringFromClass([a0 class]) : @"nil",
+            a1 ? NSStringFromClass([a1 class]) : @"nil"]);
+    }
+    if (o_pornAlert) o_pornAlert(self, _cmd, a0, a1);
+}
+
+static void (*o_pornDeal)(id, SEL, id, id);
+static void r_pornDeal(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDMessageViewController", "p_dealWithReceivedAutoDestroyAfterIdentifyPorn:message:");
+    static int n = 0;
+    n++;
+    if (n <= 10 || (n % 10) == 0) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] PORN#%d which=deal cell=%@ msg=%@",
+            n, a0 ? NSStringFromClass([a0 class]) : @"nil",
+            a1 ? NSStringFromClass([a1 class]) : @"nil"]);
+    }
+    if (o_pornDeal) o_pornDeal(self, _cmd, a0, a1);
+}
+
 // ---------------------------------------------------------------- v42 网络探针
 //
 // 闪照的图片 URL 不在模型里 —— v41c 与 v41d 两份真机日志里，type=282 的
@@ -1391,7 +1462,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 60
+#define HUSH_TARGET_COUNT 63
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -1775,6 +1846,24 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnWebServer, "v16@0:8");
         if (strcmp(r.kind, "MISSING") != 0) o_burnWebServer = (void (*)(id, SEL))r.prev;
         hush_report(59, "BDAutoDestoryImageViewController", "p_handleWebServer", r);
+    }
+    if (!s_done[60]) {
+        SEL s = sel_registerName("setContentImage:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnSetContentImage, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnSetContentImage = (void (*)(id, SEL, id))r.prev;
+        hush_report(60, "BDAutoDestoryImageViewController", "setContentImage:", r);
+    }
+    if (!s_done[61]) {
+        SEL s = sel_registerName("p_showPornAlertForReceiveAutoDestroy:message:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_pornAlert, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_pornAlert = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(61, "BDMessageViewController", "p_showPornAlertForReceiveAutoDestroy:message:", r);
+    }
+    if (!s_done[62]) {
+        SEL s = sel_registerName("p_dealWithReceivedAutoDestroyAfterIdentifyPorn:message:");
+        hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_pornDeal, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_pornDeal = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(62, "BDMessageViewController", "p_dealWithReceivedAutoDestroyAfterIdentifyPorn:message:", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");

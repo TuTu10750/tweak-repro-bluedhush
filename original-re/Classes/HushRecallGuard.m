@@ -1351,25 +1351,32 @@ void HushBurnApplyImage(id cell, id model) {
     iv.contentMode = UIViewContentModeScaleAspectFill;
     iv.clipsToBounds = YES;
 
-    // ---- v47 C：撑 frame ----
-    // 宿主给 Destory cell 的 _bubbleImgView 恒为 80x91（按占位缩略图算的），
-    // 2342x1078 的图塞进去只能看到中间一条。
-    // 这里按 cell 的实际可用宽高等比放大 —— 上限锁死在 cell 内，
-    // 不溢出：行高仍是宿主算的，溢出会被 contentView 裁掉，比白块更难看。
-    //   实测 cell 440x141 / 容器 (64,50) → maxW=368 maxH=87
-    //   图 2342x1078（ratio 2.17）→ 189x87，几乎完整显示原图。
+    // ---- v49 B：撑 frame（按宽铺满，允许纵向溢出） ----
+    // v47 的算法是「塞进 cell」：竖图 1080x2340（ratio 0.46）在 440x141 的
+    // cell 里只能压成 40x87 —— 实测 BURNPAINT#1 ivF=(0,0,40,87)，
+    // 用户看到的是一根 40pt 的竖条，等于没铺。
+    // v49 改成「宽度优先，高度按比例算，不压回 maxH」：
+    // 竖图会算出 368x797，超出 cell 的部分被 contentView 裁掉 ——
+    // 至少用户能看到图的主体（人脸/身体），而不是一条细缝。
+    // cell 高度是宿主按占位图（80x91）算死的，BDDestoryChatCell 上一个
+    // constraint 都没有，改行高这条路走不通，只能接受裁切。
     UIView *container = iv.superview;
     if (container) {
         CGRect cellB = [(UIView *)cell bounds];
         CGRect cRect = container.frame;
-        CGFloat maxW = cellB.size.width  - CGRectGetMinX(cRect) - 8.0;
-        CGFloat maxH = cellB.size.height - CGRectGetMinY(cRect) - 4.0;
-        if (maxW > 40.0 && maxH > 40.0) {
+        CGFloat maxW = cellB.size.width - CGRectGetMinX(cRect) - 8.0;
+        if (maxW > 40.0) {
             CGFloat ratio = im.size.width / MAX(im.size.height, 1.0);
             CGFloat newW = maxW;
             CGFloat newH = maxW / MAX(ratio, 0.01);
-            if (newH > maxH) { newH = maxH; newW = maxH * ratio; }
-            if (newW > 40.0 && newH > 40.0
+            // 只挡极端：高度小到看不见时按 cell 高度回算（横图走这条）
+            CGFloat floorH = MAX(cellB.size.height - CGRectGetMinY(cRect) - 4.0, 40.0);
+            if (newH < floorH) {
+                newH = floorH;
+                newW = floorH * ratio;
+                if (newW > maxW) { newW = maxW; newH = maxW / MAX(ratio, 0.01); }
+            }
+            if (newW > 20.0 && newH > 20.0
                 && (fabs(cRect.size.width - newW) > 1.0
                     || fabs(cRect.size.height - newH) > 1.0)) {
                 container.translatesAutoresizingMaskIntoConstraints = YES;
@@ -1417,9 +1424,11 @@ void HushBurnApplyImage(id cell, id model) {
     paintLogs++;
     if (paintLogs <= 12 || (paintLogs % 10) == 0) {
         NSString *line = [NSString stringWithFormat:
-            @"[P0-2b] BURNPAINT#%d cell=%@ mid=%lld size=%.0fx%.0f ivF=(%.0f,%.0f,%.0f,%.0f) contF=(%.0f,%.0f,%.0f,%.0f) cm=%d file=%@",
+            @"[P0-2b] BURNPAINT#%d cell=%@ mid=%lld size=%.0fx%.0f imgS=%.0fx%.0f ivF=(%.0f,%.0f,%.0f,%.0f) contF=(%.0f,%.0f,%.0f,%.0f) cm=%d file=%@",
             paintLogs, NSStringFromClass([cell class]), mid,
             im.size.width, im.size.height,
+            iv.image ? iv.image.size.width : -1.0,
+            iv.image ? iv.image.size.height : -1.0,
             iv.frame.origin.x, iv.frame.origin.y,
             iv.frame.size.width, iv.frame.size.height,
             container ? container.frame.origin.x : -1.0,
@@ -1921,8 +1930,25 @@ void HushBurnRefreshVisible(long long mid) {
     if (mid <= 0) return;
     if (!HushFlashUnlockOn()) return;
 
-    UITableView *tv = HushRecallChatTable();
-    if (!tv) return;
+    // v49 A：不能走 HushRecallChatTable()。
+    // v48 真机实证：调用点是 BDAutoDestoryImageViewController 的
+    // startLoadingResource —— 此刻全屏页在栈顶，HushRecallTopViewController()
+    // 返回的是全屏 VC，沿它的父链根本找不到 BDMessageTableView，
+    // HushRecallChatTable() 直接 nil，函数静默 return，FORCEPAINT# 一条不出。
+    // 改成先从 keyWindow 暴力找表（全屏页是 presented 出来的，聊天表还在
+    // 底下那个 window 的视图树里），再把旧路径当兜底。
+    UIWindow *win = HushRecallKeyWindow();
+    UITableView *tv = win ? HushFindMsgTable(win, 10, 2000) : nil;
+    if (!tv) tv = HushRecallChatTable();
+    if (!tv) {
+        NSString *miss = [NSString stringWithFormat:
+            @"[P0-2b] FORCEPAINT-MISS mid=%lld win=%d top=%@",
+            mid, win ? 1 : 0,
+            NSStringFromClass([HushRecallTopViewController() class])];
+        fprintf(stderr, "%s\n", [miss UTF8String]);
+        [HushLogger logLevel:2 format:miss];
+        return;
+    }
 
     int hit = 0;
     for (UITableViewCell *c in [tv visibleCells]) {
