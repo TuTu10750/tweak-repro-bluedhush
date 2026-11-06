@@ -1009,14 +1009,27 @@ static BOOL HushFlashUnlockOn(void) {
 // 白板（v41d 真机实证：mask=y img=y 但模型上没有任何 URL；更糟的是
 // _destoryIconBtn 被一起 hidden，点击入口也没了，所以「点了毫无反应」）。
 //
-// 正确语义：拆遮罩的唯一目的是「看图」，所以只有确实拿得到图时才拆：
+// 正确语义：拆遮罩的唯一目的是「看图」，所以只有确实拿得到图时才拆。
 //   - 模型上已有 image / destroyUrl / pic_url —— 拆了立刻能渲染
+//   - v50：本地已经下载到 <mid>.jpg —— 拆完由 HushBurnApplyImage 立刻铺上去
 // 拿不到就返回 NO，保持宿主原样（「点击查看」按钮在），把入口留给点击探针。
-// 本轮还没有任何一条闪照拿到过 URL（v41c/v41d 的 extra 全是空 URL），
-// 所以这里事实上恒为 NO —— 这是预期行为，不是没生效。
+//
+// v50 修正：v49 之前判据只认 model 上的 URL，而闪照 model 的 image/destroyUrl
+// 在列表页恒为空（v48 真机日志 LEAN 行 img=- dur=-），所以 strip 恒 0、遮罩
+// 永远拆不掉，用户看到的就是白块。现在补上「本地有图」这一条 —— 只要
+// HushFlashMapPath(mid) 命中，说明 HushFlashDownload 已经落盘，拆遮罩安全。
+// v45：mid -> 本地原图路径（定义在 HushHooks.m 的映射表里）
+extern NSString *HushFlashMapPath(long long mid);
+
 static BOOL HushFlashStripOn(id model) {
     if (![[HushConfig shared] isEnabled:@"switch_flash_thumb"]) return NO;
     if (!model) return NO;
+
+    // v50：本地已有落盘图 → 放行
+    long long mid = HushModelLongLong(model, HushRecallIdKeys());
+    if (mid > 0 && HushFlashMapPath(mid) != nil) return YES;
+
+    // 兜底：model 自带 URL（少数场景宿主会把明文 URL 挂上来）
     return HushModelString(model, @[@"image", @"destroyUrl", @"pic_url", @"picUrl"]) != nil;
 }
 
@@ -1203,8 +1216,8 @@ void HushAutoDestroyKeepAlive(id cell) {
 // 里几层都不影响结果。
 // HushHooks.m 里的闪照记忆池（v44 P2）：靠 uid + sendTime 反查 mid。
 extern void HushFlashRemember(long long mid, long long from, long long ts);
-// v45：mid -> 本地原图路径（HushHooks.m 里的映射表）
-extern NSString *HushFlashMapPath(long long mid);
+// v45：mid -> 本地原图路径（HushHooks.m 里的映射表，v50 起 HushFlashStripOn 也要用，
+// 声明已提到 :1015 附近，这里不再重复）
 
 // v45 P5：渲染层塞图 —— 全程不动 model、不碰 DB。
 //
