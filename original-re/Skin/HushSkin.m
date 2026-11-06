@@ -60,8 +60,9 @@ static NSString *SkinJSONPath(void) {
 }
 
 static NSArray<NSDictionary *> *gRules;
+static NSArray<NSDictionary *> *gColorRules;   // 只上色、不改字的规则（霓虹紫那三条）
 static UIColor *gColA, *gColB, *gColC;      // 青 / 蓝 / 紫
-static CGFloat gAlpha = 0.22;               // 面板渐变透明度（浅色主题下只当一层薄纱）
+static CGFloat gAlpha = 0.30;               // 面板渐变透明度（浅色主题下只当一层薄纱）
 static UIColor *gBase;                      // 面板底色
 static UIColor *gText;                      // 浅色主题的正文色
 static BOOL gLight = YES;                   // 浅色主题（默认）：行是半透明白，正文走深色
@@ -81,8 +82,15 @@ static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
 static NSDictionary *SkinDefaultConfig(void) {
     return @{
         @"palette": @{ @"a": @"#00C8E0", @"b": @"#3A6BFF", @"c": @"#8A2BE2",
-                       @"alpha": @0.22, @"base": @"#F4F7FD", @"text": @"#1B1F2A" },
+                       @"alpha": @0.30, @"base": @"#F4F7FD", @"text": @"#1B1F2A" },
         @"theme": @"light",
+        // 只改颜色：聊天页顶部那三行（其他·18岁 / 180cm 65kg / 时间）走霓虹紫，
+        // 并且把它们的底色清掉，避免原版的浅灰块跟着走。
+        @"colors": @[
+            @{ @"match": @"contains", @"text": @"岁",                      @"color": @"#C13BFF" },
+            @{ @"match": @"regex",    @"text": @"^[0-9]+cm [0-9]+kg$",     @"color": @"#C13BFF" },
+            @{ @"match": @"regex",    @"text": @"^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$", @"color": @"#C13BFF" },
+        ],
         @"hide_footer": @YES,
         @"dim_blur": @YES,
         // 页脚是自绘的，下面这些规则是给「如果哪天改成 UILabel」留的保险。
@@ -113,7 +121,11 @@ static void SkinLoadConfig(void) {
             if ([obj isKindOfClass:[NSDictionary class]]) cfg = [obj mutableCopy];
         } @catch (__unused NSException *e) { cfg = nil; }
     }
-    if (!cfg) cfg = [SkinDefaultConfig() mutableCopy];
+    // 旧版本写下的 JSON 没有 colors / theme 这些新键 —— 逐个补默认值，
+    // 而不是整份丢掉重写，用户改过的颜色不会因为升级而消失。
+    NSMutableDictionary *merged = [SkinDefaultConfig() mutableCopy];
+    if (cfg) [merged addEntriesFromDictionary:cfg];
+    cfg = merged;
 
     NSDictionary *p = [cfg[@"palette"] isKindOfClass:[NSDictionary class]] ? cfg[@"palette"] : @{};
     gColA = SkinHex(p[@"a"], [UIColor colorWithRed:0.00 green:0.90 blue:1.00 alpha:1]);
@@ -137,11 +149,48 @@ static void SkinLoadConfig(void) {
         [ok addObject:r];
     }
     gRules = ok;
+
+    NSArray *cs = [cfg[@"colors"] isKindOfClass:[NSArray class]] ? cfg[@"colors"] : @[];
+    NSMutableArray *colors = [NSMutableArray array];
+    for (id r in cs) {
+        if (![r isKindOfClass:[NSDictionary class]]) continue;
+        if (![r[@"text"] isKindOfClass:[NSString class]] || [r[@"text"] length] == 0) continue;
+        if (![r[@"color"] isKindOfClass:[NSString class]]) continue;
+        [colors addObject:r];
+    }
+    gColorRules = colors;
     SkinLog(@"配置生效：规则 %lu 条，配色 %@ / %@ / %@ alpha=%.2f 底 %@ 页脚%@",
             (unsigned long)gRules.count, p[@"a"] ?: @"默认", p[@"b"] ?: @"默认", p[@"c"] ?: @"默认",
             gAlpha, p[@"base"] ?: @"默认", gHideFooter ? @"隐藏" : @"保留");
     SkinLog(@"主题：%@  磨砂层：%@", gLight ? @"浅色（半透明白行 + 深色正文）" : @"深色",
             gDimBlur ? @"摘除" : @"保留");
+}
+
+static BOOL SkinRuleMatches(NSDictionary *r, NSString *text) {
+    NSString *needle = r[@"text"];
+    NSString *mode = [r[@"match"] isKindOfClass:[NSString class]] ? r[@"match"] : @"contains";
+    if ([mode isEqualToString:@"exact"])  return [text isEqualToString:needle];
+    if ([mode isEqualToString:@"prefix"]) return [text hasPrefix:needle];
+    if ([mode isEqualToString:@"suffix"]) return [text hasSuffix:needle];
+    if ([mode isEqualToString:@"regex"]) {
+        NSError *err = nil;
+        NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:needle
+                                                                           options:0 error:&err];
+        if (!re || err) return NO;
+        return [re numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)] > 0;
+    }
+    return [text rangeOfString:needle].location != NSNotFound;
+}
+
+// 命中「只上色」规则就返回霓虹紫（或配置里的任意颜色），没命中返回 nil。
+static UIColor *SkinColorForText(NSString *text) {
+    if (![text isKindOfClass:[NSString class]] || text.length == 0 || gColorRules.count == 0) return nil;
+    for (NSDictionary *r in gColorRules) {
+        @try {
+            if (SkinRuleMatches(r, text)) return SkinHex(r[@"color"], nil);
+        } @catch (__unused NSException *e) {}
+    }
+    return nil;
 }
 
 static NSString *SkinMapText(NSString *text, BOOL *hide) {
@@ -199,6 +248,16 @@ static void r_setText(id self, SEL _cmd, NSString *text) {
             return;
         }
         if (o_setText) o_setText(self, _cmd, mapped);
+        if ([self isKindOfClass:[UILabel class]]) {
+            UILabel *lb = (UILabel *)self;
+            UIColor *neon = SkinColorForText(mapped);
+            if (neon) {
+                lb.textColor = neon;
+                lb.backgroundColor = [UIColor clearColor];
+                if (lb.superview && [NSStringFromClass([lb.superview class]) rangeOfString:@"Bubble"].location != NSNotFound)
+                    lb.superview.backgroundColor = [UIColor clearColor];
+            }
+        }
     } @catch (__unused NSException *e) {
         if (o_setText) o_setText(self, _cmd, text);
     }
@@ -255,7 +314,14 @@ static void SkinStyleGlass(UIView *v) {
 // 只改「被我们或深色主题染成近白」的 label —— 深色正文、彩色角标一律不动，
 // 否则详情页会出现白字压浅底的情况（v16 真机就是这个症状）。
 static void SkinFixLabel(UILabel *lb) {
-    if (!lb || lb.hidden || !lb.textColor) return;
+    if (!lb || lb.hidden) return;
+    UIColor *neon = SkinColorForText(lb.text);
+    if (neon) {
+        lb.textColor = neon;
+        lb.backgroundColor = [UIColor clearColor];
+        return;
+    }
+    if (!lb.textColor) return;
     if (!gLight) { lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0]; return; }
     CGFloat r = 0, g = 0, b = 0, a = 0;
     if (![lb.textColor getRed:&r green:&g blue:&b alpha:&a]) return;
@@ -270,10 +336,10 @@ static void SkinStyleCell(UITableViewCell *cell) {
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
     if (cell.backgroundView) cell.backgroundView.backgroundColor = [UIColor clearColor];
-    if (gLight) {
-        // 半透明白：面板那层青蓝紫的薄纱透上来，行与行之间不再是一条白一条蓝。
-        cell.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.78];
-    }
+    // 行彻底透明：面板那层青蓝紫从行背后透上来，整页是一块连续的液态玻璃，
+    // 而不是「上面一条蓝、中间一条白」。
+    cell.backgroundColor = [UIColor clearColor];
+    cell.opaque = NO;
     UIView *sel = cell.selectedBackgroundView;
     if (sel && !sel.backgroundColor) sel.backgroundColor = [gColB colorWithAlphaComponent:0.18];
     SkinFixLabelRecursive(cell.contentView, 0);
@@ -303,7 +369,17 @@ static void SkinWalk(UIView *root, NSInteger depth) {
         }
         if ([root isKindOfClass:[UILabel class]]) SkinFixLabel((UILabel *)root);
         if ([root isKindOfClass:[UITableView class]]) {
-            ((UITableView *)root).backgroundColor = [UIColor clearColor];
+            UITableView *tv = (UITableView *)root;
+            tv.backgroundColor = [UIColor clearColor];
+            tv.opaque = NO;
+            tv.separatorColor = [gColB colorWithAlphaComponent:0.16];
+        }
+        NSString *rcn = NSStringFromClass([root class]) ?: @"";
+        if ([rcn rangeOfString:@"HeaderFooterView"].location != NSNotFound) {
+            root.backgroundColor = [UIColor clearColor];
+            for (UIView *sub in root.subviews) {
+                if ([sub isKindOfClass:[UILabel class]]) SkinFixLabel((UILabel *)sub);
+            }
         }
         for (UIView *sub in root.subviews) SkinWalk(sub, depth + 1);
     } @catch (__unused NSException *e) {}
