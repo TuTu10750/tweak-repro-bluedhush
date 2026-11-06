@@ -1,14 +1,18 @@
 //
-//  HushSkin.m — 原版 BluedHush 的「皮肤层」
+//  HushSkin.m — 原版 BluedHush 5.19 的「皮肤层」
 //
-//  设计红线（务必遵守）：
-//   1. 不定义任何与宿主/原版同名的类，不 hook 任何逻辑方法
-//      —— 只碰显示层：UILabel -setText:、以及玻璃控件的 layoutSubviews。
-//   2. 原版 dylib 的字节一个都不改：本 dylib 在 ctor 里 dlopen 原版，
-//      让它的类先注册，再装皮肤 hook。
-//   3. 任何异常一律吞掉并回落到原实现，绝不让皮肤把宿主带崩。
-//   4. 文案映射走外部 JSON（Documents/bluedbackups/skin_texts.json），
-//      改文案不用重新出包；文件不在就用内置默认值并写一份出来。
+//  红线：
+//   1. 零类定义，只 hook 显示方法；不碰原版/宿主的任何逻辑方法。
+//   2. 原版 dylib 字节零改动：ctor 里 dlopen OriginalHush.dylib，让它先注册类。
+//   3. 每个 hook 都必须拿到「它自己那个类」的旧 IMP —— 两个类共用一个 IMP 变量
+//      会让 A 类的方法体跑在 B 类实例上，v15E 就是这么崩的
+//      （-[UITableViewCellLayoutManager views]: unrecognized selector）。
+//   4. 任何异常吞掉并回落，皮肤不许把宿主带崩。
+//   5. 文案与配色走 Documents/bluedbackups/skin_texts.json，热加载。
+//
+//  关于页脚：原版是自绘（日志里写着「清掉系统自带 textLabel（防与自绘文字重叠）」），
+//  所以改 UILabel 抓不到它 —— 直接 hook HushAuthorFooterView 的 drawRect: 画空，
+//  并把高度压 0。
 //
 
 #import <UIKit/UIKit.h>
@@ -18,7 +22,7 @@
 #import <string.h>
 
 // ---------------------------------------------------------------------------
-// 日志：极简。stderr 给 Xcode/syslog，文件给用户导出。
+// 日志
 // ---------------------------------------------------------------------------
 static NSString *SkinLogPath(void) {
     NSString *docs = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
@@ -36,11 +40,9 @@ static void SkinLog(NSString *fmt, ...) {
     static NSLock *lk; static dispatch_once_t o;
     dispatch_once(&o, ^{ lk = [NSLock new]; });
     [lk lock];
-    NSFileHandle *fh = [NSFileHandle fileHandleForWritingAtPath:SkinLogPath()];
-    if (!fh) {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:SkinLogPath()])
         [[NSFileManager defaultManager] createFileAtPath:SkinLogPath() contents:nil attributes:nil];
-        fh = [NSFileHandle fileHandleForWritingAtPath:SkinLogPath()];
-    }
+    NSFileHandle *fh = [NSFileHandle fileHandleForWritingAtPath:SkinLogPath()];
     if (fh) { @try { [fh seekToEndOfFile]; [fh writeData:[line dataUsingEncoding:NSUTF8StringEncoding]]; [fh closeFile]; } @catch (__unused NSException *e) {} }
     [lk unlock];
 }
@@ -57,10 +59,11 @@ static NSString *SkinJSONPath(void) {
     return [dir stringByAppendingPathComponent:kSkinJSONName];
 }
 
-static NSDictionary *gSkinCfg;          // 当前生效配置
-static NSArray<NSDictionary *> *gRules; // 文案规则
-static UIColor *gColA, *gColB, *gColC;  // 青 / 蓝 / 紫
-static CGFloat gAlpha = 0.26;
+static NSArray<NSDictionary *> *gRules;
+static UIColor *gColA, *gColB, *gColC;      // 青 / 蓝 / 紫
+static CGFloat gAlpha = 0.55;               // 面板渐变透明度
+static UIColor *gBase;                      // 面板底色（深，衬得出青蓝紫）
+static BOOL gHideFooter = YES;
 
 static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
     if (![hex isKindOfClass:[NSString class]] || hex.length < 7) return fallback;
@@ -74,25 +77,25 @@ static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
 
 static NSDictionary *SkinDefaultConfig(void) {
     return @{
-        @"palette": @{ @"a": @"#00E5FF", @"b": @"#2F6BFF", @"c": @"#8A2BE2", @"alpha": @0.26 },
-        // 只按「出现即隐藏」的保守规则处理页脚那几行；其余文案等你逐条给。
-        // 页脚实际是三段独立文案（作者行 / 版本行 / 提示行），单条 format
-        // 串只是拼接来源，所以这里按各自特征分别命中，不依赖拼接结果。
+        @"palette": @{ @"a": @"#00E5FF", @"b": @"#2F6BFF", @"c": @"#8A2BE2",
+                       @"alpha": @0.55, @"base": @"#0B1020" },
+        @"hide_footer": @YES,
+        // 页脚是自绘的，下面这些规则是给「如果哪天改成 UILabel」留的保险。
         @"rules": @[
-            @{ @"match": @"contains", @"text": @"@Tinycca",        @"replace": @"", @"hide": @YES },
-            @{ @"match": @"prefix",   @"text": @"作者 ",           @"replace": @"", @"hide": @YES },
-            @{ @"match": @"prefix",   @"text": @"版本 ",           @"replace": @"", @"hide": @YES },
-            @{ @"match": @"contains", @"text": @"项（开关",        @"replace": @"", @"hide": @YES },
-            @{ @"match": @"contains", @"text": @"开关改动即时写入", @"replace": @"", @"hide": @YES },
+            @{ @"match": @"contains", @"text": @"@Tinycca",         @"replace": @"", @"hide": @YES },
+            @{ @"match": @"prefix",   @"text": @"作者 ",            @"replace": @"", @"hide": @YES },
+            @{ @"match": @"prefix",   @"text": @"版本 ",            @"replace": @"", @"hide": @YES },
+            @{ @"match": @"contains", @"text": @"项（开关",          @"replace": @"", @"hide": @YES },
+            @{ @"match": @"contains", @"text": @"开关改动即时写入",  @"replace": @"", @"hide": @YES },
         ],
     };
 }
 
 static void SkinLoadConfig(void) {
-    NSDictionary *cfg = nil;
+    NSMutableDictionary *cfg = nil;
     NSString *path = SkinJSONPath();
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        cfg = SkinDefaultConfig();
+        cfg = [SkinDefaultConfig() mutableCopy];
         @try {
             NSData *d = [NSJSONSerialization dataWithJSONObject:cfg options:NSJSONWritingPrettyPrinted error:NULL];
             [d writeToFile:path atomically:YES];
@@ -102,20 +105,22 @@ static void SkinLoadConfig(void) {
         @try {
             NSData *d = [NSData dataWithContentsOfFile:path];
             id obj = d ? [NSJSONSerialization JSONObjectWithData:d options:0 error:NULL] : nil;
-            if ([obj isKindOfClass:[NSDictionary class]]) cfg = obj;
+            if ([obj isKindOfClass:[NSDictionary class]]) cfg = [obj mutableCopy];
         } @catch (__unused NSException *e) { cfg = nil; }
     }
-    if (!cfg) cfg = SkinDefaultConfig();
+    if (!cfg) cfg = [SkinDefaultConfig() mutableCopy];
 
-    gSkinCfg = cfg;
     NSDictionary *p = [cfg[@"palette"] isKindOfClass:[NSDictionary class]] ? cfg[@"palette"] : @{};
     gColA = SkinHex(p[@"a"], [UIColor colorWithRed:0.00 green:0.90 blue:1.00 alpha:1]);
     gColB = SkinHex(p[@"b"], [UIColor colorWithRed:0.18 green:0.42 blue:1.00 alpha:1]);
     gColC = SkinHex(p[@"c"], [UIColor colorWithRed:0.54 green:0.17 blue:0.89 alpha:1]);
+    gBase = SkinHex(p[@"base"], [UIColor colorWithRed:0.043 green:0.063 blue:0.125 alpha:1]);
     if ([p[@"alpha"] isKindOfClass:[NSNumber class]]) {
         CGFloat a = [p[@"alpha"] doubleValue];
-        gAlpha = (a > 0.05 && a < 1.0) ? a : 0.26;
+        if (a > 0.05 && a <= 1.0) gAlpha = a;
     }
+    if ([cfg[@"hide_footer"] isKindOfClass:[NSNumber class]]) gHideFooter = [cfg[@"hide_footer"] boolValue];
+
     NSArray *rs = [cfg[@"rules"] isKindOfClass:[NSArray class]] ? cfg[@"rules"] : @[];
     NSMutableArray *ok = [NSMutableArray array];
     for (id r in rs) {
@@ -124,11 +129,11 @@ static void SkinLoadConfig(void) {
         [ok addObject:r];
     }
     gRules = ok;
-    SkinLog(@"配置生效：规则 %lu 条，配色 %@ / %@ / %@ alpha=%.2f",
-            (unsigned long)gRules.count, p[@"a"] ?: @"默认", p[@"b"] ?: @"默认", p[@"c"] ?: @"默认", gAlpha);
+    SkinLog(@"配置生效：规则 %lu 条，配色 %@ / %@ / %@ alpha=%.2f 底 %@ 页脚%@",
+            (unsigned long)gRules.count, p[@"a"] ?: @"默认", p[@"b"] ?: @"默认", p[@"c"] ?: @"默认",
+            gAlpha, p[@"base"] ?: @"默认", gHideFooter ? @"隐藏" : @"保留");
 }
 
-// 返回替换后的文本；*hide 表示这一行要整条藏掉。
 static NSString *SkinMapText(NSString *text, BOOL *hide) {
     if (hide) *hide = NO;
     if (![text isKindOfClass:[NSString class]] || text.length == 0 || gRules.count == 0) return text;
@@ -137,15 +142,10 @@ static NSString *SkinMapText(NSString *text, BOOL *hide) {
         NSString *mode = r[@"match"] ?: @"contains";
         BOOL hit = NO;
         @try {
-            if ([mode isEqualToString:@"exact"]) {
-                hit = [text isEqualToString:needle];
-            } else if ([mode isEqualToString:@"prefix"]) {
-                hit = [text hasPrefix:needle];
-            } else if ([mode isEqualToString:@"suffix"]) {
-                hit = [text hasSuffix:needle];
-            } else {
-                hit = [text rangeOfString:needle].location != NSNotFound;
-            }
+            if ([mode isEqualToString:@"exact"])       hit = [text isEqualToString:needle];
+            else if ([mode isEqualToString:@"prefix"]) hit = [text hasPrefix:needle];
+            else if ([mode isEqualToString:@"suffix"]) hit = [text hasSuffix:needle];
+            else                                      hit = [text rangeOfString:needle].location != NSNotFound;
         } @catch (__unused NSException *e) { hit = NO; }
         if (!hit) continue;
         if ([r[@"hide"] boolValue]) { if (hide) *hide = YES; return @""; }
@@ -156,19 +156,8 @@ static NSString *SkinMapText(NSString *text, BOOL *hide) {
 }
 
 // ---------------------------------------------------------------------------
-// swizzle：只换显示方法，且都能回落到原 IMP
+// swizzle
 // ---------------------------------------------------------------------------
-static IMP SkinOwnImp(Class c, SEL sel) {
-    unsigned int n = 0;
-    Method *list = class_copyMethodList(c, &n);
-    IMP found = NULL;
-    for (unsigned int i = 0; i < n; i++) {
-        if (method_getName(list[i]) == sel) { found = method_getImplementation(list[i]); break; }
-    }
-    if (list) free(list);
-    return found;
-}
-
 static IMP SkinReplace(Class c, SEL sel, IMP repl) {
     if (!c) return NULL;
     Method own = NULL;
@@ -177,7 +166,6 @@ static IMP SkinReplace(Class c, SEL sel, IMP repl) {
     for (unsigned int i = 0; i < n; i++) if (method_getName(list[i]) == sel) { own = list[i]; break; }
     if (list) free(list);
     if (own) return method_setImplementation(own, repl);
-    // 只在「本类没有、父类有」时补；不加凭空方法，避免脏 method list
     Method inh = class_getInstanceMethod(c, sel);
     if (inh) {
         IMP old = method_getImplementation(inh);
@@ -187,7 +175,9 @@ static IMP SkinReplace(Class c, SEL sel, IMP repl) {
     return NULL;
 }
 
-// ---- UILabel -setText: ----
+// ---------------------------------------------------------------------------
+// UILabel -setText:
+// ---------------------------------------------------------------------------
 static void (*o_setText)(id, SEL, NSString *);
 static void r_setText(id self, SEL _cmd, NSString *text) {
     @try {
@@ -204,25 +194,34 @@ static void r_setText(id self, SEL _cmd, NSString *text) {
     }
 }
 
-// ---- 玻璃控件外观 ----
+// ---------------------------------------------------------------------------
+// 玻璃 / cell 外观
+// ---------------------------------------------------------------------------
 static const NSInteger kSkinGradientTag = 0x534B31; // 'SK1'
+static const NSInteger kSkinPanelTag = 0x534B32;
 
 static void SkinStyleGlass(UIView *v) {
     if (!v || v.tag == kSkinGradientTag) return;
-    Class cls = [v class];
-    NSString *cn = NSStringFromClass(cls) ?: @"";
+    NSString *cn = NSStringFromClass([v class]) ?: @"";
     BOOL isGlass = [cn rangeOfString:@"Glass"].location != NSNotFound
                 || [cn rangeOfString:@"Capsule"].location != NSNotFound
                 || [cn rangeOfString:@"PillButton"].location != NSNotFound;
     if (!isGlass) return;
 
-    v.layer.cornerRadius = (cn.length && [cn rangeOfString:@"Pill"].location != NSNotFound) ? v.bounds.size.height / 2.0 : 18.0;
+    v.layer.cornerRadius = ([cn rangeOfString:@"Pill"].location != NSNotFound) ? v.bounds.size.height / 2.0 : 16.0;
     v.layer.cornerCurve = kCACornerCurveContinuous;
-    v.layer.borderWidth = 0.6;
-    v.layer.borderColor = [gColA colorWithAlphaComponent:0.55].CGColor;
-    v.layer.masksToBounds = NO;
+    v.layer.borderWidth = 0.8;
+    v.layer.borderColor = [gColA colorWithAlphaComponent:0.65].CGColor;
 
-    if (![v viewWithTag:kSkinGradientTag]) {
+    UIView *host = [v viewWithTag:kSkinGradientTag];
+    if (!host) {
+        host = [[UIView alloc] initWithFrame:v.bounds];
+        host.tag = kSkinGradientTag;
+        host.userInteractionEnabled = NO;
+        host.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        host.layer.cornerRadius = v.layer.cornerRadius;
+        host.layer.cornerCurve = kCACornerCurveContinuous;
+        host.layer.masksToBounds = YES;
         CAGradientLayer *g = [CAGradientLayer layer];
         g.name = @"hushSkinGradient";
         g.colors = @[ (__bridge id)[gColA colorWithAlphaComponent:gAlpha].CGColor,
@@ -230,27 +229,30 @@ static void SkinStyleGlass(UIView *v) {
                       (__bridge id)[gColC colorWithAlphaComponent:gAlpha].CGColor ];
         g.startPoint = CGPointMake(0.0, 0.0);
         g.endPoint = CGPointMake(1.0, 1.0);
-        g.cornerRadius = v.layer.cornerRadius;
-        g.cornerCurve = kCACornerCurveContinuous;
-        g.frame = v.bounds;
-        // 用一个不可交互的宿主视图承载渐变，tag 用来避免重复叠加
-        UIView *host = [[UIView alloc] initWithFrame:v.bounds];
-        host.tag = kSkinGradientTag;
-        host.userInteractionEnabled = NO;
-        host.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        host.layer.cornerRadius = v.layer.cornerRadius;
-        host.layer.cornerCurve = kCACornerCurveContinuous;
-        host.layer.masksToBounds = YES;
         [host.layer addSublayer:g];
         [v insertSubview:host atIndex:0];
-    } else {
-        UIView *host = [v viewWithTag:kSkinGradientTag];
-        host.frame = v.bounds;
-        for (CALayer *l in host.layer.sublayers) {
-            if ([l isKindOfClass:[CAGradientLayer class]]) {
-                l.frame = host.bounds;
-                ((CAGradientLayer *)l).cornerRadius = v.layer.cornerRadius;
-            }
+    }
+    host.frame = v.bounds;
+    host.layer.cornerRadius = v.layer.cornerRadius;
+    for (CALayer *l in host.layer.sublayers) {
+        if ([l isKindOfClass:[CAGradientLayer class]]) {
+            l.frame = host.bounds;
+            ((CAGradientLayer *)l).cornerRadius = v.layer.cornerRadius;
+        }
+    }
+}
+
+static void SkinStyleCell(UITableViewCell *cell) {
+    if (!cell) return;
+    cell.backgroundColor = [UIColor clearColor];
+    cell.contentView.backgroundColor = [UIColor clearColor];
+    if (cell.backgroundView) cell.backgroundView.backgroundColor = [UIColor clearColor];
+    UIView *sel = cell.selectedBackgroundView;
+    if (sel && !sel.backgroundColor) sel.backgroundColor = [gColB colorWithAlphaComponent:0.18];
+    for (UIView *sub in cell.contentView.subviews) {
+        if ([sub isKindOfClass:[UILabel class]]) {
+            UILabel *lb = (UILabel *)sub;
+            if (!lb.hidden) lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0];
         }
     }
 }
@@ -261,13 +263,84 @@ static void SkinWalk(UIView *root, NSInteger depth) {
         SkinStyleGlass(root);
         if ([root isKindOfClass:[UILabel class]]) {
             UILabel *lb = (UILabel *)root;
-            if (!lb.hidden) lb.textColor = [UIColor colorWithWhite:0.97 alpha:1.0];
+            if (!lb.hidden) lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0];
+        }
+        if ([root isKindOfClass:[UITableView class]]) {
+            ((UITableView *)root).backgroundColor = [UIColor clearColor];
         }
         for (UIView *sub in root.subviews) SkinWalk(sub, depth + 1);
     } @catch (__unused NSException *e) {}
 }
 
-// ---- HushSettingsPanel ----
+// ---------------------------------------------------------------------------
+// 每个类各自持有旧 IMP —— 绝不共用
+// ---------------------------------------------------------------------------
+static void (*o_glassLayout)(id, SEL);
+static void r_glassLayout(id self, SEL _cmd) {
+    if (o_glassLayout) o_glassLayout(self, _cmd);
+    @try { SkinWalk((UIView *)self, 0); } @catch (__unused NSException *e) {}
+}
+
+static void (*o_switchCellLayout)(id, SEL);
+static void r_switchCellLayout(id self, SEL _cmd) {
+    if (o_switchCellLayout) o_switchCellLayout(self, _cmd);
+    @try {
+        if ([self isKindOfClass:[UITableViewCell class]]) SkinStyleCell((UITableViewCell *)self);
+        SkinWalk((UIView *)self, 0);
+    } @catch (__unused NSException *e) {}
+}
+
+static void (*o_detailCellLayout)(id, SEL);
+static void r_detailCellLayout(id self, SEL _cmd) {
+    if (o_detailCellLayout) o_detailCellLayout(self, _cmd);
+    @try {
+        if ([self isKindOfClass:[UITableViewCell class]]) SkinStyleCell((UITableViewCell *)self);
+    } @catch (__unused NSException *e) {}
+}
+
+// 页脚：自绘 → 直接画空
+static void (*o_footerDraw)(id, SEL, CGRect);
+static void r_footerDraw(id self, SEL _cmd, CGRect rect) {
+    if (!gHideFooter) { if (o_footerDraw) o_footerDraw(self, _cmd, rect); return; }
+    // 什么都不画
+}
+
+static void (*o_footerLayout)(id, SEL);
+static void r_footerLayout(id self, SEL _cmd) {
+    if (o_footerLayout) o_footerLayout(self, _cmd);
+    @try {
+        UIView *v = (UIView *)self;
+        if (gHideFooter) {
+            v.hidden = YES;
+            if (v.superview && v.frame.size.height > 0.5) {
+                CGRect f = v.frame; f.size.height = 0.0; v.frame = f;
+            }
+        }
+    } @catch (__unused NSException *e) {}
+}
+
+// ---------------------------------------------------------------------------
+// 面板 / 详情页
+// ---------------------------------------------------------------------------
+static void SkinApplyPanelBackground(UIView *v) {
+    if (!v || [v viewWithTag:kSkinPanelTag]) return;
+    v.backgroundColor = gBase;
+    UIView *host = [[UIView alloc] initWithFrame:v.bounds];
+    host.tag = kSkinPanelTag;
+    host.userInteractionEnabled = NO;
+    host.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    CAGradientLayer *bg = [CAGradientLayer layer];
+    bg.colors = @[ (__bridge id)[gColC colorWithAlphaComponent:gAlpha].CGColor,
+                   (__bridge id)[gColB colorWithAlphaComponent:gAlpha].CGColor,
+                   (__bridge id)[gColA colorWithAlphaComponent:gAlpha].CGColor ];
+    bg.startPoint = CGPointMake(0.05, 0.0);
+    bg.endPoint = CGPointMake(0.95, 1.0);
+    bg.frame = v.bounds;
+    [host.layer addSublayer:bg];
+    [v insertSubview:host atIndex:0];
+    SkinLog(@"面板底色已应用（青蓝紫）");
+}
+
 static void (*o_panelDidLoad)(id, SEL);
 static void r_panelDidLoad(id self, SEL _cmd) {
     if (o_panelDidLoad) o_panelDidLoad(self, _cmd);
@@ -275,23 +348,7 @@ static void r_panelDidLoad(id self, SEL _cmd) {
         SkinLoadConfig();
         UIView *v = [self valueForKey:@"view"];
         if (!v) return;
-        // 面板底色：三层渐变压在最底
-        if (![v viewWithTag:kSkinGradientTag + 1]) {
-            CAGradientLayer *bg = [CAGradientLayer layer];
-            bg.colors = @[ (__bridge id)[gColC colorWithAlphaComponent:gAlpha * 0.85].CGColor,
-                           (__bridge id)[gColB colorWithAlphaComponent:gAlpha * 0.7].CGColor,
-                           (__bridge id)[gColA colorWithAlphaComponent:gAlpha * 0.8].CGColor ];
-            bg.startPoint = CGPointMake(0.1, 0.0);
-            bg.endPoint = CGPointMake(0.9, 1.0);
-            bg.frame = v.bounds;
-            UIView *host = [[UIView alloc] initWithFrame:v.bounds];
-            host.tag = kSkinGradientTag + 1;
-            host.userInteractionEnabled = NO;
-            host.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-            [host.layer addSublayer:bg];
-            [v insertSubview:host atIndex:0];
-            SkinLog(@"面板底色已应用（青蓝紫）");
-        }
+        SkinApplyPanelBackground(v);
         SkinWalk(v, 0);
     } @catch (__unused NSException *e) { SkinLog(@"面板皮肤异常，已忽略"); }
 }
@@ -299,31 +356,21 @@ static void r_panelDidLoad(id self, SEL _cmd) {
 static void (*o_panelWillAppear)(id, SEL, BOOL);
 static void r_panelWillAppear(id self, SEL _cmd, BOOL animated) {
     if (o_panelWillAppear) o_panelWillAppear(self, _cmd, animated);
-    @try { SkinLoadConfig(); UIView *v = [self valueForKey:@"view"]; if (v) SkinWalk(v, 0); } @catch (__unused NSException *e) {}
-}
-
-// ---- 玻璃/开关 cell 重绘时补一次外观 ----
-static void (*o_glassLayout)(id, SEL);
-static void r_glassLayout(id self, SEL _cmd) {
-    if (o_glassLayout) o_glassLayout(self, _cmd);
-    @try { SkinWalk((UIView *)self, 0); } @catch (__unused NSException *e) {}
-}
-
-// ---- 页脚：把空出来的那几行高度让回去 ----
-static void (*o_footerLayout)(id, SEL);
-static void r_footerLayout(id self, SEL _cmd) {
-    if (o_footerLayout) o_footerLayout(self, _cmd);
     @try {
-        UIView *v = (UIView *)self;
-        BOOL anyVisible = NO;
-        for (UIView *s in v.subviews) {
-            if ([s isKindOfClass:[UILabel class]] && !s.hidden && ((UILabel *)s).text.length > 0) { anyVisible = YES; break; }
-        }
-        // 只在「确实已经全空」时压高度，且高度已是 0 就不再动，
-        // 否则每次 layoutSubviews 都改 frame 会反过来触发重排。
-        if (!anyVisible && v.superview && v.frame.size.height > 0.5) {
-            CGRect f = v.frame; f.size.height = 0.0; v.frame = f;
-        }
+        SkinLoadConfig();
+        UIView *v = [self valueForKey:@"view"];
+        if (v) { SkinApplyPanelBackground(v); SkinWalk(v, 0); }
+    } @catch (__unused NSException *e) {}
+}
+
+static void (*o_detailDidLoad)(id, SEL);
+static void r_detailDidLoad(id self, SEL _cmd) {
+    if (o_detailDidLoad) o_detailDidLoad(self, _cmd);
+    @try {
+        UIView *v = [self valueForKey:@"view"];
+        if (!v) return;
+        SkinApplyPanelBackground(v);
+        SkinWalk(v, 0);
     } @catch (__unused NSException *e) {}
 }
 
@@ -336,27 +383,32 @@ static BOOL SkinEnabled(void) {
 }
 
 static void SkinInstallHooks(void) {
-    Class panel = NSClassFromString(@"HushSettingsPanel");
-    Class glass = NSClassFromString(@"HushGlassView");
-    Class cell  = NSClassFromString(@"HushSwitchCell");
-    Class foot  = NSClassFromString(@"HushAuthorFooterView");
+    Class panel  = NSClassFromString(@"HushSettingsPanel");
+    Class detail = NSClassFromString(@"HushModuleDetailController");
+    Class glass  = NSClassFromString(@"HushGlassView");
+    Class cell   = NSClassFromString(@"HushSwitchCell");
+    Class dcell  = NSClassFromString(@"HushModuleEntry");
+    Class foot   = NSClassFromString(@"HushAuthorFooterView");
 
     if (panel) {
-        o_panelDidLoad = (void (*)(id, SEL))SkinReplace(panel, @selector(viewDidLoad), (IMP)&r_panelDidLoad);
+        o_panelDidLoad    = (void (*)(id, SEL))SkinReplace(panel, @selector(viewDidLoad), (IMP)&r_panelDidLoad);
         o_panelWillAppear = (void (*)(id, SEL, BOOL))SkinReplace(panel, @selector(viewWillAppear:), (IMP)&r_panelWillAppear);
     }
-    if (glass) o_glassLayout = (void (*)(id, SEL))SkinReplace(glass, @selector(layoutSubviews), (IMP)&r_glassLayout);
-    if (cell)  SkinReplace(cell, @selector(layoutSubviews), (IMP)&r_glassLayout);
-    if (foot)  o_footerLayout = (void (*)(id, SEL))SkinReplace(foot, @selector(layoutSubviews), (IMP)&r_footerLayout);
-
+    if (detail) o_detailDidLoad = (void (*)(id, SEL))SkinReplace(detail, @selector(viewDidLoad), (IMP)&r_detailDidLoad);
+    if (glass)  o_glassLayout = (void (*)(id, SEL))SkinReplace(glass, @selector(layoutSubviews), (IMP)&r_glassLayout);
+    if (cell)   o_switchCellLayout = (void (*)(id, SEL))SkinReplace(cell, @selector(layoutSubviews), (IMP)&r_switchCellLayout);
+    if (dcell)  o_detailCellLayout = (void (*)(id, SEL))SkinReplace(dcell, @selector(layoutSubviews), (IMP)&r_detailCellLayout);
+    if (foot) {
+        o_footerDraw   = (void (*)(id, SEL, CGRect))SkinReplace(foot, @selector(drawRect:), (IMP)&r_footerDraw);
+        o_footerLayout = (void (*)(id, SEL))SkinReplace(foot, @selector(layoutSubviews), (IMP)&r_footerLayout);
+    }
     o_setText = (void (*)(id, SEL, NSString *))SkinReplace([UILabel class], @selector(setText:), (IMP)&r_setText);
 
-    SkinLog(@"hook 结果：panel=%d glass=%d cell=%d footer=%d label=%d",
-            panel != nil, glass != nil, cell != nil, foot != nil, o_setText != nil);
+    SkinLog(@"hook 结果：panel=%d detail=%d glass=%d cell=%d entry=%d footer(draw=%d,layout=%d) label=%d",
+            panel != nil, detail != nil, glass != nil, cell != nil, dcell != nil,
+            o_footerDraw != nil, o_footerLayout != nil, o_setText != nil);
 }
 
-// 原版 dylib 由我们随包携带（改名 OriginalHush.dylib），在 ctor 里先 dlopen，
-// 让它的类注册完，再挂皮肤 hook。
 static void SkinLoadOriginal(void) {
     const char *cands[] = {
         "@executable_path/Frameworks/OriginalHush.dylib",
@@ -378,7 +430,6 @@ static void HushSkinInit(void) {
         SkinLoadConfig();
         SkinLoadOriginal();
 
-        // 类注册可能稍晚（原版在它自己的 ctor 里做），重试最多 40 次 × 0.25s
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
             for (int i = 0; i < 40; i++) {
                 if (NSClassFromString(@"HushSettingsPanel")) break;
@@ -389,7 +440,7 @@ static void HushSkinInit(void) {
                 [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification
                                                                   object:nil queue:[NSOperationQueue mainQueue]
                                                               usingBlock:^(__unused NSNotification *n) {
-                    SkinLoadConfig();   // 回前台热加载：改完 JSON 切回来就生效
+                    SkinLoadConfig();   // 回前台热加载
                 }];
             });
         });
