@@ -1075,9 +1075,14 @@ void HushAutoDestroyUnlock(id cell, id model) {
         // v42：BURN# 补 mid。此前 13 条 BURN 只能靠时间戳猜对应哪条消息，
         // 结果把「同一 mid 的两份 model 实例（282 与 24）」误读成「宿主改写 type」。
         long long midRaw = model ? HushModelLongLong(model, HushRecallIdKeys()) : LLONG_MIN;
+        // v51 D：mask 只打「ivar 存在」会骗人 —— v50 日志里 strip=1 却 mask=y，
+        // 用户以为遮罩没拆。真正决定可见的是 hidden，这里直接打它。
+        id maskObj = HushSafeKVC(cell, @"_destoryCellMaskView");
+        BOOL maskHidden = (!maskObj || ![maskObj isKindOfClass:[UIView class]])
+                          ? YES : ((UIView *)maskObj).hidden;
         NSString *line = [NSString stringWithFormat:
             @"[P0-2b] BURN#%d cell=%@ cls=%@ mid=%@ t=%@ mt=%@ mix=%@ by=%@ "
-            @"unlock=%d strip=%d mask=%@ img=%@ timer=%@",
+            @"unlock=%d strip=%d maskH=%d img=%@ timer=%@",
             burnLogs,
             NSStringFromClass([cell class]),
             model ? NSStringFromClass([model class]) : @"nil",
@@ -1085,7 +1090,7 @@ void HushAutoDestroyUnlock(id cell, id model) {
             HushNumStr(tRaw), HushNumStr(mtRaw), HushNumStr(t),
             byType ? @"type" : (byCell ? @"destoryCell" : @"isMask"),
             unlockOn ? 1 : 0, strip ? 1 : 0,
-            HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
+            maskHidden ? 1 : 0,
             HushSafeKVC(cell, @"_bubbleImgView") ? @"y" : @"n",
             HushSafeKVC(cell, @"_timer") ? @"y" : @"n"];
         fprintf(stderr, "%s\n", [line UTF8String]);
@@ -1364,40 +1369,45 @@ void HushBurnApplyImage(id cell, id model) {
     iv.contentMode = UIViewContentModeScaleAspectFill;
     iv.clipsToBounds = YES;
 
-    // ---- v49 B：撑 frame（按宽铺满，允许纵向溢出） ----
-    // v47 的算法是「塞进 cell」：竖图 1080x2340（ratio 0.46）在 440x141 的
-    // cell 里只能压成 40x87 —— 实测 BURNPAINT#1 ivF=(0,0,40,87)，
-    // 用户看到的是一根 40pt 的竖条，等于没铺。
-    // v49 改成「宽度优先，高度按比例算，不压回 maxH」：
-    // 竖图会算出 368x797，超出 cell 的部分被 contentView 裁掉 ——
-    // 至少用户能看到图的主体（人脸/身体），而不是一条细缝。
-    // cell 高度是宿主按占位图（80x91）算死的，BDDestoryChatCell 上一个
-    // constraint 都没有，改行高这条路走不通，只能接受裁切。
+    // ---- v51 C1：高度优先，绝不出界 ----
+    // v49/v50 是「宽度优先」：竖图 1080x2340 算出 368x797，而 cell 只有 223 高
+    // （TREE root f=(0,1478,440,223)），contentView 默认 clipsToBounds=NO，
+    // 溢出 574pt 直接盖住下面几条消息 —— 用户看到的「超大白块」就是这个。
+    //
+    // 宿主不走 tableView:heightForRowAtIndexPath:（sel_index 全库 249 个类有，
+    // BDMessageViewController / PrivateChatViewController / LiveMessagesView /
+    // BDMessageTableView 一个都没有），行高上不去，那就只能把图压回 cell 内。
+    // 代价是竖图变小（223 高的 cell → 约 76x165），但列表恢复正常。
+    // C2（调 BDChatBasicCell -setUpBubbleImageView:... 让宿主自己重算）留 v52。
     UIView *container = iv.superview;
     if (container) {
         CGRect cellB = [(UIView *)cell bounds];
         CGRect cRect = container.frame;
-        CGFloat maxW = cellB.size.width - CGRectGetMinX(cRect) - 8.0;
-        if (maxW > 40.0) {
-            CGFloat ratio = im.size.width / MAX(im.size.height, 1.0);
-            CGFloat newW = maxW;
-            CGFloat newH = maxW / MAX(ratio, 0.01);
-            // 只挡极端：高度小到看不见时按 cell 高度回算（横图走这条）
-            CGFloat floorH = MAX(cellB.size.height - CGRectGetMinY(cRect) - 4.0, 40.0);
-            if (newH < floorH) {
-                newH = floorH;
-                newW = floorH * ratio;
-                if (newW > maxW) { newW = maxW; newH = maxW / MAX(ratio, 0.01); }
-            }
-            if (newW > 20.0 && newH > 20.0
-                && (fabs(cRect.size.width - newW) > 1.0
-                    || fabs(cRect.size.height - newH) > 1.0)) {
-                container.translatesAutoresizingMaskIntoConstraints = YES;
-                iv.translatesAutoresizingMaskIntoConstraints = YES;
-                container.frame = CGRectMake(CGRectGetMinX(cRect),
-                                             CGRectGetMinY(cRect), newW, newH);
-                iv.frame = CGRectMake(0, 0, newW, newH);
-            }
+
+        // 可用高度 = cell 底 - 容器顶 - 8pt 边距；可用宽度 = cell 右 - 容器左 - 8pt
+        CGFloat availH = cellB.size.height - CGRectGetMinY(cRect) - 8.0;
+        CGFloat availW = cellB.size.width - CGRectGetMinX(cRect) - 8.0;
+        if (availH < 40.0) availH = 40.0;   // 太矮时不至于算出 0
+        if (availW < 40.0) availW = 40.0;
+
+        CGFloat ratio = im.size.width / MAX(im.size.height, 1.0);   // 宽/高
+
+        // 高度优先：先按可用高度算宽，宽超了就按宽回算
+        CGFloat newH = availH;
+        CGFloat newW = availH * ratio;
+        if (newW > availW) {
+            newW = availW;
+            newH = availW / MAX(ratio, 0.01);
+        }
+
+        if (newW > 20.0 && newH > 20.0
+            && (fabs(cRect.size.width - newW) > 1.0
+                || fabs(cRect.size.height - newH) > 1.0)) {
+            container.translatesAutoresizingMaskIntoConstraints = YES;
+            iv.translatesAutoresizingMaskIntoConstraints = YES;
+            container.frame = CGRectMake(CGRectGetMinX(cRect),
+                                         CGRectGetMinY(cRect), newW, newH);
+            iv.frame = CGRectMake(0, 0, newW, newH);
         }
     }
 

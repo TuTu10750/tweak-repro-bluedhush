@@ -1186,7 +1186,56 @@ static void r_burnFinishReview(id self, SEL _cmd) {
     if (o_burnFinishReview) o_burnFinishReview(self, _cmd);
 }
 
-// ---- slot 55: touchesEnded:withEvent:   （只留痕；按用户要求不在这里截图）
+// ---- v51 A：逃生口集合 ----
+// keep 开时我们把 touchesEnded / exitAction / popBack / finishVideo 全部掐死，
+// 全屏页就出不去了。所以挂一个双击手势：双击时把这个 VC 记进 sEscapeVcs，
+// 之后所有拦截点看到自己在集合里就放行。
+//
+// 为什么不用「关开关」的方式：HushConfig 是持久化配置，双击一下就把全局开关
+// 关掉，下次进聊天页防销毁也跟着失效了。必须只作用于当前这个 VC 实例。
+static NSMutableSet *sEscapeVcs = nil;
+static NSLock       *sEscapeLock = nil;
+
+static void HushEscapeMark(id vc) {
+    if (!vc) return;
+    @synchronized ([NSLock class]) {
+        if (!sEscapeVcs) { sEscapeVcs = [[NSMutableSet alloc] init]; }
+        if (!sEscapeLock) { sEscapeLock = [[NSLock alloc] init]; }
+        [sEscapeVcs addObject:[NSValue valueWithNonretainedObject:vc]];
+    }
+}
+
+static BOOL HushEscapeAsked(id vc) {
+    if (!vc) return NO;
+    @synchronized ([NSLock class]) {
+        if (!sEscapeVcs) return NO;
+        return [sEscapeVcs containsObject:[NSValue valueWithNonretainedObject:vc]];
+    }
+}
+
+// keep 开着 且 用户没双击 → 拦住
+static BOOL HushGuardBlock(id vc) {
+    if (!HushFlashKeepOn()) return NO;
+    if (HushEscapeAsked(vc)) return NO;
+    return YES;
+}
+
+// 双击handler：先登记逃生，再走宿主自己的退出路径。
+// exitAction / popBack / finishVideo 三个都可能，按 respondsToSelector 依次试。
+static void HushEscapeAction(id self, SEL _cmd) {
+    HushEscapeMark(self);
+    HushBurnNote([NSString stringWithFormat:
+        @"[P0-2b] ESCAPE# 双击逃生已放行 cls=%@", NSStringFromClass([self class])]);
+    if ([self respondsToSelector:NSSelectorFromString(@"exitAction")]) {
+        ((void (*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"exitAction"));
+    } else if ([self respondsToSelector:NSSelectorFromString(@"popBack")]) {
+        ((void (*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"popBack"));
+    } else if ([self respondsToSelector:NSSelectorFromString(@"finishVideo")]) {
+        ((void (*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"finishVideo"));
+    }
+}
+
+// ---- v51 A1: slot 55 touchesEnded:withEvent:  （keep 开 + 未逃生 → 吞掉）----
 static void (*o_burnTouchesEnded)(id, SEL, id, id);
 static void r_burnTouchesEnded(id self, SEL _cmd, id a0, id a1) {
     HushHit("BDAutoDestoryImageViewController", "touchesEnded:withEvent:");
@@ -1194,10 +1243,103 @@ static void r_burnTouchesEnded(id self, SEL _cmd, id a0, id a1) {
     n++;
     if (n <= 12 || (n % 10) == 0) {
         HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] BURNTEND#%d keep=%d %@", n, (int)HushFlashKeepOn(), HushBurnState(self)]);
+            @"[P0-2b] BURNTEND#%d keep=%d blocked=%d %@",
+            n, (int)HushFlashKeepOn(), (int)HushGuardBlock(self), HushBurnState(self)]);
     }
+    // v51：v50 这里是「只留痕然后照调 orig」—— 松手后宿主内部的销毁逻辑照跑，
+    // 日志里 BURNKEEP# 明明拦住了 finishReview，人还是被踢出去，就是这条没拦住。
+    if (HushGuardBlock(self)) return;
     if (o_burnTouchesEnded) o_burnTouchesEnded(self, _cmd, a0, a1);
 }
+
+// ---- v51 A3: slot 63 touchesCancelled:withEvent:  （系统手势打断时也走销毁）----
+static void (*o_burnTouchesCancelled)(id, SEL, id, id);
+static void r_burnTouchesCancelled(id self, SEL _cmd, id a0, id a1) {
+    HushHit("BDAutoDestoryImageViewController", "touchesCancelled:withEvent:");
+    static int n = 0;
+    n++;
+    if (n <= 10) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNCANCEL#%d keep=%d blocked=%d",
+            n, (int)HushFlashKeepOn(), (int)HushGuardBlock(self)]);
+    }
+    if (HushGuardBlock(self)) return;
+    if (o_burnTouchesCancelled) o_burnTouchesCancelled(self, _cmd, a0, a1);
+}
+
+// ---- v51 A2: slot 64/65/66 —— 三条退出路径全拦 ----
+static void (*o_burnExit)(id, SEL);
+static void r_burnExit(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "exitAction");
+    static int n = 0;
+    n++;
+    if (n <= 10) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNEXIT#%d which=exitAction blocked=%d",
+            n, (int)HushGuardBlock(self)]);
+    }
+    if (HushGuardBlock(self)) return;
+    if (o_burnExit) o_burnExit(self, _cmd);
+}
+
+static void (*o_burnPopBack)(id, SEL);
+static void r_burnPopBack(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "popBack");
+    static int n = 0;
+    n++;
+    if (n <= 10) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNEXIT#%d which=popBack blocked=%d",
+            n, (int)HushGuardBlock(self)]);
+    }
+    if (HushGuardBlock(self)) return;
+    if (o_burnPopBack) o_burnPopBack(self, _cmd);
+}
+
+static void (*o_burnFinishVideo)(id, SEL);
+static void r_burnFinishVideo(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "finishVideo");
+    static int n = 0;
+    n++;
+    if (n <= 10) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] BURNEXIT#%d which=finishVideo blocked=%d",
+            n, (int)HushGuardBlock(self)]);
+    }
+    if (HushGuardBlock(self)) return;
+    if (o_burnFinishVideo) o_burnFinishVideo(self, _cmd);
+}
+
+// ---- v51 A 逃生口: slot 67 viewDidLoad —— 挂双击手势 ----
+static void (*o_burnViewDidLoad)(id, SEL);
+static void r_burnViewDidLoad(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "viewDidLoad");
+    if (o_burnViewDidLoad) o_burnViewDidLoad(self, _cmd);
+    if (!HushFlashKeepOn()) return;
+    @try {
+        Class c = [self class];
+        SEL escape = NSSelectorFromString(@"hush_escapeAction");
+        if (!class_getInstanceMethod(c, escape)) {
+            class_addMethod(c, escape, (IMP)&HushEscapeAction, "v16@0:8");
+        }
+        UIViewController *vc = (UIViewController *)self;
+        UIView *v = vc.view;
+        if (!v) return;
+        // 去重：viewDidLoad 可能被调多次
+        for (UIGestureRecognizer *g in [v gestureRecognizers]) {
+            if ([g isKindOfClass:[UITapGestureRecognizer class]]
+                && ((UITapGestureRecognizer *)g).numberOfTapsRequired == 2) return;
+        }
+        UITapGestureRecognizer *tap =
+            [[UITapGestureRecognizer alloc] initWithTarget:self action:escape];
+        tap.numberOfTapsRequired = 2;
+        tap.cancelsTouchesInView = NO;   // 不吃 touches，避免和「按住查看」打架
+        [v addGestureRecognizer:tap];
+        [tap release];
+        HushBurnNote(@"[P0-2b] ESCAPEARM# 双击逃生口已挂上");
+    } @catch (__unused NSException *e) {}
+}
+
 
 // ---- slot 56: initWithFileType:sources:   ← 最上游的一站
 //
@@ -1313,19 +1455,28 @@ static void r_burnSetContentImage(id self, SEL _cmd, id img) {
     if (o_burnSetContentImage) o_burnSetContentImage(self, _cmd, img);
 }
 
-// ---- v49 D: slot 61/62 —— 敏感判定探针（只留痕，本版不拦） ----
-// 目前只抓到 content=[害羞] 这种表情消息，没抓到真正的敏感拦截，
-// 先确认松手时这两个方法有没有被调，再决定拦哪个。
+// ---- v49 D / v51 B: slot 61/62 —— 敏感判定 ----
+// v50 真机日志（19:57:07.931 / 19:57:09.383）抓到了这两个方法被真实调用：
+//   PORN#1 which=alert → VCKEEP#1 → PORN#1 which=deal → BURNINIT#1
+// 也就是说「系统检测到当前内容可能敏感，可点击取消后进行举报。确认查看吗？」
+// 这个弹框来自 alert；用户点确认后才走 deal，再实例化全屏页。
+// v51：keep 开着时把 alert 整个掐掉，点开闪照不再弹确认。
 static void (*o_pornAlert)(id, SEL, id, id);
 static void r_pornAlert(id self, SEL _cmd, id a0, id a1) {
     HushHit("BDMessageViewController", "p_showPornAlertForReceiveAutoDestroy:message:");
     static int n = 0;
     n++;
+    BOOL block = HushFlashKeepOn();
     if (n <= 10 || (n % 10) == 0) {
         HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORN#%d which=alert cell=%@ msg=%@",
+            @"[P0-2b] PORN#%d which=alert cell=%@ msg=%@ block=%d",
             n, a0 ? NSStringFromClass([a0 class]) : @"nil",
-            a1 ? NSStringFromClass([a1 class]) : @"nil"]);
+            a1 ? NSStringFromClass([a1 class]) : @"nil", (int)block]);
+    }
+    if (block) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] PORNBLOCK#%d 已拦截敏感确认框，直接放行（keep 已开）", n]);
+        return;
     }
     if (o_pornAlert) o_pornAlert(self, _cmd, a0, a1);
 }
@@ -1462,7 +1613,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 63
+#define HUSH_TARGET_COUNT 68
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -1864,6 +2015,37 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cMsgVC, s, (IMP)&r_pornDeal, "v32@0:8@16@24");
         if (strcmp(r.kind, "MISSING") != 0) o_pornDeal = (void (*)(id, SEL, id, id))r.prev;
         hush_report(62, "BDMessageViewController", "p_dealWithReceivedAutoDestroyAfterIdentifyPorn:message:", r);
+    }
+    // ---- v51 A2/A3：三条退出路径 + 触摸取消 + 双击逃生口 ----
+    if (!s_done[63]) {
+        SEL s = sel_registerName("touchesCancelled:withEvent:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnTouchesCancelled, "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnTouchesCancelled = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(63, "BDAutoDestoryImageViewController", "touchesCancelled:withEvent:", r);
+    }
+    if (!s_done[64]) {
+        SEL s = sel_registerName("exitAction");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnExit, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnExit = (void (*)(id, SEL))r.prev;
+        hush_report(64, "BDAutoDestoryImageViewController", "exitAction", r);
+    }
+    if (!s_done[65]) {
+        SEL s = sel_registerName("popBack");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnPopBack, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnPopBack = (void (*)(id, SEL))r.prev;
+        hush_report(65, "BDAutoDestoryImageViewController", "popBack", r);
+    }
+    if (!s_done[66]) {
+        SEL s = sel_registerName("finishVideo");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnFinishVideo, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnFinishVideo = (void (*)(id, SEL))r.prev;
+        hush_report(66, "BDAutoDestoryImageViewController", "finishVideo", r);
+    }
+    if (!s_done[67]) {
+        SEL s = sel_registerName("viewDidLoad");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnViewDidLoad, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_burnViewDidLoad = (void (*)(id, SEL))r.prev;
+        hush_report(67, "BDAutoDestoryImageViewController", "viewDidLoad", r);
     }
     if (!s_done[29]) {
         SEL s = sel_registerName("is_locked");
