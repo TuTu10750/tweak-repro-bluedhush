@@ -300,6 +300,8 @@ jobs:
   # ==========================================================================
   build-original-re-linux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     env:
       THEOS: ${{ github.workspace }}/theos
@@ -400,6 +402,27 @@ jobs:
       - name: Verify deployability (no substrate, metadata intact)
         run: |
           python3 ci/check_dylib.py original-re/.theos/obj/debug/arm64/BluedHushRE.dylib 76 | tee dylib-check.txt
+
+      # artifacts 走 objects.githubusercontent.com，本机网络到这个域不通，
+      # 所以额外把产物推到 artifact 分支，本地用 git fetch 取（github.com 可达）。
+      - name: Publish dylib to artifact branch
+        if: always()
+        run: |
+          set -e
+          DYLIB=original-re/.theos/obj/debug/arm64/BluedHushRE.dylib
+          [ -f "$DYLIB" ] || DYLIB=original-re/.theos/obj/debug/BluedHushRE.dylib
+          [ -f "$DYLIB" ] || { echo "no dylib produced"; exit 0; }
+          cp "$DYLIB" /tmp/BluedHushRE.dylib
+          ls -l /tmp/BluedHushRE.dylib
+          git config user.email "ci@users.noreply.github.com"
+          git config user.name  "ci"
+          git checkout --orphan pub-tmp
+          git rm -rf --cached . >/dev/null 2>&1 || true
+          cp /tmp/BluedHushRE.dylib ./BluedHushRE.dylib
+          git add -f BluedHushRE.dylib
+          git commit -q -m "artifact ${GITHUB_SHA}"
+          git push -f origin HEAD:artifact
+          echo "pushed: artifact branch @ ${GITHUB_SHA}"
 
       - name: Upload dylib + build log
         if: always()
