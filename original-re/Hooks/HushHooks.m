@@ -966,6 +966,12 @@ NSString *HushFlashMapPath(long long mid) {
 
 // v45 P3 补丁 B：下载 + 落盘全放后台队列，文件名固定 <mid>.jpg ——
 // 同一张图不论点开多少次只存一份，不会堆几十个重复大文件。
+// v48 A：HushRecallGuard.m 里导出（非 static）。
+// 之所以要跨文件调：HushRecallChatTable 与 HushModelLongLong 都是 Guard 内的
+// static，Hooks 这边拿不到；把「找表 + 比对 mid + 铺图」整段搬进 Guard，
+// 这里只传一个 mid。
+extern void HushBurnRefreshVisible(long long mid);
+
 static void HushFlashDownload(long long mid, NSString *url) {
     if (mid <= 0 || url.length == 0) return;
     NSString *dir = HushBurnDir();
@@ -974,6 +980,9 @@ static void HushFlashDownload(long long mid, NSString *url) {
                      [NSString stringWithFormat:@"%lld.jpg", mid]];
     if ([[NSFileManager defaultManager] fileExistsAtPath:dst]) {
         HushFlashMapSet(mid, url, dst);   // 已下过，直接登记
+        // v48 A：图已经在盘上，立即把可见 cell 铺一遍。
+        // 调用点（r_burnStartLoad）在主线程，不用切队列。
+        HushBurnRefreshVisible(mid);
         return;
     }
     NSURL *u = [NSURL URLWithString:url];
@@ -992,6 +1001,12 @@ static void HushFlashDownload(long long mid, NSString *url) {
             HushBurnNote([NSString stringWithFormat:
                 @"[P0-2b] BURNDL#ok mid=%lld bytes=%lu file=%@",
                 mid, (unsigned long)len, [dst lastPathComponent]]);
+            // v48 A：写盘成功即刻回主线程铺图。
+            // v47 真机 mid=23 就是死在这里 —— 图下完了，但宿主不重绘，
+            // 铺图入口永远等不到。
+            dispatch_async(dispatch_get_main_queue(), ^{
+                HushBurnRefreshVisible(mid);
+            });
         } else {
             HushBurnNote([NSString stringWithFormat:
                 @"[P0-2b] BURNDL#write-fail mid=%lld", mid]);

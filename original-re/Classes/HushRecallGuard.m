@@ -614,6 +614,26 @@ BOOL HushRecallModelWasIntercepted(id model) {
 static int sTruthDumps = 0;
 static int sShadowBatches = 0;   // v40：整批影子的丢弃次数（只报前 3 次，防刷屏）
 
+// v48 D：LEAN 去重。TRUTH 被 setMessage: 与定时巡检各调一遍，同一条消息
+// 一分钟能刷十几行 LEAN（v47 真机 60 行 TRUTH 里 30 行是重复），
+// 把真正有用的 SENS / BURN 全挤掉了。
+static BOOL HushLeanSeen(long long mid) {
+    static NSMutableSet *sSeen = nil;
+    static NSLock *sLock = nil;
+    static dispatch_once_t once;
+    dispatch_once(&once, ^{
+        sSeen = [[NSMutableSet alloc] initWithCapacity:64];
+        sLock = [[NSLock alloc] init];
+    });
+    if (mid <= 0) return NO;               // 拿不到 mid 就不去重，宁可多打
+    NSNumber *k = [NSNumber numberWithLongLong:mid];
+    [sLock lock];
+    BOOL seen = [sSeen containsObject:k];
+    if (!seen) [sSeen addObject:k];
+    [sLock unlock];
+    return seen;
+}
+
 // HushModelLongLong 拿不到字段时返回 LLONG_MIN。直接 %lld 会打出一串
 // -9223372036854775808，看着像真值 —— 必须显式区分「没有这个字段」。
 static NSString *HushNumStr(long long v) {
@@ -774,7 +794,10 @@ static void HushRecallTruthDump(id obj, const char *where) {
 
         // v45：t==24 只打关键字段。宿主给 Destory cell 的就是这个类型，
         // 打满屏的 sid/status/face/tls 全是 n/a，纯噪音。
+        // v48 D：LEAN 去重。TRUTH 一次被 setMessage: 和定时巡检各调一遍，
+        // 同一条消息一分钟能打十几行，把真正有用的 SENS/BURN 全刷没了。
         if (t == 24) {
+            if (HushLeanSeen(mid)) continue;
             [lines addObject:[NSString stringWithFormat:
                 @"[P0-2b]   m[%lu] LEAN mid=%@ t=24 img=%@ dur=%@ ctLen=%lu",
                 (unsigned long)i, HushNumStr(mid),
@@ -1439,6 +1462,34 @@ void HushRecallDecorateCell(id cell, id model) {
     if (dcCls && [cell isKindOfClass:dcCls]) burnByCell = YES;
     BOOL burnish = burnByType || burnByCell;
 
+    // v48 B：SENS 探针。
+    // v47 真机里 mid=23 下到了图（BURNDL#ok 153926B）、遮罩也压了，
+    // 但列表页显示的是「包含敏感内容」四个字 —— 六个候选层
+    // （keywordsSafetyView / commonSafetyView / vertifyView / preVertifyView /
+    //   tipLabel / longPressedView）全是 nil 或 h=1，说明这层 UI 不在
+    // BDDestoryChatCell 上。
+    // 判据：model 是闪照类型（282/24）但 cell 不是 Destory 类 —— 宿主把这条
+    // 消息换给别的 Cell 渲染了，那个 Cell 才是敏感提示的真凶。
+    if (burnByType && !burnByCell) {
+        static int sensLogs = 0;
+        sensLogs++;
+        if (sensLogs <= 20 || (sensLogs % 10) == 0) {
+            NSString *ct = HushModelString(model, @[@"content"]);
+            NSString *head = @"-";
+            if (ct.length > 0) {
+                NSUInteger n = MIN(ct.length, (NSUInteger)80);
+                head = [ct substringToIndex:n];
+            }
+            NSString *line = [NSString stringWithFormat:
+                @"[P0-2b] SENS#%d cell=%@ mid=%@ t=%@ ctLen=%lu content=%@",
+                sensLogs, NSStringFromClass([cell class]),
+                HushNumStr(HushModelLongLong(model, HushRecallIdKeys())),
+                HushNumStr(mT), (unsigned long)ct.length, head];
+            fprintf(stderr, "%s\n", [line UTF8String]);
+            [HushLogger logLevel:2 format:line];
+        }
+    }
+
     // v44 P2 → v45 P1：把这条闪照记进池子，供 BDAutoDestoryImageViewController
     // 那边用 targetUid + msgTime 反查 mid（那个 VC 身上根本没有 mid ivar）。
     if (burnish && model) {
@@ -1851,6 +1902,45 @@ static UITableView *HushRecallChatTable(void) {
     }
 
     return nil;
+}
+
+// v48 A：下载完成后的「绝杀」。
+//
+// v47 真机暴露的死角：mid=23 下完图（BURNDL#ok 153926B），但整份日志
+// 一条 BURNPAINT# 都没有 —— HushRecallDecorateCell 一次没被调，
+// HushBurnApplyImage 根本没进。原因是退出全屏后 TableView 没有重绘，
+// 宿主的 setMessage: 不跑，我们的铺图入口就永远等不到。
+//
+// 这里不等宿主：下载成功即刻在主线程把可见 cell 挨个比对 mid，
+// 命中就直接铺。
+//
+// 关键：不调 setMessage:。setMessage: 会触发宿主完整重算布局，
+// 刚撑到 189x87 的容器会被 layoutSubviews 打回 80x91，再靠我们二次撑开
+// —— 肉眼可见的抖动。直接调 HushBurnApplyImage 一步到位。
+void HushBurnRefreshVisible(long long mid) {
+    if (mid <= 0) return;
+    if (!HushFlashUnlockOn()) return;
+
+    UITableView *tv = HushRecallChatTable();
+    if (!tv) return;
+
+    int hit = 0;
+    for (UITableViewCell *c in [tv visibleCells]) {
+        id msg = nil;
+        @try { msg = [c valueForKey:@"message"]; }
+        @catch (__unused NSException *e) { msg = nil; }
+        if (!msg) continue;
+        long long m = HushModelLongLong(msg, HushRecallIdKeys());
+        if (m != mid) continue;
+        hit++;
+        HushBurnApplyImage(c, msg);
+    }
+
+    NSString *line = [NSString stringWithFormat:
+        @"[P0-2b] FORCEPAINT#%d mid=%lld visCells=%lu",
+        hit, mid, (unsigned long)[[tv visibleCells] count]];
+    fprintf(stderr, "%s\n", [line UTF8String]);
+    [HushLogger logLevel:2 format:line];
 }
 
 #pragma mark - P0-2a 探针（临时，出结论后收敛成 P0-2b）
