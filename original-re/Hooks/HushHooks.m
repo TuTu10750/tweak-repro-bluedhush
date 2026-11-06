@@ -961,20 +961,36 @@ static void HushFlashMapFlush(void) {
     if (d) [d writeToFile:f atomically:YES];
 }
 
+// v53 P1：只存文件名，不存绝对路径。
+//
+// v52 真机翻车就是因为这里把 <sandbox>/Documents/bluedbackups/burn/23.jpg
+// 整条塞进了 map.json。iOS 每次冷启动都给 App 换一个新的沙盒 UUID：
+//   /var/mobile/Containers/Data/Application/0A04AD63-.../Documents/...
+//   /var/mobile/Containers/Data/Application/4DAE7F83-.../Documents/...
+// 重启后那条绝对路径必然不存在 —— fileExistsAtPath 返回 NO，
+// HushBurnApplyImage 静默 return，一条 BURNPAINT# 都打不出来。
+//
+// 现在只存 "23.jpg"，读的时候用当时的 NSHomeDirectory() 重新拼，
+// 沙盒怎么变都对得上。
 static void HushFlashMapSet(long long mid, NSString *url, NSString *path) {
     if (mid <= 0 || url.length == 0) return;
     @synchronized (HushFlashMapLock()) {
         HushFlashMapLoad();
         NSMutableDictionary *e = [NSMutableDictionary dictionary];
         [e setObject:url forKey:@"url"];
-        if (path.length) [e setObject:path forKey:@"path"];
+        if (path.length) [e setObject:[path lastPathComponent] forKey:@"path"];
         [e setObject:@((long long)[[NSDate date] timeIntervalSince1970]) forKey:@"at"];
         [sFlashMap setObject:e forKey:[NSString stringWithFormat:@"%lld", mid]];
         HushFlashMapFlush();
     }
 }
 
-// 给 HushRecallGuard.m 的 HushBurnApplyImage 查本地图
+// 给 HushRecallGuard.m 的 HushBurnApplyImage 查本地图。
+//
+// v53 P1：返回值一律用「当前沙盒」重新拼，永远指向真实存在的那个 Documents。
+// v52 之前存的是绝对路径，冷启动后必然失效 —— 详见 HushFlashMapSet 的注释。
+// 兼容处理：老 map.json 里躺着绝对路径的条目，取 lastPathComponent 重拼即可，
+// 不需要迁移逻辑、不需要清库。
 NSString *HushFlashMapPath(long long mid) {
     if (mid <= 0) return nil;
     @synchronized (HushFlashMapLock()) {
@@ -982,8 +998,16 @@ NSString *HushFlashMapPath(long long mid) {
         NSDictionary *e = [sFlashMap objectForKey:[NSString stringWithFormat:@"%lld", mid]];
         if (![e isKindOfClass:[NSDictionary class]]) return nil;
         id p = [(NSDictionary *)e objectForKey:@"path"];
-        if (![p isKindOfClass:[NSString class]]) return nil;
-        return (NSString *)p;
+        if (![p isKindOfClass:[NSString class]] || [(NSString *)p length] == 0) return nil;
+
+        NSString *name = (NSString *)p;
+        if ([name isAbsolutePath]) {
+            // 旧数据（或将来手滑写进绝对路径）：只留文件名
+            name = [name lastPathComponent];
+        }
+        NSString *dir = HushBurnDir();
+        if (dir.length == 0 || name.length == 0) return nil;
+        return [dir stringByAppendingPathComponent:name];
     }
 }
 

@@ -996,6 +996,25 @@ static void HushNukeView(id obj) {
     v.userInteractionEnabled = NO;
 }
 
+// v53：幽灵态 —— 看不见，但还能点。
+//
+// v52 把 _destoryIconBtn 也 HushNukeView 了（userInteractionEnabled = NO），
+// 而 _destoryIconBtn 就是宿主「点击查看」按钮本体。三连击之后整颗 cell
+// 再没有任何子视图接得住触摸，点击落到 cell 背景 —— 用户看到的
+// 「点白块毫无反应」就是这个。这是 v41d 同一个坑的第二次踩
+// （当时是 hidden = YES 断 hitTest，这次连 userInteractionEnabled 一起关）。
+//
+// 幽灵态只做「视觉消失」：alpha = 0 让按钮看不见，
+// 但 hidden 保持 NO、userInteractionEnabled 保持 YES，仍然参与 hitTest。
+// 这样宿主原生的点击链路完全不受影响，我们不必自己模拟点击。
+static void HushGhostView(id obj) {
+    if (![obj isKindOfClass:[UIView class]]) return;
+    UIView *v = (UIView *)obj;
+    v.hidden = NO;
+    v.alpha = 0.0;
+    v.userInteractionEnabled = YES;
+}
+
 // v41: 闪照解锁总闸。
 //
 // 面板里「闪照转照片 / 闪文转普通消息」这两个键（switch_flash_photo /
@@ -1039,8 +1058,16 @@ static BOOL HushFlashStripOn(id model) {
     if (!model) return NO;
 
     // v50：本地已有落盘图 → 放行
+    // v53：判据从「字典里有这个 key」升级成「文件真的在盘上」。
+    // v52 真机就是死在这里的：map.json 里存的是绝对路径（带沙盒 UUID），
+    // App 冷启动后 UUID 变了，HushFlashMapPath 照样返回一个字符串、
+    // strip 照样 = 1，但 fileExistsAtPath 是 NO —— 于是拆了遮罩却铺不上图，
+    // 用户看到的就是白块。现在两个函数用同一把尺子量。
     long long mid = HushModelLongLong(model, HushRecallIdKeys());
-    if (mid > 0 && HushFlashMapPath(mid) != nil) return YES;
+    if (mid > 0) {
+        NSString *p = HushFlashMapPath(mid);
+        if (p.length > 0 && [[NSFileManager defaultManager] fileExistsAtPath:p]) return YES;
+    }
 
     // 兜底：model 自带 URL（少数场景宿主会把明文 URL 挂上来）
     return HushModelString(model, @[@"image", @"destroyUrl", @"pic_url", @"picUrl"]) != nil;
@@ -1343,6 +1370,41 @@ static void HushProbeCellTree(UIView *root, UIView *anchor) {
     }
 }
 
+// v53 P4：手势兜底用的 proxy。
+//
+// HushBurnApplyImage 是 C 函数、没有 self，不能直接当 target。
+// proxy 用 unsafe_unretained 持 cell：cell 由 tableView 持有并复用，
+// 强引用会成环，weak 在 MRC 下不可用，只能 unsafe_unretained。
+// 每次铺图都会把 targetCell 重指到当前 cell，复用那一下 cell 对象本身
+// 没有被销毁（只是换了内容），所以不会野指针。
+static UIViewController *HushRecallTopViewController(void);   // 定义在文件后半段
+
+@interface HushBurnTapProxy : NSObject
+@property (nonatomic, unsafe_unretained) id targetCell;
+@end
+
+@implementation HushBurnTapProxy
+- (void)hushHandleTap:(UITapGestureRecognizer *)g {
+    id c = self.targetCell;
+    if (!c) return;
+    id msg = HushSafeKVC(c, @"message");
+    UIViewController *vc = HushRecallTopViewController();
+    if (!vc) return;
+    @try {
+        // 优先走「大图浏览」：它不要求消息仍处于待点开态，适应性最好。
+        // showAutoDestroyImage: 只吃一个 cell 参数，留作兜底。
+        if (msg && [vc respondsToSelector:@selector(showBigImageCell:clickMsg:)]) {
+            [vc performSelector:@selector(showBigImageCell:clickMsg:)
+                     withObject:c withObject:msg];
+            return;
+        }
+        if ([vc respondsToSelector:@selector(showAutoDestroyImage:)]) {
+            [vc performSelector:@selector(showAutoDestroyImage:) withObject:c];
+        }
+    } @catch (__unused NSException *e) {}
+}
+@end
+
 void HushBurnApplyImage(id cell, id model) {
     if (!cell || !model) return;
     if (!HushFlashUnlockOn()) return;          // 面板开关关着就完全不介入
@@ -1350,12 +1412,44 @@ void HushBurnApplyImage(id cell, id model) {
     long long mid = HushModelLongLong(model, HushRecallIdKeys());
     if (mid <= 0) return;
 
+    // v53 P2：入口日志 + 三个失败点各打一条。
+    //
+    // v52 真机「改了却一行 BURNPAINT# 都没有」之所以查了两轮才定位，就是
+    // 因为下面三个 return 全是静默的。以后任何一次铺不上图，日志上直接
+    // 能看出是「映射表没这条」还是「路径失效」还是「图读不出来」。
     NSString *path = HushFlashMapPath(mid);
-    if (path.length == 0) return;
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) return;
+    UIImage *im = path.length > 0 ? [UIImage imageWithContentsOfFile:path] : nil;
+
+    static int entryLogs = 0;
+    entryLogs++;
+    BOOL logEntry = (entryLogs <= 20) || ((entryLogs % 20) == 0);
+
+    if (logEntry) {
+        HushProbeEmit([NSString stringWithFormat:
+            @"[P0-2b] BURNENTRY#%d mid=%lld path=%@ img=%@",
+            entryLogs, mid,
+            path.length ? path : @"(nil)",
+            im ? NSStringFromCGSize(im.size) : @"(nil)"]);
+    }
+    if (!im) {
+        if (logEntry) {
+            HushProbeEmit([NSString stringWithFormat:
+                @"[P0-2b] BURNMISS#%d mid=%lld why=%@ path=%@",
+                entryLogs, mid,
+                path.length == 0 ? @"nopath" : @"noload",
+                path.length ? path : @"(nil)"]);
+        }
+        return;
+    }
 
     id img = HushSafeKVC(cell, @"_bubbleImgView");
-    if (![img isKindOfClass:[UIImageView class]]) return;
+    if (![img isKindOfClass:[UIImageView class]]) {
+        if (logEntry) {
+            HushProbeEmit([NSString stringWithFormat:
+                @"[P0-2b] BURNMISS#%d mid=%lld why=noiv", entryLogs, mid]);
+        }
+        return;
+    }
     UIImageView *iv = (UIImageView *)img;
 
     // ---- v47 A / v52：绝对镇压，无条件、每次进来都干 ----
@@ -1370,26 +1464,56 @@ void HushBurnApplyImage(id cell, id model) {
     //      取的时候走 getter（HushSafeKVC 传 tipLabel），不是 _tipLabel ivar。
     //   2) 三连击（hidden + alpha + userInteraction），单改 hidden 挡不住命中测试。
     //   3) 保留 _bubbleImgView 与它的父容器不动 —— 那是我们唯一要露出来的东西。
+    // v53：_destoryIconBtn 单独走幽灵态。
+    // v52 把它一起三连击了，而它正是宿主「点击查看」按钮本体 ——
+    // userInteractionEnabled = NO 之后整颗 cell 没有可点区域，
+    // 用户点上去毫无反应。这是 v41d 同一个坑的第二次踩。
+    // 幽灵态只让它视觉消失，hidden 与交互都保留，宿主原生点击链路不受影响。
     HushNukeView(HushSafeKVC(cell, @"_destoryCellMaskView"));
-    HushNukeView(HushSafeKVC(cell, @"_destoryIconBtn"));
+    HushGhostView(HushSafeKVC(cell, @"_destoryIconBtn"));
     HushNukeView(HushSafeKVC(cell, @"_destoryAlterLab"));
     HushNukeView(HushSafeKVC(cell, @"_vertifyView"));
     HushNukeView(HushSafeKVC(cell, @"_preVertifyView"));
     HushNukeView(HushSafeKVC(cell, @"_keywordsSafetyView"));
     HushNukeView(HushSafeKVC(cell, @"tipLabel"));
 
-    // ---- v47 B：读图 ----
+    // ---- v47 B：塞图 ----
     // 判据不用 iv.tag（kHushBurnTag 挂在子 label 上，iv.tag 恒 0），
     // 也不用 iv.image != im（imageWithContentsOfFile: 每次都返回新对象，
     // 指针比较恒真，等于没去重）。比尺寸最稳。
-    UIImage *im = [UIImage imageWithContentsOfFile:path];
-    if (!im) return;
     if (!CGSizeEqualToSize(iv.image.size, im.size)) {
         @try { [iv setImage:im]; } @catch (__unused NSException *e) {}
     }
     iv.hidden = NO;
     iv.contentMode = UIViewContentModeScaleAspectFill;
     iv.clipsToBounds = YES;
+    // v53：UIImageView 默认 userInteractionEnabled = NO。
+    // 这是「点不动」的第三层原因（前两层是 _destoryIconBtn 被 nuke、
+    // 以及 iv 身上根本没有手势）。三处一起补才算真的能点。
+    iv.userInteractionEnabled = YES;
+
+    // ---- v53 P4：自己接管点击 ----
+    // 宿主的 _destoryIconBtn 位置不可控（滑动 / 重载 / 转屏都可能偏），
+    // 依赖它的原生点击不稳。挂在图自身上才是一步到位的。
+    // 用关联对象判重：cell 复用会反复进这里，不判重会越挂越多层手势，
+    // 点一下触发 N 次。
+    {
+        static char kHushTapKey;
+        HushBurnTapProxy *proxy = objc_getAssociatedObject(iv, &kHushTapKey);
+        if (![proxy isKindOfClass:[HushBurnTapProxy class]]) {
+            proxy = [[HushBurnTapProxy alloc] init];
+            objc_setAssociatedObject(iv, &kHushTapKey, proxy, OBJC_ASSOCIATION_RETAIN);
+            [proxy release];
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                initWithTarget:proxy action:@selector(hushHandleTap:)];
+            // cancelsTouchesInView = NO：别把宿主的 tableView:didSelectRow 吃掉
+            tap.cancelsTouchesInView = NO;
+            tap.numberOfTapsRequired = 1;
+            [iv addGestureRecognizer:tap];
+            [tap release];
+        }
+        proxy.targetCell = cell;
+    }
 
     // ---- v52：固定上限，只缩不放，彻底断掉反馈环 ----
     // v51 C1 拿 cell 高度当上限（availH = cellH - containerY - 8），
