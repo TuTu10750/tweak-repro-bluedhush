@@ -64,6 +64,7 @@ static UIColor *gColA, *gColB, *gColC;      // 青 / 蓝 / 紫
 static CGFloat gAlpha = 0.55;               // 面板渐变透明度
 static UIColor *gBase;                      // 面板底色（深，衬得出青蓝紫）
 static BOOL gHideFooter = YES;
+static BOOL gDimBlur = YES;
 
 static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
     if (![hex isKindOfClass:[NSString class]] || hex.length < 7) return fallback;
@@ -80,6 +81,7 @@ static NSDictionary *SkinDefaultConfig(void) {
         @"palette": @{ @"a": @"#00E5FF", @"b": @"#2F6BFF", @"c": @"#8A2BE2",
                        @"alpha": @0.55, @"base": @"#0B1020" },
         @"hide_footer": @YES,
+        @"dim_blur": @YES,
         // 页脚是自绘的，下面这些规则是给「如果哪天改成 UILabel」留的保险。
         @"rules": @[
             @{ @"match": @"contains", @"text": @"@Tinycca",         @"replace": @"", @"hide": @YES },
@@ -120,6 +122,7 @@ static void SkinLoadConfig(void) {
         if (a > 0.05 && a <= 1.0) gAlpha = a;
     }
     if ([cfg[@"hide_footer"] isKindOfClass:[NSNumber class]]) gHideFooter = [cfg[@"hide_footer"] boolValue];
+    if ([cfg[@"dim_blur"] isKindOfClass:[NSNumber class]]) gDimBlur = [cfg[@"dim_blur"] boolValue];
 
     NSArray *rs = [cfg[@"rules"] isKindOfClass:[NSArray class]] ? cfg[@"rules"] : @[];
     NSMutableArray *ok = [NSMutableArray array];
@@ -132,6 +135,7 @@ static void SkinLoadConfig(void) {
     SkinLog(@"配置生效：规则 %lu 条，配色 %@ / %@ / %@ alpha=%.2f 底 %@ 页脚%@",
             (unsigned long)gRules.count, p[@"a"] ?: @"默认", p[@"b"] ?: @"默认", p[@"c"] ?: @"默认",
             gAlpha, p[@"base"] ?: @"默认", gHideFooter ? @"隐藏" : @"保留");
+    SkinLog(@"磨砂层：%@", gDimBlur ? @"摘除" : @"保留");
 }
 
 static NSString *SkinMapText(NSString *text, BOOL *hide) {
@@ -261,6 +265,15 @@ static void SkinWalk(UIView *root, NSInteger depth) {
     if (!root || depth > 6) return;
     @try {
         SkinStyleGlass(root);
+        // 面板与详情页的底是一层 UIVisualEffectView（v15E 的崩溃栈里就有一条
+        // -[UIVisualEffectView layoutSubviews]）。它压在我们的渐变上面，
+        // 不清掉的话青蓝紫会被磨砂糊成一层灰白 —— 所以这里把它的 effect 摘掉，
+        // 只留一层极淡的底色。
+        if (gDimBlur && [root isKindOfClass:[UIVisualEffectView class]]) {
+            UIVisualEffectView *fx = (UIVisualEffectView *)root;
+            if (fx.effect) { fx.effect = nil; SkinLog(@"已摘除磨砂层 %@", NSStringFromClass([fx class])); }
+            fx.backgroundColor = [gBase colorWithAlphaComponent:0.35];
+        }
         if ([root isKindOfClass:[UILabel class]]) {
             UILabel *lb = (UILabel *)root;
             if (!lb.hidden) lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0];
