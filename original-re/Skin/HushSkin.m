@@ -75,11 +75,15 @@ static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
 static NSDictionary *SkinDefaultConfig(void) {
     return @{
         @"palette": @{ @"a": @"#00E5FF", @"b": @"#2F6BFF", @"c": @"#8A2BE2", @"alpha": @0.26 },
-        // 只按「出现即隐藏」的保守规则处理页脚三行；其余文案等你逐条给。
+        // 只按「出现即隐藏」的保守规则处理页脚那几行；其余文案等你逐条给。
+        // 页脚实际是三段独立文案（作者行 / 版本行 / 提示行），单条 format
+        // 串只是拼接来源，所以这里按各自特征分别命中，不依赖拼接结果。
         @"rules": @[
+            @{ @"match": @"contains", @"text": @"@Tinycca",        @"replace": @"", @"hide": @YES },
+            @{ @"match": @"prefix",   @"text": @"作者 ",           @"replace": @"", @"hide": @YES },
+            @{ @"match": @"prefix",   @"text": @"版本 ",           @"replace": @"", @"hide": @YES },
+            @{ @"match": @"contains", @"text": @"项（开关",        @"replace": @"", @"hide": @YES },
             @{ @"match": @"contains", @"text": @"开关改动即时写入", @"replace": @"", @"hide": @YES },
-            @{ @"match": @"contains", @"text": @"· 版本 ",          @"replace": @"", @"hide": @YES },
-            @{ @"match": @"contains", @"text": @"项（开关",         @"replace": @"", @"hide": @YES },
         ],
     };
 }
