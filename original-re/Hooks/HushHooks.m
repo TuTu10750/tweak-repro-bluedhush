@@ -1568,26 +1568,155 @@ static void r_burnSetContentImage(id self, SEL _cmd, id img) {
 //   PORN#1 which=alert → VCKEEP#1 → PORN#1 which=deal → BURNINIT#1
 // 也就是说「系统检测到当前内容可能敏感，可点击取消后进行举报。确认查看吗？」
 // 这个弹框来自 alert；用户点确认后才走 deal，再实例化全屏页。
-// v51：keep 开着时把 alert 整个掐掉，点开闪照不再弹确认。
+//
+// ── V56：不再拦截 p_showPornAlert，改成「偷 block + 静默确认」 ──────────
+//
+// v55 真机实证（21:42:19~21:42:28）：
+//   用户点了 10 次，PORN#1~#10 / PORNBLOCK#1~#16 / VCKEEP#1~#10 都在打，
+//   但 BURNINIT# / BURNSTART# 一条没有 —— BDAutoDestoryImageViewController
+//   一次都没被实例化过。
+// 原因：p_showPornAlertForReceiveAutoDestroy:message: 不是「弹个框就完了」，
+// 它自己就是「弹框 → 用户点确认 → present 全屏页」这一整条链的宿主。
+// return 不调 orig，等于把框和框后面的 present 一起掐掉，
+// 全屏页永远出不来，imageURL getter 永远拿不到明文 URL。
+//
+// 新做法（旧版插件验证过：`[Sensitive] 敏感确认弹窗拦截已装载（present 层，自动确认）`）：
+//   1. p_showPornAlert 照常放行 —— 让它把 UIAlertController 和 handler 都建出来
+//   2. 在 UIAlertAction 初始化时把「确认」那个 handler 抄一份
+//      （判据用 style == UIAlertActionStyleDefault，不依赖按钮文案）
+//   3. 拦 presentViewController: —— 框不出现，handler 真执行，全屏页正常起来
+//
+// 为什么要 2 秒窗口：gSavedConfirmBlock 是全局单例，App 里任何 alert
+// （网络错误、权限申请、版本更新）都会覆盖它。只在 p_showPornAlert 前后
+// 2 秒内接受捕获，避免拿到无关弹框的 handler。
+
+static id            gSavedConfirmAction = nil;   // retain 持有，用完 release
+static id            gSavedConfirmBlock  = nil;   // handler 的 copy
+static NSTimeInterval gPornWindowUntil  = 0.0;
+
+static void HushPornWindowOpen(void) {
+    gPornWindowUntil = [NSDate timeIntervalSinceReferenceDate] + 2.0;
+}
+
+static BOOL HushPornWindowActive(void) {
+    return gPornWindowUntil > 0.0
+        && [NSDate timeIntervalSinceReferenceDate] <= gPornWindowUntil;
+}
+
+static void HushCaptureConfirmAction(id action, void *handlerPtr) {
+    if (!action || !handlerPtr) return;
+    if (!HushPornWindowActive()) return;
+    if (![action isKindOfClass:[UIAlertAction class]]) return;
+    if ([(UIAlertAction *)action style] != UIAlertActionStyleDefault) return;
+
+    // 同一个 action 会被 actionWithTitle: 和 initWithTitle: 各报一次
+    // （构造器内部就是 alloc+init，返回的是同一个对象），只认第一次。
+    if (gSavedConfirmAction == action && gSavedConfirmBlock) return;
+
+    void (^handler)(UIAlertAction *) = (void (^)(UIAlertAction *))handlerPtr;
+
+    if (gSavedConfirmBlock)  { [(id)gSavedConfirmBlock release];  gSavedConfirmBlock  = nil; }
+    if (gSavedConfirmAction) { [(id)gSavedConfirmAction release]; gSavedConfirmAction = nil; }
+    gSavedConfirmBlock  = [handler copy];
+    gSavedConfirmAction = [action retain];
+
+    HushBurnNote([NSString stringWithFormat:
+        @"[P0-2b] PORNGRAB# ok title=%@ style=%ld",
+        [(UIAlertAction *)action title] ?: @"", (long)[(UIAlertAction *)action style]]);
+}
+
+// slot 68：+[UIAlertAction actionWithTitle:style:handler:]（类方法，走 metaClass）
+static id (*o_alertActionNew)(id, SEL, NSString *, long, id);
+static id r_alertActionNew(id self, SEL _cmd, NSString *t, long st, id h) {
+    id r = o_alertActionNew ? o_alertActionNew(self, _cmd, t, st, h) : nil;
+    HushCaptureConfirmAction(r, (void *)h);
+    return r;
+}
+
+// slot 69：-[UIAlertAction initWithTitle:style:handler:]（指定初始化器）
+static id (*o_alertActionInit)(id, SEL, NSString *, long, id);
+static id r_alertActionInit(id self, SEL _cmd, NSString *t, long st, id h) {
+    id r = o_alertActionInit ? o_alertActionInit(self, _cmd, t, st, h) : self;
+    HushCaptureConfirmAction(r, (void *)h);
+    return r;
+}
+
+// slot 70：-[UIViewController presentViewController:animated:completion:]
+// 这是 UIKit 超热路径（每次弹任何页面都进），判据必须窄：
+// 必须是 HushPornBlockOn() 且是 alert 类，且文案命中。
+static void (*o_presentVc)(id, SEL, id, BOOL, id);
+static void r_presentVc(id self, SEL _cmd, UIViewController *vc, BOOL anim, id comp) {
+    if (vc && HushPornBlockOn()) {
+        // v56：类名兜一层 —— 万一宿主换成自绘 alert 的子类也能命中；
+        // 真正的判据还是下面的 title/message 文案。
+        BOOL looksAlert = [vc isKindOfClass:[UIAlertController class]]
+            || [NSStringFromClass([vc class]) containsString:@"Alert"];
+
+        if (looksAlert) {
+            NSString *t = @"";
+            NSString *m = @"";
+            if ([vc isKindOfClass:[UIAlertController class]]) {
+                UIAlertController *ac = (UIAlertController *)vc;
+                t = [ac title] ?: @"";
+                m = [ac message] ?: @"";
+            } else {
+                @try { t = [vc valueForKey:@"title"] ?: @""; } @catch (__unused NSException *e) { }
+                @try { m = [vc valueForKey:@"message"] ?: @""; } @catch (__unused NSException *e) { }
+            }
+
+            BOOL hit = [t containsString:@"温馨提示"]
+                    || [m containsString:@"敏感"]
+                    || [m containsString:@"确认查看"];
+
+            if (hit && gSavedConfirmBlock) {
+                void (^blk)(UIAlertAction *) = (void (^)(UIAlertAction *))gSavedConfirmBlock;
+                UIAlertAction *act = (UIAlertAction *)gSavedConfirmAction;
+
+                // 先摘引用再执行，防止 handler 内部又触发一次 present
+                [(id)gSavedConfirmBlock release];
+                gSavedConfirmBlock = nil;
+
+                HushBurnNote([NSString stringWithFormat:
+                    @"[P0-2b] PORNCLICK# 静默执行确认 block（不弹框）act=%@",
+                    act ? NSStringFromClass([act class]) : @"-"]);
+
+                if (act) {
+                    @try { blk(act); }
+                    @catch (NSException *e) {
+                        HushBurnNote([NSString stringWithFormat:
+                            @"[P0-2b] PORNCLICK# block 抛异常 %@", [e name]]);
+                    }
+                    [(id)act release];
+                } else {
+                    gSavedConfirmAction = nil;
+                }
+                gSavedConfirmAction = nil;
+                return;   // 不 present
+            }
+
+            if (hit) {
+                HushBurnNote(@"[P0-2b] PORNCLICK# 未拿到 block，降级放行弹框");
+            }
+        }
+    }
+    if (o_presentVc) o_presentVc(self, _cmd, vc, anim, comp);
+}
+
 static void (*o_pornAlert)(id, SEL, id, id);
 static void r_pornAlert(id self, SEL _cmd, id a0, id a1) {
     HushHit("BDMessageViewController", "p_showPornAlertForReceiveAutoDestroy:message:");
     static int n = 0;
     n++;
-    // v52：闸门换成 HushPornBlockOn()（purify_sensitive || flash_photo || flash_text）。
-    // v51 用的是 HushFlashKeepOn()，用户开「闪文转普通消息」时它是 NO，拦不住。
-    BOOL block = HushPornBlockOn();
+    HushPornWindowOpen();          // v56：开捕获窗口，给宿主编 alert 留 2 秒
+
     if (n <= 10 || (n % 10) == 0) {
         HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORN#%d which=alert cell=%@ msg=%@ block=%d",
+            @"[P0-2b] PORN#%d which=alert cell=%@ msg=%@ block=%d window=1",
             n, a0 ? NSStringFromClass([a0 class]) : @"nil",
-            a1 ? NSStringFromClass([a1 class]) : @"nil", (int)block]);
+            a1 ? NSStringFromClass([a1 class]) : @"nil",
+            (int)HushPornBlockOn()]);
     }
-    if (block) {
-        HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORNBLOCK#%d 已拦截敏感确认框，直接放行（净化/闪照已开）", n]);
-        return;
-    }
+    // v56：一律放行。返回 early 会把「框 → 确认 → present 全屏页」整条链掐断。
     if (o_pornAlert) o_pornAlert(self, _cmd, a0, a1);
 }
 
@@ -1596,21 +1725,14 @@ static void r_pornDeal(id self, SEL _cmd, id a0, id a1) {
     HushHit("BDMessageViewController", "p_dealWithReceivedAutoDestroyAfterIdentifyPorn:message:");
     static int n = 0;
     n++;
-    // v52：deal 也要拦。v51 只拦了 alert，真机日志里 PORN#1 which=deal
-    // 是唯一的入口（alert 早被点过「确认」了），结果一路走到实例化全屏页。
-    // 拦 deal 的语义是：服务器哪怕判了敏感，本地也不做任何销毁/特殊处理，
-    // 让图片按普通路径完整渲染。
-    BOOL block = HushPornBlockOn();
+    // v52 这里也是 return，同样会断链（v51 真机：PORN#1 which=deal 是唯一入口）。
+    // v56 一并改回放行 —— 我们的目标不是「不做销毁」，而是「先拿到图再洗白」。
     if (n <= 10 || (n % 10) == 0) {
         HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORN#%d which=deal cell=%@ msg=%@ block=%d",
+            @"[P0-2b] PORN#%d which=deal cell=%@ msg=%@ block=%d pass=1",
             n, a0 ? NSStringFromClass([a0 class]) : @"nil",
-            a1 ? NSStringFromClass([a1 class]) : @"nil", (int)block]);
-    }
-    if (block) {
-        HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORNBLOCK#%d which=deal 已拦截敏感处理，直接放行", n]);
-        return;
+            a1 ? NSStringFromClass([a1 class]) : @"nil",
+            (int)HushPornBlockOn()]);
     }
     if (o_pornDeal) o_pornDeal(self, _cmd, a0, a1);
 }
@@ -1733,7 +1855,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 68
+#define HUSH_TARGET_COUNT 71
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -2217,6 +2339,49 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cEngine, s, (IMP)&r_checkBlockPkg, "B24@0:8@16");
         if (strcmp(r.kind, "MISSING") != 0) o_checkBlockPkg = (BOOL (*)(id, SEL, id))r.prev;
         hush_report(37, "GJIMEngine", "p_checkIfNeedBlockPackage:", r);
+    }
+
+    // ── V56：偷 UIAlertAction 的确认 handler，静默执行并吞掉弹框 ──────────
+    // 68: +[UIAlertAction actionWithTitle:style:handler:]   ← 类方法，走 metaClass
+    // 69: -[UIAlertAction initWithTitle:style:handler:]      ← 指定初始化器
+    // 70: -[UIViewController presentViewController:animated:completion:]
+    if (!s_done[68]) {
+        s_done[68] = YES;
+        Class cAlertAction = hush_resolve_class("UIAlertAction");
+        if (cAlertAction) {
+            SEL s = sel_registerName("actionWithTitle:style:handler:");
+            hush_installed r = hush_install_impl(object_getClass(cAlertAction), s,
+                                                 (IMP)&r_alertActionNew,
+                                                 "@32@0:8@16q24@?32");
+            if (strcmp(r.kind, "MISSING") != 0)
+                o_alertActionNew = (id (*)(id, SEL, NSString *, long, id))r.prev;
+            hush_report(68, "UIAlertAction", "+actionWithTitle:style:handler:", r);
+        }
+    }
+    if (!s_done[69]) {
+        s_done[69] = YES;
+        Class cAlertAction = hush_resolve_class("UIAlertAction");
+        if (cAlertAction) {
+            SEL s = sel_registerName("initWithTitle:style:handler:");
+            hush_installed r = hush_install_impl(cAlertAction, s,
+                                                 (IMP)&r_alertActionInit,
+                                                 "@32@0:8@16q24@?32");
+            if (strcmp(r.kind, "MISSING") != 0)
+                o_alertActionInit = (id (*)(id, SEL, NSString *, long, id))r.prev;
+            hush_report(69, "UIAlertAction", "initWithTitle:style:handler:", r);
+        }
+    }
+    if (!s_done[70]) {
+        s_done[70] = YES;
+        Class cVC = hush_resolve_class("UIViewController");
+        if (cVC) {
+            SEL s = sel_registerName("presentViewController:animated:completion:");
+            hush_installed r = hush_install_impl(cVC, s, (IMP)&r_presentVc,
+                                                 "v40@0:8@16B24@?32");
+            if (strcmp(r.kind, "MISSING") != 0)
+                o_presentVc = (void (*)(id, SEL, id, BOOL, id))r.prev;
+            hush_report(70, "UIViewController", "presentViewController:animated:completion:", r);
+        }
     }
 
     // Only summarise once every target has reached a final state, so the line the
