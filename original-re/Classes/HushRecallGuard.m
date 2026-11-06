@@ -2143,8 +2143,20 @@ void HushBurnRefreshVisible(long long mid, NSString *url) {
     // HushRecallChatTable() 直接 nil，函数静默 return，FORCEPAINT# 一条不出。
     // 改成先从 keyWindow 暴力找表（全屏页是 presented 出来的，聊天表还在
     // 底下那个 window 的视图树里），再把旧路径当兜底。
+    // v58：v57 真机实证 FORCEPAINT-MISS mid=28 win=1 top=BDAutoDestoryImageViewController
+    // —— keyWindow 拿到的是全屏页所在那个 window，聊天表在下面那一层。
+    // 改成遍历全部 window，逐个找 BDMessageTableView，找到就停。
     UIWindow *win = HushRecallKeyWindow();
-    UITableView *tv = win ? HushFindMsgTable(win, 10, 2000) : nil;
+    UITableView *tv = nil;
+    NSArray *allWins = nil;
+    @try { allWins = [[UIApplication sharedApplication] windows]; }
+    @catch (__unused NSException *e) { allWins = nil; }
+    for (UIWindow *w in allWins) {
+        if (![w isKindOfClass:[UIWindow class]]) continue;
+        tv = HushFindMsgTable(w, 10, 2000);
+        if (tv) break;
+    }
+    if (!tv && win) tv = HushFindMsgTable(win, 10, 2000);
     if (!tv) tv = HushRecallChatTable();
     if (!tv) {
         NSString *miss = [NSString stringWithFormat:

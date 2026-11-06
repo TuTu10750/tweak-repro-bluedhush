@@ -1237,6 +1237,10 @@ static void r_burnStartLoad(id self, SEL _cmd) {
     if (mid > 0 && u.length >= 8) {
         HushBurnNote([NSString stringWithFormat:
             @"[P0-2b] BURNGRAB mid=%lld url=%@", mid, u]);
+        // v58：给「退出全屏后洗白」留一份上下文
+        gLastBurnMid = mid;
+        if (gLastBurnUrl) { [gLastBurnUrl release]; gLastBurnUrl = nil; }
+        gLastBurnUrl = [u copy];
         HushFlashDownload(mid, u);
     } else {
         HushBurnNote([NSString stringWithFormat:
@@ -1260,7 +1264,8 @@ static void r_burnCountDown(id self, SEL _cmd) {
     if (HushFlashKeepOn()) {
         static int n = 0;
         n++;
-        if (n <= 10 || (n % 10) == 0) {
+        // v58：宿主每 100ms 调一次，之前 %10 会刷出 60+ 条，改 %100
+        if (n <= 10 || (n % 100) == 0) {
             HushBurnNote([NSString stringWithFormat:
                 @"[P0-2b] BURNSTOP#%d countDown 已拦，倒计时不跑", n]);
         }
@@ -1328,18 +1333,38 @@ static BOOL HushGuardBlock(id vc) {
     return YES;
 }
 
-// 双击handler：先登记逃生，再走宿主自己的退出路径。
-// exitAction / popBack / finishVideo 三个都可能，按 respondsToSelector 依次试。
+// v58：单击退出手势的 handler。
+//
+// 用户要的行为是：松手之后照片挂在全屏 → 再点一下 → 退出全屏 →
+// 聊天列表里那张变成普通照片。
+//
+// 所以这里不走宿主的 exitAction / popBack / finishVideo
+// （v57 真机三个的日志全是 0 条，用户点的返回根本没到它们），
+// 而是自己 dismiss，然后在转场结束后主动触发一次洗白。
+// 延迟 0.45 秒是因为 dismiss 动画期间聊天表的 visibleCells 还是旧的，
+// 太早调会拿到正在销毁的全屏页。
 static void HushEscapeAction(id self, SEL _cmd) {
     HushEscapeMark(self);
+
+    long long mid = gLastBurnMid;
+    NSString *url = gLastBurnUrl ? [gLastBurnUrl retain] : nil;
+
     HushBurnNote([NSString stringWithFormat:
-        @"[P0-2b] ESCAPE# 双击逃生已放行 cls=%@", NSStringFromClass([self class])]);
-    if ([self respondsToSelector:NSSelectorFromString(@"exitAction")]) {
-        ((void (*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"exitAction"));
-    } else if ([self respondsToSelector:NSSelectorFromString(@"popBack")]) {
-        ((void (*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"popBack"));
-    } else if ([self respondsToSelector:NSSelectorFromString(@"finishVideo")]) {
-        ((void (*)(id, SEL))objc_msgSend)(self, NSSelectorFromString(@"finishVideo"));
+        @"[P0-2b] ESCAPE# 单击退出 cls=%@ mid=%lld urlLen=%lu",
+        NSStringFromClass([self class]), mid, (unsigned long)[url length]]);
+
+    UIViewController *vc = (UIViewController *)self;
+    @try { [vc dismissViewControllerAnimated:NO completion:nil]; }
+    @catch (__unused NSException *e) { }
+
+    if (mid > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.45 * NSEC_PER_SEC)),
+                       dispatch_get_main_queue(), ^{
+            HushBurnRefreshVisible(mid, url);
+            if (url) [url release];
+        });
+    } else if (url) {
+        [url release];
     }
 }
 
@@ -1418,34 +1443,70 @@ static void r_burnFinishVideo(id self, SEL _cmd) {
     if (o_burnFinishVideo) o_burnFinishVideo(self, _cmd);
 }
 
-// ---- v51 A 逃生口: slot 67 viewDidLoad —— 挂双击手势 ----
-static void (*o_burnViewDidLoad)(id, SEL);
-static void r_burnViewDidLoad(id self, SEL _cmd) {
-    HushHit("BDAutoDestoryImageViewController", "viewDidLoad");
-    if (o_burnViewDidLoad) o_burnViewDidLoad(self, _cmd);
+// ---- v58 逃生口：单击退出（viewDidLoad + viewDidAppear 两处兜底）----
+//
+// v57 真机：viewDidLoad 的 hook 装上了（日志有 hook own ... viewDidLoad），
+// 但 ESCAPEARM# 一条没打 —— 因为 viewDidLoad 时刻 vc.view 很可能还在构建。
+// 所以改成两处都挂：viewDidLoad 先试，viewDidAppear 再兜一次，
+// 去重逻辑保证只挂一个。
+static void HushArmEscape(id self, const char *where) {
+    if (!self) return;
     if (!HushFlashKeepOn()) return;
+
     @try {
         Class c = [self class];
         SEL escape = NSSelectorFromString(@"hush_escapeAction");
         if (!class_getInstanceMethod(c, escape)) {
             class_addMethod(c, escape, (IMP)&HushEscapeAction, "v16@0:8");
         }
+
         UIViewController *vc = (UIViewController *)self;
         UIView *v = vc.view;
-        if (!v) return;
-        // 去重：viewDidLoad 可能被调多次
+        if (!v) {
+            HushBurnNote([NSString stringWithFormat:
+                @"[P0-2b] ESCAPEARM# skip=noview from=%s", where]);
+            return;
+        }
+
         for (UIGestureRecognizer *g in [v gestureRecognizers]) {
             if ([g isKindOfClass:[UITapGestureRecognizer class]]
-                && ((UITapGestureRecognizer *)g).numberOfTapsRequired == 2) return;
+                && ((UITapGestureRecognizer *)g).numberOfTapsRequired == 1) {
+                HushBurnNote([NSString stringWithFormat:
+                    @"[P0-2b] ESCAPEARM# skip=dup from=%s", where]);
+                return;
+            }
         }
+
+        // 1 tap：按住查看是 3 秒长按，不会被识别成 tap；
+        // 松手后图还挂着，此时轻点一下才算 tap —— 正好是用户要的交互。
         UITapGestureRecognizer *tap =
             [[UITapGestureRecognizer alloc] initWithTarget:self action:escape];
-        tap.numberOfTapsRequired = 2;
-        tap.cancelsTouchesInView = NO;   // 不吃 touches，避免和「按住查看」打架
+        tap.numberOfTapsRequired = 1;
+        tap.cancelsTouchesInView = NO;   // 不抢宿主自己的 touches 处理
         [v addGestureRecognizer:tap];
         [tap release];
-        HushBurnNote(@"[P0-2b] ESCAPEARM# 双击逃生口已挂上");
-    } @catch (__unused NSException *e) {}
+
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] ESCAPEARM# 单击退出手势已挂上 from=%s", where]);
+    } @catch (NSException *e) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] ESCAPEARM# throw=%s from=%s",
+            [[e name] UTF8String] ?: "?", where]);
+    }
+}
+
+static void (*o_burnViewDidLoad)(id, SEL);
+static void r_burnViewDidLoad(id self, SEL _cmd) {
+    HushHit("BDAutoDestoryImageViewController", "viewDidLoad");
+    if (o_burnViewDidLoad) o_burnViewDidLoad(self, _cmd);
+    HushArmEscape(self, "viewDidLoad");
+}
+
+static void (*o_burnViewDidAppear)(id, SEL, BOOL);
+static void r_burnViewDidAppear(id self, SEL _cmd, BOOL animated) {
+    HushHit("BDAutoDestoryImageViewController", "viewDidAppear:");
+    if (o_burnViewDidAppear) o_burnViewDidAppear(self, _cmd, animated);
+    HushArmEscape(self, "viewDidAppear");
 }
 
 
@@ -1772,7 +1833,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 68
+#define HUSH_TARGET_COUNT 69
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -2256,6 +2317,15 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cEngine, s, (IMP)&r_checkBlockPkg, "B24@0:8@16");
         if (strcmp(r.kind, "MISSING") != 0) o_checkBlockPkg = (BOOL (*)(id, SEL, id))r.prev;
         hush_report(37, "GJIMEngine", "p_checkIfNeedBlockPackage:", r);
+    }
+
+    if (!s_done[68]) {
+        s_done[68] = YES;
+        SEL s = sel_registerName("viewDidAppear:");
+        hush_installed r = hush_install_impl(cBurn, s, (IMP)&r_burnViewDidAppear, "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_burnViewDidAppear = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(68, "BDAutoDestoryImageViewController", "viewDidAppear:", r);
     }
 
     // Only summarise once every target has reached a final state, so the line the
