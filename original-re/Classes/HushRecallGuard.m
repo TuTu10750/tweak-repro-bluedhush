@@ -1046,7 +1046,7 @@ void HushAutoDestroyUnlock(id cell, id model) {
             model ? NSStringFromClass([model class]) : @"nil",
             HushNumStr(midRaw),
             HushNumStr(tRaw), HushNumStr(mtRaw), HushNumStr(t),
-            byType ? @"type282" : (byCell ? @"destoryCell" : @"isMask"),
+            byType ? @"type" : (byCell ? @"destoryCell" : @"isMask"),
             unlockOn ? 1 : 0, strip ? 1 : 0,
             HushSafeKVC(cell, @"_destoryCellMaskView") ? @"y" : @"n",
             HushSafeKVC(cell, @"_bubbleImgView") ? @"y" : @"n",
@@ -1192,6 +1192,93 @@ extern NSString *HushFlashMapPath(long long mid);
 //
 // 前置：HushHooks.m 的 startLoadingResource hook 已经在点开那一刻把
 //   明文 imageURL 抓下来、下载到 Documents/bluedbackups/burn/<mid>.jpg。
+// v46 C：把 cell 整棵子树打出来 —— 目标是把盖在 _bubbleImgView 上的那层揪出来。
+//
+// v45 上机现象：图确实塞进 _bubbleImgView（BURNPAINT# size=1215x1620），
+// 但屏幕上被一层写着「包含敏感内容」的白块压住。sel_index 实证
+// BDDestoryChatCell 身上有 keywordsSafetyView / p_setupSafetyTipView: /
+// p_showPornAlert / p_dealAfterIdentifyPorn / openSafetyTipLink: 一整套内容
+// 安全 UI —— v45 只隐藏了遮罩三件套，安全层一个没碰。
+// 这次不猜，把状态和遮挡关系一次打全。
+static void HushProbeCellTreeWalk(UIView *v, UIView *root, UIView *anchor,
+                                  CGRect anchorRect, int depth, int maxDepth,
+                                  int *nodes, NSMutableArray *lines) {
+    if (!v || depth > maxDepth || !nodes || *nodes >= 160) return;
+    (*nodes)++;
+
+    BOOL vis = (v.hidden == NO && v.alpha > 0.01f
+                && v.frame.size.width > 0.5f && v.frame.size.height > 0.5f);
+    BOOL isAnchor = (v == anchor);
+
+    if (vis || isAnchor) {
+        NSString *mark = @"";
+        if (isAnchor) {
+            mark = @" <ANCHOR>";
+        } else if (vis && anchorRect.size.width > 0.5f) {
+            CGRect r = [v convertRect:v.bounds toView:root];
+            if (CGRectIntersectsRect(r, anchorRect)
+                && r.size.width  >= anchorRect.size.width  * 0.5f
+                && r.size.height >= anchorRect.size.height * 0.5f) {
+                mark = @" <COVER>";
+            }
+        }
+        NSMutableString *pad = [NSMutableString string];
+        for (int i = 0; i < depth && i < 8; i++) [pad appendString:@"  "];
+        [lines addObject:[NSString stringWithFormat:
+            @"[P0-2b]   d%d%@<%@>%@ f=(%.0f,%.0f,%.0f,%.0f) h=%d a=%.2f tag=%ld",
+            depth, pad, NSStringFromClass([v class]), mark,
+            v.frame.origin.x, v.frame.origin.y,
+            v.frame.size.width, v.frame.size.height,
+            v.hidden ? 1 : 0, v.alpha, (long)v.tag]];
+    }
+    for (UIView *sv in v.subviews) {
+        HushProbeCellTreeWalk(sv, root, anchor, anchorRect,
+                              depth + 1, maxDepth, nodes, lines);
+    }
+}
+
+static void HushProbeCellTree(UIView *root, UIView *anchor) {
+    if (!root) return;
+
+    // 先无条件打六个候选层的状态 —— 有没有值、显不显示，一行看完
+    NSArray *keys = @[ @"_keywordsSafetyView", @"_commonSafetyView",
+                       @"_vertifyView", @"_preVertifyView",
+                       @"_tipLabel", @"_longPressedView" ];
+    NSMutableString *sm = [NSMutableString string];
+    for (NSString *k in keys) {
+        id v = HushSafeKVC(root, k);
+        if ([v isKindOfClass:[UIView class]]) {
+            UIView *uv = (UIView *)v;
+            [sm appendFormat:@" %@=<%@> h=%d a=%.2f f=(%.0f,%.0f,%.0f,%.0f)",
+             [k substringFromIndex:1], NSStringFromClass([v class]),
+             uv.hidden ? 1 : 0, uv.alpha,
+             uv.frame.origin.x, uv.frame.origin.y,
+             uv.frame.size.width, uv.frame.size.height];
+        } else {
+            [sm appendFormat:@" %@=nil", [k substringFromIndex:1]];
+        }
+    }
+    NSString *hdr = [NSString stringWithFormat:
+        @"[P0-2b] TREE root=<%@> f=(%.0f,%.0f,%.0f,%.0f) SAFE%@",
+        NSStringFromClass([root class]),
+        root.frame.origin.x, root.frame.origin.y,
+        root.frame.size.width, root.frame.size.height, sm];
+    fprintf(stderr, "%s\n", [hdr UTF8String]);
+    [HushLogger logLevel:2 format:hdr];
+
+    CGRect ar = CGRectNull;
+    if (anchor && anchor != root) {
+        ar = [anchor convertRect:anchor.bounds toView:root];
+    }
+    NSMutableArray *lines = [NSMutableArray array];
+    int nodes = 0;
+    HushProbeCellTreeWalk(root, root, anchor, ar, 0, 5, &nodes, lines);
+    for (NSString *l in lines) {
+        fprintf(stderr, "%s\n", [l UTF8String]);
+        [HushLogger logLevel:2 format:l];
+    }
+}
+
 void HushBurnApplyImage(id cell, id model) {
     if (!cell || !model) return;
     if (!HushFlashUnlockOn()) return;          // 面板开关关着就完全不介入
@@ -1205,14 +1292,23 @@ void HushBurnApplyImage(id cell, id model) {
 
     id img = HushSafeKVC(cell, @"_bubbleImgView");
     if (![img isKindOfClass:[UIImageView class]]) return;
+    UIImageView *iv = (UIImageView *)img;
+
+    // ---- v46 A：已经铺过就直接返回 ----
+    // v45 实测：一次 DecorateCell 会被 setMessage: 和 visibleCells 巡检各调
+    // 一次（LEAN 每条都成对出现），BURNPAINT 十几秒连打 8 条，每次都在重读
+    // 文件 + 重建 UIImage + setImage: 触发布局。
+    // 判据不能用 iv.tag —— kHushBurnTag 挂在子 label 上，iv.tag 恒为 0。
+    if (iv.image != nil && [iv viewWithTag:kHushBurnTag] != nil) return;
 
     UIImage *im = [UIImage imageWithContentsOfFile:path];
     if (!im) return;
 
-    UIImageView *iv = (UIImageView *)img;
-    // 宿主没给这张图算过尺寸（它原本是「按住才能看」的占位），直接塞会把
-    // 气泡撑爆 / 压扁。AspectFill + clipsToBounds 是唯一稳妥的组合。
-    iv.contentMode = UIViewContentModeScaleAspectFill;
+    // ---- v46 B：AspectFit ----
+    // v45 用 AspectFill，1215x1620 的竖图塞进宿主按占位算的扁框里只剩中间
+    // 一条缝。Destory cell 身上没有任何 imageHeight/Width 约束（sel_index
+    // 实证），撑开气泡得另找宿主算 cell 高度的地方 —— 那是 V47。
+    iv.contentMode = UIViewContentModeScaleAspectFit;
     iv.clipsToBounds = YES;
     @try { [iv setImage:im]; } @catch (__unused NSException *e) {}
     iv.hidden = NO;
@@ -1233,7 +1329,7 @@ void HushBurnApplyImage(id cell, id model) {
     UILabel *mark = nil;
     @try { mark = (UILabel *)[iv viewWithTag:kHushBurnTag]; }
     @catch (__unused NSException *e) { mark = nil; }
-    if (!mark) {
+    if (!mark || ![mark isKindOfClass:[UILabel class]]) {
         mark = [[UILabel alloc] initWithFrame:CGRectZero];
         mark.tag = kHushBurnTag;
         mark.text = @"闪照";
@@ -1253,7 +1349,6 @@ void HushBurnApplyImage(id cell, id model) {
     mf.origin.x = 4.0;
     mf.origin.y = 4.0;
     mark.frame = mf;
-    mark.hidden = NO;
 
     static int paintLogs = 0;
     paintLogs++;
@@ -1264,6 +1359,11 @@ void HushBurnApplyImage(id cell, id model) {
             im.size.width, im.size.height, [path lastPathComponent]];
         fprintf(stderr, "%s\n", [line UTF8String]);
         [HushLogger logLevel:2 format:line];
+    }
+
+    // v46 C：铺图成功后扫一次子树，找 <COVER>
+    if (paintLogs <= 2) {
+        HushProbeCellTree((UIView *)cell, iv);
     }
 }
 
