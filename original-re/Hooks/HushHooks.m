@@ -782,8 +782,24 @@ static BOOL HushFlashKeepOn(void) {
     // 用户无论怎么点都开不了，isEnabled: 永远走 defBool=0。
     // v48 日志 BURNTEND#1 keep=0 就是铁证：用户以为开着，实际是死的。
     // 现在让它跟随「闪照转照片」：开了闪照解锁就等于开了防销毁。
-    if ([[HushConfig shared] isEnabled:@"switch_flash_keep"]) return YES;
-    return [[HushConfig shared] isEnabled:@"switch_flash_photo"];
+    // v52：再接一个「闪文转普通消息」。v51 真机日志里 unlock=1（说明闪照逻辑
+    // 认了）但 ESCAPEARM# / BURNTEND# / BURNEXIT# 全是 0 条 —— 因为用户开的是
+    // 「闪文转普通消息」，而这里只 OR 了 switch_flash_keep 与 switch_flash_photo，
+    // keep 一直是 NO，防销毁 A1/A2/A3 整段都是死代码。三个都 OR 上，谁开都算。
+    if ([[HushConfig shared] isEnabled:@"switch_flash_keep"])  return YES;
+    if ([[HushConfig shared] isEnabled:@"switch_flash_photo"]) return YES;
+    return [[HushConfig shared] isEnabled:@"switch_flash_text"];
+}
+
+// v52 A：敏感确认框的闸门。
+// 用户拍板：宁可宽，不要漏。开了「敏感内容优化」就拦；就算没开，
+// 只要开了「闪照转照片」或「闪文转普通消息」，同样拦 —— 因为这说明
+// 他就是想把闪照当普通图看，那个「系统检测到当前内容可能敏感」的
+// 二次确认框纯属添堵。
+static BOOL HushPornBlockOn(void) {
+    if ([[HushConfig shared] isEnabled:@"purify_sensitive"])   return YES;
+    if ([[HushConfig shared] isEnabled:@"switch_flash_photo"]) return YES;
+    return [[HushConfig shared] isEnabled:@"switch_flash_text"];
 }
 
 static void HushBurnNote(NSString *line) {
@@ -1466,7 +1482,9 @@ static void r_pornAlert(id self, SEL _cmd, id a0, id a1) {
     HushHit("BDMessageViewController", "p_showPornAlertForReceiveAutoDestroy:message:");
     static int n = 0;
     n++;
-    BOOL block = HushFlashKeepOn();
+    // v52：闸门换成 HushPornBlockOn()（purify_sensitive || flash_photo || flash_text）。
+    // v51 用的是 HushFlashKeepOn()，用户开「闪文转普通消息」时它是 NO，拦不住。
+    BOOL block = HushPornBlockOn();
     if (n <= 10 || (n % 10) == 0) {
         HushBurnNote([NSString stringWithFormat:
             @"[P0-2b] PORN#%d which=alert cell=%@ msg=%@ block=%d",
@@ -1475,7 +1493,7 @@ static void r_pornAlert(id self, SEL _cmd, id a0, id a1) {
     }
     if (block) {
         HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORNBLOCK#%d 已拦截敏感确认框，直接放行（keep 已开）", n]);
+            @"[P0-2b] PORNBLOCK#%d 已拦截敏感确认框，直接放行（净化/闪照已开）", n]);
         return;
     }
     if (o_pornAlert) o_pornAlert(self, _cmd, a0, a1);
@@ -1486,11 +1504,21 @@ static void r_pornDeal(id self, SEL _cmd, id a0, id a1) {
     HushHit("BDMessageViewController", "p_dealWithReceivedAutoDestroyAfterIdentifyPorn:message:");
     static int n = 0;
     n++;
+    // v52：deal 也要拦。v51 只拦了 alert，真机日志里 PORN#1 which=deal
+    // 是唯一的入口（alert 早被点过「确认」了），结果一路走到实例化全屏页。
+    // 拦 deal 的语义是：服务器哪怕判了敏感，本地也不做任何销毁/特殊处理，
+    // 让图片按普通路径完整渲染。
+    BOOL block = HushPornBlockOn();
     if (n <= 10 || (n % 10) == 0) {
         HushBurnNote([NSString stringWithFormat:
-            @"[P0-2b] PORN#%d which=deal cell=%@ msg=%@",
+            @"[P0-2b] PORN#%d which=deal cell=%@ msg=%@ block=%d",
             n, a0 ? NSStringFromClass([a0 class]) : @"nil",
-            a1 ? NSStringFromClass([a1 class]) : @"nil"]);
+            a1 ? NSStringFromClass([a1 class]) : @"nil", (int)block]);
+    }
+    if (block) {
+        HushBurnNote([NSString stringWithFormat:
+            @"[P0-2b] PORNBLOCK#%d which=deal 已拦截敏感处理，直接放行", n]);
+        return;
     }
     if (o_pornDeal) o_pornDeal(self, _cmd, a0, a1);
 }

@@ -983,6 +983,19 @@ static void HushHideView(id obj, BOOL hide) {
     ((UIView *)obj).hidden = hide;
 }
 
+// v52：三连击式镇压。
+// v51 只做 hidden = YES，但真机日志（TREE 里 d3 <UILabel> f=(5,60,70,13)）
+// 证明还有一层 UI 压在图上、而且 hidden 没生效或事后被宿主翻回来。
+// hidden + alpha + userInteraction 一起关，任何一条被宿主改回来都还有两条兜着；
+// 三条全改回来才会露相，比单打一稳。
+static void HushNukeView(id obj) {
+    if (![obj isKindOfClass:[UIView class]]) return;
+    UIView *v = (UIView *)obj;
+    v.hidden = YES;
+    v.alpha = 0.0;
+    v.userInteractionEnabled = NO;
+}
+
 // v41: 闪照解锁总闸。
 //
 // 面板里「闪照转照片 / 闪文转普通消息」这两个键（switch_flash_photo /
@@ -1345,16 +1358,25 @@ void HushBurnApplyImage(id cell, id model) {
     if (![img isKindOfClass:[UIImageView class]]) return;
     UIImageView *iv = (UIImageView *)img;
 
-    // ---- v47 A：绝对镇压，无条件、每次进来都干 ----
+    // ---- v47 A / v52：绝对镇压，无条件、每次进来都干 ----
     // v46 的「已铺过就 return」把镇压一起挡掉了：宿主重建 cell 后
     // viewWithTag 变空、但遮罩已经重新盖上来，于是那一轮什么都不做。
     // 现在把镇压提到最前、不受任何去重影响 —— 宿主刷多少次就压多少次。
-    HushHideView(HushSafeKVC(cell, @"_destoryCellMaskView"), YES);
-    HushHideView(HushSafeKVC(cell, @"_destoryIconBtn"),      YES);
-    HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),     YES);
-    HushHideView(HushSafeKVC(cell, @"_vertifyView"),         YES);
-    HushHideView(HushSafeKVC(cell, @"_preVertifyView"),      YES);
-    HushHideView(HushSafeKVC(cell, @"_keywordsSafetyView"),  YES);
+    //
+    // v52 追加三样：
+    //   1) tipLabel —— 真机 TREE 实测 f=(5,60,70,13) h=0，压在 77pt 宽的图上
+    //      几乎盖满，「点不动」就是它。sel_index 确认 tipLabel / setTipLabel:
+    //      / tipLabelTop / tipLabelHeight 全在 BDDestoryChatCell 上。
+    //      取的时候走 getter（HushSafeKVC 传 tipLabel），不是 _tipLabel ivar。
+    //   2) 三连击（hidden + alpha + userInteraction），单改 hidden 挡不住命中测试。
+    //   3) 保留 _bubbleImgView 与它的父容器不动 —— 那是我们唯一要露出来的东西。
+    HushNukeView(HushSafeKVC(cell, @"_destoryCellMaskView"));
+    HushNukeView(HushSafeKVC(cell, @"_destoryIconBtn"));
+    HushNukeView(HushSafeKVC(cell, @"_destoryAlterLab"));
+    HushNukeView(HushSafeKVC(cell, @"_vertifyView"));
+    HushNukeView(HushSafeKVC(cell, @"_preVertifyView"));
+    HushNukeView(HushSafeKVC(cell, @"_keywordsSafetyView"));
+    HushNukeView(HushSafeKVC(cell, @"tipLabel"));
 
     // ---- v47 B：读图 ----
     // 判据不用 iv.tag（kHushBurnTag 挂在子 label 上，iv.tag 恒 0），
@@ -1369,36 +1391,27 @@ void HushBurnApplyImage(id cell, id model) {
     iv.contentMode = UIViewContentModeScaleAspectFill;
     iv.clipsToBounds = YES;
 
-    // ---- v51 C1：高度优先，绝不出界 ----
-    // v49/v50 是「宽度优先」：竖图 1080x2340 算出 368x797，而 cell 只有 223 高
-    // （TREE root f=(0,1478,440,223)），contentView 默认 clipsToBounds=NO，
-    // 溢出 574pt 直接盖住下面几条消息 —— 用户看到的「超大白块」就是这个。
+    // ---- v52：固定上限，只缩不放，彻底断掉反馈环 ----
+    // v51 C1 拿 cell 高度当上限（availH = cellH - containerY - 8），
+    // 结果是个正反馈死循环：我缩图 → container 变小 → 宿主按内容重算行高
+    // → cell 更矮 → availH 更小 → 我再缩。真机日志实测连缩 8 轮：
+    //   77x112 → 72x104 → 66x96 → 60x88 → 55x80 → 50x72 → 44x64 → 38x56
+    // 最后图小到点都点不动（TREE 里 d3 <UILabel> f=(5,60,70,13) 直接盖满
+    // 77pt 宽的图）。根因是「上限依赖被自己影响的量」，必须换成常量。
     //
-    // 宿主不走 tableView:heightForRowAtIndexPath:（sel_index 全库 249 个类有，
-    // BDMessageViewController / PrivateChatViewController / LiveMessagesView /
-    // BDMessageTableView 一个都没有），行高上不去，那就只能把图压回 cell 内。
-    // 代价是竖图变小（223 高的 cell → 约 76x165），但列表恢复正常。
-    // C2（调 BDChatBasicCell -setUpBubbleImageView:... 让宿主自己重算）留 v52。
+    // v49/v50 的「按宽铺满」不会递归（maxW 只吃固定的 cell 宽度），
+    // 但会算出 368x797 溢出 574pt 盖住下面几条消息。两边都不对，
+    // 所以改成绝对常量：maxW/maxH 与 cell 完全无关，一次算死，永不再缩。
     UIView *container = iv.superview;
     if (container) {
-        CGRect cellB = [(UIView *)cell bounds];
         CGRect cRect = container.frame;
-
-        // 可用高度 = cell 底 - 容器顶 - 8pt 边距；可用宽度 = cell 右 - 容器左 - 8pt
-        CGFloat availH = cellB.size.height - CGRectGetMinY(cRect) - 8.0;
-        CGFloat availW = cellB.size.width - CGRectGetMinX(cRect) - 8.0;
-        if (availH < 40.0) availH = 40.0;   // 太矮时不至于算出 0
-        if (availW < 40.0) availW = 40.0;
-
-        CGFloat ratio = im.size.width / MAX(im.size.height, 1.0);   // 宽/高
-
-        // 高度优先：先按可用高度算宽，宽超了就按宽回算
-        CGFloat newH = availH;
-        CGFloat newW = availH * ratio;
-        if (newW > availW) {
-            newW = availW;
-            newH = availW / MAX(ratio, 0.01);
-        }
+        CGFloat maxW = 253.0;   // 屏宽 440 的 57.5%，留出气泡左右空间
+        CGFloat maxH = 340.0;
+        CGFloat ratio = MIN(maxW / MAX(im.size.width, 1.0),
+                            maxH / MAX(im.size.height, 1.0));
+        if (ratio > 1.0) ratio = 1.0;    // 只缩不放大，小图保持原样
+        CGFloat newW = im.size.width  * ratio;
+        CGFloat newH = im.size.height * ratio;
 
         if (newW > 20.0 && newH > 20.0
             && (fabs(cRect.size.width - newW) > 1.0
@@ -1505,7 +1518,10 @@ void HushRecallDecorateCell(id cell, id model) {
     if (burnByType && !burnByCell) {
         static int sensLogs = 0;
         sensLogs++;
-        if (sensLogs <= 20 || (sensLogs % 10) == 0) {
+        // v52：节流收紧。v51 真机里 SENS 打了 75 条，全是 282/24 但落在
+        // BDChatBasicCell / BDMsgBigImageCellSelf 上的常规噪音（连 `content=[害羞]`
+        // 的表情消息都被标 282）。关键行会被淹，所以只留前 15 条 + 每 30 条。
+        if (sensLogs <= 15 || (sensLogs % 30) == 0) {
             NSString *ct = HushModelString(model, @[@"content"]);
             NSString *head = @"-";
             if (ct.length > 0) {
