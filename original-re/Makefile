@@ -4,7 +4,15 @@ ARCHS  := arm64 arm64e
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = BluedHushRE
+TWEAK_NAME = BluedHushRE HushSkin
+
+# HushSkin 是「原版皮肤层」：独立 dylib、零类定义、只 hook 显示方法。
+# 打包时它占用 @executable_path/Frameworks/BluedHushRE.dylib 这个槽位，
+# 原版 dylib 改名 OriginalHush.dylib 由它在 ctor 里 dlopen。
+HushSkin_FILES = Skin/HushSkin.m
+HushSkin_CFLAGS = -I$(THEOS_PROJECT_DIR)/Headers -fobjc-arc -Wno-everything \
+                  -finput-charset=UTF-8 -fexec-charset=UTF-8
+HushSkin_FRAMEWORKS = Foundation UIKit QuartzCore
 
 BluedHushRE_FILES = $(wildcard Classes/*.m)
 # HushReal.xm disabled for the minimal-loop run (114 classes / 286 methods,
