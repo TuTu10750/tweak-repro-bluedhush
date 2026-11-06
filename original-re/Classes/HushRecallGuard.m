@@ -1032,7 +1032,8 @@ void HushAutoDestroyUnlock(id cell, id model) {
     // 到底哪个有值 —— 用户就是靠那个 24 推出了错误的洗白目标类型。
     static int burnLogs = 0;
     burnLogs++;
-    if (burnLogs <= 12 || (burnLogs % 10) == 0) {
+    // v47：节流收紧。v46 打到 BURN#90，全是同一形态，纯噪音。
+    if (burnLogs <= 10 || (burnLogs % 20) == 0) {
         long long tRaw  = model ? HushModelLLRaw(model, @"type")        : LLONG_MIN;
         long long mtRaw = model ? HushModelLLRaw(model, @"messageType") : LLONG_MIN;
         // v42：BURN# 补 mid。此前 13 条 BURN 只能靠时间戳猜对应哪条消息，
@@ -1215,8 +1216,17 @@ static void HushProbeCellTreeWalk(UIView *v, UIView *root, UIView *anchor,
         if (isAnchor) {
             mark = @" <ANCHOR>";
         } else if (vis && anchorRect.size.width > 0.5f) {
+            // v47：排除祖先。v46 的判据只看「相交 + 够大」，把 _bubbleImgView
+            // 的爹（那个 80x91 的 UIView）和爷爷（UITableViewCellContentView）
+            // 都标成了 <COVER> —— 它们不是盖在上面的层，是容器本身。
+            BOOL isAncestor = NO;
+            for (UIView *p = v.superview; p; p = p.superview) {
+                if (p == anchor) { isAncestor = YES; break; }
+                if (p == root) break;
+            }
             CGRect r = [v convertRect:v.bounds toView:root];
-            if (CGRectIntersectsRect(r, anchorRect)
+            if (!isAncestor
+                && CGRectIntersectsRect(r, anchorRect)
                 && r.size.width  >= anchorRect.size.width  * 0.5f
                 && r.size.height >= anchorRect.size.height * 0.5f) {
                 mark = @" <COVER>";
@@ -1294,29 +1304,59 @@ void HushBurnApplyImage(id cell, id model) {
     if (![img isKindOfClass:[UIImageView class]]) return;
     UIImageView *iv = (UIImageView *)img;
 
-    // ---- v46 A：已经铺过就直接返回 ----
-    // v45 实测：一次 DecorateCell 会被 setMessage: 和 visibleCells 巡检各调
-    // 一次（LEAN 每条都成对出现），BURNPAINT 十几秒连打 8 条，每次都在重读
-    // 文件 + 重建 UIImage + setImage: 触发布局。
-    // 判据不能用 iv.tag —— kHushBurnTag 挂在子 label 上，iv.tag 恒为 0。
-    if (iv.image != nil && [iv viewWithTag:kHushBurnTag] != nil) return;
-
-    UIImage *im = [UIImage imageWithContentsOfFile:path];
-    if (!im) return;
-
-    // ---- v46 B：AspectFit ----
-    // v45 用 AspectFill，1215x1620 的竖图塞进宿主按占位算的扁框里只剩中间
-    // 一条缝。Destory cell 身上没有任何 imageHeight/Width 约束（sel_index
-    // 实证），撑开气泡得另找宿主算 cell 高度的地方 —— 那是 V47。
-    iv.contentMode = UIViewContentModeScaleAspectFit;
-    iv.clipsToBounds = YES;
-    @try { [iv setImage:im]; } @catch (__unused NSException *e) {}
-    iv.hidden = NO;
-
-    // 图有了，销毁面就没必要留（此时点不点得动已经不重要）
+    // ---- v47 A：绝对镇压，无条件、每次进来都干 ----
+    // v46 的「已铺过就 return」把镇压一起挡掉了：宿主重建 cell 后
+    // viewWithTag 变空、但遮罩已经重新盖上来，于是那一轮什么都不做。
+    // 现在把镇压提到最前、不受任何去重影响 —— 宿主刷多少次就压多少次。
     HushHideView(HushSafeKVC(cell, @"_destoryCellMaskView"), YES);
     HushHideView(HushSafeKVC(cell, @"_destoryIconBtn"),      YES);
-    HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),    YES);
+    HushHideView(HushSafeKVC(cell, @"_destoryAlterLab"),     YES);
+    HushHideView(HushSafeKVC(cell, @"_vertifyView"),         YES);
+    HushHideView(HushSafeKVC(cell, @"_preVertifyView"),      YES);
+    HushHideView(HushSafeKVC(cell, @"_keywordsSafetyView"),  YES);
+
+    // ---- v47 B：读图 ----
+    // 判据不用 iv.tag（kHushBurnTag 挂在子 label 上，iv.tag 恒 0），
+    // 也不用 iv.image != im（imageWithContentsOfFile: 每次都返回新对象，
+    // 指针比较恒真，等于没去重）。比尺寸最稳。
+    UIImage *im = [UIImage imageWithContentsOfFile:path];
+    if (!im) return;
+    if (!CGSizeEqualToSize(iv.image.size, im.size)) {
+        @try { [iv setImage:im]; } @catch (__unused NSException *e) {}
+    }
+    iv.hidden = NO;
+    iv.contentMode = UIViewContentModeScaleAspectFill;
+    iv.clipsToBounds = YES;
+
+    // ---- v47 C：撑 frame ----
+    // 宿主给 Destory cell 的 _bubbleImgView 恒为 80x91（按占位缩略图算的），
+    // 2342x1078 的图塞进去只能看到中间一条。
+    // 这里按 cell 的实际可用宽高等比放大 —— 上限锁死在 cell 内，
+    // 不溢出：行高仍是宿主算的，溢出会被 contentView 裁掉，比白块更难看。
+    //   实测 cell 440x141 / 容器 (64,50) → maxW=368 maxH=87
+    //   图 2342x1078（ratio 2.17）→ 189x87，几乎完整显示原图。
+    UIView *container = iv.superview;
+    if (container) {
+        CGRect cellB = [(UIView *)cell bounds];
+        CGRect cRect = container.frame;
+        CGFloat maxW = cellB.size.width  - CGRectGetMinX(cRect) - 8.0;
+        CGFloat maxH = cellB.size.height - CGRectGetMinY(cRect) - 4.0;
+        if (maxW > 40.0 && maxH > 40.0) {
+            CGFloat ratio = im.size.width / MAX(im.size.height, 1.0);
+            CGFloat newW = maxW;
+            CGFloat newH = maxW / MAX(ratio, 0.01);
+            if (newH > maxH) { newH = maxH; newW = maxH * ratio; }
+            if (newW > 40.0 && newH > 40.0
+                && (fabs(cRect.size.width - newW) > 1.0
+                    || fabs(cRect.size.height - newH) > 1.0)) {
+                container.translatesAutoresizingMaskIntoConstraints = YES;
+                iv.translatesAutoresizingMaskIntoConstraints = YES;
+                container.frame = CGRectMake(CGRectGetMinX(cRect),
+                                             CGRectGetMinY(cRect), newW, newH);
+                iv.frame = CGRectMake(0, 0, newW, newH);
+            }
+        }
+    }
 
     id timer = HushSafeKVC(cell, @"_timer");
     if ([timer isKindOfClass:[NSTimer class]]) {
@@ -1354,9 +1394,17 @@ void HushBurnApplyImage(id cell, id model) {
     paintLogs++;
     if (paintLogs <= 12 || (paintLogs % 10) == 0) {
         NSString *line = [NSString stringWithFormat:
-            @"[P0-2b] BURNPAINT#%d cell=%@ mid=%lld size=%.0fx%.0f file=%@",
+            @"[P0-2b] BURNPAINT#%d cell=%@ mid=%lld size=%.0fx%.0f ivF=(%.0f,%.0f,%.0f,%.0f) contF=(%.0f,%.0f,%.0f,%.0f) cm=%d file=%@",
             paintLogs, NSStringFromClass([cell class]), mid,
-            im.size.width, im.size.height, [path lastPathComponent]];
+            im.size.width, im.size.height,
+            iv.frame.origin.x, iv.frame.origin.y,
+            iv.frame.size.width, iv.frame.size.height,
+            container ? container.frame.origin.x : -1.0,
+            container ? container.frame.origin.y : -1.0,
+            container ? container.frame.size.width : -1.0,
+            container ? container.frame.size.height : -1.0,
+            (int)iv.contentMode,
+            [path lastPathComponent]];
         fprintf(stderr, "%s\n", [line UTF8String]);
         [HushLogger logLevel:2 format:line];
     }
