@@ -1378,9 +1378,15 @@ static void HushProbeCellTree(UIView *root, UIView *anchor) {
 // 每次铺图都会把 targetCell 重指到当前 cell，复用那一下 cell 对象本身
 // 没有被销毁（只是换了内容），所以不会野指针。
 static UIViewController *HushRecallTopViewController(void);   // 定义在文件后半段
+static void HushProbeEmit(NSString *s);                        // 定义在文件后半段
 
+// 注意：Classes/ 这一层是 -fobjc-arc 编译的（Makefile 里
+// BluedHushRE_CFLAGS = -fobjc-arc），所以这里用 weak 而不是
+// unsafe_unretained —— cell 被 tableView 回收后 targetCell 自动变 nil，
+// 比悬垂指针更安全，也不用写任何 release。
+// （Hooks/HushHooks.m 是 -fno-objc-arc，那一层仍然是 MRC。）
 @interface HushBurnTapProxy : NSObject
-@property (nonatomic, unsafe_unretained) id targetCell;
+@property (nonatomic, weak) id targetCell;
 @end
 
 @implementation HushBurnTapProxy
@@ -1503,14 +1509,12 @@ void HushBurnApplyImage(id cell, id model) {
         if (![proxy isKindOfClass:[HushBurnTapProxy class]]) {
             proxy = [[HushBurnTapProxy alloc] init];
             objc_setAssociatedObject(iv, &kHushTapKey, proxy, OBJC_ASSOCIATION_RETAIN);
-            [proxy release];
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                 initWithTarget:proxy action:@selector(hushHandleTap:)];
             // cancelsTouchesInView = NO：别把宿主的 tableView:didSelectRow 吃掉
             tap.cancelsTouchesInView = NO;
             tap.numberOfTapsRequired = 1;
             [iv addGestureRecognizer:tap];
-            [tap release];
         }
         proxy.targetCell = cell;
     }
