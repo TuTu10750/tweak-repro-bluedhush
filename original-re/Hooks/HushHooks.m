@@ -1037,6 +1037,12 @@ extern void HushSetSessionService(id svc);
 //   SDImageCache  storeImageToMemory:forKey:            v32@0:8@16@24
 //   SDAnimatedImageView  sd_setImageWithURL:             v24@0:8@16
 // BDAnimatedImageView 继承自 SDAnimatedImageView（ivar dump 实证）。
+// v58：记住「最近一次抢到的明文 URL + mid」。
+// 退出全屏那一刻 VC 正在销毁，图片 URL 已经取不到了，只能在
+// startLoadingResource 抢到的那一瞬间存下来，退出去再拿。
+static long long  gLastBurnMid = 0;
+static NSString  *gLastBurnUrl = nil;
+
 static NSString *HushFlashMD5(NSString *s) {
     if (s.length == 0) return nil;
     const char *c = [s UTF8String];
