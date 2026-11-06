@@ -61,8 +61,10 @@ static NSString *SkinJSONPath(void) {
 
 static NSArray<NSDictionary *> *gRules;
 static UIColor *gColA, *gColB, *gColC;      // 青 / 蓝 / 紫
-static CGFloat gAlpha = 0.55;               // 面板渐变透明度
-static UIColor *gBase;                      // 面板底色（深，衬得出青蓝紫）
+static CGFloat gAlpha = 0.22;               // 面板渐变透明度（浅色主题下只当一层薄纱）
+static UIColor *gBase;                      // 面板底色
+static UIColor *gText;                      // 浅色主题的正文色
+static BOOL gLight = YES;                   // 浅色主题（默认）：行是半透明白，正文走深色
 static BOOL gHideFooter = YES;
 static BOOL gDimBlur = YES;
 
@@ -78,8 +80,9 @@ static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
 
 static NSDictionary *SkinDefaultConfig(void) {
     return @{
-        @"palette": @{ @"a": @"#00E5FF", @"b": @"#2F6BFF", @"c": @"#8A2BE2",
-                       @"alpha": @0.55, @"base": @"#0B1020" },
+        @"palette": @{ @"a": @"#00C8E0", @"b": @"#3A6BFF", @"c": @"#8A2BE2",
+                       @"alpha": @0.22, @"base": @"#F4F7FD", @"text": @"#1B1F2A" },
+        @"theme": @"light",
         @"hide_footer": @YES,
         @"dim_blur": @YES,
         // 页脚是自绘的，下面这些规则是给「如果哪天改成 UILabel」留的保险。
@@ -116,7 +119,9 @@ static void SkinLoadConfig(void) {
     gColA = SkinHex(p[@"a"], [UIColor colorWithRed:0.00 green:0.90 blue:1.00 alpha:1]);
     gColB = SkinHex(p[@"b"], [UIColor colorWithRed:0.18 green:0.42 blue:1.00 alpha:1]);
     gColC = SkinHex(p[@"c"], [UIColor colorWithRed:0.54 green:0.17 blue:0.89 alpha:1]);
-    gBase = SkinHex(p[@"base"], [UIColor colorWithRed:0.043 green:0.063 blue:0.125 alpha:1]);
+    gBase = SkinHex(p[@"base"], [UIColor colorWithRed:0.957 green:0.969 blue:0.992 alpha:1]);
+    gText = SkinHex(p[@"text"], [UIColor colorWithRed:0.106 green:0.122 blue:0.165 alpha:1]);
+    if ([cfg[@"theme"] isKindOfClass:[NSString class]]) gLight = ![cfg[@"theme"] isEqualToString:@"dark"];
     if ([p[@"alpha"] isKindOfClass:[NSNumber class]]) {
         CGFloat a = [p[@"alpha"] doubleValue];
         if (a > 0.05 && a <= 1.0) gAlpha = a;
@@ -135,7 +140,8 @@ static void SkinLoadConfig(void) {
     SkinLog(@"配置生效：规则 %lu 条，配色 %@ / %@ / %@ alpha=%.2f 底 %@ 页脚%@",
             (unsigned long)gRules.count, p[@"a"] ?: @"默认", p[@"b"] ?: @"默认", p[@"c"] ?: @"默认",
             gAlpha, p[@"base"] ?: @"默认", gHideFooter ? @"隐藏" : @"保留");
-    SkinLog(@"磨砂层：%@", gDimBlur ? @"摘除" : @"保留");
+    SkinLog(@"主题：%@  磨砂层：%@", gLight ? @"浅色（半透明白行 + 深色正文）" : @"深色",
+            gDimBlur ? @"摘除" : @"保留");
 }
 
 static NSString *SkinMapText(NSString *text, BOOL *hide) {
@@ -246,18 +252,38 @@ static void SkinStyleGlass(UIView *v) {
     }
 }
 
+// 只改「被我们或深色主题染成近白」的 label —— 深色正文、彩色角标一律不动，
+// 否则详情页会出现白字压浅底的情况（v16 真机就是这个症状）。
+static void SkinFixLabel(UILabel *lb) {
+    if (!lb || lb.hidden || !lb.textColor) return;
+    if (!gLight) { lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0]; return; }
+    CGFloat r = 0, g = 0, b = 0, a = 0;
+    if (![lb.textColor getRed:&r green:&g blue:&b alpha:&a]) return;
+    CGFloat mx = MAX(r, MAX(g, b)), mn = MIN(r, MIN(g, b));
+    if (mx > 0.78 && (mx - mn) < 0.12) lb.textColor = gText;
+}
+
+static void SkinFixLabelRecursive(UIView *root, NSInteger depth);
+
 static void SkinStyleCell(UITableViewCell *cell) {
     if (!cell) return;
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
     if (cell.backgroundView) cell.backgroundView.backgroundColor = [UIColor clearColor];
+    if (gLight) {
+        // 半透明白：面板那层青蓝紫的薄纱透上来，行与行之间不再是一条白一条蓝。
+        cell.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.78];
+    }
     UIView *sel = cell.selectedBackgroundView;
     if (sel && !sel.backgroundColor) sel.backgroundColor = [gColB colorWithAlphaComponent:0.18];
-    for (UIView *sub in cell.contentView.subviews) {
-        if ([sub isKindOfClass:[UILabel class]]) {
-            UILabel *lb = (UILabel *)sub;
-            if (!lb.hidden) lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0];
-        }
+    SkinFixLabelRecursive(cell.contentView, 0);
+}
+
+static void SkinFixLabelRecursive(UIView *root, NSInteger depth) {
+    if (!root || depth > 5) return;
+    for (UIView *sub in root.subviews) {
+        if ([sub isKindOfClass:[UILabel class]]) SkinFixLabel((UILabel *)sub);
+        else SkinFixLabelRecursive(sub, depth + 1);
     }
 }
 
@@ -272,12 +298,10 @@ static void SkinWalk(UIView *root, NSInteger depth) {
         if (gDimBlur && [root isKindOfClass:[UIVisualEffectView class]]) {
             UIVisualEffectView *fx = (UIVisualEffectView *)root;
             if (fx.effect) { fx.effect = nil; SkinLog(@"已摘除磨砂层 %@", NSStringFromClass([fx class])); }
-            fx.backgroundColor = [gBase colorWithAlphaComponent:0.35];
+            fx.backgroundColor = gLight ? [UIColor clearColor]
+                                        : [gBase colorWithAlphaComponent:0.35];
         }
-        if ([root isKindOfClass:[UILabel class]]) {
-            UILabel *lb = (UILabel *)root;
-            if (!lb.hidden) lb.textColor = [UIColor colorWithWhite:0.96 alpha:1.0];
-        }
+        if ([root isKindOfClass:[UILabel class]]) SkinFixLabel((UILabel *)root);
         if ([root isKindOfClass:[UITableView class]]) {
             ((UITableView *)root).backgroundColor = [UIColor clearColor];
         }
