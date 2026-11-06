@@ -22,6 +22,7 @@
 #import "HushRuntime.h"
 
 #import <objc/runtime.h>
+#import <objc/message.h>
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 #import <limits.h>
@@ -2120,7 +2121,18 @@ static UITableView *HushRecallChatTable(void) {
 // 关键：不调 setMessage:。setMessage: 会触发宿主完整重算布局，
 // 刚撑到 189x87 的容器会被 layoutSubviews 打回 80x91，再靠我们二次撑开
 // —— 肉眼可见的抖动。直接调 HushBurnApplyImage 一步到位。
-void HushBurnRefreshVisible(long long mid) {
+// v55 B：落库要用 GJIMSessionService 实例。
+// 这个类没有 sharedInstance / sharedService（sel_index 全表核实），
+// 唯一稳定来源是我们 hook 过的 -[GJIMSessionService addMessages:] 的 self。
+// __unsafe_unretained：宿主的长生命周期单例，正常不会中途释放；
+// 取用前一律做 isKindOfClass 兜底，释放了也只会走不到分支，不会崩。
+static __unsafe_unretained id sHushSessionSvc = nil;
+
+void HushSetSessionService(id svc) {
+    if (svc) sHushSessionSvc = svc;
+}
+
+void HushBurnRefreshVisible(long long mid, NSString *url) {
     if (mid <= 0) return;
     if (!HushFlashUnlockOn()) return;
 
@@ -2144,7 +2156,7 @@ void HushBurnRefreshVisible(long long mid) {
         return;
     }
 
-    int hit = 0;
+    int hit = 0, repaint = 0, dumped = 0;
     for (UITableViewCell *c in [tv visibleCells]) {
         id msg = nil;
         @try { msg = [c valueForKey:@"message"]; }
@@ -2153,12 +2165,54 @@ void HushBurnRefreshVisible(long long mid) {
         long long m = HushModelLongLong(msg, HushRecallIdKeys());
         if (m != mid) continue;
         hit++;
-        HushBurnApplyImage(c, msg);
+
+        // ── v55 B：把这条消息洗成普通图片消息 ────────────────────
+        // 关键：GJIMMessageModel 上是 setType:，不是 setMessageType:。
+        //   messageType 属于网络包那一层（PushPackage / GJIMChatSessionModel），
+        //   sel_index 全表核实：setMessageType: 只出现在 GJIMChatSessionModel，
+        //   GJIMMessageModel 只有 setType:。
+        // 用 type=2 + image=url 让宿主按普通图片渲染，destroyUrl 清空，
+        // 之后无论重绘还是重进会话，都不会再走闪照那套流程。
+        BOOL okT = HushCallSetNumber(msg, NSSelectorFromString(@"setType:"), 2);
+        BOOL okI = NO;
+        if (url.length > 0) {
+            okI = HushCallSetObject(msg, NSSelectorFromString(@"setImage:"), url);
+        }
+        HushCallSetObject(msg, NSSelectorFromString(@"setDestroyUrl:"), nil);
+
+        // 重绘这一行。此时 type 已经是 2，setMessage: 走的是宿主自己
+        // 的普通图片布局链，不会再把我们算出来的框打回 80×91。
+        @try {
+            ((void (*)(id, SEL, id))objc_msgSend)(
+                c, NSSelectorFromString(@"setMessage:"), msg);
+            repaint++;
+        } @catch (__unused NSException *e) { }
+
+        // 落库：GJIMSessionService -updateMessage:（v24@0:8@16）
+        // 它会同时刷内存缓存与 DB，重进会话也保得住。
+        if (sHushSessionSvc &&
+            [sHushSessionSvc isKindOfClass:NSClassFromString(@"GJIMSessionService")] &&
+            [sHushSessionSvc respondsToSelector:NSSelectorFromString(@"updateMessage:")]) {
+            @try {
+                ((void (*)(id, SEL, id))objc_msgSend)(
+                    sHushSessionSvc, NSSelectorFromString(@"updateMessage:"), msg);
+                dumped++;
+            } @catch (__unused NSException *e) { }
+        }
+
+        if (hit <= 3) {
+            NSString *line = [NSString stringWithFormat:
+                @"[P0-2b] PAINT#%d mid=%lld cell=%@ type2=%d img=%d urlLen=%lu",
+                hit, mid, NSStringFromClass([c class]),
+                okT ? 1 : 0, okI ? 1 : 0, (unsigned long)url.length];
+            fprintf(stderr, "%s\n", [line UTF8String]);
+            [HushLogger logLevel:2 format:line];
+        }
     }
 
     NSString *line = [NSString stringWithFormat:
-        @"[P0-2b] FORCEPAINT#%d mid=%lld visCells=%lu",
-        hit, mid, (unsigned long)[[tv visibleCells] count]];
+        @"[P0-2b] FORCEPAINT#%d mid=%lld visCells=%lu repaint=%d db=%d",
+        hit, mid, (unsigned long)[[tv visibleCells] count], repaint, dumped];
     fprintf(stderr, "%s\n", [line UTF8String]);
     [HushLogger logLevel:2 format:line];
 }
@@ -2461,28 +2515,41 @@ BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg, void (*orig)(id, 
     if (!pkg) return NO;
     HushPktLogShapeOnce(pkg);
 
-    // ── v54 P1：闪照转照片，走协议层 ───────────────────────────────────
-    // 关键事实（旧版插件日志实证 + 原版二进制 sel_index 核实）：
-    //   type=24 才是闪照（msgExtra 里带 images / pic_width / pic_height /
-    //   secureNotify），type=282 是表情一类，之前把 282 当闪照是错的。
-    // 旧版的做法是「改写推送包 type 24 → 2」，改完下游根本拿不到闪照消息，
-    // 于是 BDMessageViewController 那套「按住屏幕阅读 / 只可查看一次 / 15 秒 /
-    // 松手即销毁」的渲染链整条都不会被拉起 —— 遮罩、白块、行高、点击吃掉
-    // 这四个问题一次性消失，不需要再跟 BDDestoryChatCell 的布局较劲。
-    // PushPackage 上 setMessageType: 存在（sel_index: v24@0:8Q16），可以原地改。
+    // ── v55 A：闪照转照片，走协议层，但必须「先回填、后转照片」────────
+    // v54 曾无条件把 messageType 24 → 2，结果是个死锁：
+    //   改成 2 之后宿主当普通图片消息渲染，而闪照的 extra 里
+    //   images 是 ["",""]（空的），于是显示成一条空白图片消息；
+    //   更致命的是它再也不会走 BDAutoDestoryImageViewController，
+    //   而明文 URL 只有那个全屏页的 imageURL getter 能给我们 ——
+    //   转了就永远拿不到 URL，缓存里也就永远没有图。
+    // 旧版插件日志的时序是反的：21:43 回填（拿 URL、落盘、注入缓存），
+    // 21:45 才改包。所以这里加一道闸：本地盘上已经有这张图，才允许转。
     if ([[HushConfig shared] isEnabled:@"switch_flash_photo"]
         || [[HushConfig shared] isEnabled:@"switch_flash_text"]) {
         long long ft = HushModelLongLong(pkg, HushPktTypeKeys());
-        if (ft == 24) {
+        if (ft == HUSH_MSG_TYPE_FLASH) {
             long long fmid = HushModelLongLong(pkg, HushPktIdKeys());
-            BOOL ok = HushCallSetNumber(pkg,
-                            NSSelectorFromString(@"setMessageType:"), 2);
+            extern NSString *HushFlashMapPath(long long mid);
+            NSString *fp = (fmid > 0) ? HushFlashMapPath(fmid) : nil;
+            BOOL haveImg = (fp.length > 0 &&
+                            [[NSFileManager defaultManager] fileExistsAtPath:fp]);
             static int sTypeFix = 0;
             sTypeFix++;
-            if (sTypeFix <= 20 || (sTypeFix % 20) == 0) {
+            BOOL logIt = (sTypeFix <= 20) || ((sTypeFix % 20) == 0);
+            if (haveImg) {
+                BOOL ok = HushCallSetNumber(pkg,
+                                NSSelectorFromString(@"setMessageType:"), 2);
+                if (logIt) {
+                    NSString *line = [NSString stringWithFormat:
+                        @"[P0-2b] TYPEFIX#%d mid=%lld 24→2 ok=%d（盘上有图才转）",
+                        sTypeFix, fmid, ok ? 1 : 0];
+                    fprintf(stderr, "%s\n", [line UTF8String]);
+                    [HushLogger logLevel:2 format:line];
+                }
+            } else if (logIt) {
                 NSString *line = [NSString stringWithFormat:
-                    @"[P0-2b] TYPEFIX#%d mid=%lld 24→2 ok=%d（协议层，下游不再看见闪照）",
-                    sTypeFix, fmid, ok ? 1 : 0];
+                    @"[P0-2b] TYPEDEFER#%d mid=%lld 保留 24（本地无图，等点开回填）",
+                    sTypeFix, fmid];
                 fprintf(stderr, "%s\n", [line UTF8String]);
                 [HushLogger logLevel:2 format:line];
             }

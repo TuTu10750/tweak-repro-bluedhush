@@ -98,9 +98,13 @@ static Class hush_resolve_class(const char *name) {
 
 // 22/23: the two nodes the reference log says actually carry a recall packet.
 // Both forward instead of swallowing the call — see HushRecallGuard.m.
+extern void HushSetSessionService(id svc);
 static void (*o_sessionAddMessages)(id, SEL, id);
 static void r_sessionAddMessages(id self, SEL _cmd, id a0) {
     HushHit("GJIMSessionService", "addMessages:");
+    // v55 B：GJIMSessionService 没有 sharedInstance（sel_index 全表核实），
+    // 落库要用它的 -updateMessage:，只能在这里把 self 抓下来缓存。
+    if (self) HushSetSessionService(self);
     HushRecallFilterAndForward(self, _cmd, a0, o_sessionAddMessages);
 }
 
@@ -1018,7 +1022,8 @@ NSString *HushFlashMapPath(long long mid) {
 // 之所以要跨文件调：HushRecallChatTable 与 HushModelLongLong 都是 Guard 内的
 // static，Hooks 这边拿不到；把「找表 + 比对 mid + 铺图」整段搬进 Guard，
 // 这里只传一个 mid。
-extern void HushBurnRefreshVisible(long long mid);
+extern void HushBurnRefreshVisible(long long mid, NSString *url);
+extern void HushSetSessionService(id svc);
 
 // ── v54 P2：SDImageCache 注入 ─────────────────────────────────────────────
 // 旧版插件日志实证：它的文件名是 32 位十六进制 = URL 的 MD5
@@ -1089,7 +1094,7 @@ static void HushFlashDownload(long long mid, NSString *url) {
         HushInjectImageCache(url, dst);   // 已下过也要注入（换账号/清过缓存）
         // v48 A：图已经在盘上，立即把可见 cell 铺一遍。
         // 调用点（r_burnStartLoad）在主线程，不用切队列。
-        HushBurnRefreshVisible(mid);
+        HushBurnRefreshVisible(mid, url);
         return;
     }
     NSURL *u = [NSURL URLWithString:url];
@@ -1115,7 +1120,7 @@ static void HushFlashDownload(long long mid, NSString *url) {
             // v47 真机 mid=23 就是死在这里 —— 图下完了，但宿主不重绘，
             // 铺图入口永远等不到。
             dispatch_async(dispatch_get_main_queue(), ^{
-                HushBurnRefreshVisible(mid);
+                HushBurnRefreshVisible(mid, url);
             });
         } else {
             HushBurnNote([NSString stringWithFormat:
