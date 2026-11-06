@@ -1421,6 +1421,40 @@ static void HushProbeEmit(NSString *s);                        // 定义在文�
 }
 @end
 
+// v59：不逆向 AES，直接借宿主的解密器。
+//
+// v52 那批 SENS# 日志里有一行当时被我当成噪音：
+//   SENS#11 cell=BDChatBasicCell mid=11 t=24 ctLen=216 content=RUXse+oQEo2+...
+// ctLen=216 —— 与 BURNINIT#1 sources=("RUVhKKTk...") 里那段 base64 长度完全一致。
+// 也就是说闪照的密文根本不在什么隐藏字段，就在 GJIMMessageModel.content 里。
+//
+// 而 BURNSETURL#1 收到的是密文、BURNSTART#1 读 imageURL 得到的是明文，说明
+// 解密就发生在 BDAutoDestoryImageViewController 的 imageURL getter 里。
+// 那就借它一次：alloc 一个空壳 VC，把密文塞进去，从 getter 读明文出来。
+//
+// 失败（getter 依赖 viewDidLoad 建的 webServer 之类）就返回 nil，
+// 上层自动退回「点开一次」的老路径，不会崩。
+static NSString *HushDecryptFlashURL(NSString *cipher) {
+    if (cipher.length < 40) return nil;
+    Class c = NSClassFromString(@"BDAutoDestoryImageViewController");
+    if (!c) return nil;
+    NSString *out = nil;
+    @try {
+        id vc = [[c alloc] init];
+        if (vc && [vc respondsToSelector:NSSelectorFromString(@"setImageURL:")]) {
+            HushCallSetObject(vc, NSSelectorFromString(@"setImageURL:"), cipher);
+            id v = nil;
+            @try { v = [vc valueForKey:@"imageURL"]; }
+            @catch (__unused NSException *e) { v = nil; }
+            if ([v isKindOfClass:[NSURL class]])         out = [(NSURL *)v absoluteString];
+            else if ([v isKindOfClass:[NSString class]]) out = (NSString *)v;
+        }
+    } @catch (__unused NSException *e) { out = nil; }
+    if (out.length < 8) return nil;
+    if ([out isEqualToString:cipher]) return nil;   // getter 原样吐回密文 = 没解密
+    return out;
+}
+
 void HushBurnApplyImage(id cell, id model) {
     // ══ v54：整段作废，代码保留便于回滚 ══════════════════════════════
     // 用户 m03604 的决策：放弃在 UI 层死磕（自己算尺寸 / 自己塞图 /
@@ -1662,6 +1696,48 @@ void HushRecallDecorateCell(id cell, id model) {
     Class dcCls = NSClassFromString(@"BDDestoryChatCell");
     if (dcCls && [cell isKindOfClass:dcCls]) burnByCell = YES;
     BOOL burnish = burnByType || burnByCell;
+
+    // v59：收到即转 —— 用户要的「对方发来就变普通照片」，不用点开。
+    //
+    // type=24 的密文就在 model.content 里（SENS# 实证 ctLen=216，
+    // 与 BURNINIT# sources 那段 base64 同长）。借宿主的解密器换出明文 URL，
+    // 然后把 model 就地改成 type=2 + image=url + destroyUrl=nil，
+    // 宿主下一次分配 cell 就按普通图片渲染，点开也是普通大图，永不销毁。
+    //
+    // 只在本地还没有落盘图时做 —— 有图的话 HushBurnApplyImage 那条路已经能
+    // 铺满气泡，再改 model 反而多一次重排。
+    if (burnByType && model && HushFlashUnlockOn()) {
+        long long fmid = HushModelLongLong(model, HushRecallIdKeys());
+        NSString *have = (fmid > 0) ? HushFlashMapPath(fmid) : nil;
+        if (have.length == 0) {
+            NSString *ct = HushModelString(model, @[@"content"]);
+            if (ct.length >= 40) {
+                NSString *u2 = HushDecryptFlashURL(ct);
+                static int sDec = 0;
+                sDec++;
+                BOOL show = (sDec <= 15 || (sDec % 20) == 0);
+                if (u2.length >= 8) {
+                    HushCallSetNumber(model, NSSelectorFromString(@"setType:"), 2);
+                    HushCallSetObject(model, NSSelectorFromString(@"setImage:"), u2);
+                    HushCallSetObject(model, NSSelectorFromString(@"setDestroyUrl:"), nil);
+                    if (show) {
+                        NSString *line = [NSString stringWithFormat:
+                            @"[P0-2b] DECRYPT#%d mid=%@ cLen=%lu ok=1 urlLen=%lu url=%@",
+                            sDec, HushNumStr(fmid), (unsigned long)ct.length,
+                            (unsigned long)u2.length, u2];
+                        fprintf(stderr, "%s\n", [line UTF8String]);
+                        [HushLogger logLevel:2 format:line];
+                    }
+                } else if (show) {
+                    NSString *line = [NSString stringWithFormat:
+                        @"[P0-2b] DECRYPT#%d mid=%@ cLen=%lu ok=0（解密器没吐明文，退回点开路径）",
+                        sDec, HushNumStr(fmid), (unsigned long)ct.length];
+                    fprintf(stderr, "%s\n", [line UTF8String]);
+                    [HushLogger logLevel:2 format:line];
+                }
+            }
+        }
+    }
 
     // v48 B：SENS 探针。
     // v47 真机里 mid=23 下到了图（BURNDL#ok 153926B）、遮罩也压了，

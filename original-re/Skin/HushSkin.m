@@ -315,7 +315,9 @@ static void r_footerLayout(id self, SEL _cmd) {
         for (UIView *s in v.subviews) {
             if ([s isKindOfClass:[UILabel class]] && !s.hidden && ((UILabel *)s).text.length > 0) { anyVisible = YES; break; }
         }
-        if (!anyVisible && v.superview) {
+        // 只在「确实已经全空」时压高度，且高度已是 0 就不再动，
+        // 否则每次 layoutSubviews 都改 frame 会反过来触发重排。
+        if (!anyVisible && v.superview && v.frame.size.height > 0.5) {
             CGRect f = v.frame; f.size.height = 0.0; v.frame = f;
         }
     } @catch (__unused NSException *e) {}
