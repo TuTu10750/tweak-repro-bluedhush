@@ -43,6 +43,7 @@
 #import <stdio.h>
 #import <stdlib.h>
 #import <dispatch/dispatch.h>
+#import <CommonCrypto/CommonCrypto.h>
 
 #import "HushRuntime.h"
 #import "HushConfig.h"
@@ -1019,14 +1020,73 @@ NSString *HushFlashMapPath(long long mid) {
 // 这里只传一个 mid。
 extern void HushBurnRefreshVisible(long long mid);
 
+// ── v54 P2：SDImageCache 注入 ─────────────────────────────────────────────
+// 旧版插件日志实证：它的文件名是 32 位十六进制 = URL 的 MD5
+//   [Chat][回填] 命中：msg=… url=<len=136> → 523f8c4631a8245f47dcd8633be7d584.jpg
+//   [Chat][回填] 已注入宿主图片缓存 1 个槽（key 尾=<len=136>）
+// 也就是说它把「完整 URL 字符串」当 key 塞进图片缓存，宿主之后自己
+// 走 sd_setImageWithURL: 时直接命中，CDN 是 200 还是 403 都无关。
+// sel_index 实证宿主用的是 SDWebImage：
+//   SDImageCache  storeImage:forKey:toDisk:completion:  v44@0:8@16@24B32@?36
+//   SDImageCache  storeImage:forKey:completion:         v40@0:8@16@24@?32
+//   SDImageCache  storeImageToMemory:forKey:            v32@0:8@16@24
+//   SDAnimatedImageView  sd_setImageWithURL:             v24@0:8@16
+// BDAnimatedImageView 继承自 SDAnimatedImageView（ivar dump 实证）。
+static NSString *HushFlashMD5(NSString *s) {
+    if (s.length == 0) return nil;
+    const char *c = [s UTF8String];
+    if (!c) return nil;
+    unsigned char d[CC_MD5_DIGEST_LENGTH];
+    CC_MD5(c, (CC_LONG)strlen(c), d);
+    NSMutableString *out = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) [out appendFormat:@"%02x", d[i]];
+    return out;
+}
+
+static void HushInjectImageCache(NSString *urlString, NSString *path) {
+    if (urlString.length == 0 || path.length == 0) return;
+    Class c = objc_getClass("SDImageCache");
+    if (!c) {
+        HushBurnNote(@"[P0-2b] CACHEINJECT# skip（找不到 SDImageCache）");
+        return;
+    }
+    id cache = ((id (*)(id, SEL))objc_msgSend)(c, @selector(sharedImageCache));
+    if (!cache) {
+        HushBurnNote(@"[P0-2b] CACHEINJECT# skip（sharedImageCache=nil）");
+        return;
+    }
+    UIImage *im = [UIImage imageWithContentsOfFile:path];
+    if (!im) {
+        HushBurnNote(@"[P0-2b] CACHEINJECT# skip（读不出图）");
+        return;
+    }
+    // 先塞内存 + 磁盘。SDWebImage 5 的默认 key 就是 url.absoluteString。
+    ((void (*)(id, SEL, id, id, BOOL, id))objc_msgSend)(
+        cache, @selector(storeImage:forKey:toDisk:completion:),
+        im, urlString, YES, nil);
+    // 老版本 SDK 只有两参版本，补一发（重复写无害）。
+    if ([cache respondsToSelector:@selector(storeImage:forKey:completion:)]) {
+        ((void (*)(id, SEL, id, id, id))objc_msgSend)(
+            cache, @selector(storeImage:forKey:completion:), im, urlString, nil);
+    }
+    HushBurnNote([NSString stringWithFormat:
+        @"[P0-2b] CACHEINJECT# ok key=%@ size=%.0fx%.0f",
+        urlString, im.size.width, im.size.height]);
+}
+
 static void HushFlashDownload(long long mid, NSString *url) {
     if (mid <= 0 || url.length == 0) return;
     NSString *dir = HushBurnDir();
     if (!dir) return;
-    NSString *dst = [dir stringByAppendingPathComponent:
-                     [NSString stringWithFormat:@"%lld.jpg", mid]];
+    // v54 P2：文件名改成 URL 的 MD5（对齐旧版插件），同一张图换条消息也认得出；
+    // 取不到 MD5 才退回 mid.jpg。
+    NSString *h = HushFlashMD5(url);
+    NSString *fname = h.length ? [h stringByAppendingPathExtension:@"jpg"]
+                               : [NSString stringWithFormat:@"%lld.jpg", mid];
+    NSString *dst = [dir stringByAppendingPathComponent:fname];
     if ([[NSFileManager defaultManager] fileExistsAtPath:dst]) {
         HushFlashMapSet(mid, url, dst);   // 已下过，直接登记
+        HushInjectImageCache(url, dst);   // 已下过也要注入（换账号/清过缓存）
         // v48 A：图已经在盘上，立即把可见 cell 铺一遍。
         // 调用点（r_burnStartLoad）在主线程，不用切队列。
         HushBurnRefreshVisible(mid);
@@ -1048,6 +1108,9 @@ static void HushFlashDownload(long long mid, NSString *url) {
             HushBurnNote([NSString stringWithFormat:
                 @"[P0-2b] BURNDL#ok mid=%lld bytes=%lu file=%@",
                 mid, (unsigned long)len, [dst lastPathComponent]]);
+            // v54 P2：写盘即注入宿主图片缓存 —— 宿主之后自己渲染这张图
+            // 时直接命中，不存在 CDN 403/过期的问题。
+            HushInjectImageCache(url, dst);
             // v48 A：写盘成功即刻回主线程铺图。
             // v47 真机 mid=23 就是死在这里 —— 图下完了，但宿主不重绘，
             // 铺图入口永远等不到。

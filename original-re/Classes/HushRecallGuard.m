@@ -31,7 +31,16 @@
 #define HUSH_MSG_TYPE_RECALL 55
 // 阅后即焚（闪照/闪文）。v39a 真机日志里它只在影子更新对象上出现过一次
 // （TRUTH#7/#8 mid=3），真消息那条还没采到 —— v40 先让探针认得它。
-#define HUSH_MSG_TYPE_TIME_LIMITED 282
+// v54 概念纠正：type=24 才是闪照。
+// 旧版插件日志铁证（hooo.1）：
+//   [Chat][历史闪照] 解密失败样本 msgId=1 type=24 ... extra 里带
+//   {"images":["",""],"pic_width":664,"pic_height":1870,"secureNotify":{...}}
+// —— images / pic_width / pic_height 只在闪照消息上出现。
+// 而 type=282 那条是 content=[害羞] 的表情消息，跟闪照无关。
+// 之前把 282 当闪照，导致 TruthDump 的 suspicious 判据、HushFlashRemember
+// 的入池判据、HushBurnApplyImage 的闸门全部打空 —— 闪照池永远是空的。
+#define HUSH_MSG_TYPE_FLASH        24
+#define HUSH_MSG_TYPE_TIME_LIMITED 282   // 已废弃：这是表情一类，不是闪照
 
 static long sBlocked = 0;
 
@@ -734,7 +743,7 @@ static void HushRecallTruthDump(id obj, const char *where) {
         long long rt  = HushModelLongLong(m, @[@"recallType"]);
         long long mid = HushModelLongLong(m, HushRecallIdKeys());
         if (t == HUSH_MSG_TYPE_RECALL
-            || t == HUSH_MSG_TYPE_TIME_LIMITED
+            || t == HUSH_MSG_TYPE_FLASH
             // v45：24 也要进 —— Destory cell 全程给的是 t=24，不收 24 就等于
             // 永远看不到这条渲染路径的任何真值。为了防日志爆炸，下面明细行
             // 对 t==24 走精简分支（只打 mid/t/img/dur）。
@@ -808,7 +817,7 @@ static void HushRecallTruthDump(id obj, const char *where) {
         }
 
         // 非 24（282 / 有图的普通消息）：打全六字段。
-        if (t == HUSH_MSG_TYPE_TIME_LIMITED || img.length > 0 || dur.length > 0) {
+        if (t == HUSH_MSG_TYPE_FLASH || img.length > 0 || dur.length > 0) {
             [lines addObject:[NSString stringWithFormat:
                 @"[P0-2b]   m[%lu] img=%@ dur=%@ it=%@ ctLen=%lu sctLen=%lu trs=%@",
                 (unsigned long)i,
@@ -1087,7 +1096,7 @@ void HushAutoDestroyUnlock(id cell, id model) {
     // v45：type=24 也要认。v44 真机日志里 Destory cell 拿到的 model 一直是 t=24
     // （BURN#1-3: mid=674 t=24 mt=n/a mix=24），而 type=282 全文一次都没出现。
     // 只认 282 会把真实渲染路径整条漏掉。
-    BOOL byType = (t == HUSH_MSG_TYPE_TIME_LIMITED) || (t == 24);
+    BOOL byType = (t == HUSH_MSG_TYPE_FLASH);
     BOOL byCell = NO;
     Class dc = NSClassFromString(@"BDDestoryChatCell");
     if (dc && [cell isKindOfClass:dc]) byCell = YES;
@@ -1412,6 +1421,24 @@ static void HushProbeEmit(NSString *s);                        // 定义在文�
 @end
 
 void HushBurnApplyImage(id cell, id model) {
+    // ══ v54：整段作废，代码保留便于回滚 ══════════════════════════════
+    // 用户 m03604 的决策：放弃在 UI 层死磕（自己算尺寸 / 自己塞图 /
+    // 自己挂手势接管点击），全面改走协议层（PushPackage messageType
+    // 24→2）+ SDImageCache 注入。
+    //
+    // 理由（v47~v53 六轮真机实测的教训）：
+    //   · 自己改 frame → 宿主按内容重算行高 → cell 变矮 → 我再按 cell
+    //     算 → 再缩，v51 打出 77→72→66→…→38 的递归缩图；
+    //   · 不缩、按宽铺满 → 368×797 溢出 574pt，contentView 默认
+    //     clipsToBounds=NO 直接盖住下面几条消息；
+    //   · 隐藏遮挡 → 连同 _destoryIconBtn（点击入口本体）一起干掉，
+    //     hidden / userInteractionEnabled 两层各踩过一次；
+    //   · 归根到底：宿主的排版链是它自己算的，我们在外面硬改，永远
+    //     慢一拍、永远互相打架。
+    //
+    // 协议层改写之后，宿主根本不会走 BDDestoryChatCell 这条渲染路径，
+    // 这套代码再也不会被需要。要恢复：删掉下面这行 return 即可。
+    return;
     if (!cell || !model) return;
     if (!HushFlashUnlockOn()) return;          // 面板开关关着就完全不介入
 
@@ -1629,7 +1656,7 @@ void HushRecallDecorateCell(id cell, id model) {
     // 一次没进、池子永远空、BURNSTART# 的 mid 恒为 n/a。
     // 现在跟 HushAutoDestroyUnlock 对齐，三路 OR。
     long long mT = model ? HushModelLongLong(model, HushRecallTypeKeys()) : LLONG_MIN;
-    BOOL burnByType = (mT == HUSH_MSG_TYPE_TIME_LIMITED) || (mT == 24);
+    BOOL burnByType = (mT == HUSH_MSG_TYPE_FLASH);
     BOOL burnByCell = NO;
     Class dcCls = NSClassFromString(@"BDDestoryChatCell");
     if (dcCls && [cell isKindOfClass:dcCls]) burnByCell = YES;
@@ -2433,6 +2460,34 @@ BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg, void (*orig)(id, 
 
     if (!pkg) return NO;
     HushPktLogShapeOnce(pkg);
+
+    // ── v54 P1：闪照转照片，走协议层 ───────────────────────────────────
+    // 关键事实（旧版插件日志实证 + 原版二进制 sel_index 核实）：
+    //   type=24 才是闪照（msgExtra 里带 images / pic_width / pic_height /
+    //   secureNotify），type=282 是表情一类，之前把 282 当闪照是错的。
+    // 旧版的做法是「改写推送包 type 24 → 2」，改完下游根本拿不到闪照消息，
+    // 于是 BDMessageViewController 那套「按住屏幕阅读 / 只可查看一次 / 15 秒 /
+    // 松手即销毁」的渲染链整条都不会被拉起 —— 遮罩、白块、行高、点击吃掉
+    // 这四个问题一次性消失，不需要再跟 BDDestoryChatCell 的布局较劲。
+    // PushPackage 上 setMessageType: 存在（sel_index: v24@0:8Q16），可以原地改。
+    if ([[HushConfig shared] isEnabled:@"switch_flash_photo"]
+        || [[HushConfig shared] isEnabled:@"switch_flash_text"]) {
+        long long ft = HushModelLongLong(pkg, HushPktTypeKeys());
+        if (ft == 24) {
+            long long fmid = HushModelLongLong(pkg, HushPktIdKeys());
+            BOOL ok = HushCallSetNumber(pkg,
+                            NSSelectorFromString(@"setMessageType:"), 2);
+            static int sTypeFix = 0;
+            sTypeFix++;
+            if (sTypeFix <= 20 || (sTypeFix % 20) == 0) {
+                NSString *line = [NSString stringWithFormat:
+                    @"[P0-2b] TYPEFIX#%d mid=%lld 24→2 ok=%d（协议层，下游不再看见闪照）",
+                    sTypeFix, fmid, ok ? 1 : 0];
+                fprintf(stderr, "%s\n", [line UTF8String]);
+                [HushLogger logLevel:2 format:line];
+            }
+        }
+    }
 
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]) return NO;
     if (![[HushConfig shared] isEnabled:@"switch_ar_packet_block"]) return NO;
