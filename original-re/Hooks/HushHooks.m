@@ -1085,7 +1085,10 @@ static void HushInjectImageCache(NSString *urlString, NSString *path) {
         urlString, im.size.width, im.size.height]);
 }
 
-static void HushFlashDownload(long long mid, NSString *url) {
+// v60：改成非 static —— HushRecallDecorateCell（Guard，ARC）在「收到即转」
+// 成功后要立刻触发下载 + 注入 SDImageCache，让宿主普通图片 cell 秒出图，
+// 不用等它自己去 CDN 拉。
+void HushFlashDownload(long long mid, NSString *url) {
     if (mid <= 0 || url.length == 0) return;
     NSString *dir = HushBurnDir();
     if (!dir) return;

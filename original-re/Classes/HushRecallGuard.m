@@ -1062,6 +1062,7 @@ static BOOL HushFlashUnlockOn(void) {
 // HushFlashMapPath(mid) 命中，说明 HushFlashDownload 已经落盘，拆遮罩安全。
 // v45：mid -> 本地原图路径（定义在 HushHooks.m 的映射表里）
 extern NSString *HushFlashMapPath(long long mid);
+extern void HushFlashDownload(long long mid, NSString *url);
 
 static BOOL HushFlashStripOn(id model) {
     if (![[HushConfig shared] isEnabled:@"switch_flash_thumb"]) return NO;
@@ -1706,6 +1707,41 @@ void HushRecallDecorateCell(id cell, id model) {
     //
     // 只在本地还没有落盘图时做 —— 有图的话 HushBurnApplyImage 那条路已经能
     // 铺满气泡，再改 model 反而多一次重排。
+    // v60 探针：普通图片 cell 到底读 model 上哪个字段拿图。
+    // 用户实测 v59 已经把 type 改成 2、URL 也拿到了（DECRYPT# ok=1 urlLen=136），
+    // 但列表里还是空 —— 说明 setImage: 不是宿主读的那个键。
+    // 这里把 image / content / destroyUrl / msgExtra 全打一遍，一次定位。
+    if (model) {
+        static int sImgProbe = 0;
+        Class ic = NSClassFromString(@"BDChatImageCell");
+        if (ic && [cell isKindOfClass:ic] && sImgProbe < 8) {
+            sImgProbe++;
+            NSMutableString *d = [NSMutableString string];
+            NSArray *keys = @[@"type", @"image", @"imageType", @"content",
+                              @"destroyUrl", @"treasureImage", @"msgExtra"];
+            for (NSString *k in keys) {
+                id v = nil;
+                @try { v = [model valueForKey:k]; }
+                @catch (__unused NSException *e) { v = nil; }
+                NSString *sv = @"-";
+                if ([v isKindOfClass:[NSString class]]) {
+                    NSString *t = (NSString *)v;
+                    sv = (t.length > 90) ? [t substringToIndex:90] : t;
+                } else if (v) {
+                    sv = [v description];
+                    if (sv.length > 90) sv = [sv substringToIndex:90];
+                }
+                [d appendFormat:@" %@=[%@]", k, sv];
+            }
+            NSString *line = [NSString stringWithFormat:
+                @"[P0-2b] IMGPROBE#%d mid=%@ cell=%@%@",
+                sImgProbe, HushNumStr(HushModelLongLong(model, HushRecallIdKeys())),
+                NSStringFromClass([cell class]), d];
+            fprintf(stderr, "%s\n", [line UTF8String]);
+            [HushLogger logLevel:2 format:line];
+        }
+    }
+
     if (burnByType && model && HushFlashUnlockOn()) {
         long long fmid = HushModelLongLong(model, HushRecallIdKeys());
         NSString *have = (fmid > 0) ? HushFlashMapPath(fmid) : nil;
@@ -1720,6 +1756,12 @@ void HushRecallDecorateCell(id cell, id model) {
                     HushCallSetNumber(model, NSSelectorFromString(@"setType:"), 2);
                     HushCallSetObject(model, NSSelectorFromString(@"setImage:"), u2);
                     HushCallSetObject(model, NSSelectorFromString(@"setDestroyUrl:"), nil);
+                    // v60：content 里原本是 162 字节密文。宿主普通图片 cell 若把
+                    // content 当图片地址去加载，密文必然 404 —— 一并换成明文 URL。
+                    HushCallSetObject(model, NSSelectorFromString(@"setContent:"), u2);
+                    // v60：立刻下载 + 注入 SDImageCache。宿主 sd_setImageWithURL:
+                    // 命中缓存就直接出图，不用等它自己走一遍网络。
+                    if (fmid > 0) HushFlashDownload(fmid, u2);
                     if (show) {
                         NSString *line = [NSString stringWithFormat:
                             @"[P0-2b] DECRYPT#%d mid=%@ cLen=%lu ok=1 urlLen=%lu url=%@",
