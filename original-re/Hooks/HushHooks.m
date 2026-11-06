@@ -1767,6 +1767,44 @@ static BOOL HushFlashNetWanted(NSString *u) {
     return NO;
 }
 
+// v61：相册探针 —— 原版 `[AlbumSniff]` 只被动嗅探、命中率 0（cheat/private 是
+// 关系链查询，回包没有 pics）。真照片墙是 `/ticktocks/users/<uid>/photowall`。
+// 这里把相册相关的**请求 URL 与响应体开头**都打出来，第一次就能看清：
+//   - 真实路径与 query（page/size/uid 在哪）
+//   - 鉴权是走 header 还是 query 签名
+//   - 顶层 key 到底是 pics / feed_pics / data.pics
+static BOOL HushAlbumNetWanted(NSString *u) {
+    if (u.length < 8 || u.length > 2048) return NO;
+    if ([u rangeOfString:@"photowall"].location       != NSNotFound) return YES;
+    if ([u rangeOfString:@"/ticktocks/"].location     != NSNotFound) return YES;
+    if ([u rangeOfString:@"cheat/private"].location   != NSNotFound) return YES;
+    if ([u rangeOfString:@"super_call_album"].location != NSNotFound) return YES;
+    return NO;
+}
+
+// 只取前若干字符：相册 JSON 可能几百 KB，全打会把日志刷爆。
+static void HushAlbumNote(const char *phase, NSString *url, NSData *data, NSURLResponse *resp) {
+    NSInteger code = -1;
+    @try {
+        if ([resp isKindOfClass:[NSHTTPURLResponse class]])
+            code = (NSInteger)[(NSHTTPURLResponse *)resp statusCode];
+    } @catch (__unused NSException *e) {}
+    NSString *head = @"";
+    if (data.length > 0) {
+        NSUInteger n = data.length < 360 ? data.length : 360;
+        NSString *s = [[NSString alloc] initWithBytes:[data bytes]
+                                              length:n
+                                            encoding:NSUTF8StringEncoding];
+        if (s) { head = [s stringByReplacingOccurrencesOfString:@"\n" withString:@" "]; [s release]; }
+    }
+    NSString *line = [NSString stringWithFormat:
+        @"[Album] ALB# %s code=%ld bytes=%lu url=%@ | %@",
+        phase, (long)code, (unsigned long)(data ? data.length : 0),
+        url ? url : @"(nil)", head];
+    fprintf(stderr, "%s\n", [line UTF8String]);
+    [HushLogger logLevel:2 format:line];
+}
+
 static void HushNetNote(int seq, NSString *phase, NSString *url, NSData *data, NSURLResponse *resp) {
     NSString *mime = @"?";
     @try {
@@ -1813,12 +1851,25 @@ static HushNetHandler HushNetWrap(int seq, NSString *url, NSURLRequest *req,
     return [[raw copy] autorelease];
 }
 
+static HushNetHandler HushAlbumWrap(NSString *url, HushNetHandler handler) {
+    HushNetHandler raw = ^(NSData *data, NSURLResponse *resp, NSError *err) {
+        if (data.length > 0 && !err)      HushAlbumNote("resp", url, data, resp);
+        else if (err)                     HushAlbumNote("err",  url, nil,  nil);
+        if (handler) handler(data, resp, err);   // 原样回调
+    };
+    return [[raw copy] autorelease];
+}
+
 static id (*o_dataTaskReq)(id, SEL, id, HushNetHandler);
 static id r_dataTaskReq(id self, SEL _cmd, id req, HushNetHandler handler) {
     NSString *u = HushNetURLString(req);
-    if (!HushFlashNetWanted(u)) {
+    if (!HushFlashNetWanted(u) && !HushAlbumNetWanted(u)) {
         if (!o_dataTaskReq) return nil;
         return o_dataTaskReq(self, _cmd, req, handler);
+    }
+    if (!HushFlashNetWanted(u)) {           // 只命中相册词
+        HushAlbumNote("req", u, nil, nil);
+        return o_dataTaskReq ? o_dataTaskReq(self, _cmd, req, HushAlbumWrap(u, handler)) : nil;
     }
     static int seq = 0;
     int my = ++seq;
@@ -1830,9 +1881,13 @@ static id r_dataTaskReq(id self, SEL _cmd, id req, HushNetHandler handler) {
 static id (*o_dataTaskURL)(id, SEL, id, HushNetHandler);
 static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
     NSString *u = HushNetURLOf(url);
-    if (!HushFlashNetWanted(u)) {
+    if (!HushFlashNetWanted(u) && !HushAlbumNetWanted(u)) {
         if (!o_dataTaskURL) return nil;
         return o_dataTaskURL(self, _cmd, url, handler);
+    }
+    if (!HushFlashNetWanted(u)) {           // 只命中相册词
+        HushAlbumNote("req", u, nil, nil);
+        return o_dataTaskURL ? o_dataTaskURL(self, _cmd, url, HushAlbumWrap(u, handler)) : nil;
     }
     static int seq = 0;
     int my = ++seq;
