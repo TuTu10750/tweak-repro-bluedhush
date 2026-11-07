@@ -37,11 +37,12 @@
 //   [Chat][历史闪照] 解密失败样本 msgId=1 type=24 ... extra 里带
 //   {"images":["",""],"pic_width":664,"pic_height":1870,"secureNotify":{...}}
 // —— images / pic_width / pic_height 只在闪照消息上出现。
-// 而 type=282 那条是 content=[害羞] 的表情消息，跟闪照无关。
+// type=282 走 BDMsgBigImageCellOther；最新原版真机日志里它不是 24，
+// 原版也不会把 282 改写成 2，但撤回仍需要保留这条媒体消息。
 // 之前把 282 当闪照，导致 TruthDump 的 suspicious 判据、HushFlashRemember
 // 的入池判据、HushBurnApplyImage 的闸门全部打空 —— 闪照池永远是空的。
 #define HUSH_MSG_TYPE_FLASH        24
-#define HUSH_MSG_TYPE_TIME_LIMITED 282   // 已废弃：这是表情一类，不是闪照
+#define HUSH_MSG_TYPE_BIG_IMAGE     282  // 媒体大图；原版不按 24 闪照转换
 
 static long sBlocked = 0;
 
@@ -614,17 +615,22 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     id target = model;
     BOOL isolated = NO;
 
-    // v62：闪照「收到即转」之后，这条消息在本地已经是普通图片（type=2 + 明文 URL）。
-    // 撤回不能把它改回文本 —— 用户要的语义是「照片留着，只多一个已拦截」。
-    // 判据：本地闪照映射表里有这条 mid（= 我们已落盘/转过），或 image 字段已有值。
+    // 撤回不能把媒体消息改回文本。
+    // 最新原版日志同时出现三种终态：普通图片 type=2、闪照 type=24、
+    // 大图 type=282；原版吞掉 type=55 后这三类 type 都没有变化。
+    // 因此兜底通道也保持媒体类型，只清撤回字段并贴「已拦截」。
     extern NSString *HushFlashMapPath(long long mid);
     NSString *flashPath = (mid > 0) ? HushFlashMapPath(mid) : nil;
     NSString *imgUrl = HushModelString(model, @[@"image"]);
-    BOOL keepAsImage = (flashPath.length > 0 || imgUrl.length > 0);
+    BOOL keepMedia = (t == 2 || t == HUSH_MSG_TYPE_FLASH ||
+                      t == HUSH_MSG_TYPE_BIG_IMAGE ||
+                      flashPath.length > 0 || imgUrl.length > 0);
+    long long preservedType = (t == 2 || t == HUSH_MSG_TYPE_FLASH ||
+                               t == HUSH_MSG_TYPE_BIG_IMAGE) ? t : 2;
 
     BOOL ok = NO;
-    if (keepAsImage) {
-        ok = HushCallSetNumber(target, @selector(setType:), 2);
+    if (keepMedia) {
+        ok = HushCallSetNumber(target, @selector(setType:), preservedType);
         HushCallSetNumber(target, @selector(setStatus:), 0);
         HushCallSetNumber(target, @selector(setDeleteStatus:), 0);
         HushCallSetNumber(target, @selector(setRecallType:), 0);
@@ -642,11 +648,11 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     // 排版逻辑去取）。我们把撤回态抹掉之后，宿主就没有理由再去取正文了，
     // 于是渲染成一条什么都没有的气泡。这里补一句占位说明；
     // 只有原本就没有正文时才补，正常消息不受影响。
-    // 保留成图片的那条不补：它已经有图了，塞文字反而把气泡搞脏。
+    // 保留成媒体消息的那条不补：它已经有内容，塞文字反而把气泡搞脏。
     BOOL filled = NO;
     NSString *body = HushModelString(model, @[@"content", @"messageContent", @"text"]);
     NSString *bodyForRestore = body;
-    if (!keepAsImage && body.length == 0) {
+    if (!keepMedia && body.length == 0) {
         filled = HushCallSetObject(target, @selector(setContent:),
                                    @"[对方试图撤回一条消息，已被拦截]");
         if (!filled) bodyForRestore = nil;
@@ -663,9 +669,9 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
         return model;
     }
 
-    // 保留成图片的那条不进「落库前还原」表：它在库里的终态就该是普通照片，
-    // 还原成 type=55 反而是数据污染。
-    if (!keepAsImage) HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
+    // 保留成媒体消息的那条不进「落库前还原」表：它在库里的终态就该是
+    // type=2/24/282，还原成 type=55 反而是数据污染。
+    if (!keepMedia) HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
     // 给气泡打标记：Cell 的 setMessage: 会查这个关联对象，命中就贴「已拦截」。
     objc_setAssociatedObject(target, &kHushInterceptedKey, @YES,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -673,8 +679,8 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     // 注意别用 %s 传中文：%s 走的是 C 字符串，日志里会变成乱码
     // （v31 的「ÂâØÊú¨ÈöîÁ¶ª」就是这么来的），中文一律 %@。
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
-        @"[Hush][防撤回] 改造 type=55→%d msgId=%lld 入口=%s 方式=%@ 补正文=%d",
-        keepAsImage ? 2 : 1, mid, where,
+        @"[Hush][防撤回] 改造撤回→%lld msgId=%lld 入口=%s 方式=%@ 补正文=%d",
+        keepMedia ? preservedType : 1, mid, where,
         isolated ? @"副本隔离" : @"原地改+落库前还原", filled ? 1 : 0]];
     return target;
 }
@@ -2757,40 +2763,51 @@ BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg, void (*orig)(id, 
     if (!pkg) return NO;
     HushPktLogShapeOnce(pkg);
 
-    // ── v55 A：闪照转照片，走协议层，但必须「先回填、后转照片」────────
-    // v54 曾无条件把 messageType 24 → 2，结果是个死锁：
-    //   改成 2 之后宿主当普通图片消息渲染，而闪照的 extra 里
-    //   images 是 ["",""]（空的），于是显示成一条空白图片消息；
-    //   更致命的是它再也不会走 BDAutoDestoryImageViewController，
-    //   而明文 URL 只有那个全屏页的 imageURL getter 能给我们 ——
-    //   转了就永远拿不到 URL，缓存里也就永远没有图。
-    // 旧版插件日志的时序是反的：21:43 回填（拿 URL、落盘、注入缓存），
-    // 21:45 才改包。所以这里加一道闸：本地盘上已经有这张图，才允许转。
+    // ── v63：闪照在私有包入口“收到即转” ───────────────────────────
+    // 最新原版真机日志证明，原版是在 handleingGRPCPrivatePackage 内把
+    // messageType=24 原地改成 2，随后宿主才收到 type=2 的 receiveNewMessage，
+    // 再完成归档与图片缓存注入。不能只等本地文件先存在，否则首次收到时
+    // 仍会进入闪照 cell，无法做到真正的“收到即转”。
+    //
+    // 我们沿用已验证的 HushDecryptFlashURL 借宿主解密器取得明文 URL：
+    //   密文 content → 明文 URL → 回填 content/image → messageType 24→2
+    // 若缓存中已经有落盘图，也允许转换。两者都没有时仍保留 24，避免空白图。
     if ([[HushConfig shared] isEnabled:@"switch_flash_photo"]
         || [[HushConfig shared] isEnabled:@"switch_flash_text"]) {
         long long ft = HushModelLongLong(pkg, HushPktTypeKeys());
         if (ft == HUSH_MSG_TYPE_FLASH) {
             long long fmid = HushModelLongLong(pkg, HushPktIdKeys());
             extern NSString *HushFlashMapPath(long long mid);
+            extern void HushFlashDownload(long long mid, NSString *url);
             NSString *fp = (fmid > 0) ? HushFlashMapPath(fmid) : nil;
             BOOL haveImg = (fp.length > 0 &&
                             [[NSFileManager defaultManager] fileExistsAtPath:fp]);
+            NSString *cipher = HushModelString(pkg, @[@"content", @"messageContent"]);
+            NSString *plain = HushDecryptFlashURL(cipher);
+            BOOL canPromote = haveImg || plain.length >= 8;
             static int sTypeFix = 0;
             sTypeFix++;
             BOOL logIt = (sTypeFix <= 20) || ((sTypeFix % 20) == 0);
-            if (haveImg) {
+            if (canPromote) {
                 BOOL ok = HushCallSetNumber(pkg,
                                 NSSelectorFromString(@"setMessageType:"), 2);
+                if (ok && plain.length >= 8) {
+                    HushCallSetObject(pkg, NSSelectorFromString(@"setContent:"), plain);
+                    HushCallSetObject(pkg, NSSelectorFromString(@"setImage:"), plain);
+                    HushCallSetObject(pkg, NSSelectorFromString(@"setDestroyUrl:"), nil);
+                    if (fmid > 0) HushFlashDownload(fmid, plain);
+                }
                 if (logIt) {
                     NSString *line = [NSString stringWithFormat:
-                        @"[P0-2b] TYPEFIX#%d mid=%lld 24→2 ok=%d（盘上有图才转）",
-                        sTypeFix, fmid, ok ? 1 : 0];
+                        @"[P0-2b] TYPEFIX#%d mid=%lld 24→2 ok=%d cached=%d plain=%d",
+                        sTypeFix, fmid, ok ? 1 : 0,
+                        haveImg ? 1 : 0, plain.length >= 8 ? 1 : 0];
                     fprintf(stderr, "%s\n", [line UTF8String]);
                     [HushLogger logLevel:2 format:line];
                 }
             } else if (logIt) {
                 NSString *line = [NSString stringWithFormat:
-                    @"[P0-2b] TYPEDEFER#%d mid=%lld 保留 24（本地无图，等点开回填）",
+                    @"[P0-2b] TYPEDEFER#%d mid=%lld 保留 24（无缓存图且未解出明文 URL）",
                     sTypeFix, fmid];
                 fprintf(stderr, "%s\n", [line UTF8String]);
                 [HushLogger logLevel:2 format:line];
