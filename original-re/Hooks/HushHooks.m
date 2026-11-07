@@ -319,6 +319,17 @@ static void HushPrivacyTagLayout(UIView *host) {
     f.origin.y = MAX(0.0, host.bounds.size.height - f.size.height);
     tag.frame = f;
     [host bringSubviewToFront:tag];
+
+    static int tagLogs = 0;
+    tagLogs++;
+    if (tagLogs <= 20 || (tagLogs % 20) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[Hush][隐私相册] 标签已显示 host=%@ hostFrame=%@ tagFrame=%@ items=%ld",
+            NSStringFromClass([host class]), NSStringFromCGRect(host.bounds),
+            NSStringFromCGRect(f), (long)items];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
 }
 
 static int r_personPrivAccess(id self, SEL _cmd) {
@@ -350,6 +361,8 @@ static void r_personPrivUpdate(id self, SEL _cmd, id uid, id photos,
                                int isAccessOpen, int picNums) {
     HushHit("BDPersonPrivacyAlbumCollectView",
             "updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:");
+    int originalLock = islock;
+    int originalAccess = isAccessOpen;
     if (HushPrivacyUnlockOn()) {
         islock = 1;
         isAccessOpen = 0;
@@ -360,6 +373,21 @@ static void r_personPrivUpdate(id self, SEL _cmd, id uid, id photos,
     }
     if (HushPrivacyUnlockOn() && [self isKindOfClass:[UIView class]]) {
         HushPrivacyTagLayout((UIView *)self);
+    }
+    if (HushPrivacyUnlockOn()) {
+        static int updateLogs = 0;
+        updateLogs++;
+        if (updateLogs <= 20 || (updateLogs % 20) == 0) {
+            long photoCount = [photos respondsToSelector:@selector(count)]
+                            ? (long)[(id)photos count] : -1;
+            NSString *line = [NSString stringWithFormat:
+                @"[Hush][隐私相册] live 更新 islock=%d→%d isAccessOpen=%d→%d "
+                @"photos=%ld picNums=%d hasMore=%d",
+                originalLock, islock, originalAccess, isAccessOpen,
+                photoCount, picNums, hasMore ? 1 : 0];
+            fprintf(stderr, "%s\n", [line UTF8String]);
+            [HushLogger logLevel:2 format:line];
+        }
     }
 }
 
