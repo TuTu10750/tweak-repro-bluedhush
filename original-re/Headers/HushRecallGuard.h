@@ -37,6 +37,21 @@
 /// must treat 0 as "unknown" and fail open.
 FOUNDATION_EXPORT long long HushRecallCurrentUid(void);
 
+/// v62: uid resolved per conversation. A machine can hold more than one
+/// `Documents/<uid>DB.sqlite` (real log: 100938367 and 120159476), which makes
+/// `HushRecallCurrentUid()` useless. In a 1:1 chat `sessionId` IS the peer's uid,
+/// so excluding it from the candidates leaves our own uid. Returns 0 when that
+/// still does not narrow down to exactly one candidate.
+FOUNDATION_EXPORT long long HushRecallResolveUidForSession(long long sid);
+
+/// v62: "did *I* send this recall?" — shared by the packet leg and the three
+/// model-level legs so they can never disagree. Order: a resolved uid decides
+/// (`from == me`); otherwise `from == sessionId` proves the peer did it; anything
+/// else is treated as ours (fail open, same as the reference tweak).
+/// `outMe` may be NULL and receives the uid that was used (0 when unknown).
+FOUNDATION_EXPORT BOOL HushRecallIsSelfRecall(long long sid, long long from,
+                                              long long *outMe);
+
 /// YES when `model` is a recall packet that came from somebody else.
 /// `outMsgId` may be NULL.
 FOUNDATION_EXPORT BOOL HushRecallIsForeignRecall(id model, long long *outMsgId);

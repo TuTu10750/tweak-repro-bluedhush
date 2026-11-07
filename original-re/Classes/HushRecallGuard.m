@@ -104,6 +104,75 @@ long long HushRecallCurrentUid(void) {
     return sUid;
 }
 
+// v62：uid 唯一化 —— 会话维度排除法。
+//
+// v61 及之前只有「候选必须唯一」这一条路，一旦机上出现两个 <uid>DB.sqlite
+// （真机日志：100938367 与 120159476 并存），HushRecallCurrentUid() 直接返 0，
+// 于是包层 / 写库 / UI 三条腿全体 fail-open —— 撤回想拦也拦不住。
+// 真机证据（桌面 hush.log:21:42:38）：
+//   uid 候选 2 个（100938367,120159476），无法唯一确定 → 按 fail-safe 放行不拦
+//   收到撤回包但登录态未知（me=0）→ fail-safe 放行不吞
+// 结果就是闪照转照片照常生效、防撤回却彻底失效：前者不看 uid，后者全押在 uid 上。
+//
+// 单聊语义是确定的：sessionId 就是对方的 uid。所以候选里把 sessionId 排除掉，
+// 剩下那个就是自己。群聊 sessionId 是群号、不在候选里，排除不掉 → 仍返 0，
+// 上层按「拿不准放行」的老口径处理，不猜。
+long long HushRecallResolveUidForSession(long long sid) {
+    static long long sUid = 0;
+    static NSTimeInterval sReadAt = 0;
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if (sUid != 0 && now - sReadAt < 30.0) return sUid;
+
+    sReadAt = now;
+    NSArray *cands = HushRecallUidCandidates();
+    if (cands.count == 1) {
+        sUid = [[cands firstObject] longLongValue];
+        return sUid;
+    }
+    if (cands.count == 0) { sUid = 0; return 0; }
+
+    if (sid > 0) {
+        long long only = 0;
+        int left = 0;
+        for (NSString *s in cands) {
+            long long v = [s longLongValue];
+            if (v == sid) continue;          // 单聊的 sessionId 是对方，不是自己
+            only = v;
+            left++;
+        }
+        if (left == 1) {
+            sUid = only;
+            [HushLogger logLevel:2 format:[NSString stringWithFormat:
+                @"[Hush][防撤回] uid 候选 %lu 个（%@），按 sessionId=%lld 排除后唯一确定为 %lld",
+                (unsigned long)cands.count, [cands componentsJoinedByString:@","],
+                sid, only]];
+            return sUid;
+        }
+    }
+
+    [HushLogger logLevel:2 format:[NSString stringWithFormat:
+        @"[Hush][防撤回] uid 候选 %lu 个（%@），sessionId=%lld 也排除不掉 → 仍按 fail-safe 放行",
+        (unsigned long)cands.count, [cands componentsJoinedByString:@","], sid]];
+    sUid = 0;
+    return 0;
+}
+
+// 「这次撤回是不是我自己发起的」—— 三条腿统一走这里，别各写一套。
+//
+// 判据顺序：
+//   1. uid 能确定 → from == me 即自己；
+//   2. uid 定不了，但包自带 sessionId 且 from == sessionId → 发起者就是会话对象
+//      （单聊里那一定是对方），可以安全地判成「别人撤回」，不必知道 me；
+//   3. 其余情况拿不准 → 按自己处理（fail-open），与原版一致。
+BOOL HushRecallIsSelfRecall(long long sid, long long from, long long *outMe) {
+    long long me = HushRecallResolveUidForSession(sid);
+    if (outMe) *outMe = me;
+    if (from <= 0 || from == LLONG_MIN) return YES;   // 认不出来源 → 不动
+    if (me > 0) return (from == me);
+    if (sid > 0 && from == sid) return NO;            // 发起者==会话对象 ⇒ 对方
+    return YES;
+}
+
 #pragma mark - model probing
 
 static BOOL HushModelHasKey(id model, NSString *key) {
@@ -244,20 +313,20 @@ BOOL HushRecallIsForeignRecall(id model, long long *outMsgId) {
     long long type = HushModelLongLong(model, HushRecallTypeKeys());
     if (type != HUSH_MSG_TYPE_RECALL) return NO;
 
-    long long me = HushRecallCurrentUid();
-    if (me == 0) return NO;   // unknown login state → fail open, like the original
-
     long long from = HushModelLongLong(model, HushRecallFromKeys());
     if (from == LLONG_MIN) return NO;   // cannot attribute it → do not touch
+
+    long long sid = HushModelLongLong(model, @[@"sessionId", @"sess", @"to"]);
+    if (sid == LLONG_MIN) sid = 0;
+
+    // v62：不再「uid 定不了就整条放行」。self/foreign 由 HushRecallIsSelfRecall
+    // 统一判定，双 uid 库的机器上也能靠 sessionId 反推出自己。
+    long long me = 0;
+    if (HushRecallIsSelfRecall(sid, from, &me)) return NO;
 
     if (outMsgId) {
         long long mid = HushModelLongLong(model, HushRecallIdKeys());
         *outMsgId = (mid == LLONG_MIN) ? 0 : mid;
-    }
-
-    if (from == me) {
-        // Our own recall: let it through, the reference log does the same.
-        return NO;
     }
     return YES;
 }
@@ -1875,6 +1944,25 @@ void HushRecallDecorateCell(id cell, id model) {
     }
 
     tag.hidden = NO;
+
+    // v62：被撤回的闪照不再保留「闪照」身份。
+    // 用户要的语义是：先看到闪照标志 → 对方撤回 → 标志消失，改成「已拦截」。
+    // 已成功「收到即转」的那条根本不会有这个标（它现在是普通图片），
+    // 只有还没转成照片的（盘上无图 / 开关关着）仍挂着 kHushBurnTag，这里一并摘掉。
+    {
+        id ivObj = HushSafeKVC(cell, @"_bubbleImgView");
+        UIView *bm = nil;
+        if ([ivObj isKindOfClass:[UIView class]]) {
+            @try { bm = (UIView *)[(UIView *)ivObj viewWithTag:kHushBurnTag]; }
+            @catch (__unused NSException *e) { bm = nil; }
+        }
+        if (!bm) {
+            @try { bm = (UIView *)[host viewWithTag:kHushBurnTag]; }
+            @catch (__unused NSException *e) { bm = nil; }
+        }
+        if (bm) bm.hidden = YES;
+    }
+
     CGRect a = [anchor convertRect:anchor.bounds toView:host];
     CGRect f = tag.frame;
     // v41：贴气泡最内侧左上角，内缩 6pt（v40 是 4pt）。
@@ -2695,19 +2783,26 @@ BOOL HushRecallHandlePrivatePackage(id self, SEL _cmd, id pkg, void (*orig)(id, 
     long long mid  = HushModelLongLong(pkg, HushPktIdKeys());
     long long from = HushModelLongLong(pkg, HushPktFromKeys());
     long long sid  = HushModelLongLong(pkg, HushPktSessKeys());
-    long long me   = HushRecallCurrentUid();
+    if (from == LLONG_MIN) from = 0;
+    if (sid  == LLONG_MIN) sid  = 0;
 
-    // 与自己撤回 / 登录态未知同一条口径：拿不准就放行（原版也是这么写的：
-    // `撤回包来自自己（from=100938367），放行` / `登录态不可用（me=0），按 fail-safe 放行不拦`）。
-    if (me == 0) {
-        [HushLogger logLevel:2 format:
-            @"[Hush][防撤回] 收到撤回包但登录态未知（me=0）→ fail-safe 放行不吞"];
+    // v62：这里是「防撤回全灭」的真凶。v61 及之前是
+    //     long long me = HushRecallCurrentUid();
+    //     if (me == 0) { ...fail-safe 放行不吞... }
+    // 而双 uid 库的机器上 HushRecallCurrentUid() 恒返 0 —— 也就是说这条腿永远
+    // 放行，宿主自己把 type=55 吃掉、把消息刷成撤回态。
+    // 现在改走 HushRecallIsSelfRecall：uid 定不了时用「from == sessionId ⇒ 对方」
+    // 这条单聊语义继续拦，只有真正拿不准（群聊且 uid 未知）才 fail-open。
+    long long me = 0;
+    if (HushRecallIsSelfRecall(sid, from, &me)) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][防撤回] 撤回包判为自己发起或无法归属（me=%lld from=%lld sessionId=%lld），放行",
+            me, from, sid]];
         return NO;
     }
-    if (from == me) {
+    if (me == 0) {
         [HushLogger logLevel:3 format:[NSString stringWithFormat:
-            @"[Hush][防撤回] 撤回包来自自己（from=%lld），放行", from]];
-        return NO;
+            @"[Hush][防撤回] uid 未唯一确定，但 from==sessionId(%lld) 证明是对方撤回 → 照拦", sid]];
     }
     if (mid <= 0) {
         [HushLogger logLevel:2 format:
@@ -2758,10 +2853,10 @@ void HushRecallFilterAndForward(id self, SEL _cmd, id msgs,
                                 void (*orig)(id, SEL, id)) {
     if (!orig) return;
 
-    // v37：包层吞包开着（默认开）时这条老腿完全让路。宿主根本收不到撤回包，
-    // 这里再改类型只会制造第二套状态 —— 保留实现仅为排障时手动开回去。
+    // v62：不再因 switch_ar_packet_block 整条让路。理由同 DB / UI 两条腿：
+    // 这里只对「真的进了内存数组的撤回态模型」动手，包层正常工作时数组里
+    // 根本不会有这种模型，天然空转；包层漏了才由它接管。
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
-        || [[HushConfig shared] isEnabled:@"switch_ar_packet_block"]
         || ![msgs isKindOfClass:[NSArray class]]
         || [(NSArray *)msgs count] == 0) {
         orig(self, _cmd, msgs);            // R2
@@ -2804,16 +2899,34 @@ void HushRecallGuardSingleWrite(id self, SEL _cmd, id model,
     // v37：包层吞包开着时 DB 腿不作主 —— 宿主压根不会发起把消息写成撤回态的写库。
     BOOL packetLeg = [[HushConfig shared] isEnabled:@"switch_ar_packet_block"];
 
-    if (on && blockDb && !packetLeg) {
+    if (on) {
         long long mid = 0;
         HushCrumb("db:probe");
         if (HushRecallIsForeignRecall(model, &mid)) {
+            // v62 兜底。之前这里是 `if (on && blockDb && !packetLeg)`，而
+            // switch_ar_db_block 默认 0、switch_ar_packet_block 默认 1 —— 整段
+            // 在默认配置下**永不执行**。也就是说防撤回全押在包层这根独木桥上：
+            // 包层一旦因为 uid 认不出而放行，宿主就把撤回态写进库，一点救都没有
+            // （真机 hush.log:21:42:38 的 me=0 就是这么把防撤回全灭的）。
+            // 现在只要这条撤回态真的到了写库口，就说明包层没拦住，必须接管：
+            //   · 诊断开关 blockDb 打开 → 保持老行为：拦写、不调 orig；
+            //   · 否则 → 就地洗白后照常落库（R2 不破，宿主状态机不会被悬住）。
+            if (mid > 0) HushRecallMarkIntercepted(mid);
             sBlocked++;
-            HushCrumb("db:record");
+            if (blockDb && !packetLeg) {
+                HushCrumb("db:record");
+                [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                    @"[Hush][防撤回] 拦下撤回落库 msgId=%lld（本地记录保持原样）", mid]];
+                HushRecallNoteBlocked(model, mid, "db-write");
+                return;                    // 拦写：不调 orig（v27 验证安全）
+            }
+            id repl = HushRecallNeutralize(model, mid, "db-write");
             [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][防撤回] 拦下撤回落库 msgId=%lld（本地记录保持原样）", mid]];
+                @"[Hush][防撤回] 包层漏掉的撤回落库，就地洗白后照写 msgId=%lld", mid]];
             HushRecallNoteBlocked(model, mid, "db-write");
-            return;                        // 拦写：不调 orig（v27 验证安全）
+            HushCrumb("db:orig");
+            orig(self, _cmd, (repl ?: model));
+            return;
         }
     }
 
@@ -2829,9 +2942,10 @@ void HushRecallFilterArrayForward(id self, SEL _cmd, id msgs,
                                   void (*orig)(id, SEL, id, unsigned long long)) {
     if (!orig) return;
 
+    // v62：不再因为 switch_ar_ui_block / switch_ar_packet_block 整条让路。
+    // 这条腿只对「真的混进批次的撤回态模型」动手（hit 判据），包层正常工作时
+    // 批次里根本不会有这种模型，等于天然空转；包层漏了才由它接管。
     if (![[HushConfig shared] isEnabled:@"switch_anti_recall"]
-        || ![[HushConfig shared] isEnabled:@"switch_ar_ui_block"]
-        || [[HushConfig shared] isEnabled:@"switch_ar_packet_block"]
         || ![msgs isKindOfClass:[NSArray class]]
         || [(NSArray *)msgs count] == 0) {
         orig(self, _cmd, msgs, updateType);            // R2
@@ -2870,12 +2984,13 @@ void HushRecallDropSingleForward(id self, SEL _cmd, id model,
                                  void (*orig)(id, SEL, id)) {
     if (!orig) return;
 
-    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]
-        && [[HushConfig shared] isEnabled:@"switch_ar_ui_block"]
-        && ![[HushConfig shared] isEnabled:@"switch_ar_packet_block"]) {
+    // v62：同 updateMessages 那条腿 —— 不因 ui_block / packet_block 整条让路。
+    // 只有「单条进来的确实是别人的撤回态」才动手，包层正常时它永远走不到这里。
+    if ([[HushConfig shared] isEnabled:@"switch_anti_recall"]) {
         long long mid = 0;
         if (HushRecallIsForeignRecall(model, &mid)) {
             sBlocked++;
+            if (mid > 0) HushRecallMarkIntercepted(mid);
             id repl = HushRecallNeutralize(model, mid, "receiveNewMessage:");
             [HushLogger logLevel:3 format:[NSString stringWithFormat:
                 @"[Hush][防撤回] 单条改造 msgId=%lld（照常进会话，不渲染撤回态）", mid]];
