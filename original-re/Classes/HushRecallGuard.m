@@ -614,18 +614,39 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     id target = model;
     BOOL isolated = NO;
 
-    // 55 → 1（普通文本），status 3（已撤回）→ 0，让宿主按普通气泡渲染。
-    BOOL ok = HushCallSetNumber(target, @selector(setType:), 1);
-    HushCallSetNumber(target, @selector(setStatus:), 0);
+    // v62：闪照「收到即转」之后，这条消息在本地已经是普通图片（type=2 + 明文 URL）。
+    // 撤回不能把它改回文本 —— 用户要的语义是「照片留着，只多一个已拦截」。
+    // 判据：本地闪照映射表里有这条 mid（= 我们已落盘/转过），或 image 字段已有值。
+    extern NSString *HushFlashMapPath(long long mid);
+    NSString *flashPath = (mid > 0) ? HushFlashMapPath(mid) : nil;
+    NSString *imgUrl = HushModelString(model, @[@"image"]);
+    BOOL keepAsImage = (flashPath.length > 0 || imgUrl.length > 0);
+
+    BOOL ok = NO;
+    if (keepAsImage) {
+        ok = HushCallSetNumber(target, @selector(setType:), 2);
+        HushCallSetNumber(target, @selector(setStatus:), 0);
+        HushCallSetNumber(target, @selector(setDeleteStatus:), 0);
+        HushCallSetNumber(target, @selector(setRecallType:), 0);
+        HushCallSetNumber(target, @selector(setIsSuperRecallTip:), 0);
+        if (imgUrl.length == 0 && flashPath.length > 0) {
+            HushCallSetObject(target, @selector(setDestroyUrl:), nil);
+        }
+    } else {
+        // 55 → 1（普通文本），status 3（已撤回）→ 0，让宿主按普通气泡渲染。
+        ok = HushCallSetNumber(target, @selector(setType:), 1);
+        HushCallSetNumber(target, @selector(setStatus:), 0);
+    }
 
     // 空白气泡：撤回包自己不带正文（正文在宿主库里那条原消息上，靠撤回态的
     // 排版逻辑去取）。我们把撤回态抹掉之后，宿主就没有理由再去取正文了，
     // 于是渲染成一条什么都没有的气泡。这里补一句占位说明；
     // 只有原本就没有正文时才补，正常消息不受影响。
+    // 保留成图片的那条不补：它已经有图了，塞文字反而把气泡搞脏。
     BOOL filled = NO;
     NSString *body = HushModelString(model, @[@"content", @"messageContent", @"text"]);
     NSString *bodyForRestore = body;
-    if (body.length == 0) {
+    if (!keepAsImage && body.length == 0) {
         filled = HushCallSetObject(target, @selector(setContent:),
                                    @"[对方试图撤回一条消息，已被拦截]");
         if (!filled) bodyForRestore = nil;
@@ -642,7 +663,9 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
         return model;
     }
 
-    HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
+    // 保留成图片的那条不进「落库前还原」表：它在库里的终态就该是普通照片，
+    // 还原成 type=55 反而是数据污染。
+    if (!keepAsImage) HushMarkDirtyInPlace(target, t, s, filled, bodyForRestore);
     // 给气泡打标记：Cell 的 setMessage: 会查这个关联对象，命中就贴「已拦截」。
     objc_setAssociatedObject(target, &kHushInterceptedKey, @YES,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -650,8 +673,9 @@ static id HushRecallNeutralize(id model, long long mid, const char *where) {
     // 注意别用 %s 传中文：%s 走的是 C 字符串，日志里会变成乱码
     // （v31 的「ÂâØÊú¨ÈöîÁ¶ª」就是这么来的），中文一律 %@。
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
-        @"[Hush][防撤回] 改造 type=55→1 msgId=%lld 入口=%s 方式=%@ 补正文=%d",
-        mid, where, isolated ? @"副本隔离" : @"原地改+落库前还原", filled ? 1 : 0]];
+        @"[Hush][防撤回] 改造 type=55→%d msgId=%lld 入口=%s 方式=%@ 补正文=%d",
+        keepAsImage ? 2 : 1, mid, where,
+        isolated ? @"副本隔离" : @"原地改+落库前还原", filled ? 1 : 0]];
     return target;
 }
 
