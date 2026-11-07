@@ -247,6 +247,175 @@ static void r_setAlbumBanSave(id self, SEL _cmd, int a0) {
     if (o_setAlbumBanSave) o_setAlbumBanSave(self, _cmd, a0);
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// v64：隐私相册 live 链路
+//
+// 最新原版日志证明仅改 UserInformation 不够。真正承载他人主页私密相册的
+// BDPersonPrivacyAlbumCollectView 会在更新时收到：
+//   islock=0 / isAccessOpen=2
+// 原版改为：
+//   islock=1 / isAccessOpen=0
+// 然后仍显示照片，并由自身 AlbumTag 在相册底部叠加「隐私相册🔒」。
+// ─────────────────────────────────────────────────────────────────────────
+static const NSInteger kHushPrivacyAlbumTag = 0x48555052; // 'HUPR'
+
+static int (*o_personPrivAccess)(id, SEL);
+static void (*o_personPrivSetAccess)(id, SEL, int);
+static int (*o_personPrivLocked)(id, SEL);
+static void (*o_personPrivSetLocked)(id, SEL, int);
+static void (*o_personPrivUpdate)(id, SEL, id, id, BOOL, int, int, int);
+static void (*o_personPrivLayout)(id, SEL);
+
+static void HushPrivacyTagLayout(UIView *host) {
+    if (!host || ![host isKindOfClass:[UIView class]]) return;
+
+    UILabel *tag = (UILabel *)[host viewWithTag:kHushPrivacyAlbumTag];
+    if (!HushPrivacyUnlockOn()) {
+        if (tag) tag.hidden = YES;
+        return;
+    }
+
+    // 只有真正有私密相册项时才显示。这个视图本身通常已代表私密相册，
+    // dataSource 不可用时保持显示，避免不同宿主实现下漏标。
+    NSInteger items = 1;
+    id ds = nil;
+    if ([host respondsToSelector:@selector(dataSource)]) {
+        @try { ds = [(id)host valueForKey:@"dataSource"]; }
+        @catch (__unused NSException *e) { ds = nil; }
+    }
+    SEL countSel = @selector(collectionView:numberOfItemsInSection:);
+    if (ds && [ds respondsToSelector:countSel]) {
+        @try { items = [(id)ds collectionView:(id)host numberOfItemsInSection:0]; }
+        @catch (__unused NSException *e) { items = 1; }
+    }
+    if (items <= 0) {
+        if (tag) tag.hidden = YES;
+        return;
+    }
+
+    BOOL created = NO;
+    if (![tag isKindOfClass:[UILabel class]]) {
+        tag = [[UILabel alloc] initWithFrame:CGRectZero];
+        created = YES;
+        tag.tag = kHushPrivacyAlbumTag;
+        tag.text = @"隐私相册🔒";
+        tag.font = [UIFont systemFontOfSize:11.0 weight:UIFontWeightMedium];
+        tag.textColor = [UIColor colorWithWhite:0.22 alpha:1.0];
+        tag.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.82];
+        tag.textAlignment = NSTextAlignmentCenter;
+        tag.layer.cornerRadius = 8.0;
+        tag.clipsToBounds = YES;
+        tag.userInteractionEnabled = NO;
+        [host addSubview:tag];
+    }
+    if (created) [tag release];
+
+    tag.hidden = NO;
+    [tag sizeToFit];
+    CGRect f = tag.frame;
+    f.size.width  += 12.0;
+    f.size.height = MAX(18.0, f.size.height + 4.0);
+    f.origin.x = (host.bounds.size.width - f.size.width) * 0.5;
+    f.origin.y = MAX(0.0, host.bounds.size.height - f.size.height);
+    tag.frame = f;
+    [host bringSubviewToFront:tag];
+}
+
+static int r_personPrivAccess(id self, SEL _cmd) {
+    HushHit("BDPersonPrivacyAlbumCollectView", "access_private_photos");
+    if (HushPrivacyUnlockOn()) return 1;
+    return o_personPrivAccess ? o_personPrivAccess(self, _cmd) : 0;
+}
+
+static void r_personPrivSetAccess(id self, SEL _cmd, int value) {
+    HushHit("BDPersonPrivacyAlbumCollectView", "setAccess_private_photos:");
+    if (HushPrivacyUnlockOn()) value = 1;
+    if (o_personPrivSetAccess) o_personPrivSetAccess(self, _cmd, value);
+}
+
+static int r_personPrivLocked(id self, SEL _cmd) {
+    HushHit("BDPersonPrivacyAlbumCollectView", "privacy_photos_has_locked");
+    if (HushPrivacyUnlockOn()) return 0;
+    return o_personPrivLocked ? o_personPrivLocked(self, _cmd) : 0;
+}
+
+static void r_personPrivSetLocked(id self, SEL _cmd, int value) {
+    HushHit("BDPersonPrivacyAlbumCollectView", "setPrivacy_photos_has_locked:");
+    if (HushPrivacyUnlockOn()) value = 0;
+    if (o_personPrivSetLocked) o_personPrivSetLocked(self, _cmd, value);
+}
+
+static void r_personPrivUpdate(id self, SEL _cmd, id uid, id photos,
+                               BOOL hasMore, int islock,
+                               int isAccessOpen, int picNums) {
+    HushHit("BDPersonPrivacyAlbumCollectView",
+            "updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:");
+    if (HushPrivacyUnlockOn()) {
+        islock = 1;
+        isAccessOpen = 0;
+    }
+    if (o_personPrivUpdate) {
+        o_personPrivUpdate(self, _cmd, uid, photos, hasMore,
+                           islock, isAccessOpen, picNums);
+    }
+    if (HushPrivacyUnlockOn() && [self isKindOfClass:[UIView class]]) {
+        HushPrivacyTagLayout((UIView *)self);
+    }
+}
+
+static void r_personPrivLayout(id self, SEL _cmd) {
+    HushHit("BDPersonPrivacyAlbumCollectView", "layoutSubviews");
+    if (o_personPrivLayout) o_personPrivLayout(self, _cmd);
+    if (HushPrivacyUnlockOn() && [self isKindOfClass:[UIView class]]) {
+        HushPrivacyTagLayout((UIView *)self);
+    }
+}
+
+static int (*o_homePrivAccess)(id, SEL);
+static void (*o_homePrivSetAccess)(id, SEL, int);
+
+static int r_homePrivAccess(id self, SEL _cmd) {
+    HushHit("BDHomePrivacyAlbumModel", "access_private_photos");
+    if (HushPrivacyUnlockOn()) return 1;
+    return o_homePrivAccess ? o_homePrivAccess(self, _cmd) : 0;
+}
+
+static void r_homePrivSetAccess(id self, SEL _cmd, int value) {
+    HushHit("BDHomePrivacyAlbumModel", "setAccess_private_photos:");
+    if (HushPrivacyUnlockOn()) value = 1;
+    if (o_homePrivSetAccess) o_homePrivSetAccess(self, _cmd, value);
+}
+
+static BOOL (*o_homeIsUnlockPrivateAlbum)(id, SEL);
+static void (*o_homeSetUnlockPrivateAlbum)(id, SEL, BOOL);
+
+static BOOL r_homeIsUnlockPrivateAlbum(id self, SEL _cmd) {
+    HushHit("BDHomeViewController", "isUnlockPrivateAlbum");
+    if (HushPrivacyUnlockOn()) return YES;
+    return o_homeIsUnlockPrivateAlbum ? o_homeIsUnlockPrivateAlbum(self, _cmd) : NO;
+}
+
+static void r_homeSetUnlockPrivateAlbum(id self, SEL _cmd, BOOL value) {
+    HushHit("BDHomeViewController", "setIsUnlockPrivateAlbum:");
+    if (HushPrivacyUnlockOn()) value = YES;
+    if (o_homeSetUnlockPrivateAlbum) o_homeSetUnlockPrivateAlbum(self, _cmd, value);
+}
+
+static int (*o_userPrivAccess)(id, SEL);
+static void (*o_userPrivSetAccess)(id, SEL, int);
+
+static int r_userPrivAccess(id self, SEL _cmd) {
+    HushHit("UserInformation", "access_private_photos");
+    if (HushPrivacyUnlockOn()) return 1;
+    return o_userPrivAccess ? o_userPrivAccess(self, _cmd) : 0;
+}
+
+static void r_userPrivSetAccess(id self, SEL _cmd, int value) {
+    HushHit("UserInformation", "setAccess_private_photos:");
+    if (HushPrivacyUnlockOn()) value = 1;
+    if (o_userPrivSetAccess) o_userPrivSetAccess(self, _cmd, value);
+}
+
 // 35: probe only — 同步通道。推送腿吞包之后，断网期间发生的撤回只可能从
 // GJIMMessageService -p_handleSyncRangeMessages:syncType: 进来。这里只数不改：
 // 数到 0 说明同步包不带撤回，数到 >0 就是下一版要拦的第二个投递口。
@@ -1016,6 +1185,18 @@ NSString *HushFlashMapPath(long long mid) {
     }
 }
 
+// v64：转换标记不能等下载完成才落盘。收到 type=24 时先把 mid/url 登记，
+// 这样宿主第一帧分配普通图片 cell 时就能立即显示「闪照」角标；下载完成
+// 后再补 path 字段，重启后也仍能识别这是转换过的闪照。
+BOOL HushFlashIsTracked(long long mid) {
+    if (mid <= 0) return NO;
+    @synchronized (HushFlashMapLock()) {
+        HushFlashMapLoad();
+        id e = [sFlashMap objectForKey:[NSString stringWithFormat:@"%lld", mid]];
+        return [e isKindOfClass:[NSDictionary class]];
+    }
+}
+
 // v45 P3 补丁 B：下载 + 落盘全放后台队列，文件名固定 <mid>.jpg ——
 // 同一张图不论点开多少次只存一份，不会堆几十个重复大文件。
 // v48 A：HushRecallGuard.m 里导出（非 static）。
@@ -1090,6 +1271,7 @@ static void HushInjectImageCache(NSString *urlString, NSString *path) {
 // 不用等它自己去 CDN 拉。
 void HushFlashDownload(long long mid, NSString *url) {
     if (mid <= 0 || url.length == 0) return;
+    HushFlashMapSet(mid, url, nil);
     NSString *dir = HushBurnDir();
     if (!dir) return;
     // v54 P2：文件名改成 URL 的 MD5（对齐旧版插件），同一张图换条消息也认得出；
@@ -1897,7 +2079,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 69
+#define HUSH_TARGET_COUNT 81
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -1953,6 +2135,9 @@ void HushInstallHooks(void) {
     Class cMsgVC = hush_resolve_class("BDMessageViewController");
     Class cCell  = hush_resolve_class("BDChatBasicCell");
     Class cUser  = hush_resolve_class("UserInformation");
+    Class cPersonPriv = hush_resolve_class("BDPersonPrivacyAlbumCollectView");
+    Class cHomePriv   = hush_resolve_class("BDHomePrivacyAlbumModel");
+    Class cHomeVC     = hush_resolve_class("BDHomeViewController");
     Class cEngine = hush_resolve_class("GJIMEngine");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
     // v43：阅后即焚的全屏查看页 —— 「按住屏幕阅读 / 松手销毁」的真身。
@@ -2366,6 +2551,91 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cUser, s, (IMP)&r_setAlbumBanSave, "v20@0:8i16");
         if (strcmp(r.kind, "MISSING") != 0) o_setAlbumBanSave = (void (*)(id, SEL, int))r.prev;
         hush_report(34, "UserInformation", "setAlbum_ban_save:", r);
+    }
+    if (!s_done[69]) {
+        SEL s = sel_registerName("updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivUpdate,
+                                             "v48@0:8@16@24B32i36i40i44");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_personPrivUpdate = (void (*)(id, SEL, id, id, BOOL, int, int, int))r.prev;
+        hush_report(69, "BDPersonPrivacyAlbumCollectView",
+                    "updatePrivateAlbumWithUid:photos:hasMore:islock:isAccessOpen:picNums:", r);
+    }
+    if (!s_done[70]) {
+        SEL s = sel_registerName("access_private_photos");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivAccess, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_personPrivAccess = (int (*)(id, SEL))r.prev;
+        hush_report(70, "BDPersonPrivacyAlbumCollectView", "access_private_photos", r);
+    }
+    if (!s_done[71]) {
+        SEL s = sel_registerName("setAccess_private_photos:");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivSetAccess,
+                                             "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_personPrivSetAccess = (void (*)(id, SEL, int))r.prev;
+        hush_report(71, "BDPersonPrivacyAlbumCollectView", "setAccess_private_photos:", r);
+    }
+    if (!s_done[72]) {
+        SEL s = sel_registerName("privacy_photos_has_locked");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivLocked, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_personPrivLocked = (int (*)(id, SEL))r.prev;
+        hush_report(72, "BDPersonPrivacyAlbumCollectView", "privacy_photos_has_locked", r);
+    }
+    if (!s_done[73]) {
+        SEL s = sel_registerName("setPrivacy_photos_has_locked:");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivSetLocked,
+                                             "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_personPrivSetLocked = (void (*)(id, SEL, int))r.prev;
+        hush_report(73, "BDPersonPrivacyAlbumCollectView", "setPrivacy_photos_has_locked:", r);
+    }
+    if (!s_done[74]) {
+        SEL s = sel_registerName("layoutSubviews");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivLayout, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_personPrivLayout = (void (*)(id, SEL))r.prev;
+        hush_report(74, "BDPersonPrivacyAlbumCollectView", "layoutSubviews", r);
+    }
+    if (!s_done[75]) {
+        SEL s = sel_registerName("access_private_photos");
+        hush_installed r = hush_install_impl(cHomePriv, s, (IMP)&r_homePrivAccess, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_homePrivAccess = (int (*)(id, SEL))r.prev;
+        hush_report(75, "BDHomePrivacyAlbumModel", "access_private_photos", r);
+    }
+    if (!s_done[76]) {
+        SEL s = sel_registerName("setAccess_private_photos:");
+        hush_installed r = hush_install_impl(cHomePriv, s, (IMP)&r_homePrivSetAccess,
+                                             "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_homePrivSetAccess = (void (*)(id, SEL, int))r.prev;
+        hush_report(76, "BDHomePrivacyAlbumModel", "setAccess_private_photos:", r);
+    }
+    if (!s_done[77]) {
+        SEL s = sel_registerName("isUnlockPrivateAlbum");
+        hush_installed r = hush_install_impl(cHomeVC, s, (IMP)&r_homeIsUnlockPrivateAlbum,
+                                             "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_homeIsUnlockPrivateAlbum = (BOOL (*)(id, SEL))r.prev;
+        hush_report(77, "BDHomeViewController", "isUnlockPrivateAlbum", r);
+    }
+    if (!s_done[78]) {
+        SEL s = sel_registerName("setIsUnlockPrivateAlbum:");
+        hush_installed r = hush_install_impl(cHomeVC, s, (IMP)&r_homeSetUnlockPrivateAlbum,
+                                             "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_homeSetUnlockPrivateAlbum = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(78, "BDHomeViewController", "setIsUnlockPrivateAlbum:", r);
+    }
+    if (!s_done[79]) {
+        SEL s = sel_registerName("access_private_photos");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_userPrivAccess, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_userPrivAccess = (int (*)(id, SEL))r.prev;
+        hush_report(79, "UserInformation", "access_private_photos", r);
+    }
+    if (!s_done[80]) {
+        SEL s = sel_registerName("setAccess_private_photos:");
+        hush_installed r = hush_install_impl(cUser, s, (IMP)&r_userPrivSetAccess, "v20@0:8i16");
+        if (strcmp(r.kind, "MISSING") != 0) o_userPrivSetAccess = (void (*)(id, SEL, int))r.prev;
+        hush_report(80, "UserInformation", "setAccess_private_photos:", r);
     }
 
 

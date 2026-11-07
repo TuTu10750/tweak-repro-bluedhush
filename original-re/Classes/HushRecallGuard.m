@@ -1773,6 +1773,71 @@ void HushBurnApplyImage(id cell, id model) {
     }
 }
 
+// v64：转换完成的闪照仍是 type=2，不能再靠 type 判断。
+// HushHooks 的 map.json 在收到 type=24 时先把 mid 登记，下载完成后再补 path；
+// 因此这个标记既能在首帧出现，也能在重启后恢复。
+static const NSInteger kHushConvertedFlashTag = 0x4F3A23;
+extern BOOL HushFlashIsTracked(long long mid);
+
+static void HushConvertedFlashBadge(id cell, id model, BOOL show) {
+    if (!cell || ![cell isKindOfClass:[UIView class]]) return;
+    UIView *host = (UIView *)cell;
+    UILabel *tag = nil;
+    @try { tag = (UILabel *)[host viewWithTag:kHushConvertedFlashTag]; }
+    @catch (__unused NSException *e) { tag = nil; }
+
+    if (!show) {
+        if (tag) tag.hidden = YES;
+        return;
+    }
+
+    if (!tag) {
+        tag = [[UILabel alloc] initWithFrame:CGRectZero];
+        tag.tag = kHushConvertedFlashTag;
+        tag.text = @"闪照";
+        tag.font = [UIFont systemFontOfSize:9.0 weight:UIFontWeightMedium];
+        tag.textColor = [UIColor colorWithWhite:0.55 alpha:1.0];
+        tag.backgroundColor = [UIColor clearColor];
+        tag.textAlignment = NSTextAlignmentCenter;
+        tag.userInteractionEnabled = NO;
+        [host addSubview:tag];
+    }
+    tag.text = @"闪照";
+    [tag sizeToFit];
+    CGRect f = tag.frame;
+    f.size.width += 2.0;
+    f.size.height += 1.0;
+
+    NSString *anchorName = @"-";
+    UIView *anchor = HushRecallAnchorView(cell, host, &anchorName);
+    if (!anchor || anchor == host) {
+        tag.hidden = YES;
+        return;
+    }
+    tag.hidden = NO;
+    CGRect a = [anchor convertRect:anchor.bounds toView:host];
+    f.origin.x = CGRectGetMinX(a) + 6.0;
+    f.origin.y = CGRectGetMinY(a) + 6.0;
+    if (f.origin.x < 0.0) f.origin.x = 0.0;
+    if (f.origin.y < 0.0) f.origin.y = 0.0;
+    CGRect b = host.bounds;
+    if (CGRectGetMaxX(f) > b.size.width) f.origin.x = b.size.width - f.size.width;
+    if (CGRectGetMaxY(f) > b.size.height) f.origin.y = b.size.height - f.size.height;
+    tag.frame = f;
+    [host bringSubviewToFront:tag];
+
+    static int flashTagLogs = 0;
+    flashTagLogs++;
+    if (flashTagLogs <= 12 || (flashTagLogs % 20) == 0) {
+        NSString *line = [NSString stringWithFormat:
+            @"[Hush][角标] 已加「闪照」角标 cell=%@ anchor=%@ frame=%@",
+            NSStringFromClass([cell class]), anchorName,
+            NSStringFromCGRect(f)];
+        fprintf(stderr, "%s\n", [line UTF8String]);
+        [HushLogger logLevel:2 format:line];
+    }
+}
+
 void HushRecallDecorateCell(id cell, id model) {
     if (!cell) return;
     UIView *host = [cell isKindOfClass:[UIView class]] ? (UIView *)cell : nil;
@@ -1927,11 +1992,19 @@ void HushRecallDecorateCell(id cell, id model) {
     // v45 P5：映射表里已经有本地原图就直接铺上去（不动 model、不碰 DB）。
     if (burnish) HushBurnApplyImage(cell, model);
 
+    long long badgeMid = model ? HushModelLongLong(model, HushRecallIdKeys()) : LLONG_MIN;
+    BOOL intercepted = HushRecallModelWasIntercepted(model);
+    BOOL convertedFlash = (badgeMid > 0 && HushFlashIsTracked(badgeMid));
+
+    // 已召回的消息只显示「已拦截」；未召回但由 type=24 转换成功的照片显示「闪照」。
+    // 普通图片、视频、文本和原始 type=282 不会命中这里。
+    HushConvertedFlashBadge(cell, model, convertedFlash && !intercepted);
+
     UILabel *tag = nil;
     @try { tag = (UILabel *)[host viewWithTag:kHushInterceptTag]; }
     @catch (__unused NSException *e) { tag = nil; }
 
-    if (!HushRecallModelWasIntercepted(model)) {
+    if (!intercepted) {
         if (tag && !tag.hidden) tag.hidden = YES;   // 复用到普通消息时收起来
         return;
     }
