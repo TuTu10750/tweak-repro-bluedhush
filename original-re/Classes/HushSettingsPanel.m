@@ -67,15 +67,11 @@ static dispatch_once_t gHushSharedPanelOnce;
             probe = probe.presentedViewController ?: probe.parentViewController;
         }
 
-        UINavigationController *nav = HushVisibleNavigationController();
-        if (!nav) nav = top.navigationController;
-
-        if (nav) {
-            panel.hidesBottomBarWhenPushed = YES;
-            [nav pushViewController:panel animated:YES];
-            return;
-        }
-
+        // v66：悬浮球必须从任意页面立即打开。此前优先 push 到可见导航栈，
+        // 某些页面拿到的是身边页或其他 Tab 的隐藏导航控制器，面板就被推到了
+        // 用户当前看不到的栈里，只有切回身边页才出现。统一改成从当前最顶层
+        // 控制器全屏 present，任何 Tab / 聊天页 / 详情页都使用同一条路径。
+        [panel.navigationController popToRootViewControllerAnimated:NO];
         UINavigationController *wrap = [[UINavigationController alloc] initWithRootViewController:panel];
         wrap.modalPresentationStyle = UIModalPresentationFullScreen;
         [top presentViewController:wrap animated:YES completion:nil];

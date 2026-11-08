@@ -49,6 +49,7 @@
 #import "HushConfig.h"
 #import "HushLogger.h"
 #import "HushRecallGuard.h"
+#import "HushTracking.h"
 
 extern void HushHit(const char *cls, const char *sel);
 
@@ -60,6 +61,42 @@ int gHushHooksMissing  = 0;
 int gHushHooksNoTypes  = 0;
 int gHushHooksAdded    = 0;
 int gHushHooksSkipped  = 0;
+
+// v66：全局悄悄看。只阻断网络回执，不阻止本机把消息标成已读。
+// 用户主动发出一条消息后解除本轮抑制，让宿主按正常“已读”语义走。
+static BOOL sHushSecretReceiptsReleased = NO;
+static BOOL HushSecretReceiptMode(void) {
+    return [[HushConfig shared] isEnabled:@"switch_read_receipt"]
+        || [[HushConfig shared] isEnabled:@"switch_secret_view_all"];
+}
+static long long HushSecretField(id obj, NSString *key) {
+    if (!obj) return LLONG_MIN;
+    @try {
+        id v = [obj valueForKey:key];
+        if ([v respondsToSelector:@selector(longLongValue)]) return [v longLongValue];
+    } @catch (__unused NSException *e) {}
+    return LLONG_MIN;
+}
+static void HushSecretObserveOutgoing(id messages) {
+    if (!HushSecretReceiptMode()) {
+        sHushSecretReceiptsReleased = NO;
+        return;
+    }
+    NSArray *arr = [messages isKindOfClass:[NSArray class]] ? messages
+                   : ([messages isKindOfClass:[NSSet class]]
+                      ? [(NSSet *)messages allObjects] : nil);
+    for (id m in arr) {
+        long long sid = HushSecretField(m, @"sessionId");
+        long long from = HushSecretField(m, @"fromId");
+        if (from == LLONG_MIN) from = HushSecretField(m, @"from");
+        if (sid > 0 && from > 0 && from != sid) {
+            sHushSecretReceiptsReleased = YES;
+            [HushLogger logLevel:3 format:
+                @"[Hush][悄悄看] 检测到主动发送，恢复本会话网络已读回执"];
+            return;
+        }
+    }
+}
 
 // ---------------------------------------------------------------- class resolve
 // Order matters. A bare Swift name only resolves through the module-qualified
@@ -102,10 +139,52 @@ extern void HushSetSessionService(id svc);
 static void (*o_sessionAddMessages)(id, SEL, id);
 static void r_sessionAddMessages(id self, SEL _cmd, id a0) {
     HushHit("GJIMSessionService", "addMessages:");
+    HushSecretObserveOutgoing(a0);
     // v55 B：GJIMSessionService 没有 sharedInstance（sel_index 全表核实），
     // 落库要用它的 -updateMessage:，只能在这里把 self 抓下来缓存。
     if (self) HushSetSessionService(self);
     HushRecallFilterAndForward(self, _cmd, a0, o_sessionAddMessages);
+}
+
+static void (*o_sendReceipt)(id, SEL, unsigned char, unsigned int,
+                             unsigned long long, unsigned int, unsigned int, BOOL);
+static void r_sendReceipt(id self, SEL _cmd, unsigned char sessionType,
+                          unsigned int sessionId, unsigned long long messageId,
+                          unsigned int messageType, unsigned int from,
+                          BOOL receivedAck) {
+    HushHit("GJIMEngine",
+            "sendReceiptWithSessionType:sessionId:messageId:messageType:from:receivedAck:");
+    if (HushSecretReceiptMode() && !sHushSecretReceiptsReleased) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][悄悄看] 已拦截网络已读回执 sid=%u mid=%llu",
+            sessionId, messageId]];
+        return;
+    }
+    if (o_sendReceipt) {
+        o_sendReceipt(self, _cmd, sessionType, sessionId, messageId,
+                      messageType, from, receivedAck);
+    }
+}
+
+static void (*o_msgReceiptRequest)(id, SEL, unsigned int, BOOL,
+                                  unsigned int, unsigned int,
+                                  unsigned int, unsigned int, long long);
+static void r_msgReceiptRequest(id self, SEL _cmd, unsigned int requestType,
+                                BOOL group, unsigned int sessionType,
+                                unsigned int messageType, unsigned int from,
+                                unsigned int to, long long messageId) {
+    HushHit("GJIMEngine",
+            "msgReceiptRequestType:groupChat:sessionType:messageType:from:to:msgId:");
+    if (HushSecretReceiptMode() && !sHushSecretReceiptsReleased) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][悄悄看] 已拦截回执请求类型=%u mid=%lld",
+            requestType, messageId]];
+        return;
+    }
+    if (o_msgReceiptRequest) {
+        o_msgReceiptRequest(self, _cmd, requestType, group, sessionType,
+                            messageType, from, to, messageId);
+    }
 }
 
 static void (*o_dbUpdateMessage)(id, SEL, id);
@@ -171,6 +250,44 @@ static BOOL r_hasNoneSplashShow(id self, SEL _cmd) {
     HushHit("BDIndexPageCoversManager", "hasNoneSplashShow");
     if (HushSplashPurifyOn()) return YES;
     return o_hasNoneSplashShow ? o_hasNoneSplashShow(self, _cmd) : NO;
+}
+
+// v66：仅仅不展示广告视图仍会让宿主等广告 SDK 的回调，用户看到约 5 秒空等。
+// isNeedShowSplashAd 是宿主自己的总判据；直接返回 NO，并在旧版图片/视频开屏
+// 入口提前调用 finished，能同时切断广告排队和倒计时等待。
+static BOOL (*o_isNeedShowSplashAd)(id, SEL);
+static BOOL r_isNeedShowSplashAd(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "isNeedShowSplashAd");
+    if (HushSplashPurifyOn()) return NO;
+    return o_isNeedShowSplashAd ? o_isNeedShowSplashAd(self, _cmd) : NO;
+}
+
+static void (*o_showBluedImageSplash)(id, SEL, id, id, BOOL, id);
+static void r_showBluedImageSplash(id self, SEL _cmd, id image, id winModel,
+                                   BOOL cold, id finished) {
+    HushHit("AppDelegateModel",
+            "p_showBluedImageSplash:currentWinAdModel:isColdLaunch:finished:");
+    if (HushSplashPurifyOn()) {
+        if (finished) ((void (^)(void))finished)();
+        return;
+    }
+    if (o_showBluedImageSplash) {
+        o_showBluedImageSplash(self, _cmd, image, winModel, cold, finished);
+    }
+}
+
+static void (*o_showBluedVideoSplash)(id, SEL, id, id, BOOL, id);
+static void r_showBluedVideoSplash(id self, SEL _cmd, id video, id winModel,
+                                   BOOL cold, id finished) {
+    HushHit("AppDelegateModel",
+            "p_showBluedVideoSplash:currentWinAdModel:isColdLaunch:finished:");
+    if (HushSplashPurifyOn()) {
+        if (finished) ((void (^)(void))finished)();
+        return;
+    }
+    if (o_showBluedVideoSplash) {
+        o_showBluedVideoSplash(self, _cmd, video, winModel, cold, finished);
+    }
 }
 
 // v39 fix: the two cold-launch *queries* must pass through.
@@ -454,6 +571,7 @@ static void (*o_browserSetPrivatePhotoOn)(id, SEL, BOOL);
 static void (*o_privacyCellMask)(id, SEL, BOOL);
 static void (*o_homeAlbumConfigure)(id, SEL, id, int, BOOL, id);
 static BOOL (*o_photoDataIsVertify)(id, SEL);
+extern BOOL HushPrivacyPhotoViewerShowCell(id cell);
 
 static BOOL r_browserPrivatePhoto(id self, SEL _cmd) {
     HushHit("BDPhotoBrowserController", "privatePhoto");
@@ -498,6 +616,30 @@ static BOOL r_photoDataIsVertify(id self, SEL _cmd) {
     HushHit("BDPhotoBrowserData", "isVertify");
     if (HushPrivacyUnlockOn()) return NO;
     return o_photoDataIsVertify ? o_photoDataIsVertify(self, _cmd) : NO;
+}
+
+static void (*o_personPrivDidSelect)(id, SEL, id, id);
+static void r_personPrivDidSelect(id self, SEL _cmd, id collectionView, id indexPath) {
+    HushHit("BDPersonPrivacyAlbumCollectView",
+            "collectionView:didSelectItemAtIndexPath:");
+    if (HushPrivacyUnlockOn() && collectionView && indexPath) {
+        id cell = nil;
+        @try { cell = [collectionView cellForItemAtIndexPath:indexPath]; }
+        @catch (__unused NSException *e) { cell = nil; }
+        if (HushPrivacyPhotoViewerShowCell(cell)) return;
+    }
+    if (o_personPrivDidSelect) {
+        o_personPrivDidSelect(self, _cmd, collectionView, indexPath);
+    }
+}
+
+static void (*o_homeProfileLayout)(id, SEL);
+static void r_homeProfileLayout(id self, SEL _cmd) {
+    HushHit("BDHomeViewController", "viewDidLayoutSubviews");
+    if (o_homeProfileLayout) o_homeProfileLayout(self, _cmd);
+    if ([self isKindOfClass:[UIViewController class]]) {
+        HushTrackInstallOnProfile((UIViewController *)self);
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -654,18 +796,14 @@ static int r_visitorIsAds(id self, SEL _cmd) {
 }
 
 static void (*o_tabSetVCs)(id, SEL, id);
-static void r_tabSetVCs(id self, SEL _cmd, id controllers) {
-    HushHit("UITabBarController", "setViewControllers:");
-    if (![controllers isKindOfClass:[NSArray class]]) {
-        if (o_tabSetVCs) o_tabSetVCs(self, _cmd, controllers);
-        return;
-    }
+static void (*o_tabSetVCsAnimated)(id, SEL, id, BOOL);
+static NSArray *(*o_tabTitles)(id, SEL);
+
+static NSArray *HushFilterTabControllers(id controllers) {
+    if (![controllers isKindOfClass:[NSArray class]]) return controllers;
     BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
     BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
-    if (!hideLive && !hideDiscover) {
-        if (o_tabSetVCs) o_tabSetVCs(self, _cmd, controllers);
-        return;
-    }
+    if (!hideLive && !hideDiscover) return controllers;
     NSMutableArray *out = [NSMutableArray array];
     for (id vc in (NSArray *)controllers) {
         NSString *cn = NSStringFromClass([vc class]);
@@ -673,7 +811,36 @@ static void r_tabSetVCs(id self, SEL _cmd, id controllers) {
         if (hideDiscover && ([cn rangeOfString:@"Find" options:NSCaseInsensitiveSearch].location != NSNotFound)) continue;
         [out addObject:vc];
     }
-    if (o_tabSetVCs) o_tabSetVCs(self, _cmd, out);
+    return out;
+}
+
+static void r_tabSetVCs(id self, SEL _cmd, id controllers) {
+    HushHit("UITabBarController", "setViewControllers:");
+    NSArray *filtered = HushFilterTabControllers(controllers);
+    if (o_tabSetVCs) o_tabSetVCs(self, _cmd, filtered);
+}
+
+static void r_tabSetVCsAnimated(id self, SEL _cmd, id controllers, BOOL animated) {
+    HushHit("UITabBarController", "setViewControllers:animated:");
+    NSArray *filtered = HushFilterTabControllers(controllers);
+    if (o_tabSetVCsAnimated) o_tabSetVCsAnimated(self, _cmd, filtered, animated);
+}
+
+static NSArray *r_tabTitles(id self, SEL _cmd) {
+    HushHit("UITabBarController", "titles");
+    NSArray *titles = o_tabTitles ? o_tabTitles(self, _cmd) : nil;
+    if (![titles isKindOfClass:[NSArray class]]) return titles;
+    BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
+    BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
+    if (!hideLive && !hideDiscover) return titles;
+    NSMutableArray *out = [NSMutableArray array];
+    for (id title in titles) {
+        NSString *s = [title isKindOfClass:[NSString class]] ? title : [title description];
+        if (hideLive && [s rangeOfString:@"直播"].location != NSNotFound) continue;
+        if (hideDiscover && [s rangeOfString:@"发现"].location != NSNotFound) continue;
+        [out addObject:title];
+    }
+    return out;
 }
 
 static void (*o_voiceJoin)(id, SEL);
@@ -2324,6 +2491,7 @@ static HushNetHandler HushAlbumWrap(NSString *url, HushNetHandler handler) {
 static id (*o_dataTaskReq)(id, SEL, id, HushNetHandler);
 static id r_dataTaskReq(id self, SEL _cmd, id req, HushNetHandler handler) {
     NSString *u = HushNetURLString(req);
+    HushTrackCaptureRequest(req);
     if (!HushFlashNetWanted(u) && !HushAlbumNetWanted(u)) {
         if (!o_dataTaskReq) return nil;
         return o_dataTaskReq(self, _cmd, req, handler);
@@ -2342,6 +2510,9 @@ static id r_dataTaskReq(id self, SEL _cmd, id req, HushNetHandler handler) {
 static id (*o_dataTaskURL)(id, SEL, id, HushNetHandler);
 static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
     NSString *u = HushNetURLOf(url);
+    if ([url isKindOfClass:[NSURL class]]) {
+        HushTrackCaptureRequest([NSURLRequest requestWithURL:(NSURL *)url]);
+    }
     if (!HushFlashNetWanted(u) && !HushAlbumNetWanted(u)) {
         if (!o_dataTaskURL) return nil;
         return o_dataTaskURL(self, _cmd, url, handler);
@@ -2358,7 +2529,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 110
+#define HUSH_TARGET_COUNT 119
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -3125,6 +3296,85 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cTavern, s, (IMP)&r_voiceForward, "v16@0:8");
         if (strcmp(r.kind, "MISSING") != 0) o_voiceForward = (void (*)(id, SEL))r.prev;
         hush_report(109, "BDTavernChatingViewController", "p_startVoiceForwardIfNeeded", r);
+    }
+    if (!s_done[110]) {
+        SEL s = sel_registerName("collectionView:didSelectItemAtIndexPath:");
+        hush_installed r = hush_install_impl(cPersonPriv, s, (IMP)&r_personPrivDidSelect,
+                                             "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_personPrivDidSelect = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(110, "BDPersonPrivacyAlbumCollectView",
+                    "collectionView:didSelectItemAtIndexPath:", r);
+    }
+    if (!s_done[111]) {
+        SEL s = sel_registerName("isNeedShowSplashAd");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_isNeedShowSplashAd, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_isNeedShowSplashAd = (BOOL (*)(id, SEL))r.prev;
+        hush_report(111, "AppDelegateModel", "isNeedShowSplashAd", r);
+    }
+    if (!s_done[112]) {
+        SEL s = sel_registerName("p_showBluedImageSplash:currentWinAdModel:isColdLaunch:finished:");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_showBluedImageSplash,
+                                             "v44@0:8@16@24B32@?36");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_showBluedImageSplash = (void (*)(id, SEL, id, id, BOOL, id))r.prev;
+        hush_report(112, "AppDelegateModel",
+                    "p_showBluedImageSplash:currentWinAdModel:isColdLaunch:finished:", r);
+    }
+    if (!s_done[113]) {
+        SEL s = sel_registerName("p_showBluedVideoSplash:currentWinAdModel:isColdLaunch:finished:");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_showBluedVideoSplash,
+                                             "v44@0:8@16@24B32@?36");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_showBluedVideoSplash = (void (*)(id, SEL, id, id, BOOL, id))r.prev;
+        hush_report(113, "AppDelegateModel",
+                    "p_showBluedVideoSplash:currentWinAdModel:isColdLaunch:finished:", r);
+    }
+    if (!s_done[114]) {
+        SEL s = sel_registerName("setViewControllers:animated:");
+        hush_installed r = hush_install_impl(cTabVC, s, (IMP)&r_tabSetVCsAnimated,
+                                             "v28@0:8@16B24");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_tabSetVCsAnimated = (void (*)(id, SEL, id, BOOL))r.prev;
+        hush_report(114, "UITabBarController", "setViewControllers:animated:", r);
+    }
+    if (!s_done[115]) {
+        SEL s = sel_registerName("titles");
+        hush_installed r = hush_install_impl(cTabVC, s, (IMP)&r_tabTitles, "@16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_tabTitles = (NSArray *(*)(id, SEL))r.prev;
+        hush_report(115, "UITabBarController", "titles", r);
+    }
+    if (!s_done[116]) {
+        SEL s = sel_registerName("sendReceiptWithSessionType:sessionId:messageId:messageType:from:receivedAck:");
+        hush_installed r = hush_install_impl(cEngine, s, (IMP)&r_sendReceipt,
+                                             "v44@0:8C16I20Q24I32I36B40");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_sendReceipt = (void (*)(id, SEL, unsigned char, unsigned int,
+                                      unsigned long long, unsigned int,
+                                      unsigned int, BOOL))r.prev;
+        hush_report(116, "GJIMEngine",
+                    "sendReceiptWithSessionType:sessionId:messageId:messageType:from:receivedAck:", r);
+    }
+    if (!s_done[117]) {
+        SEL s = sel_registerName("msgReceiptRequestType:groupChat:sessionType:messageType:from:to:msgId:");
+        hush_installed r = hush_install_impl(cEngine, s, (IMP)&r_msgReceiptRequest,
+                                             "v48@0:8I16B20I24I28I32I36q40");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_msgReceiptRequest = (void (*)(id, SEL, unsigned int, BOOL,
+                                            unsigned int, unsigned int,
+                                            unsigned int, unsigned int,
+                                            long long))r.prev;
+        hush_report(117, "GJIMEngine",
+                    "msgReceiptRequestType:groupChat:sessionType:messageType:from:to:msgId:", r);
+    }
+    if (!s_done[118]) {
+        SEL s = sel_registerName("viewDidLayoutSubviews");
+        hush_installed r = hush_install_impl(cHomeVC, s, (IMP)&r_homeProfileLayout, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_homeProfileLayout = (void (*)(id, SEL))r.prev;
+        hush_report(118, "BDHomeViewController", "viewDidLayoutSubviews", r);
     }
 
 
