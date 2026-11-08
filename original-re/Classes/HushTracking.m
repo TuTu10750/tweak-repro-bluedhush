@@ -146,11 +146,11 @@ static void HushTrackShowResult(long long uid, double lat, double lng,
         card.residual = residual;
         card.sourceViewController = from;
         card.modalPresentationStyle = UIModalPresentationPageSheet;
-        if (@available(iOS 15.0, *)) {
-            UISheetPresentationController *sheet = card.sheetPresentationController;
-            sheet.detents = @[[UISheetPresentationControllerDetent mediumDetent],
-                              [UISheetPresentationControllerDetent largeDetent]];
-            sheet.prefersGrabberVisible = YES;
+        id sheet = nil;
+        @try { sheet = [card valueForKey:@"sheetPresentationController"]; }
+        @catch (__unused NSException *e) { sheet = nil; }
+        if (sheet && [sheet respondsToSelector:@selector(setPrefersGrabberVisible:)]) {
+            [sheet setValue:@YES forKey:@"prefersGrabberVisible"];
         }
         [from presentViewController:card animated:YES completion:nil];
     });
