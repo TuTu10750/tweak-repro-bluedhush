@@ -131,6 +131,10 @@ static NSString *MFrameworkPath(NSString *name) {
 }
 
 static void MLoadOriginal(void) {
+    if (objc_getClass("HushConfig")) {
+        MLog(@"BOOT original already resident; skip secondary dlopen");
+        return;
+    }
     NSString *substrate = MFrameworkPath(@"libsubstrate.dylib");
     if (!substrate.length) {
         substrate = MFrameworkPath(@"CydiaSubstrate.framework/CydiaSubstrate");
