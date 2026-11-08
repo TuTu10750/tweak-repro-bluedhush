@@ -131,8 +131,10 @@ static NSString *MFrameworkPath(NSString *name) {
 }
 
 static void MLoadOriginal(void) {
-    NSString *substrate =
-        MFrameworkPath(@"CydiaSubstrate.framework/CydiaSubstrate");
+    NSString *substrate = MFrameworkPath(@"libsubstrate.dylib");
+    if (!substrate.length) {
+        substrate = MFrameworkPath(@"CydiaSubstrate.framework/CydiaSubstrate");
+    }
     if (substrate.length) {
         void *handle = dlopen(substrate.fileSystemRepresentation,
                               RTLD_NOW | RTLD_GLOBAL);
