@@ -262,6 +262,34 @@ static BOOL r_isNeedShowSplashAd(id self, SEL _cmd) {
     return o_isNeedShowSplashAd ? o_isNeedShowSplashAd(self, _cmd) : NO;
 }
 
+static BOOL (*o_isCanShowSplashCold)(id, SEL);
+static BOOL r_isCanShowSplashCold(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "isCanShowSplashForColdLaunch");
+    if (HushSplashPurifyOn()) return NO;
+    return o_isCanShowSplashCold ? o_isCanShowSplashCold(self, _cmd) : NO;
+}
+
+static BOOL (*o_isCanShowSplashHot)(id, SEL);
+static BOOL r_isCanShowSplashHot(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "isCanShowSplashForHotLaunch");
+    if (HushSplashPurifyOn()) return NO;
+    return o_isCanShowSplashHot ? o_isCanShowSplashHot(self, _cmd) : NO;
+}
+
+static BOOL (*o_isLoadSplashCold)(id, SEL);
+static BOOL r_isLoadSplashCold(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "isLoadSplashSuccessForColdLaunch");
+    if (HushSplashPurifyOn()) return NO;
+    return o_isLoadSplashCold ? o_isLoadSplashCold(self, _cmd) : NO;
+}
+
+static BOOL (*o_isLoadSplashHot)(id, SEL);
+static BOOL r_isLoadSplashHot(id self, SEL _cmd) {
+    HushHit("AppDelegateModel", "isLoadSplashSuccessForHotLaunch");
+    if (HushSplashPurifyOn()) return NO;
+    return o_isLoadSplashHot ? o_isLoadSplashHot(self, _cmd) : NO;
+}
+
 static void (*o_showBluedImageSplash)(id, SEL, id, id, BOOL, id);
 static void r_showBluedImageSplash(id self, SEL _cmd, id image, id winModel,
                                    BOOL cold, id finished) {
@@ -571,7 +599,7 @@ static void (*o_browserSetPrivatePhotoOn)(id, SEL, BOOL);
 static void (*o_privacyCellMask)(id, SEL, BOOL);
 static void (*o_homeAlbumConfigure)(id, SEL, id, int, BOOL, id);
 static BOOL (*o_photoDataIsVertify)(id, SEL);
-extern BOOL HushPrivacyPhotoViewerShowCell(id cell);
+extern BOOL HushPrivacyPhotoViewerShowCollection(id collectionView, id indexPath);
 
 static BOOL r_browserPrivatePhoto(id self, SEL _cmd) {
     HushHit("BDPhotoBrowserController", "privatePhoto");
@@ -623,10 +651,7 @@ static void r_personPrivDidSelect(id self, SEL _cmd, id collectionView, id index
     HushHit("BDPersonPrivacyAlbumCollectView",
             "collectionView:didSelectItemAtIndexPath:");
     if (HushPrivacyUnlockOn() && collectionView && indexPath) {
-        id cell = nil;
-        @try { cell = [collectionView cellForItemAtIndexPath:indexPath]; }
-        @catch (__unused NSException *e) { cell = nil; }
-        if (HushPrivacyPhotoViewerShowCell(cell)) return;
+        if (HushPrivacyPhotoViewerShowCollection(collectionView, indexPath)) return;
     }
     if (o_personPrivDidSelect) {
         o_personPrivDidSelect(self, _cmd, collectionView, indexPath);
@@ -795,34 +820,145 @@ static int r_visitorIsAds(id self, SEL _cmd) {
     return o_visitorIsAds ? o_visitorIsAds(self, _cmd) : 0;
 }
 
+static void (*o_viewDidMoveToSuperview)(id, SEL);
+static NSMutableDictionary *sHushPurifyViewCache = nil;
+
+static void r_viewDidMoveToSuperview(id self, SEL _cmd) {
+    if (o_viewDidMoveToSuperview) o_viewDidMoveToSuperview(self, _cmd);
+    if (!HushPurifyKey(@"purify_master") || ![self isKindOfClass:[UIView class]]) return;
+    NSString *cn = NSStringFromClass([self class]);
+    if (!cn.length || [cn hasPrefix:@"Hush"]) return;
+    if (!sHushPurifyViewCache) sHushPurifyViewCache = [[NSMutableDictionary alloc] init];
+    NSString *key = nil;
+    @synchronized (sHushPurifyViewCache) {
+        key = sHushPurifyViewCache[cn];
+    }
+    if (!key) {
+        NSString *lower = cn.lowercaseString;
+        if ([lower containsString:@"sessioncalllive"] ||
+            [lower containsString:@"supercallingcard"] ||
+            [lower containsString:@"sessioncalllist"] ||
+            [lower containsString:@"sessionheaderguide"]) {
+            key = @"purify_session_card";
+        } else if ([lower containsString:@"nearbyonlinematched"] ||
+                   [lower containsString:@"nearbyscenematching"] ||
+                   [lower containsString:@"nearbyrecommendcontainer"] ||
+                   [lower containsString:@"nearbytopfixatt"] ||
+                   [lower containsString:@"nearbytopfixonline"] ||
+                   [lower containsString:@"nearbytopfixvoice"] ||
+                   [lower containsString:@"nearbytopfixgbti"] ||
+                   [lower containsString:@"nearbytopcallentry"] ||
+                   [lower containsString:@"usermatch"]) {
+            key = @"purify_nearby_ad";
+        } else if ([lower containsString:@"tavern"] ||
+                   [lower containsString:@"voicematch"] ||
+                   [lower containsString:@"onlineuser"] ||
+                   [lower containsString:@"discoveryrecommend"] ||
+                   [lower containsString:@"discoverynotification"]) {
+            key = @"purify_live_entry";
+        } else if ([lower containsString:@"nearbbycall"] ||
+                   [lower containsString:@"nearbycall"] ||
+                   [lower containsString:@"callentry"] ||
+                   [lower containsString:@"callheader"]) {
+            key = @"purify_call_header";
+        } else if ([lower containsString:@"minebanner"] ||
+                   [lower containsString:@"minevip"] ||
+                   [lower containsString:@"minevipcenterentry"]) {
+            key = @"purify_mine_ad";
+        } else if ([lower containsString:@"banner"] ||
+                   [lower containsString:@"nsnofy"]) {
+            key = @"purify_banner";
+        } else if ([lower containsString:@"bdschatonline"] ||
+                   [lower containsString:@"recommendcell"] ||
+                   [lower containsString:@"recommendview"] ||
+                   [lower containsString:@"bdsupercall"]) {
+            key = @"purify_session_card";
+        } else if ([lower containsString:@"floatlayer"] ||
+                   [lower containsString:@"floatad"]) {
+            key = @"purify_float_layer";
+        } else if ([lower containsString:@"svga"]) {
+            key = @"purify_svg_ad";
+        }
+        key = key ?: @"";
+        @synchronized (sHushPurifyViewCache) {
+            sHushPurifyViewCache[cn] = key;
+        }
+    }
+    if (!key.length || !HushPurifyKey(key)) return;
+    UIView *v = (UIView *)self;
+    v.hidden = YES;
+    v.alpha = 0.0;
+    CGRect f = v.frame;
+    if (f.size.height > 1.0) f.size.height = 0.01;
+    v.frame = f;
+    static NSMutableSet *logged = nil;
+    if (!logged) logged = [[NSMutableSet alloc] init];
+    @synchronized (logged) {
+        if (![logged containsObject:cn] && logged.count < 80) {
+            [logged addObject:cn];
+            [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                @"[Hush][净化] 隐藏推广视图 %@ key=%@", cn, key]];
+        }
+    }
+}
+
 static void (*o_tabSetVCs)(id, SEL, id);
 static void (*o_tabSetVCsAnimated)(id, SEL, id, BOOL);
 static NSArray *(*o_tabTitles)(id, SEL);
 
-static NSArray *HushFilterTabControllers(id controllers) {
+static NSString *HushTabControllerName(id item) {
+    id vc = item;
+    if ([vc isKindOfClass:[UINavigationController class]]) {
+        UIViewController *top = [(UINavigationController *)vc topViewController];
+        if (top) vc = top;
+    }
+    if ([vc isKindOfClass:[UIViewController class]]) {
+        UIViewController *top = [(UIViewController *)vc childViewControllers].lastObject;
+        if (top && !([vc isKindOfClass:[UINavigationController class]])) vc = top;
+    }
+    return vc ? NSStringFromClass([vc class]) : @"";
+}
+
+static NSArray *HushFilterTabControllers(UITabBarController *tab, id controllers) {
     if (![controllers isKindOfClass:[NSArray class]]) return controllers;
     BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
     BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
     if (!hideLive && !hideDiscover) return controllers;
+    NSMutableArray *oldTitles = [NSMutableArray array];
+    for (UITabBarItem *it in tab.tabBar.items) [oldTitles addObject:it.title ?: @""];
     NSMutableArray *out = [NSMutableArray array];
-    for (id vc in (NSArray *)controllers) {
-        NSString *cn = NSStringFromClass([vc class]);
-        if (hideLive && ([cn rangeOfString:@"Live" options:NSCaseInsensitiveSearch].location != NSNotFound)) continue;
-        if (hideDiscover && ([cn rangeOfString:@"Find" options:NSCaseInsensitiveSearch].location != NSNotFound)) continue;
+    NSArray *arr = (NSArray *)controllers;
+    for (NSUInteger i = 0; i < arr.count; i++) {
+        id vc = arr[i];
+        NSString *cn = HushTabControllerName(vc);
+        NSString *title = nil;
+        if (oldTitles.count == arr.count && [oldTitles[i] isKindOfClass:[NSString class]]) {
+            title = oldTitles[i];
+        }
+        BOOL live = ([cn rangeOfString:@"Live" options:NSCaseInsensitiveSearch].location != NSNotFound)
+                 || [title isEqualToString:@"直播"];
+        BOOL discover = ([cn rangeOfString:@"Find" options:NSCaseInsensitiveSearch].location != NSNotFound)
+                     || [cn rangeOfString:@"Discover" options:NSCaseInsensitiveSearch].location != NSNotFound
+                     || [title isEqualToString:@"发现"];
+        if ((hideLive && live) || (hideDiscover && discover)) continue;
         [out addObject:vc];
     }
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][净化] Tab过滤 %lu→%lu live=%d discover=%d",
+        (unsigned long)arr.count, (unsigned long)out.count,
+        hideLive ? 1 : 0, hideDiscover ? 1 : 0]];
     return out;
 }
 
 static void r_tabSetVCs(id self, SEL _cmd, id controllers) {
     HushHit("UITabBarController", "setViewControllers:");
-    NSArray *filtered = HushFilterTabControllers(controllers);
+    NSArray *filtered = HushFilterTabControllers((UITabBarController *)self, controllers);
     if (o_tabSetVCs) o_tabSetVCs(self, _cmd, filtered);
 }
 
 static void r_tabSetVCsAnimated(id self, SEL _cmd, id controllers, BOOL animated) {
     HushHit("UITabBarController", "setViewControllers:animated:");
-    NSArray *filtered = HushFilterTabControllers(controllers);
+    NSArray *filtered = HushFilterTabControllers((UITabBarController *)self, controllers);
     if (o_tabSetVCsAnimated) o_tabSetVCsAnimated(self, _cmd, filtered, animated);
 }
 
@@ -2529,7 +2665,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 119
+#define HUSH_TARGET_COUNT 124
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -2608,6 +2744,7 @@ void HushInstallHooks(void) {
     Class cSafetyView = hush_resolve_class("BDMessageSafetyTipView");
     Class cVisitorData = hush_resolve_class("UserVisitorData");
     Class cTabVC      = hush_resolve_class("UITabBarController");
+    Class cView       = hush_resolve_class("UIView");
     Class cTavern     = hush_resolve_class("BDTavernChatingViewController");
     Class cEngine = hush_resolve_class("GJIMEngine");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
@@ -3375,6 +3512,41 @@ void HushInstallHooks(void) {
         if (strcmp(r.kind, "MISSING") != 0)
             o_homeProfileLayout = (void (*)(id, SEL))r.prev;
         hush_report(118, "BDHomeViewController", "viewDidLayoutSubviews", r);
+    }
+    if (!s_done[119]) {
+        SEL s = sel_registerName("isCanShowSplashForColdLaunch");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_isCanShowSplashCold, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_isCanShowSplashCold = (BOOL (*)(id, SEL))r.prev;
+        hush_report(119, "AppDelegateModel", "isCanShowSplashForColdLaunch", r);
+    }
+    if (!s_done[120]) {
+        SEL s = sel_registerName("isCanShowSplashForHotLaunch");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_isCanShowSplashHot, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_isCanShowSplashHot = (BOOL (*)(id, SEL))r.prev;
+        hush_report(120, "AppDelegateModel", "isCanShowSplashForHotLaunch", r);
+    }
+    if (!s_done[121]) {
+        SEL s = sel_registerName("isLoadSplashSuccessForColdLaunch");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_isLoadSplashCold, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_isLoadSplashCold = (BOOL (*)(id, SEL))r.prev;
+        hush_report(121, "AppDelegateModel", "isLoadSplashSuccessForColdLaunch", r);
+    }
+    if (!s_done[122]) {
+        SEL s = sel_registerName("isLoadSplashSuccessForHotLaunch");
+        hush_installed r = hush_install_impl(cApp, s, (IMP)&r_isLoadSplashHot, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_isLoadSplashHot = (BOOL (*)(id, SEL))r.prev;
+        hush_report(122, "AppDelegateModel", "isLoadSplashSuccessForHotLaunch", r);
+    }
+    if (!s_done[123]) {
+        SEL s = sel_registerName("didMoveToSuperview");
+        hush_installed r = hush_install_impl(cView, s, (IMP)&r_viewDidMoveToSuperview, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_viewDidMoveToSuperview = (void (*)(id, SEL))r.prev;
+        hush_report(123, "UIView", "didMoveToSuperview", r);
     }
 
 

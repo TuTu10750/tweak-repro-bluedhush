@@ -101,6 +101,8 @@
 @property (nonatomic) void * ctx;
 @property (nonatomic) double lat;
 @property (nonatomic) double lng;
+@property (nonatomic) double residual;
+@property (nonatomic, weak) UIViewController *sourceViewController;
 
 - (void)viewDidLoad;
 - (id)hushChipText;

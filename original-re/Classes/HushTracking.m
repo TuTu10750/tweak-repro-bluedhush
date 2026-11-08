@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #import "HushConfig.h"
 #import "HushLogger.h"
+#import "HushTrackMapCardVC.h"
 #import "HushVirtualLocation.h"
 
 static NSURLRequest *gHushTrackTemplate = nil;
@@ -138,30 +139,20 @@ static void HushTrackQuery(NSURLRequest *template, double lat, double lng,
 static void HushTrackShowResult(long long uid, double lat, double lng,
                                 double residual, UIViewController *from) {
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSString *msg = [NSString stringWithFormat:
-            @"纬度 %.6f\n经度 %.6f\n残差 %.3f km",
-            lat, lng, residual];
-        UIAlertController *ac =
-            [UIAlertController alertControllerWithTitle:@"位置解算完成"
-                                                message:msg
-                                         preferredStyle:UIAlertControllerStyleAlert];
-        [ac addAction:[UIAlertAction actionWithTitle:@"定位到这里"
-                                               style:UIAlertActionStyleDefault
-                                             handler:^(UIAlertAction *a) {
-            HushConfig *cfg = [HushConfig shared];
-            [cfg setString:[NSString stringWithFormat:@"%.8f", lat] forKey:@"runtime_custom_lat"];
-            [cfg setString:[NSString stringWithFormat:@"%.8f", lng] forKey:@"runtime_custom_lng"];
-            [cfg setEnabled:YES forKey:@"switch_virtual_location"];
-            [cfg setEnabled:YES forKey:@"switch_location_sim"];
-            [[NSNotificationCenter defaultCenter]
-                postNotificationName:HushVirtualLocationDidChangeNotification object:nil];
-            HushVirtualLocationKickHost();
-            [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][追踪] 已定位到此 %.6f,%.6f uid=%lld", lat, lng, uid]];
-        }]];
-        [ac addAction:[UIAlertAction actionWithTitle:@"取消"
-                                               style:UIAlertActionStyleCancel handler:nil]];
-        [from presentViewController:ac animated:YES completion:nil];
+        HushTrackMapCardVC *card = [[HushTrackMapCardVC alloc] init];
+        card.uid = [NSString stringWithFormat:@"%lld", uid];
+        card.lat = lat;
+        card.lng = lng;
+        card.residual = residual;
+        card.sourceViewController = from;
+        card.modalPresentationStyle = UIModalPresentationPageSheet;
+        if (@available(iOS 15.0, *)) {
+            UISheetPresentationController *sheet = card.sheetPresentationController;
+            sheet.detents = @[[UISheetPresentationControllerDetent mediumDetent],
+                              [UISheetPresentationControllerDetent largeDetent]];
+            sheet.prefersGrabberVisible = YES;
+        }
+        [from presentViewController:card animated:YES completion:nil];
     });
 }
 
@@ -183,7 +174,7 @@ static void HushTrackSolve(long long target, UIViewController *from, UIButton *b
         return;
     }
     button.enabled = NO;
-    [button setTitle:@"解算中…" forState:UIControlStateNormal];
+    if (button) [button setTitle:@"解算中…" forState:UIControlStateNormal];
     double eastKm = 10.0;
     double northKm = 10.0;
     double latE = lat0, lngE = lng0 + eastKm / (111.320 * cos(lat0 * M_PI / 180.0));
@@ -228,6 +219,11 @@ static void HushTrackSolve(long long target, UIViewController *from, UIButton *b
     });
 }
 
+void HushTrackRedoForUid(long long uid, UIViewController *from) {
+    if (uid <= 0 || !from) return;
+    HushTrackSolve(uid, from, nil);
+}
+
 static void HushTrackTapped(id sender, UIViewController *vc) {
     if (![sender isKindOfClass:[UIButton class]]) return;
     UIButton *button = (UIButton *)sender;
@@ -257,10 +253,13 @@ void HushTrackInstallOnProfile(UIViewController *vc) {
         btn = [UIButton buttonWithType:UIButtonTypeSystem];
         btn.tag = kHushTrackButtonTag;
         [btn setTitle:kHushTrackButtonTitle forState:UIControlStateNormal];
+        [btn setImage:[UIImage systemImageNamed:@"location.fill"] forState:UIControlStateNormal];
+        btn.tintColor = [UIColor whiteColor];
         [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        btn.titleLabel.font = [UIFont systemFontOfSize:11 weight:UIFontWeightSemibold];
-        btn.backgroundColor = [UIColor colorWithRed:0.0 green:0.58 blue:1.0 alpha:1.0];
-        btn.layer.cornerRadius = 13.0;
+        btn.titleLabel.font = [UIFont systemFontOfSize:13 weight:UIFontWeightSemibold];
+        btn.backgroundColor = [UIColor colorWithWhite:0.58 alpha:0.92];
+        btn.layer.cornerRadius = 19.0;
+        btn.contentEdgeInsets = UIEdgeInsetsMake(0, 12, 0, 12);
         __weak UIButton *weakButton = btn;
         __weak UIViewController *weakVC = vc;
         [btn addAction:[UIAction actionWithHandler:^(UIAction *action) {
@@ -269,8 +268,12 @@ void HushTrackInstallOnProfile(UIViewController *vc) {
     }
     if (btn.superview != follow.superview) [follow.superview addSubview:btn];
     CGRect f = follow.frame;
-    btn.frame = CGRectMake(MAX(4.0, CGRectGetMinX(f) - 82.0),
-                           CGRectGetMinY(f), 76, 28);
+    NSArray *title = @[kHushTrackButtonTitle];
+    CGFloat textW = [title[0] sizeWithAttributes:
+                     @{NSFontAttributeName: btn.titleLabel.font}].width;
+    CGFloat bw = MIN(112.0, MAX(86.0, textW + 48.0));
+    btn.frame = CGRectMake(MAX(4.0, CGRectGetMinX(f) - bw - 8.0),
+                           CGRectGetMidY(f) - 19.0, bw, 38.0);
     btn.hidden = NO;
 }
 
