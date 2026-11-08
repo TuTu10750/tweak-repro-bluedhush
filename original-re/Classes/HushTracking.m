@@ -188,6 +188,17 @@ static void HushTrackShowResult(long long uid, double lat, double lng,
 
 static void HushTrackSolve(long long target, UIViewController *from, UIButton *button) {
     NSURLRequest *template = [gHushTrackTemplate copy];
+    if (!template) {
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"快速定位"
+                                                                    message:@"尚未捕获宿主附近请求模板，请先刷新身边页再试"
+                                                             preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:@"好" style:UIAlertActionStyleCancel handler:nil]];
+        UIViewController *presenter = HushTrackTopPresenter(from);
+        if (presenter.viewLoaded && presenter.view.window) {
+            [presenter presentViewController:ac animated:YES completion:nil];
+        }
+        return;
+    }
     NSURLComponents *c = [NSURLComponents componentsWithURL:template.URL
                                     resolvingAgainstBaseURL:NO];
     double lat0 = NAN, lng0 = NAN;
@@ -195,7 +206,7 @@ static void HushTrackSolve(long long target, UIViewController *from, UIButton *b
         if ([it.name isEqualToString:@"latitude"]) lat0 = it.value.doubleValue;
         if ([it.name isEqualToString:@"longitude"]) lng0 = it.value.doubleValue;
     }
-    if (!template || !isfinite(lat0) || !isfinite(lng0)) {
+    if (!c || !isfinite(lat0) || !isfinite(lng0)) {
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"快速定位"
                                                                     message:@"尚未捕获宿主附近请求模板，请先刷新身边页再试"
                                                              preferredStyle:UIAlertControllerStyleAlert];

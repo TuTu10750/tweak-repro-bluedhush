@@ -779,6 +779,15 @@ static long long HushMapTabIndex(id tabBar, long long index) {
     BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
     if (!hideLive && !hideDiscover) return index;
     if (index < 0 || index > 4) return index;
+    NSArray *items = nil;
+    @try { items = [tabBar valueForKey:@"items"]; }
+    @catch (__unused NSException *e) { items = nil; }
+    NSUInteger visibleCount = [items isKindOfClass:[NSArray class]]
+                            ? [(NSArray *)items count] : 0;
+    BOOL alreadyFiltered =
+        (visibleCount == 3 && hideLive && hideDiscover) ||
+        (visibleCount == 4 && hideLive != hideDiscover);
+    if (alreadyFiltered && index < (long long)visibleCount) return index;
     if (index == 0) return 0;
     NSInteger removedBefore = 0;
     if (hideLive && index >= 1) removedBefore++;
