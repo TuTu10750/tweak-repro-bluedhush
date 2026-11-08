@@ -835,6 +835,11 @@ static void r_barLayout(id self, SEL _cmd) {
     id current = nil;
     @try { current = [self valueForKey:@"currentItem"]; }
     @catch (__unused NSException *e) { current = nil; }
+    // setItems: 会替换并释放宿主原来的 items 数组。HushHooks.m 是 MRC，
+    // KVC 返回值在这里没有额外强引用；替换后绝不能再访问旧 items 指针。
+    NSUInteger oldCount = [items isKindOfClass:[NSArray class]]
+                        ? [(NSArray *)items count] : 0;
+    NSUInteger newCount = filtered.count;
     if (o_barSetItems) {
         o_barSetItems(self, sel_registerName("setItems:"), filtered);
     } else {
@@ -848,8 +853,8 @@ static void r_barLayout(id self, SEL _cmd) {
     }
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
         @"[Hush][TabBar] layout 同步 %lu→%lu current=%@",
-        (unsigned long)(items ? [(NSArray *)items count] : 0),
-        (unsigned long)filtered.count,
+        (unsigned long)oldCount,
+        (unsigned long)newCount,
         NSStringFromClass([next class]) ?: @"nil"]];
 }
 
