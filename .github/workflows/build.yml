@@ -399,6 +399,15 @@ jobs:
           echo "--- shim outputs ---"
           find shim/.theos/obj -name '*.dylib' 2>/dev/null | sort
 
+      - name: Build original-plugin reference monitor
+        run: |
+          export PATH=/tmp/ldbin:$PATH
+          make -C reference-monitor clean || true
+          make -C reference-monitor ARCHS=arm64 2>&1 | tee monitor-build.log
+          MON="reference-monitor/.theos/obj/debug/arm64/HushMonitor.dylib"
+          test -s "$MON"
+          ls -l "$MON"
+
       - name: Verify deployability (no substrate, metadata intact)
         run: |
           python3 ci/check_dylib.py original-re/.theos/obj/debug/arm64/BluedHushRE.dylib 76 | tee dylib-check.txt
@@ -432,8 +441,11 @@ jobs:
           path: |
             original-re/.theos/obj/debug/BluedHushRE.dylib
             original-re/.theos/obj/debug/arm64/BluedHushRE.dylib
+            reference-monitor/.theos/obj/debug/HushMonitor.dylib
+            reference-monitor/.theos/obj/debug/arm64/HushMonitor.dylib
             shim/.theos/obj/debug/substrate_shim.dylib
             shim/.theos/obj/debug/arm64/substrate_shim.dylib
+            monitor-build.log
             shim-build.log
             build-original-re-linux.log
             syntax.log
