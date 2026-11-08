@@ -1778,6 +1778,9 @@ void HushBurnApplyImage(id cell, id model) {
 // 因此这个标记既能在首帧出现，也能在重启后恢复。
 static const NSInteger kHushConvertedFlashTag = 0x4F3A23;
 extern BOOL HushFlashIsTracked(long long mid);
+static UIColor *HushBadgeSkyBlue(void) {
+    return [UIColor colorWithRed:0.0 green:0.66 blue:1.0 alpha:1.0];
+}
 
 static void HushConvertedFlashBadge(id cell, id model, BOOL show) {
     if (!cell || ![cell isKindOfClass:[UIView class]]) return;
@@ -1796,7 +1799,7 @@ static void HushConvertedFlashBadge(id cell, id model, BOOL show) {
         tag.tag = kHushConvertedFlashTag;
         tag.text = @"闪照";
         tag.font = [UIFont systemFontOfSize:9.0 weight:UIFontWeightMedium];
-        tag.textColor = [UIColor colorWithWhite:0.55 alpha:1.0];
+        tag.textColor = HushBadgeSkyBlue();
         tag.backgroundColor = [UIColor clearColor];
         tag.textAlignment = NSTextAlignmentCenter;
         tag.userInteractionEnabled = NO;
@@ -2016,7 +2019,7 @@ void HushRecallDecorateCell(id cell, id model) {
         // v40：跟原生气泡一个调子。宿主自己极少用系统色，亮橙在气泡里尤其扎眼；
         // 改成无背景 + 9pt Medium 深灰字，看起来像气泡自带的角标而不是外挂。
         tag.font = [UIFont systemFontOfSize:9.0 weight:UIFontWeightMedium];
-        tag.textColor = [UIColor colorWithWhite:0.55 alpha:1.0];
+        tag.textColor = HushBadgeSkyBlue();
         tag.backgroundColor = [UIColor clearColor];
         tag.textAlignment = NSTextAlignmentCenter;
         tag.userInteractionEnabled = NO;

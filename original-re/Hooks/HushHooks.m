@@ -444,6 +444,257 @@ static void r_userPrivSetAccess(id self, SEL _cmd, int value) {
     if (o_userPrivSetAccess) o_userPrivSetAccess(self, _cmd, value);
 }
 
+// 隐私相册照片点击后的浏览页。主页缩略图解锁以后，宿主仍会用
+// privatePhoto/privatePhotoOn 再校验一次，导致“申请查看隐私相册”弹窗。
+// 这里把浏览页的两个私有态直接置为已开放，并压掉相册格的锁遮罩。
+static BOOL (*o_browserPrivatePhoto)(id, SEL);
+static BOOL (*o_browserPrivatePhotoOn)(id, SEL);
+static void (*o_browserSetPrivatePhoto)(id, SEL, BOOL);
+static void (*o_browserSetPrivatePhotoOn)(id, SEL, BOOL);
+static void (*o_privacyCellMask)(id, SEL, BOOL);
+static void (*o_homeAlbumConfigure)(id, SEL, id, int, BOOL, id);
+static BOOL (*o_photoDataIsVertify)(id, SEL);
+
+static BOOL r_browserPrivatePhoto(id self, SEL _cmd) {
+    HushHit("BDPhotoBrowserController", "privatePhoto");
+    if (HushPrivacyUnlockOn()) return YES;
+    return o_browserPrivatePhoto ? o_browserPrivatePhoto(self, _cmd) : NO;
+}
+
+static BOOL r_browserPrivatePhotoOn(id self, SEL _cmd) {
+    HushHit("BDPhotoBrowserController", "privatePhotoOn");
+    if (HushPrivacyUnlockOn()) return YES;
+    return o_browserPrivatePhotoOn ? o_browserPrivatePhotoOn(self, _cmd) : NO;
+}
+
+static void r_browserSetPrivatePhoto(id self, SEL _cmd, BOOL value) {
+    HushHit("BDPhotoBrowserController", "setPrivatePhoto:");
+    if (HushPrivacyUnlockOn()) value = YES;
+    if (o_browserSetPrivatePhoto) o_browserSetPrivatePhoto(self, _cmd, value);
+}
+
+static void r_browserSetPrivatePhotoOn(id self, SEL _cmd, BOOL value) {
+    HushHit("BDPhotoBrowserController", "setPrivatePhotoOn:");
+    if (HushPrivacyUnlockOn()) value = YES;
+    if (o_browserSetPrivatePhotoOn) o_browserSetPrivatePhotoOn(self, _cmd, value);
+}
+
+static void r_privacyCellMask(id self, SEL _cmd, BOOL show) {
+    HushHit("BDPrivacyAlbumCell", "showMaskViewOrNot:");
+    if (HushPrivacyUnlockOn()) return;
+    if (o_privacyCellMask) o_privacyCellMask(self, _cmd, show);
+}
+
+static void r_homeAlbumConfigure(id self, SEL _cmd, id album,
+                                 int lockStatus, BOOL multiple, id indexPath) {
+    HushHit("BDHomeAlbumCell", "configureAllAlbum:lockStatus:isMultiple:indexPath:");
+    if (HushPrivacyUnlockOn()) lockStatus = 0;
+    if (o_homeAlbumConfigure) {
+        o_homeAlbumConfigure(self, _cmd, album, lockStatus, multiple, indexPath);
+    }
+}
+
+static BOOL r_photoDataIsVertify(id self, SEL _cmd) {
+    HushHit("BDPhotoBrowserData", "isVertify");
+    if (HushPrivacyUnlockOn()) return NO;
+    return o_photoDataIsVertify ? o_photoDataIsVertify(self, _cmd) : NO;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// v65：净化中心的可落地广告 hook
+//
+// 下列类/选择子来自仓库现有宿主分析表与旧版实证清单。每条仍先用开关门控；
+// 未知广告 SDK 的域名和没有实证锚点的页面不做暴力拦截。
+// ─────────────────────────────────────────────────────────────────────────
+static inline BOOL HushPurifyKey(NSString *key) {
+    return [[HushConfig shared] isEnabled:key];
+}
+
+static void (*o_sessionInsertRecommend)(id, SEL);
+static void (*o_sessionSetAll)(id, SEL, id);
+static void (*o_sessionCallHeader)(id, SEL, id);
+
+static void r_sessionInsertRecommend(id self, SEL _cmd) {
+    HushHit("BDSessionViewController", "p_insertRecommendUserModelsIfNeeded");
+    if (HushPurifyKey(@"purify_session_card")) return;
+    if (o_sessionInsertRecommend) o_sessionInsertRecommend(self, _cmd);
+}
+
+static long long HushSessionFieldLL(id obj, NSString *key) {
+    if (!obj || !key.length) return LLONG_MIN;
+    @try {
+        id v = [obj valueForKey:key];
+        if ([v respondsToSelector:@selector(longLongValue)]) return [v longLongValue];
+    } @catch (__unused NSException *e) {}
+    return LLONG_MIN;
+}
+
+static void r_sessionSetAll(id self, SEL _cmd, id sessions) {
+    HushHit("BDSessionViewController", "setAllSessions:");
+    if (!HushPurifyKey(@"purify_session_card") ||
+        ![sessions isKindOfClass:[NSArray class]]) {
+        if (o_sessionSetAll) o_sessionSetAll(self, _cmd, sessions);
+        return;
+    }
+    NSMutableArray *out = [NSMutableArray array];
+    NSUInteger dropped = 0;
+    for (id item in (NSArray *)sessions) {
+        long long sid = HushSessionFieldLL(item, @"sessionId");
+        if (sid <= 0) dropped++;
+        else [out addObject:item];
+    }
+    if (dropped == 0) {
+        if (o_sessionSetAll) o_sessionSetAll(self, _cmd, sessions);
+        return;
+    }
+    [HushLogger logLevel:2 format:[NSString stringWithFormat:
+        @"[Hush][净化] 会话推荐卡过滤 %lu 项（保留 %lu 项）",
+        (unsigned long)dropped, (unsigned long)out.count]];
+    if (o_sessionSetAll) o_sessionSetAll(self, _cmd, out);
+}
+
+static void r_sessionCallHeader(id self, SEL _cmd, id view) {
+    HushHit("BDSessionListHeader1", "setCallListView:");
+    if (HushPurifyKey(@"purify_call_header")) view = nil;
+    if (o_sessionCallHeader) o_sessionCallHeader(self, _cmd, view);
+}
+
+static void (*o_abuDrawLoad)(id, SEL);
+static void (*o_abuNativeLoad)(id, SEL);
+static void (*o_abuNativePlay)(id, SEL);
+static void (*o_feedTemplateLoad)(id, SEL, id, id, id, BOOL);
+static void (*o_feedNativeLoad)(id, SEL, id, id, id, BOOL);
+static void (*o_nearbySetAds)(id, SEL, id);
+static void (*o_nearbySetOriginAds)(id, SEL, id);
+static void (*o_nearbyBannerConfig)(id, SEL, id);
+static void (*o_globalBannerShow)(id, SEL);
+static void (*o_globalBannerMatch)(id, SEL, id, id);
+static void (*o_abuBannerLoad)(id, SEL);
+static void (*o_mineBannerConfig)(id, SEL, id);
+static void (*o_safeTipSetup)(id, SEL);
+static double (*o_safeTipHeight)(id, SEL);
+static int (*o_visitorIsAds)(id, SEL);
+
+static void r_abuDrawLoad(id self, SEL _cmd) {
+    HushHit("ABUDrawAdView", "loadAdData");
+    if (HushPurifyKey(@"purify_feed_ad")) return;
+    if (o_abuDrawLoad) o_abuDrawLoad(self, _cmd);
+}
+static void r_abuNativeLoad(id self, SEL _cmd) {
+    HushHit("ABUNativeAdView", "loadAdData");
+    if (HushPurifyKey(@"purify_feed_ad")) return;
+    if (o_abuNativeLoad) o_abuNativeLoad(self, _cmd);
+}
+static void r_abuNativePlay(id self, SEL _cmd) {
+    HushHit("ABUNativeAdView", "play");
+    if (HushPurifyKey(@"purify_feed_ad")) return;
+    if (o_abuNativePlay) o_abuNativePlay(self, _cmd);
+}
+static void r_feedTemplateLoad(id self, SEL _cmd, id a, id b, id c, BOOL d) {
+    HushHit("BDKSTemplateExpressFeedAdBaseTableViewCell",
+            "startLoadWithAdModel:originModel:containVC:isNeedRefresh:");
+    if (HushPurifyKey(@"purify_feed_ad")) return;
+    if (o_feedTemplateLoad) o_feedTemplateLoad(self, _cmd, a, b, c, d);
+}
+static void r_feedNativeLoad(id self, SEL _cmd, id a, id b, id c, BOOL d) {
+    HushHit("BDKSSelfExpressNativeAdBaseTableViewCell",
+            "startLoadWithAdModel:originModel:containVC:isNeedRefresh:");
+    if (HushPurifyKey(@"purify_feed_ad")) return;
+    if (o_feedNativeLoad) o_feedNativeLoad(self, _cmd, a, b, c, d);
+}
+static void r_nearbySetAds(id self, SEL _cmd, id arr) {
+    HushHit("BDNearbyDataAdapter", "setAdmsArray:");
+    if (HushPurifyKey(@"purify_nearby_ad")) arr = @[];
+    if (o_nearbySetAds) o_nearbySetAds(self, _cmd, arr);
+}
+static void r_nearbySetOriginAds(id self, SEL _cmd, id arr) {
+    HushHit("BDNearbyDataAdapter", "setOriginUserAdsArray:");
+    if (HushPurifyKey(@"purify_nearby_ad")) arr = @[];
+    if (o_nearbySetOriginAds) o_nearbySetOriginAds(self, _cmd, arr);
+}
+static void r_nearbyBannerConfig(id self, SEL _cmd, id banner) {
+    HushHit("BDNearbyBannerCell", "configerBanner:");
+    if (HushPurifyKey(@"purify_nearby_ad")) return;
+    if (o_nearbyBannerConfig) o_nearbyBannerConfig(self, _cmd, banner);
+}
+static void r_globalBannerShow(id self, SEL _cmd) {
+    HushHit("BDGlobalBannerView", "showNsnofyView");
+    if (HushPurifyKey(@"purify_banner")) return;
+    if (o_globalBannerShow) o_globalBannerShow(self, _cmd);
+}
+static void r_globalBannerMatch(id self, SEL _cmd, id banner, id message) {
+    HushHit("BDGlobalBannerMatchView", "setBannerModel:messageModel:");
+    if (HushPurifyKey(@"purify_banner")) return;
+    if (o_globalBannerMatch) o_globalBannerMatch(self, _cmd, banner, message);
+}
+static void r_abuBannerLoad(id self, SEL _cmd) {
+    HushHit("ABUBannerAd", "loadAdData");
+    if (HushPurifyKey(@"purify_banner")) return;
+    if (o_abuBannerLoad) o_abuBannerLoad(self, _cmd);
+}
+static void r_mineBannerConfig(id self, SEL _cmd, id banner) {
+    HushHit("BDMineBannerCell", "configerBanner:");
+    if (HushPurifyKey(@"purify_mine_ad")) return;
+    if (o_mineBannerConfig) o_mineBannerConfig(self, _cmd, banner);
+}
+static void r_safeTipSetup(id self, SEL _cmd) {
+    HushHit("BDChatSafeTipCell", "setupData");
+    if (HushPurifyKey(@"purify_safe_tip")) return;
+    if (o_safeTipSetup) o_safeTipSetup(self, _cmd);
+}
+static double r_safeTipHeight(id self, SEL _cmd) {
+    HushHit("BDMessageSafetyTipView", "getSafetyTipViewHeight");
+    if (HushPurifyKey(@"purify_safe_tip")) return 0.0;
+    return o_safeTipHeight ? o_safeTipHeight(self, _cmd) : 0.0;
+}
+static int r_visitorIsAds(id self, SEL _cmd) {
+    HushHit("UserVisitorData", "is_ads");
+    if (HushPurifyKey(@"purify_visitor_ad")) return 0;
+    return o_visitorIsAds ? o_visitorIsAds(self, _cmd) : 0;
+}
+
+static void (*o_tabSetVCs)(id, SEL, id);
+static void r_tabSetVCs(id self, SEL _cmd, id controllers) {
+    HushHit("UITabBarController", "setViewControllers:");
+    if (![controllers isKindOfClass:[NSArray class]]) {
+        if (o_tabSetVCs) o_tabSetVCs(self, _cmd, controllers);
+        return;
+    }
+    BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
+    BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
+    if (!hideLive && !hideDiscover) {
+        if (o_tabSetVCs) o_tabSetVCs(self, _cmd, controllers);
+        return;
+    }
+    NSMutableArray *out = [NSMutableArray array];
+    for (id vc in (NSArray *)controllers) {
+        NSString *cn = NSStringFromClass([vc class]);
+        if (hideLive && ([cn rangeOfString:@"Live" options:NSCaseInsensitiveSearch].location != NSNotFound)) continue;
+        if (hideDiscover && ([cn rangeOfString:@"Find" options:NSCaseInsensitiveSearch].location != NSNotFound)) continue;
+        [out addObject:vc];
+    }
+    if (o_tabSetVCs) o_tabSetVCs(self, _cmd, out);
+}
+
+static void (*o_voiceJoin)(id, SEL);
+static void (*o_voicePopover)(id, SEL);
+static void (*o_voiceForward)(id, SEL);
+static void r_voiceJoin(id self, SEL _cmd) {
+    HushHit("BDTavernChatingViewController", "joinVoiceRoom");
+    if (HushPurifyKey(@"purify_block_voice")) return;
+    if (o_voiceJoin) o_voiceJoin(self, _cmd);
+}
+static void r_voicePopover(id self, SEL _cmd) {
+    HushHit("BDTavernChatingViewController", "p_showVoiceMatchPopoverView");
+    if (HushPurifyKey(@"purify_block_voice")) return;
+    if (o_voicePopover) o_voicePopover(self, _cmd);
+}
+static void r_voiceForward(id self, SEL _cmd) {
+    HushHit("BDTavernChatingViewController", "p_startVoiceForwardIfNeeded");
+    if (HushPurifyKey(@"purify_block_voice")) return;
+    if (o_voiceForward) o_voiceForward(self, _cmd);
+}
+
 // 35: probe only — 同步通道。推送腿吞包之后，断网期间发生的撤回只可能从
 // GJIMMessageService -p_handleSyncRangeMessages:syncType: 进来。这里只数不改：
 // 数到 0 说明同步包不带撤回，数到 >0 就是下一版要拦的第二个投递口。
@@ -2107,7 +2358,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 81
+#define HUSH_TARGET_COUNT 110
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -2166,6 +2417,27 @@ void HushInstallHooks(void) {
     Class cPersonPriv = hush_resolve_class("BDPersonPrivacyAlbumCollectView");
     Class cHomePriv   = hush_resolve_class("BDHomePrivacyAlbumModel");
     Class cHomeVC     = hush_resolve_class("BDHomeViewController");
+    Class cBrowser    = hush_resolve_class("BDPhotoBrowserController");
+    Class cPrivacyCell = hush_resolve_class("BDPrivacyAlbumCell");
+    Class cHomeAlbum  = hush_resolve_class("BDHomeAlbumCell");
+    Class cPhotoData  = hush_resolve_class("BDPhotoBrowserData");
+    Class cSessionVC  = hush_resolve_class("BDSessionViewController");
+    Class cSessionHeader = hush_resolve_class("BDSessionListHeader1");
+    Class cAbuDraw    = hush_resolve_class("ABUDrawAdView");
+    Class cAbuNative  = hush_resolve_class("ABUNativeAdView");
+    Class cFeedTpl    = hush_resolve_class("BDKSTemplateExpressFeedAdBaseTableViewCell");
+    Class cFeedNative = hush_resolve_class("BDKSSelfExpressNativeAdBaseTableViewCell");
+    Class cNearbyAdapter = hush_resolve_class("BDNearbyDataAdapter");
+    Class cNearbyBanner  = hush_resolve_class("BDNearbyBannerCell");
+    Class cGlobalBanner  = hush_resolve_class("BDGlobalBannerView");
+    Class cGlobalBannerMatch = hush_resolve_class("BDGlobalBannerMatchView");
+    Class cAbuBanner  = hush_resolve_class("ABUBannerAd");
+    Class cMineBanner = hush_resolve_class("BDMineBannerCell");
+    Class cSafeTip    = hush_resolve_class("BDChatSafeTipCell");
+    Class cSafetyView = hush_resolve_class("BDMessageSafetyTipView");
+    Class cVisitorData = hush_resolve_class("UserVisitorData");
+    Class cTabVC      = hush_resolve_class("UITabBarController");
+    Class cTavern     = hush_resolve_class("BDTavernChatingViewController");
     Class cEngine = hush_resolve_class("GJIMEngine");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
     // v43：阅后即焚的全屏查看页 —— 「按住屏幕阅读 / 松手销毁」的真身。
@@ -2664,6 +2936,195 @@ void HushInstallHooks(void) {
         hush_installed r = hush_install_impl(cUser, s, (IMP)&r_userPrivSetAccess, "v20@0:8i16");
         if (strcmp(r.kind, "MISSING") != 0) o_userPrivSetAccess = (void (*)(id, SEL, int))r.prev;
         hush_report(80, "UserInformation", "setAccess_private_photos:", r);
+    }
+    if (!s_done[81]) {
+        SEL s = sel_registerName("privatePhoto");
+        hush_installed r = hush_install_impl(cBrowser, s, (IMP)&r_browserPrivatePhoto, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_browserPrivatePhoto = (BOOL (*)(id, SEL))r.prev;
+        hush_report(81, "BDPhotoBrowserController", "privatePhoto", r);
+    }
+    if (!s_done[82]) {
+        SEL s = sel_registerName("privatePhotoOn");
+        hush_installed r = hush_install_impl(cBrowser, s, (IMP)&r_browserPrivatePhotoOn, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_browserPrivatePhotoOn = (BOOL (*)(id, SEL))r.prev;
+        hush_report(82, "BDPhotoBrowserController", "privatePhotoOn", r);
+    }
+    if (!s_done[83]) {
+        SEL s = sel_registerName("setPrivatePhoto:");
+        hush_installed r = hush_install_impl(cBrowser, s, (IMP)&r_browserSetPrivatePhoto, "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_browserSetPrivatePhoto = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(83, "BDPhotoBrowserController", "setPrivatePhoto:", r);
+    }
+    if (!s_done[84]) {
+        SEL s = sel_registerName("setPrivatePhotoOn:");
+        hush_installed r = hush_install_impl(cBrowser, s, (IMP)&r_browserSetPrivatePhotoOn, "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_browserSetPrivatePhotoOn = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(84, "BDPhotoBrowserController", "setPrivatePhotoOn:", r);
+    }
+    if (!s_done[85]) {
+        SEL s = sel_registerName("showMaskViewOrNot:");
+        hush_installed r = hush_install_impl(cPrivacyCell, s, (IMP)&r_privacyCellMask, "v20@0:8B16");
+        if (strcmp(r.kind, "MISSING") != 0) o_privacyCellMask = (void (*)(id, SEL, BOOL))r.prev;
+        hush_report(85, "BDPrivacyAlbumCell", "showMaskViewOrNot:", r);
+    }
+    if (!s_done[86]) {
+        SEL s = sel_registerName("configureAllAlbum:lockStatus:isMultiple:indexPath:");
+        hush_installed r = hush_install_impl(cHomeAlbum, s, (IMP)&r_homeAlbumConfigure,
+                                             "v40@0:8@16i24B28@32");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_homeAlbumConfigure = (void (*)(id, SEL, id, int, BOOL, id))r.prev;
+        hush_report(86, "BDHomeAlbumCell", "configureAllAlbum:lockStatus:isMultiple:indexPath:", r);
+    }
+    if (!s_done[87]) {
+        SEL s = sel_registerName("isVertify");
+        hush_installed r = hush_install_impl(cPhotoData, s, (IMP)&r_photoDataIsVertify, "B16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_photoDataIsVertify = (BOOL (*)(id, SEL))r.prev;
+        hush_report(87, "BDPhotoBrowserData", "isVertify", r);
+    }
+    if (!s_done[88]) {
+        SEL s = sel_registerName("p_insertRecommendUserModelsIfNeeded");
+        hush_installed r = hush_install_impl(cSessionVC, s, (IMP)&r_sessionInsertRecommend, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_sessionInsertRecommend = (void (*)(id, SEL))r.prev;
+        hush_report(88, "BDSessionViewController", "p_insertRecommendUserModelsIfNeeded", r);
+    }
+    if (!s_done[89]) {
+        SEL s = sel_registerName("setAllSessions:");
+        hush_installed r = hush_install_impl(cSessionVC, s, (IMP)&r_sessionSetAll, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_sessionSetAll = (void (*)(id, SEL, id))r.prev;
+        hush_report(89, "BDSessionViewController", "setAllSessions:", r);
+    }
+    if (!s_done[90]) {
+        SEL s = sel_registerName("setCallListView:");
+        hush_installed r = hush_install_impl(cSessionHeader, s, (IMP)&r_sessionCallHeader, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_sessionCallHeader = (void (*)(id, SEL, id))r.prev;
+        hush_report(90, "BDSessionListHeader1", "setCallListView:", r);
+    }
+    if (!s_done[91]) {
+        SEL s = sel_registerName("loadAdData");
+        hush_installed r = hush_install_impl(cAbuDraw, s, (IMP)&r_abuDrawLoad, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_abuDrawLoad = (void (*)(id, SEL))r.prev;
+        hush_report(91, "ABUDrawAdView", "loadAdData", r);
+    }
+    if (!s_done[92]) {
+        SEL s = sel_registerName("loadAdData");
+        hush_installed r = hush_install_impl(cAbuNative, s, (IMP)&r_abuNativeLoad, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_abuNativeLoad = (void (*)(id, SEL))r.prev;
+        hush_report(92, "ABUNativeAdView", "loadAdData", r);
+    }
+    if (!s_done[93]) {
+        SEL s = sel_registerName("play");
+        hush_installed r = hush_install_impl(cAbuNative, s, (IMP)&r_abuNativePlay, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_abuNativePlay = (void (*)(id, SEL))r.prev;
+        hush_report(93, "ABUNativeAdView", "play", r);
+    }
+    if (!s_done[94]) {
+        SEL s = sel_registerName("startLoadWithAdModel:originModel:containVC:isNeedRefresh:");
+        hush_installed r = hush_install_impl(cFeedTpl, s, (IMP)&r_feedTemplateLoad,
+                                             "v44@0:8@16@24@32B40");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_feedTemplateLoad = (void (*)(id, SEL, id, id, id, BOOL))r.prev;
+        hush_report(94, "BDKSTemplateExpressFeedAdBaseTableViewCell",
+                    "startLoadWithAdModel:originModel:containVC:isNeedRefresh:", r);
+    }
+    if (!s_done[95]) {
+        SEL s = sel_registerName("startLoadWithAdModel:originModel:containVC:isNeedRefresh:");
+        hush_installed r = hush_install_impl(cFeedNative, s, (IMP)&r_feedNativeLoad,
+                                             "v44@0:8@16@24@32B40");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_feedNativeLoad = (void (*)(id, SEL, id, id, id, BOOL))r.prev;
+        hush_report(95, "BDKSSelfExpressNativeAdBaseTableViewCell",
+                    "startLoadWithAdModel:originModel:containVC:isNeedRefresh:", r);
+    }
+    if (!s_done[96]) {
+        SEL s = sel_registerName("setAdmsArray:");
+        hush_installed r = hush_install_impl(cNearbyAdapter, s, (IMP)&r_nearbySetAds, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_nearbySetAds = (void (*)(id, SEL, id))r.prev;
+        hush_report(96, "BDNearbyDataAdapter", "setAdmsArray:", r);
+    }
+    if (!s_done[97]) {
+        SEL s = sel_registerName("setOriginUserAdsArray:");
+        hush_installed r = hush_install_impl(cNearbyAdapter, s, (IMP)&r_nearbySetOriginAds,
+                                             "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_nearbySetOriginAds = (void (*)(id, SEL, id))r.prev;
+        hush_report(97, "BDNearbyDataAdapter", "setOriginUserAdsArray:", r);
+    }
+    if (!s_done[98]) {
+        SEL s = sel_registerName("configerBanner:");
+        hush_installed r = hush_install_impl(cNearbyBanner, s, (IMP)&r_nearbyBannerConfig,
+                                             "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_nearbyBannerConfig = (void (*)(id, SEL, id))r.prev;
+        hush_report(98, "BDNearbyBannerCell", "configerBanner:", r);
+    }
+    if (!s_done[99]) {
+        SEL s = sel_registerName("showNsnofyView");
+        hush_installed r = hush_install_impl(cGlobalBanner, s, (IMP)&r_globalBannerShow, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_globalBannerShow = (void (*)(id, SEL))r.prev;
+        hush_report(99, "BDGlobalBannerView", "showNsnofyView", r);
+    }
+    if (!s_done[100]) {
+        SEL s = sel_registerName("setBannerModel:messageModel:");
+        hush_installed r = hush_install_impl(cGlobalBannerMatch, s, (IMP)&r_globalBannerMatch,
+                                             "v32@0:8@16@24");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_globalBannerMatch = (void (*)(id, SEL, id, id))r.prev;
+        hush_report(100, "BDGlobalBannerMatchView", "setBannerModel:messageModel:", r);
+    }
+    if (!s_done[101]) {
+        SEL s = sel_registerName("loadAdData");
+        hush_installed r = hush_install_impl(cAbuBanner, s, (IMP)&r_abuBannerLoad, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_abuBannerLoad = (void (*)(id, SEL))r.prev;
+        hush_report(101, "ABUBannerAd", "loadAdData", r);
+    }
+    if (!s_done[102]) {
+        SEL s = sel_registerName("configerBanner:");
+        hush_installed r = hush_install_impl(cMineBanner, s, (IMP)&r_mineBannerConfig,
+                                             "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_mineBannerConfig = (void (*)(id, SEL, id))r.prev;
+        hush_report(102, "BDMineBannerCell", "configerBanner:", r);
+    }
+    if (!s_done[103]) {
+        SEL s = sel_registerName("setupData");
+        hush_installed r = hush_install_impl(cSafeTip, s, (IMP)&r_safeTipSetup, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_safeTipSetup = (void (*)(id, SEL))r.prev;
+        hush_report(103, "BDChatSafeTipCell", "setupData", r);
+    }
+    if (!s_done[104]) {
+        SEL s = sel_registerName("getSafetyTipViewHeight");
+        hush_installed r = hush_install_impl(cSafetyView, s, (IMP)&r_safeTipHeight, "d16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_safeTipHeight = (double (*)(id, SEL))r.prev;
+        hush_report(104, "BDMessageSafetyTipView", "getSafetyTipViewHeight", r);
+    }
+    if (!s_done[105]) {
+        SEL s = sel_registerName("is_ads");
+        hush_installed r = hush_install_impl(cVisitorData, s, (IMP)&r_visitorIsAds, "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_visitorIsAds = (int (*)(id, SEL))r.prev;
+        hush_report(105, "UserVisitorData", "is_ads", r);
+    }
+    if (!s_done[106]) {
+        SEL s = sel_registerName("setViewControllers:");
+        hush_installed r = hush_install_impl(cTabVC, s, (IMP)&r_tabSetVCs, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0) o_tabSetVCs = (void (*)(id, SEL, id))r.prev;
+        hush_report(106, "UITabBarController", "setViewControllers:", r);
+    }
+    if (!s_done[107]) {
+        SEL s = sel_registerName("joinVoiceRoom");
+        hush_installed r = hush_install_impl(cTavern, s, (IMP)&r_voiceJoin, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_voiceJoin = (void (*)(id, SEL))r.prev;
+        hush_report(107, "BDTavernChatingViewController", "joinVoiceRoom", r);
+    }
+    if (!s_done[108]) {
+        SEL s = sel_registerName("p_showVoiceMatchPopoverView");
+        hush_installed r = hush_install_impl(cTavern, s, (IMP)&r_voicePopover, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_voicePopover = (void (*)(id, SEL))r.prev;
+        hush_report(108, "BDTavernChatingViewController", "p_showVoiceMatchPopoverView", r);
+    }
+    if (!s_done[109]) {
+        SEL s = sel_registerName("p_startVoiceForwardIfNeeded");
+        hush_installed r = hush_install_impl(cTavern, s, (IMP)&r_voiceForward, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0) o_voiceForward = (void (*)(id, SEL))r.prev;
+        hush_report(109, "BDTavernChatingViewController", "p_startVoiceForwardIfNeeded", r);
     }
 
 
