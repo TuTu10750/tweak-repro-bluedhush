@@ -3,6 +3,41 @@
 #import "HushRuntime.h"
 #import "HushLogger.h"
 
+// BluedHush 5.19 的 HushAlbumHighResolutionURL 实证规则：
+// bldimg.com / bldimg.cn 的 !Head.jpg 路径追加 !original.png 才是原图地址。
+// 直接拿 UIImageView 的 sd_imageURL 只会得到 192x192 的 !Head.jpg 缩略图。
+static NSString *HushPrivacyHighResolutionString(id object) {
+    NSString *raw = nil;
+    if ([object isKindOfClass:[NSURL class]]) {
+        raw = [(NSURL *)object absoluteString];
+    } else if ([object isKindOfClass:[NSString class]]) {
+        raw = (NSString *)object;
+    }
+    if (!raw.length) return nil;
+
+    NSURLComponents *components =
+        [NSURLComponents componentsWithString:raw];
+    if (!components) return raw;
+
+    NSString *host = components.host.lowercaseString;
+    NSString *path = components.percentEncodedPath.lowercaseString;
+    BOOL imageHost =
+        [host isEqualToString:@"www.bldimg.com"] ||
+        [host isEqualToString:@"bldimg.com"] ||
+        [host isEqualToString:@"www.bldimg.cn"] ||
+        [host isEqualToString:@"bldimg.cn"];
+    if (imageHost &&
+        [path containsString:@"/userfiles/"] &&
+        [path hasSuffix:@"!head.jpg"] &&
+        ![path containsString:@"!original."]) {
+        components.percentEncodedPath =
+            [components.percentEncodedPath stringByAppendingString:@"!original.png"];
+        NSString *out = components.string;
+        if (out.length) return out;
+    }
+    return raw;
+}
+
 static UIImageView *HushPrivacyBestImageView(UIView *view, UIView **outRoot) {
     UIImageView *best = nil;
     CGFloat bestArea = -1.0;
@@ -33,9 +68,13 @@ static NSURL *HushPrivacyImageURL(UIImageView *iv) {
     for (NSString *key in keys) {
         @try {
             id v = [iv valueForKey:key];
-            if ([v isKindOfClass:[NSURL class]]) return (NSURL *)v;
+            if ([v isKindOfClass:[NSURL class]]) {
+                NSString *high = HushPrivacyHighResolutionString(v);
+                if (high.length) return [NSURL URLWithString:high];
+            }
             if ([v isKindOfClass:[NSString class]] && [v length] > 8) {
-                return [NSURL URLWithString:v];
+                NSString *high = HushPrivacyHighResolutionString(v);
+                if (high.length) return [NSURL URLWithString:high];
             }
         } @catch (__unused NSException *e) {}
     }
@@ -52,9 +91,13 @@ static NSURL *HushPrivacyOriginalURLFromCell(id cell) {
             for (NSString *urlKey in @[@"url", @"imageUrl", @"imageURL",
                                         @"picUrl", @"originalUrl", @"originUrl"]) {
                 id v = [model valueForKey:urlKey];
-                if ([v isKindOfClass:[NSURL class]]) return (NSURL *)v;
+                if ([v isKindOfClass:[NSURL class]]) {
+                    NSString *high = HushPrivacyHighResolutionString(v);
+                    if (high.length) return [NSURL URLWithString:high];
+                }
                 if ([v isKindOfClass:[NSString class]] && [v length] > 8) {
-                    return [NSURL URLWithString:v];
+                    NSString *high = HushPrivacyHighResolutionString(v);
+                    if (high.length) return [NSURL URLWithString:high];
                 }
             }
         } @catch (__unused NSException *e) {}
@@ -83,7 +126,7 @@ static NSURL *HushPrivacyOriginalURLFromCell(id cell) {
     _scroll.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     _scroll.delegate = self;
     _scroll.minimumZoomScale = 1.0;
-    _scroll.maximumZoomScale = 4.0;
+    _scroll.maximumZoomScale = 6.0;
     _scroll.showsHorizontalScrollIndicator = NO;
     _scroll.showsVerticalScrollIndicator = NO;
     [self.view addSubview:_scroll];
@@ -178,9 +221,10 @@ static NSURL *HushPrivacyOriginalURLFromCell(id cell) {
             url, fallback);
     }
     [HushLogger logLevel:3 format:[NSString stringWithFormat:
-        @"[Hush][隐私相册] 浏览第 %ld/%ld 张 image=%@ remote=%d",
+        @"[Hush][隐私相册] 浏览第 %ld/%ld 张 image=%@ remote=%d url=%@",
         (long)(_currentIndex + 1), (long)count,
-        fallback ? NSStringFromCGSize(fallback.size) : @"无", url ? 1 : 0]];
+        fallback ? NSStringFromCGSize(fallback.size) : @"无", url ? 1 : 0,
+        url.absoluteString ?: @"无"]];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView {

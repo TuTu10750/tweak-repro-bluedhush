@@ -54,6 +54,18 @@ static UIButton *HushTrackFindFollowButton(UIView *root) {
     return nil;
 }
 
+static UIViewController *HushTrackTopPresenter(UIViewController *controller) {
+    UIViewController *top = controller;
+    while (top.presentedViewController) top = top.presentedViewController;
+    if ([top isKindOfClass:[UINavigationController class]]) {
+        top = [(UINavigationController *)top topViewController] ?: top;
+    }
+    if ([top isKindOfClass:[UITabBarController class]]) {
+        top = [(UITabBarController *)top selectedViewController] ?: top;
+    }
+    return top;
+}
+
 static long long HushTrackProfileUid(UIViewController *vc) {
     NSArray *keys = @[@"userInfo", @"userModel", @"selectedUser", @"profile"];
     for (NSString *key in keys) {
@@ -139,6 +151,15 @@ static void HushTrackQuery(NSURLRequest *template, double lat, double lng,
 static void HushTrackShowResult(long long uid, double lat, double lng,
                                 double residual, UIViewController *from) {
     dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *presenter = HushTrackTopPresenter(from);
+        if (!presenter || !presenter.viewLoaded || !presenter.view.window) {
+            [HushLogger logLevel:1 format:[NSString stringWithFormat:
+                @"[Hush][追踪] 无法打开位置卡片：presenter=%@ loaded=%d window=%d",
+                NSStringFromClass([presenter class]),
+                presenter.viewLoaded ? 1 : 0,
+                presenter.view.window ? 1 : 0]];
+            return;
+        }
         HushTrackMapCardVC *card = [[HushTrackMapCardVC alloc] init];
         card.uid = [NSString stringWithFormat:@"%lld", uid];
         card.lat = lat;
@@ -152,7 +173,16 @@ static void HushTrackShowResult(long long uid, double lat, double lng,
         if (sheet && [sheet respondsToSelector:@selector(setPrefersGrabberVisible:)]) {
             [sheet setValue:@YES forKey:@"prefersGrabberVisible"];
         }
-        [from presentViewController:card animated:YES completion:nil];
+        @try {
+            [presenter presentViewController:card animated:YES completion:^{
+                [HushLogger logLevel:3 format:[NSString stringWithFormat:
+                    @"[Hush][追踪] 位置卡片 present=%@", NSStringFromClass([card class])]];
+            }];
+        } @catch (NSException *exception) {
+            [HushLogger logLevel:1 format:[NSString stringWithFormat:
+                @"[Hush][追踪] present 异常 %@: %@",
+                exception.name, exception.reason]];
+        }
     });
 }
 
@@ -225,10 +255,37 @@ void HushTrackRedoForUid(long long uid, UIViewController *from) {
 }
 
 static void HushTrackTapped(id sender, UIViewController *vc) {
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][追踪] 按钮点击 sender=%@ controller=%@",
+        NSStringFromClass([sender class]), NSStringFromClass([vc class])]];
     if (![sender isKindOfClass:[UIButton class]]) return;
     UIButton *button = (UIButton *)sender;
     long long uid = HushTrackProfileUid(vc);
-    if (uid > 0) HushTrackSolve(uid, vc, button);
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][追踪] 按钮点击 uid=%lld", uid]];
+    if (uid > 0) {
+        @try {
+            HushTrackSolve(uid, vc, button);
+        } @catch (NSException *exception) {
+            button.enabled = YES;
+            [button setTitle:kHushTrackButtonTitle forState:UIControlStateNormal];
+            [HushLogger logLevel:1 format:[NSString stringWithFormat:
+                @"[Hush][追踪] 解算异常 %@: %@",
+                exception.name, exception.reason]];
+        }
+    }
+}
+
+static void HushTrackRemoveButtonConstraints(UIButton *button) {
+    UIView *container = button.superview;
+    if (!container) return;
+    NSMutableArray *doomed = [NSMutableArray array];
+    for (NSLayoutConstraint *constraint in container.constraints) {
+        if (constraint.firstItem == button || constraint.secondItem == button) {
+            [doomed addObject:constraint];
+        }
+    }
+    if (doomed.count) [container removeConstraints:doomed];
 }
 
 void HushTrackInstallOnProfile(UIViewController *vc) {
@@ -241,7 +298,9 @@ void HushTrackInstallOnProfile(UIViewController *vc) {
         if (v.tag == kHushTrackButtonTag && [v isKindOfClass:[UIButton class]]) old = (UIButton *)v;
     }
     if (!on) {
-        old.hidden = YES;
+        if (old) {
+            [old removeFromSuperview];
+        }
         return;
     }
     UIButton *follow = HushTrackFindFollowButton(view);
@@ -260,20 +319,28 @@ void HushTrackInstallOnProfile(UIViewController *vc) {
         btn.backgroundColor = [UIColor colorWithWhite:0.58 alpha:0.92];
         btn.layer.cornerRadius = 19.0;
         btn.contentEdgeInsets = UIEdgeInsetsMake(0, 12, 0, 12);
+        btn.accessibilityIdentifier = @"hush_quick_track";
         __weak UIButton *weakButton = btn;
         __weak UIViewController *weakVC = vc;
         [btn addAction:[UIAction actionWithHandler:^(UIAction *action) {
             HushTrackTapped(weakButton, weakVC);
         }] forControlEvents:UIControlEventTouchUpInside];
     }
-    if (btn.superview != follow.superview) [follow.superview addSubview:btn];
-    CGRect f = follow.frame;
-    NSArray *title = @[kHushTrackButtonTitle];
-    CGFloat textW = [title[0] sizeWithAttributes:
-                     @{NSFontAttributeName: btn.titleLabel.font}].width;
-    CGFloat bw = MIN(112.0, MAX(86.0, textW + 48.0));
-    btn.frame = CGRectMake(MAX(4.0, CGRectGetMinX(f) - bw - 8.0),
-                           CGRectGetMidY(f) - 19.0, bw, 38.0);
+    UIView *container = follow.superview;
+    if (!container) return;
+    if (btn.superview != container) {
+        [btn removeFromSuperview];
+        [container addSubview:btn];
+    }
+
+    HushTrackRemoveButtonConstraints(btn);
+    btn.translatesAutoresizingMaskIntoConstraints = NO;
+    [NSLayoutConstraint activateConstraints:@[
+        [btn.centerYAnchor constraintEqualToAnchor:follow.centerYAnchor],
+        [btn.trailingAnchor constraintEqualToAnchor:follow.leadingAnchor constant:-8.0],
+        [btn.heightAnchor constraintEqualToConstant:38.0],
+        [btn.widthAnchor constraintEqualToConstant:96.0],
+    ]];
     btn.hidden = NO;
 }
 

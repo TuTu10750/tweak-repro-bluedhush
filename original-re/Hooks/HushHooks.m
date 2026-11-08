@@ -65,6 +65,7 @@ int gHushHooksSkipped  = 0;
 // v66：全局悄悄看。只阻断网络回执，不阻止本机把消息标成已读。
 // 用户主动发出一条消息后解除本轮抑制，让宿主按正常“已读”语义走。
 static BOOL sHushSecretReceiptsReleased = NO;
+static long long HushMapTabIndex(id tabBar, long long index);
 static BOOL HushSecretReceiptMode(void) {
     return [[HushConfig shared] isEnabled:@"switch_read_receipt"]
         || [[HushConfig shared] isEnabled:@"switch_secret_view_all"];
@@ -96,6 +97,31 @@ static void HushSecretObserveOutgoing(id messages) {
             return;
         }
     }
+}
+
+// BluedHush 5.19 的悄悄看并不是自行吞网络包，而是打开宿主 BluedX 已有的
+// “悄悄查看 / 无痕访问”会员能力。原版二进制同时改写了下面三个 getter。
+static long long (*o_vipViewSecretly)(id, SEL);
+static unsigned long long (*o_userSettingGlobalSecretly)(id, SEL);
+static int (*o_userSettingTraceless)(id, SEL);
+
+static long long r_vipViewSecretly(id self, SEL _cmd) {
+    HushHit("BDVIPPrivilegeConfigModel", "is_view_secretly");
+    if (HushSecretReceiptMode()) return 1;
+    return o_vipViewSecretly ? o_vipViewSecretly(self, _cmd) : 0;
+}
+
+static unsigned long long r_userSettingGlobalSecretly(id self, SEL _cmd) {
+    HushHit("UserSetting", "is_global_view_secretly");
+    if (HushSecretReceiptMode()) return 1;
+    return o_userSettingGlobalSecretly
+         ? o_userSettingGlobalSecretly(self, _cmd) : 0;
+}
+
+static int r_userSettingTraceless(id self, SEL _cmd) {
+    HushHit("UserSetting", "is_traceless_access");
+    if (HushSecretReceiptMode()) return 1;
+    return o_userSettingTraceless ? o_userSettingTraceless(self, _cmd) : 0;
 }
 
 // ---------------------------------------------------------------- class resolve
@@ -154,12 +180,7 @@ static void r_sendReceipt(id self, SEL _cmd, unsigned char sessionType,
                           BOOL receivedAck) {
     HushHit("GJIMEngine",
             "sendReceiptWithSessionType:sessionId:messageId:messageType:from:receivedAck:");
-    if (HushSecretReceiptMode() && !sHushSecretReceiptsReleased) {
-        [HushLogger logLevel:3 format:[NSString stringWithFormat:
-            @"[Hush][悄悄看] 已拦截网络已读回执 sid=%u mid=%llu",
-            sessionId, messageId]];
-        return;
-    }
+    // 原版不是截断 GJIM 回执包，而是让宿主 BluedX 的“悄悄查看”路径接管。
     if (o_sendReceipt) {
         o_sendReceipt(self, _cmd, sessionType, sessionId, messageId,
                       messageType, from, receivedAck);
@@ -175,12 +196,6 @@ static void r_msgReceiptRequest(id self, SEL _cmd, unsigned int requestType,
                                 unsigned int to, long long messageId) {
     HushHit("GJIMEngine",
             "msgReceiptRequestType:groupChat:sessionType:messageType:from:to:msgId:");
-    if (HushSecretReceiptMode() && !sHushSecretReceiptsReleased) {
-        [HushLogger logLevel:3 format:[NSString stringWithFormat:
-            @"[Hush][悄悄看] 已拦截回执请求类型=%u mid=%lld",
-            requestType, messageId]];
-        return;
-    }
     if (o_msgReceiptRequest) {
         o_msgReceiptRequest(self, _cmd, requestType, group, sessionType,
                             messageType, from, to, messageId);
@@ -677,6 +692,172 @@ static inline BOOL HushPurifyKey(NSString *key) {
     return [[HushConfig shared] isEnabled:key];
 }
 
+static NSString *HushTabItemText(id item) {
+    if (!item) return @"";
+    for (NSString *key in @[@"normalText", @"selectedText", @"title"]) {
+        @try {
+            id value = [item valueForKey:key];
+            if ([value isKindOfClass:[NSString class]] && [value length]) {
+                return (NSString *)value;
+            }
+        } @catch (__unused NSException *e) {}
+    }
+    @try {
+        id label = [item valueForKey:@"titleLabel"];
+        if ([label isKindOfClass:[UILabel class]]) {
+            NSString *text = [(UILabel *)label text];
+            if (text.length) return text;
+        }
+    } @catch (__unused NSException *e) {}
+    return @"";
+}
+
+static BOOL HushTabItemHiddenAtIndex(id item, NSUInteger index, NSUInteger total,
+                                    BOOL *liveOut, BOOL *discoverOut) {
+    BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
+    BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
+    NSString *text = HushTabItemText(item);
+    NSString *lower = text.lowercaseString;
+    BOOL live = [text containsString:@"直播"] ||
+                [lower containsString:@"live"] ||
+                (total == 5 && index == 1);
+    BOOL discover = [text containsString:@"发现"] ||
+                    [lower containsString:@"discover"] ||
+                    (total == 5 && index == 2);
+    if (liveOut) *liveOut = live;
+    if (discoverOut) *discoverOut = discover;
+    return (hideLive && live) || (hideDiscover && discover);
+}
+
+static NSArray *HushFilterTabItems(id items, NSUInteger *removedOut) {
+    if (![items isKindOfClass:[NSArray class]]) return items;
+    if (!HushPurifyKey(@"switch_hide_live_tab") &&
+        !HushPurifyKey(@"switch_hide_discover_tab")) {
+        if (removedOut) *removedOut = 0;
+        return items;
+    }
+    NSArray *array = (NSArray *)items;
+    NSMutableArray *out = [NSMutableArray arrayWithCapacity:array.count];
+    NSUInteger removed = 0;
+    for (NSUInteger i = 0; i < array.count; i++) {
+        if (HushTabItemHiddenAtIndex(array[i], i, array.count, NULL, NULL)) {
+            removed++;
+        } else {
+            [out addObject:array[i]];
+        }
+    }
+    if (removedOut) *removedOut = removed;
+    return removed ? out : items;
+}
+
+static NSArray *HushFilterTabTitles(id titles) {
+    if (![titles isKindOfClass:[NSArray class]]) return titles;
+    BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
+    BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
+    if (!hideLive && !hideDiscover) return titles;
+    NSArray *array = (NSArray *)titles;
+    NSMutableArray *out = [NSMutableArray arrayWithCapacity:array.count];
+    for (NSUInteger i = 0; i < array.count; i++) {
+        id item = array[i];
+        NSString *text = [item isKindOfClass:[NSString class]]
+                       ? item : [item description];
+        NSString *lower = text.lowercaseString;
+        BOOL live = [text containsString:@"直播"] ||
+                    [lower containsString:@"live"] ||
+                    (array.count == 5 && i == 1);
+        BOOL discover = [text containsString:@"发现"] ||
+                        [lower containsString:@"discover"] ||
+                        (array.count == 5 && i == 2);
+        if ((hideLive && live) || (hideDiscover && discover)) continue;
+        [out addObject:item];
+    }
+    return out;
+}
+
+static long long HushMapTabIndex(id tabBar, long long index) {
+    BOOL hideLive = HushPurifyKey(@"switch_hide_live_tab");
+    BOOL hideDiscover = HushPurifyKey(@"switch_hide_discover_tab");
+    if (!hideLive && !hideDiscover) return index;
+    if (index < 0 || index > 4) return index;
+    if (index == 0) return 0;
+    NSInteger removedBefore = 0;
+    if (hideLive && index >= 1) removedBefore++;
+    if (hideDiscover && index >= 2) removedBefore++;
+    if ((hideLive && index == 1) || (hideDiscover && index == 2)) return -1;
+    return index - removedBefore;
+}
+
+static void (*o_barSetItems)(id, SEL, id);
+static void (*o_barReloadTitles)(id, SEL, id);
+static void (*o_barLayout)(id, SEL);
+static void (*o_barEntryBadge)(id, SEL, id, long long);
+static void (*o_barBadge)(id, SEL, unsigned long long, long long);
+
+static void r_barSetItems(id self, SEL _cmd, id items) {
+    HushHit("BluedTabBar", "setItems:");
+    NSUInteger removed = 0;
+    NSArray *filtered = HushFilterTabItems(items, &removed);
+    if (removed) {
+        [HushLogger logLevel:3 format:[NSString stringWithFormat:
+            @"[Hush][TabBar] items %lu→%lu",
+            (unsigned long)[(NSArray *)items count],
+            (unsigned long)filtered.count]];
+    }
+    if (o_barSetItems) o_barSetItems(self, _cmd, filtered);
+}
+
+static void r_barReloadTitles(id self, SEL _cmd, id titles) {
+    HushHit("BluedTabBar", "reloadTitleWithTitleArray:");
+    NSArray *filtered = HushFilterTabTitles(titles);
+    if (o_barReloadTitles) o_barReloadTitles(self, _cmd, filtered);
+}
+
+static void r_barLayout(id self, SEL _cmd) {
+    HushHit("BluedTabBar", "layoutSubviews");
+    if (o_barLayout) o_barLayout(self, _cmd);
+
+    NSArray *items = nil;
+    @try { items = [self valueForKey:@"items"]; }
+    @catch (__unused NSException *e) { items = nil; }
+    NSUInteger removed = 0;
+    NSArray *filtered = HushFilterTabItems(items, &removed);
+    if (!removed || filtered == items) return;
+
+    id current = nil;
+    @try { current = [self valueForKey:@"currentItem"]; }
+    @catch (__unused NSException *e) { current = nil; }
+    if (o_barSetItems) {
+        o_barSetItems(self, sel_registerName("setItems:"), filtered);
+    } else {
+        @try { [self setValue:filtered forKey:@"items"]; }
+        @catch (__unused NSException *e) {}
+    }
+    id next = [filtered containsObject:current] ? current : filtered.firstObject;
+    if (next) {
+        @try { [self setValue:next forKey:@"currentItem"]; }
+        @catch (__unused NSException *e) {}
+    }
+    [HushLogger logLevel:3 format:[NSString stringWithFormat:
+        @"[Hush][TabBar] layout 同步 %lu→%lu current=%@",
+        (unsigned long)(items ? [(NSArray *)items count] : 0),
+        (unsigned long)filtered.count,
+        NSStringFromClass([next class]) ?: @"nil"]];
+}
+
+static void r_barEntryBadge(id self, SEL _cmd, id text, long long index) {
+    HushHit("BluedTabBar", "setEntryBadgeText:atItemIndex:");
+    long long mapped = HushMapTabIndex(self, index);
+    if (mapped < 0) return;
+    if (o_barEntryBadge) o_barEntryBadge(self, _cmd, text, mapped);
+}
+
+static void r_barBadge(id self, SEL _cmd, unsigned long long value, long long index) {
+    HushHit("BluedTabBar", "setBadgeValue:atItemIndex:");
+    long long mapped = HushMapTabIndex(self, index);
+    if (mapped < 0) return;
+    if (o_barBadge) o_barBadge(self, _cmd, value, mapped);
+}
+
 static void (*o_sessionInsertRecommend)(id, SEL);
 static void (*o_sessionSetAll)(id, SEL, id);
 static void (*o_sessionCallHeader)(id, SEL, id);
@@ -738,6 +919,8 @@ static void (*o_globalBannerShow)(id, SEL);
 static void (*o_globalBannerMatch)(id, SEL, id, id);
 static void (*o_abuBannerLoad)(id, SEL);
 static void (*o_mineBannerConfig)(id, SEL, id);
+static id (*o_mineBannerImages)(id, SEL);
+static id (*o_mineBannerVideos)(id, SEL);
 static void (*o_safeTipSetup)(id, SEL);
 static double (*o_safeTipHeight)(id, SEL);
 static int (*o_visitorIsAds)(id, SEL);
@@ -804,6 +987,16 @@ static void r_mineBannerConfig(id self, SEL _cmd, id banner) {
     if (HushPurifyKey(@"purify_mine_ad")) return;
     if (o_mineBannerConfig) o_mineBannerConfig(self, _cmd, banner);
 }
+static id r_mineBannerImages(id self, SEL _cmd) {
+    HushHit("BDMineBannerCell", "images");
+    if (HushPurifyKey(@"purify_mine_ad")) return @[];
+    return o_mineBannerImages ? o_mineBannerImages(self, _cmd) : @[];
+}
+static id r_mineBannerVideos(id self, SEL _cmd) {
+    HushHit("BDMineBannerCell", "videos");
+    if (HushPurifyKey(@"purify_mine_ad")) return @[];
+    return o_mineBannerVideos ? o_mineBannerVideos(self, _cmd) : @[];
+}
 static void r_safeTipSetup(id self, SEL _cmd) {
     HushHit("BDChatSafeTipCell", "setupData");
     if (HushPurifyKey(@"purify_safe_tip")) return;
@@ -820,8 +1013,96 @@ static int r_visitorIsAds(id self, SEL _cmd) {
     return o_visitorIsAds ? o_visitorIsAds(self, _cmd) : 0;
 }
 
+static double (*o_nearbyTopHeight)(id, SEL);
+static double r_nearbyTopHeight(id self, SEL _cmd) {
+    HushHit("BDNearbyTopFixView", "p_topHeight");
+    if (HushPurifyKey(@"purify_nearby_ad")) return 0.0;
+    return o_nearbyTopHeight ? o_nearbyTopHeight(self, _cmd) : 0.0;
+}
+
+static double (*o_sessionHeaderBaseHeight)(id, SEL);
+static double r_sessionHeaderBaseHeight(id self, SEL _cmd) {
+    HushHit("BDSessionCallLiveHeader", "p_baseHeaderHeight");
+    if (HushPurifyKey(@"purify_session_card")) return 0.0;
+    return o_sessionHeaderBaseHeight
+         ? o_sessionHeaderBaseHeight(self, _cmd) : 0.0;
+}
+
+static double (*o_sessionHeaderContentHeight)(id, SEL);
+static double r_sessionHeaderContentHeight(id self, SEL _cmd) {
+    HushHit("BDSessionCallLiveHeader", "p_contentHeight");
+    if (HushPurifyKey(@"purify_session_card")) return 0.0;
+    return o_sessionHeaderContentHeight
+         ? o_sessionHeaderContentHeight(self, _cmd) : 0.0;
+}
+
 static void (*o_viewDidMoveToSuperview)(id, SEL);
 static NSMutableDictionary *sHushPurifyViewCache = nil;
+
+static UITableView *HushEnclosingTableView(UIView *view) {
+    UIView *cursor = view.superview;
+    NSInteger guard = 0;
+    while (cursor && guard++ < 24) {
+        if ([cursor isKindOfClass:[UITableView class]]) return (UITableView *)cursor;
+        cursor = cursor.superview;
+    }
+    return nil;
+}
+
+static BOOL HushViewIsInsideTableHeader(UIView *view, UITableView *table) {
+    UIView *header = table.tableHeaderView;
+    if (!header) return NO;
+    UIView *cursor = view;
+    NSInteger guard = 0;
+    while (cursor && guard++ < 20) {
+        if (cursor == header) return YES;
+        cursor = cursor.superview;
+    }
+    return NO;
+}
+
+static void HushPurifyRemoveOrCollapse(UIView *view, NSString *key) {
+    if (!view || !key.length) return;
+    UIView *parent = view.superview;
+    if (!parent) return;
+
+    UITableView *table = HushEnclosingTableView(view);
+    BOOL removed = NO;
+    if (table && HushViewIsInsideTableHeader(view, table)) {
+        table.tableHeaderView = nil;
+        removed = YES;
+    } else if ([parent isKindOfClass:[UIStackView class]]) {
+        [(UIStackView *)parent removeArrangedSubview:view];
+        [view removeFromSuperview];
+        removed = YES;
+    } else if (![view isKindOfClass:[UITableViewCell class]] &&
+               ![view isKindOfClass:[UICollectionViewCell class]]) {
+        [view removeFromSuperview];
+        removed = YES;
+    }
+
+    [parent setNeedsLayout];
+    if (!removed) {
+        // 真正由 Table/Collection 数据源拥有的 cell 不能直接摘掉；
+        // 对应页面的 height/topHeight 返回值由本文件的专用 hook 归零。
+        view.hidden = YES;
+        view.alpha = 0.0;
+    }
+
+    static NSMutableSet *logged = nil;
+    if (!logged) logged = [[NSMutableSet alloc] init];
+    NSString *cn = NSStringFromClass([view class]);
+    NSString *pn = NSStringFromClass([parent class]);
+    @synchronized (logged) {
+        if (![logged containsObject:cn] && logged.count < 100) {
+            [logged addObject:cn];
+            [HushLogger logLevel:2 format:[NSString stringWithFormat:
+                @"[Hush][净化] %@ %@ key=%@ parent=%@ table=%@",
+                removed ? @"已移除" : @"暂由数据源收起", cn, key, pn,
+                NSStringFromClass([table class]) ?: @"nil"]];
+        }
+    }
+}
 
 static void r_viewDidMoveToSuperview(id self, SEL _cmd) {
     if (o_viewDidMoveToSuperview) o_viewDidMoveToSuperview(self, _cmd);
@@ -863,7 +1144,8 @@ static void r_viewDidMoveToSuperview(id self, SEL _cmd) {
             key = @"purify_call_header";
         } else if ([lower containsString:@"minebanner"] ||
                    [lower containsString:@"minevip"] ||
-                   [lower containsString:@"minevipcenterentry"]) {
+                   [lower containsString:@"minevipcenterentry"] ||
+                   [lower containsString:@"mineservicebanner"]) {
             key = @"purify_mine_ad";
         } else if ([lower containsString:@"banner"] ||
                    [lower containsString:@"nsnofy"]) {
@@ -871,6 +1153,7 @@ static void r_viewDidMoveToSuperview(id self, SEL _cmd) {
         } else if ([lower containsString:@"bdschatonline"] ||
                    [lower containsString:@"recommendcell"] ||
                    [lower containsString:@"recommendview"] ||
+                   [lower containsString:@"dynamicrecommend"] ||
                    [lower containsString:@"bdsupercall"]) {
             key = @"purify_session_card";
         } else if ([lower containsString:@"floatlayer"] ||
@@ -885,21 +1168,7 @@ static void r_viewDidMoveToSuperview(id self, SEL _cmd) {
         }
     }
     if (!key.length || !HushPurifyKey(key)) return;
-    UIView *v = (UIView *)self;
-    v.hidden = YES;
-    v.alpha = 0.0;
-    CGRect f = v.frame;
-    if (f.size.height > 1.0) f.size.height = 0.01;
-    v.frame = f;
-    static NSMutableSet *logged = nil;
-    if (!logged) logged = [[NSMutableSet alloc] init];
-    @synchronized (logged) {
-        if (![logged containsObject:cn] && logged.count < 80) {
-            [logged addObject:cn];
-            [HushLogger logLevel:3 format:[NSString stringWithFormat:
-                @"[Hush][净化] 隐藏推广视图 %@ key=%@", cn, key]];
-        }
-    }
+    HushPurifyRemoveOrCollapse((UIView *)self, key);
 }
 
 static void (*o_tabSetVCs)(id, SEL, id);
@@ -1140,21 +1409,27 @@ static void r_removeAllSplash(id self, SEL _cmd, long long a0) {
 static void (*o_changeItemState)(id, SEL, unsigned long long);
 static void r_changeItemState(id self, SEL _cmd, unsigned long long a0) {
     HushHit("BluedTabBar", "p_changeItemStateAtIndex:");
-    if (o_changeItemState) o_changeItemState(self, _cmd, a0);
+    long long mapped = HushMapTabIndex(self, (long long)a0);
+    if (mapped < 0) return;
+    if (o_changeItemState) o_changeItemState(self, _cmd, (unsigned long long)mapped);
 }
 
 // 7. BluedTabBar -selectItemAtIndex:   (v24@0:8q16)
 static void (*o_selectItem)(id, SEL, long long);
 static void r_selectItem(id self, SEL _cmd, long long a0) {
     HushHit("BluedTabBar", "selectItemAtIndex:");
-    if (o_selectItem) o_selectItem(self, _cmd, a0);
+    long long mapped = HushMapTabIndex(self, a0);
+    if (mapped < 0) return;
+    if (o_selectItem) o_selectItem(self, _cmd, mapped);
 }
 
 // 8. BluedTabBar -selectItemAtIndex:subIndex:   (v32@0:8q16q24)
 static void (*o_selectItemSub)(id, SEL, long long, long long);
 static void r_selectItemSub(id self, SEL _cmd, long long a0, long long a1) {
     HushHit("BluedTabBar", "selectItemAtIndex:subIndex:");
-    if (o_selectItemSub) o_selectItemSub(self, _cmd, a0, a1);
+    long long mapped = HushMapTabIndex(self, a0);
+    if (mapped < 0) return;
+    if (o_selectItemSub) o_selectItemSub(self, _cmd, mapped, a1);
 }
 
 // 9. BluedTabBar -setDynamicImgView:   (v24@0:8@16)
@@ -2665,7 +2940,7 @@ static id r_dataTaskURL(id self, SEL _cmd, id url, HushNetHandler handler) {
 
 // ---------------------------------------------------------------- install driver
 // One slot per target. Installed once, retried only while still MISSING.
-#define HUSH_TARGET_COUNT 124
+#define HUSH_TARGET_COUNT 137
 
 static BOOL s_done[HUSH_TARGET_COUNT];
 
@@ -2730,12 +3005,14 @@ void HushInstallHooks(void) {
     Class cPhotoData  = hush_resolve_class("BDPhotoBrowserData");
     Class cSessionVC  = hush_resolve_class("BDSessionViewController");
     Class cSessionHeader = hush_resolve_class("BDSessionListHeader1");
+    Class cCallLiveHeader = hush_resolve_class("BDSessionCallLiveHeader");
     Class cAbuDraw    = hush_resolve_class("ABUDrawAdView");
     Class cAbuNative  = hush_resolve_class("ABUNativeAdView");
     Class cFeedTpl    = hush_resolve_class("BDKSTemplateExpressFeedAdBaseTableViewCell");
     Class cFeedNative = hush_resolve_class("BDKSSelfExpressNativeAdBaseTableViewCell");
     Class cNearbyAdapter = hush_resolve_class("BDNearbyDataAdapter");
     Class cNearbyBanner  = hush_resolve_class("BDNearbyBannerCell");
+    Class cNearbyTop     = hush_resolve_class("BDNearbyTopFixView");
     Class cGlobalBanner  = hush_resolve_class("BDGlobalBannerView");
     Class cGlobalBannerMatch = hush_resolve_class("BDGlobalBannerMatchView");
     Class cAbuBanner  = hush_resolve_class("ABUBannerAd");
@@ -2747,6 +3024,8 @@ void HushInstallHooks(void) {
     Class cView       = hush_resolve_class("UIView");
     Class cTavern     = hush_resolve_class("BDTavernChatingViewController");
     Class cEngine = hush_resolve_class("GJIMEngine");
+    Class cVIP = hush_resolve_class("BDVIPPrivilegeConfigModel");
+    Class cUserSetting = hush_resolve_class("UserSetting");
     Class cCovers = hush_resolve_class("BDIndexPageCoversManager");
     // v43：阅后即焚的全屏查看页 —— 「按住屏幕阅读 / 松手销毁」的真身。
     // 原来那个 BDDestoryChatCell 变量已随死探针一起删除（v42 实测零命中）。
@@ -3547,6 +3826,114 @@ void HushInstallHooks(void) {
         if (strcmp(r.kind, "MISSING") != 0)
             o_viewDidMoveToSuperview = (void (*)(id, SEL))r.prev;
         hush_report(123, "UIView", "didMoveToSuperview", r);
+    }
+    if (!s_done[124]) {
+        SEL s = sel_registerName("setItems:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_barSetItems, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_barSetItems = (void (*)(id, SEL, id))r.prev;
+        hush_report(124, "BluedTabBar", "setItems:", r);
+    }
+    if (!s_done[125]) {
+        SEL s = sel_registerName("reloadTitleWithTitleArray:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_barReloadTitles, "v24@0:8@16");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_barReloadTitles = (void (*)(id, SEL, id))r.prev;
+        hush_report(125, "BluedTabBar", "reloadTitleWithTitleArray:", r);
+    }
+    if (!s_done[126]) {
+        SEL s = sel_registerName("layoutSubviews");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_barLayout, "v16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_barLayout = (void (*)(id, SEL))r.prev;
+        hush_report(126, "BluedTabBar", "layoutSubviews", r);
+    }
+    if (!s_done[127]) {
+        SEL s = sel_registerName("setEntryBadgeText:atItemIndex:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_barEntryBadge,
+                                             "v32@0:8@16q24");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_barEntryBadge = (void (*)(id, SEL, id, long long))r.prev;
+        hush_report(127, "BluedTabBar", "setEntryBadgeText:atItemIndex:", r);
+    }
+    if (!s_done[128]) {
+        SEL s = sel_registerName("setBadgeValue:atItemIndex:");
+        hush_installed r = hush_install_impl(cTab, s, (IMP)&r_barBadge,
+                                             "v32@0:8Q16q24");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_barBadge = (void (*)(id, SEL, unsigned long long, long long))r.prev;
+        hush_report(128, "BluedTabBar", "setBadgeValue:atItemIndex:", r);
+    }
+    if (!s_done[129]) {
+        SEL s = sel_registerName("p_topHeight");
+        hush_installed r = hush_install_impl(cNearbyTop, s, (IMP)&r_nearbyTopHeight,
+                                             "d16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_nearbyTopHeight = (double (*)(id, SEL))r.prev;
+        hush_report(129, "BDNearbyTopFixView", "p_topHeight", r);
+    }
+    if (!s_done[130]) {
+        SEL s = sel_registerName("p_baseHeaderHeight");
+        hush_installed r = hush_install_impl(cCallLiveHeader, s,
+                                             (IMP)&r_sessionHeaderBaseHeight,
+                                             "d16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_sessionHeaderBaseHeight = (double (*)(id, SEL))r.prev;
+        hush_report(130, "BDSessionCallLiveHeader", "p_baseHeaderHeight", r);
+    }
+    if (!s_done[131]) {
+        SEL s = sel_registerName("p_contentHeight");
+        hush_installed r = hush_install_impl(cCallLiveHeader, s,
+                                             (IMP)&r_sessionHeaderContentHeight,
+                                             "d16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_sessionHeaderContentHeight = (double (*)(id, SEL))r.prev;
+        hush_report(131, "BDSessionCallLiveHeader", "p_contentHeight", r);
+    }
+    if (!s_done[132]) {
+        SEL s = sel_registerName("images");
+        hush_installed r = hush_install_impl(cMineBanner, s,
+                                             (IMP)&r_mineBannerImages,
+                                             "@16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_mineBannerImages = (id (*)(id, SEL))r.prev;
+        hush_report(132, "BDMineBannerCell", "images", r);
+    }
+    if (!s_done[133]) {
+        SEL s = sel_registerName("videos");
+        hush_installed r = hush_install_impl(cMineBanner, s,
+                                             (IMP)&r_mineBannerVideos,
+                                             "@16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_mineBannerVideos = (id (*)(id, SEL))r.prev;
+        hush_report(133, "BDMineBannerCell", "videos", r);
+    }
+    if (!s_done[134]) {
+        SEL s = sel_registerName("is_view_secretly");
+        hush_installed r = hush_install_impl(cVIP, s, (IMP)&r_vipViewSecretly,
+                                             "q16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_vipViewSecretly = (long long (*)(id, SEL))r.prev;
+        hush_report(134, "BDVIPPrivilegeConfigModel", "is_view_secretly", r);
+    }
+    if (!s_done[135]) {
+        SEL s = sel_registerName("is_global_view_secretly");
+        hush_installed r = hush_install_impl(cUserSetting, s,
+                                             (IMP)&r_userSettingGlobalSecretly,
+                                             "Q16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_userSettingGlobalSecretly =
+                (unsigned long long (*)(id, SEL))r.prev;
+        hush_report(135, "UserSetting", "is_global_view_secretly", r);
+    }
+    if (!s_done[136]) {
+        SEL s = sel_registerName("is_traceless_access");
+        hush_installed r = hush_install_impl(cUserSetting, s,
+                                             (IMP)&r_userSettingTraceless,
+                                             "i16@0:8");
+        if (strcmp(r.kind, "MISSING") != 0)
+            o_userSettingTraceless = (int (*)(id, SEL))r.prev;
+        hush_report(136, "UserSetting", "is_traceless_access", r);
     }
 
 
