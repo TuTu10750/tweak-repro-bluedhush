@@ -205,7 +205,7 @@ BOOL HushPrivacyPhotoViewerShowCollection(id collectionView, id indexPath) {
         @catch (__unused NSException *e) { count = 1; }
     }
     NSInteger selectedIndex = 0;
-    @try { selectedIndex = [indexPath item]; }
+    @try { selectedIndex = [(NSIndexPath *)indexPath item]; }
     @catch (__unused NSException *e) { selectedIndex = 0; }
 
     NSMutableArray *urls = [NSMutableArray array];
