@@ -1,12 +1,12 @@
-# HushMonitor
+# HushMonitorSafe
 
-Passive monitor loaded together with the original BluedHush 5.19 dylib.
+Zero-hook monitor loaded beside an already-injected BluedHush dylib.
 
-- Forces all original feature flags off.
-- Keeps `float_ball=1` and `switch_debug_log=1`.
-- Loads `Frameworks/OriginalHush.dylib`.
-- Records config reads/writes, original log messages, panel actions, module
-  navigation, photo viewer, location/tracking actions and pass-through app
-  navigation into `Documents/HushMonitor.log`.
+- Installs no Objective-C or Substrate hooks.
+- Never changes feature switches.
+- Never loads Substrate or OriginalHush.
+- Records compact app-state, page/tab, and feature-switch transitions in
+  `Documents/HushMonitor.log`.
+- Leaves the original plugin's detailed `Documents/hooo` log untouched.
 - Does not provide any feature itself.
 

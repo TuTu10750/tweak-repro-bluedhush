@@ -404,7 +404,7 @@ jobs:
           export PATH=/tmp/ldbin:$PATH
           make -C reference-monitor clean || true
           make -C reference-monitor ARCHS=arm64 2>&1 | tee monitor-build.log
-          MON="reference-monitor/.theos/obj/debug/arm64/HushMonitor.dylib"
+          MON="reference-monitor/.theos/obj/debug/arm64/HushMonitorSafe.dylib"
           test -s "$MON"
           ls -l "$MON"
 
@@ -441,8 +441,8 @@ jobs:
           path: |
             original-re/.theos/obj/debug/BluedHushRE.dylib
             original-re/.theos/obj/debug/arm64/BluedHushRE.dylib
-            reference-monitor/.theos/obj/debug/HushMonitor.dylib
-            reference-monitor/.theos/obj/debug/arm64/HushMonitor.dylib
+            reference-monitor/.theos/obj/debug/HushMonitorSafe.dylib
+            reference-monitor/.theos/obj/debug/arm64/HushMonitorSafe.dylib
             shim/.theos/obj/debug/substrate_shim.dylib
             shim/.theos/obj/debug/arm64/substrate_shim.dylib
             monitor-build.log
