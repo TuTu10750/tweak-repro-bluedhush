@@ -377,7 +377,7 @@ static void r_push(id self, SEL _cmd, id target, BOOL animated) {
     if (o_push) o_push(self, _cmd, target, animated);
 }
 
-static void (*o_pop)(id, SEL, BOOL);
+static id (*o_pop)(id, SEL, BOOL);
 static id r_pop(id self, SEL _cmd, BOOL animated) {
     MLog(@"NAV pop from=%@", NSStringFromClass([self class]));
     return o_pop ? o_pop(self, _cmd, animated) : nil;
