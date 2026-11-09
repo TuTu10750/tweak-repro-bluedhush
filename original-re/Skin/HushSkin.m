@@ -65,9 +65,17 @@ static UIColor *gColA, *gColB, *gColC;      // 青 / 蓝 / 紫
 static CGFloat gAlpha = 0.30;               // 面板渐变透明度（浅色主题下只当一层薄纱）
 static UIColor *gBase;                      // 面板底色
 static UIColor *gText;                      // 浅色主题的正文色
+static CGFloat gCardAlpha = 0.82;
+static CGFloat gCardRadius = 20.0;
 static BOOL gLight = YES;                   // 浅色主题（默认）：行是半透明白，正文走深色
 static BOOL gHideFooter = YES;
 static BOOL gDimBlur = YES;
+static BOOL gChatStyle = YES;
+static UIColor *gChatBase;
+static UIColor *gChatSurface;
+static UIColor *gChatAccent;
+static CGFloat gChatSurfaceAlpha = 0.80;
+static CGFloat gChatRadius = 22.0;
 
 static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
     if (![hex isKindOfClass:[NSString class]] || hex.length < 7) return fallback;
@@ -81,18 +89,24 @@ static UIColor *SkinHex(NSString *hex, UIColor *fallback) {
 
 static NSDictionary *SkinDefaultConfig(void) {
     return @{
-        @"palette": @{ @"a": @"#00C8E0", @"b": @"#3A6BFF", @"c": @"#8A2BE2",
-                       @"alpha": @0.30, @"base": @"#F4F7FD", @"text": @"#1B1F2A" },
+        @"style_version": @2,
+        // 视频参考是系统原生 Liquid Glass：近白背景、白色半透明表面、
+        // 细灰边框、黑色正文，只用系统蓝做强调色。
+        @"palette": @{ @"a": @"#0A84FF", @"b": @"#F2F2F7", @"c": @"#FFFFFF",
+                       @"alpha": @0.16, @"base": @"#F7F7F5", @"text": @"#111111",
+                       @"card_alpha": @0.82, @"card_radius": @20 },
         @"theme": @"light",
-        // 只改颜色：聊天页顶部那三行（其他·18岁 / 180cm 65kg / 时间）走霓虹紫，
-        // 并且把它们的底色清掉，避免原版的浅灰块跟着走。
-        @"colors": @[
-            @{ @"match": @"contains", @"text": @"岁",                      @"color": @"#C13BFF" },
-            @{ @"match": @"regex",    @"text": @"^[0-9]+cm [0-9]+kg$",     @"color": @"#C13BFF" },
-            @{ @"match": @"regex",    @"text": @"^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}$", @"color": @"#C13BFF" },
-        ],
+        // 聊天页保持宿主原有文字和气泡配色，不再套霓虹紫。
+        @"colors": @[],
+        @"chat": @{ @"enabled": @YES,
+                    @"background": @"#F7F7F5",
+                    @"surface": @"#FFFFFF",
+                    @"surface_alpha": @0.80,
+                    @"accent": @"#0A84FF",
+                    @"corner_radius": @22 },
         @"hide_footer": @YES,
-        @"dim_blur": @YES,
+        // 保留系统磨砂，不再把 UIVisualEffectView 整层摘掉。
+        @"dim_blur": @NO,
         // 页脚是自绘的，下面这些规则是给「如果哪天改成 UILabel」留的保险。
         @"rules": @[
             @{ @"match": @"contains", @"text": @"@Tinycca",         @"replace": @"", @"hide": @YES },
@@ -123,8 +137,22 @@ static void SkinLoadConfig(void) {
     }
     // 旧版本写下的 JSON 没有 colors / theme 这些新键 —— 逐个补默认值，
     // 而不是整份丢掉重写，用户改过的颜色不会因为升级而消失。
-    NSMutableDictionary *merged = [SkinDefaultConfig() mutableCopy];
+    NSDictionary *defaults = SkinDefaultConfig();
+    NSInteger loadedVersion = [cfg[@"style_version"] isKindOfClass:[NSNumber class]]
+                            ? [cfg[@"style_version"] integerValue] : 0;
+    NSMutableDictionary *merged = [defaults mutableCopy];
     if (cfg) [merged addEntriesFromDictionary:cfg];
+    BOOL migrated = (loadedVersion < [defaults[@"style_version"] integerValue]);
+    if (migrated) {
+        // 旧版本曾把面板固定成青蓝紫霓虹色。视频参考使用系统原生浅色玻璃，
+        // 因此仅迁移视觉配置，不触碰 rules 中的文案和其它功能选项。
+        merged[@"style_version"] = defaults[@"style_version"];
+        merged[@"palette"] = defaults[@"palette"];
+        merged[@"theme"] = defaults[@"theme"];
+        merged[@"colors"] = defaults[@"colors"];
+        merged[@"chat"] = defaults[@"chat"];
+        merged[@"dim_blur"] = defaults[@"dim_blur"];
+    }
     cfg = merged;
 
     NSDictionary *p = [cfg[@"palette"] isKindOfClass:[NSDictionary class]] ? cfg[@"palette"] : @{};
@@ -133,6 +161,27 @@ static void SkinLoadConfig(void) {
     gColC = SkinHex(p[@"c"], [UIColor colorWithRed:0.54 green:0.17 blue:0.89 alpha:1]);
     gBase = SkinHex(p[@"base"], [UIColor colorWithRed:0.957 green:0.969 blue:0.992 alpha:1]);
     gText = SkinHex(p[@"text"], [UIColor colorWithRed:0.106 green:0.122 blue:0.165 alpha:1]);
+    if ([p[@"card_alpha"] isKindOfClass:[NSNumber class]]) {
+        CGFloat a = [p[@"card_alpha"] doubleValue];
+        if (a > 0.05 && a <= 1.0) gCardAlpha = a;
+    }
+    if ([p[@"card_radius"] isKindOfClass:[NSNumber class]]) {
+        CGFloat r = [p[@"card_radius"] doubleValue];
+        if (r >= 8.0 && r <= 40.0) gCardRadius = r;
+    }
+    NSDictionary *chat = [cfg[@"chat"] isKindOfClass:[NSDictionary class]] ? cfg[@"chat"] : @{};
+    if ([chat[@"enabled"] isKindOfClass:[NSNumber class]]) gChatStyle = [chat[@"enabled"] boolValue];
+    gChatBase = SkinHex(chat[@"background"], gBase);
+    gChatSurface = SkinHex(chat[@"surface"], [UIColor whiteColor]);
+    gChatAccent = SkinHex(chat[@"accent"], gColA);
+    if ([chat[@"surface_alpha"] isKindOfClass:[NSNumber class]]) {
+        CGFloat a = [chat[@"surface_alpha"] doubleValue];
+        if (a > 0.05 && a <= 1.0) gChatSurfaceAlpha = a;
+    }
+    if ([chat[@"corner_radius"] isKindOfClass:[NSNumber class]]) {
+        CGFloat r = [chat[@"corner_radius"] doubleValue];
+        if (r >= 8.0 && r <= 40.0) gChatRadius = r;
+    }
     if ([cfg[@"theme"] isKindOfClass:[NSString class]]) gLight = ![cfg[@"theme"] isEqualToString:@"dark"];
     if ([p[@"alpha"] isKindOfClass:[NSNumber class]]) {
         CGFloat a = [p[@"alpha"] doubleValue];
@@ -159,6 +208,13 @@ static void SkinLoadConfig(void) {
         [colors addObject:r];
     }
     gColorRules = colors;
+    if (migrated) {
+        @try {
+            NSData *d = [NSJSONSerialization dataWithJSONObject:merged options:NSJSONWritingPrettyPrinted error:NULL];
+            [d writeToFile:path atomically:YES];
+            SkinLog(@"视觉配置已迁移到 v2 原生浅色玻璃");
+        } @catch (__unused NSException *e) {}
+    }
     SkinLog(@"配置生效：规则 %lu 条，配色 %@ / %@ / %@ alpha=%.2f 底 %@ 页脚%@",
             (unsigned long)gRules.count, p[@"a"] ?: @"默认", p[@"b"] ?: @"默认", p[@"c"] ?: @"默认",
             gAlpha, p[@"base"] ?: @"默认", gHideFooter ? @"隐藏" : @"保留");
@@ -268,6 +324,8 @@ static void r_setText(id self, SEL _cmd, NSString *text) {
 // ---------------------------------------------------------------------------
 static const NSInteger kSkinGradientTag = 0x534B31; // 'SK1'
 static const NSInteger kSkinPanelTag = 0x534B32;
+static const NSInteger kSkinCardTag = 0x534B33;
+static const NSInteger kSkinChatBG = 0x534B34;
 
 static void SkinStyleGlass(UIView *v) {
     if (!v || v.tag == kSkinGradientTag) return;
@@ -277,10 +335,12 @@ static void SkinStyleGlass(UIView *v) {
                 || [cn rangeOfString:@"PillButton"].location != NSNotFound;
     if (!isGlass) return;
 
-    v.layer.cornerRadius = ([cn rangeOfString:@"Pill"].location != NSNotFound) ? v.bounds.size.height / 2.0 : 16.0;
+    v.layer.cornerRadius = ([cn rangeOfString:@"Pill"].location != NSNotFound)
+                         ? v.bounds.size.height / 2.0 : gCardRadius;
     v.layer.cornerCurve = kCACornerCurveContinuous;
-    v.layer.borderWidth = 0.8;
-    v.layer.borderColor = [gColA colorWithAlphaComponent:0.65].CGColor;
+    v.layer.borderWidth = 0.6;
+    v.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.88].CGColor;
+    v.backgroundColor = [gColC colorWithAlphaComponent:0.52];
 
     UIView *host = [v viewWithTag:kSkinGradientTag];
     if (!host) {
@@ -293,9 +353,9 @@ static void SkinStyleGlass(UIView *v) {
         host.layer.masksToBounds = YES;
         CAGradientLayer *g = [CAGradientLayer layer];
         g.name = @"hushSkinGradient";
-        g.colors = @[ (__bridge id)[gColA colorWithAlphaComponent:gAlpha].CGColor,
-                      (__bridge id)[gColB colorWithAlphaComponent:gAlpha].CGColor,
-                      (__bridge id)[gColC colorWithAlphaComponent:gAlpha].CGColor ];
+        g.colors = @[ (__bridge id)[gColC colorWithAlphaComponent:0.58].CGColor,
+                      (__bridge id)[gColB colorWithAlphaComponent:0.34].CGColor,
+                      (__bridge id)[gColA colorWithAlphaComponent:gAlpha].CGColor ];
         g.startPoint = CGPointMake(0.0, 0.0);
         g.endPoint = CGPointMake(1.0, 1.0);
         [host.layer addSublayer:g];
@@ -336,12 +396,25 @@ static void SkinStyleCell(UITableViewCell *cell) {
     cell.backgroundColor = [UIColor clearColor];
     cell.contentView.backgroundColor = [UIColor clearColor];
     if (cell.backgroundView) cell.backgroundView.backgroundColor = [UIColor clearColor];
-    // 行彻底透明：面板那层青蓝紫从行背后透上来，整页是一块连续的液态玻璃，
-    // 而不是「上面一条蓝、中间一条白」。
-    cell.backgroundColor = [UIColor clearColor];
     cell.opaque = NO;
     UIView *sel = cell.selectedBackgroundView;
-    if (sel && !sel.backgroundColor) sel.backgroundColor = [gColB colorWithAlphaComponent:0.18];
+    if (sel) sel.backgroundColor = [gChatAccent colorWithAlphaComponent:0.12];
+
+    // 在 contentView 内插入独立卡片，不移动宿主 cell 的结构或约束。
+    UIView *card = [cell.contentView viewWithTag:kSkinCardTag];
+    if (!card) {
+        card = [[UIView alloc] initWithFrame:CGRectZero];
+        card.tag = kSkinCardTag;
+        card.userInteractionEnabled = NO;
+        card.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        card.layer.cornerCurve = kCACornerCurveContinuous;
+        card.layer.borderWidth = 0.6;
+        card.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.86].CGColor;
+        [cell.contentView insertSubview:card atIndex:0];
+    }
+    card.frame = CGRectInset(cell.contentView.bounds, 6.0, 4.0);
+    card.backgroundColor = [gColC colorWithAlphaComponent:gCardAlpha];
+    card.layer.cornerRadius = gCardRadius;
     SkinFixLabelRecursive(cell.contentView, 0);
 }
 
@@ -372,7 +445,8 @@ static void SkinWalk(UIView *root, NSInteger depth) {
             UITableView *tv = (UITableView *)root;
             tv.backgroundColor = [UIColor clearColor];
             tv.opaque = NO;
-            tv.separatorColor = [gColB colorWithAlphaComponent:0.16];
+            tv.separatorStyle = UITableViewCellSeparatorStyleNone;
+            tv.separatorColor = [UIColor clearColor];
         }
         NSString *rcn = NSStringFromClass([root class]) ?: @"";
         if ([rcn rangeOfString:@"HeaderFooterView"].location != NSNotFound) {
@@ -443,15 +517,15 @@ static void SkinApplyPanelBackground(UIView *v) {
     host.userInteractionEnabled = NO;
     host.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     CAGradientLayer *bg = [CAGradientLayer layer];
-    bg.colors = @[ (__bridge id)[gColC colorWithAlphaComponent:gAlpha].CGColor,
-                   (__bridge id)[gColB colorWithAlphaComponent:gAlpha].CGColor,
+    bg.colors = @[ (__bridge id)[UIColor whiteColor].CGColor,
+                   (__bridge id)[gColB colorWithAlphaComponent:0.72].CGColor,
                    (__bridge id)[gColA colorWithAlphaComponent:gAlpha].CGColor ];
     bg.startPoint = CGPointMake(0.05, 0.0);
     bg.endPoint = CGPointMake(0.95, 1.0);
     bg.frame = v.bounds;
     [host.layer addSublayer:bg];
     [v insertSubview:host atIndex:0];
-    SkinLog(@"面板底色已应用（青蓝紫）");
+    SkinLog(@"面板底色已应用（系统浅色玻璃）");
 }
 
 static void (*o_panelDidLoad)(id, SEL);
@@ -488,6 +562,110 @@ static void r_detailDidLoad(id self, SEL _cmd) {
 }
 
 // ---------------------------------------------------------------------------
+// 聊天页宿主布局：只处理背景、导航和输入条，不修改消息模型或功能开关
+// ---------------------------------------------------------------------------
+static void SkinStyleChatNodes(UIView *root, NSInteger depth) {
+    if (!root || depth > 7) return;
+    @try {
+        UIView *view = root;
+        if ([view isKindOfClass:[UITextField class]]) {
+            UIView *bar = view.superview;
+            if (bar) {
+                bar.backgroundColor = [gChatSurface colorWithAlphaComponent:gChatSurfaceAlpha];
+                bar.layer.cornerRadius = MIN(gChatRadius, MAX(12.0, CGRectGetHeight(bar.bounds) / 2.0));
+                bar.layer.cornerCurve = kCACornerCurveContinuous;
+                bar.layer.borderWidth = 0.6;
+                bar.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.85].CGColor;
+            }
+        } else {
+            NSString *cn = NSStringFromClass([view class]).lowercaseString ?: @"";
+            BOOL chrome = [cn rangeOfString:@"input"].location != NSNotFound
+                       || [cn rangeOfString:@"toolbar"].location != NSNotFound
+                       || [cn rangeOfString:@"bottombar"].location != NSNotFound
+                       || [cn rangeOfString:@"composer"].location != NSNotFound
+                       || [cn rangeOfString:@"capsule"].location != NSNotFound;
+            if (chrome && view.bounds.size.width > 100.0 && view.bounds.size.height >= 32.0 &&
+                view.bounds.size.height <= 180.0) {
+                view.backgroundColor = [gChatSurface colorWithAlphaComponent:gChatSurfaceAlpha];
+                view.layer.cornerRadius = MIN(gChatRadius, MAX(12.0, CGRectGetHeight(view.bounds) / 2.0));
+                view.layer.cornerCurve = kCACornerCurveContinuous;
+                view.layer.borderWidth = 0.6;
+                view.layer.borderColor = [[UIColor whiteColor] colorWithAlphaComponent:0.85].CGColor;
+            }
+        }
+        if ([view isKindOfClass:[UITableView class]]) {
+            UITableView *tv = (UITableView *)view;
+            tv.backgroundColor = [UIColor clearColor];
+            tv.separatorStyle = UITableViewCellSeparatorStyleNone;
+        }
+        for (UIView *sub in view.subviews) SkinStyleChatNodes(sub, depth + 1);
+    } @catch (__unused NSException *e) {}
+}
+
+static void SkinApplyChatStyle(UIViewController *vc) {
+    if (!gChatStyle || !vc || !vc.view) return;
+    @try {
+        UIView *v = vc.view;
+        v.backgroundColor = gChatBase;
+
+        UIView *bg = [v viewWithTag:kSkinChatBG];
+        if (!bg) {
+            bg = [[UIView alloc] initWithFrame:v.bounds];
+            bg.tag = kSkinChatBG;
+            bg.userInteractionEnabled = NO;
+            bg.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            CAGradientLayer *g = [CAGradientLayer layer];
+            g.colors = @[ (__bridge id)[UIColor whiteColor].CGColor,
+                          (__bridge id)[gChatBase colorWithAlphaComponent:0.94].CGColor,
+                          (__bridge id)[gChatAccent colorWithAlphaComponent:0.035].CGColor ];
+            g.startPoint = CGPointMake(0.0, 0.0);
+            g.endPoint = CGPointMake(1.0, 1.0);
+            g.frame = v.bounds;
+            [bg.layer addSublayer:g];
+            [v insertSubview:bg atIndex:0];
+        } else {
+            bg.frame = v.bounds;
+        }
+
+        UINavigationController *nav = vc.navigationController;
+        if (nav) {
+            UINavigationBarAppearance *ap = [[UINavigationBarAppearance alloc] init];
+            [ap configureWithTransparentBackground];
+            ap.backgroundColor = [UIColor clearColor];
+            ap.shadowColor = [UIColor clearColor];
+            ap.titleTextAttributes = @{ NSForegroundColorAttributeName: gText };
+            nav.navigationBar.standardAppearance = ap;
+            nav.navigationBar.scrollEdgeAppearance = ap;
+            nav.navigationBar.compactAppearance = ap;
+            nav.navigationBar.tintColor = gText;
+        }
+        SkinStyleChatNodes(v, 0);
+        SkinLog(@"聊天页布局已应用：%@@%.2f radius=%.1f", gChatSurface,
+                (double)gChatSurfaceAlpha, (double)gChatRadius);
+    } @catch (__unused NSException *e) {
+        SkinLog(@"聊天页布局异常，已忽略");
+    }
+}
+
+static void (*o_chatDidLoad)(id, SEL);
+static void r_chatDidLoad(id self, SEL _cmd) {
+    if (o_chatDidLoad) o_chatDidLoad(self, _cmd);
+    @try {
+        if ([self isKindOfClass:[UIViewController class]])
+            SkinApplyChatStyle((UIViewController *)self);
+    } @catch (__unused NSException *e) {}
+}
+
+static void (*o_chatWillAppear)(id, SEL, BOOL);
+static void r_chatWillAppear(id self, SEL _cmd, BOOL animated) {
+    if (o_chatWillAppear) o_chatWillAppear(self, _cmd, animated);
+    @try {
+        if ([self isKindOfClass:[UIViewController class]])
+            SkinApplyChatStyle((UIViewController *)self);
+    } @catch (__unused NSException *e) {}
+}
+
+// ---------------------------------------------------------------------------
 // 安装
 // ---------------------------------------------------------------------------
 static BOOL SkinEnabled(void) {
@@ -496,12 +674,14 @@ static BOOL SkinEnabled(void) {
 }
 
 static void SkinInstallHooks(void) {
+    SkinLog(@"build=v19-liquid-glass-video");
     Class panel  = NSClassFromString(@"HushSettingsPanel");
     Class detail = NSClassFromString(@"HushModuleDetailController");
     Class glass  = NSClassFromString(@"HushGlassView");
     Class cell   = NSClassFromString(@"HushSwitchCell");
     Class dcell  = NSClassFromString(@"HushModuleEntry");
     Class foot   = NSClassFromString(@"HushAuthorFooterView");
+    Class chat   = NSClassFromString(@"PrivateChatViewController");
 
     if (panel) {
         o_panelDidLoad    = (void (*)(id, SEL))SkinReplace(panel, @selector(viewDidLoad), (IMP)&r_panelDidLoad);
@@ -515,11 +695,15 @@ static void SkinInstallHooks(void) {
         o_footerDraw   = (void (*)(id, SEL, CGRect))SkinReplace(foot, @selector(drawRect:), (IMP)&r_footerDraw);
         o_footerLayout = (void (*)(id, SEL))SkinReplace(foot, @selector(layoutSubviews), (IMP)&r_footerLayout);
     }
+    if (chat) {
+        o_chatDidLoad = (void (*)(id, SEL))SkinReplace(chat, @selector(viewDidLoad), (IMP)&r_chatDidLoad);
+        o_chatWillAppear = (void (*)(id, SEL, BOOL))SkinReplace(chat, @selector(viewWillAppear:), (IMP)&r_chatWillAppear);
+    }
     o_setText = (void (*)(id, SEL, NSString *))SkinReplace([UILabel class], @selector(setText:), (IMP)&r_setText);
 
-    SkinLog(@"hook 结果：panel=%d detail=%d glass=%d cell=%d entry=%d footer(draw=%d,layout=%d) label=%d",
+    SkinLog(@"hook 结果：panel=%d detail=%d glass=%d cell=%d entry=%d footer(draw=%d,layout=%d) chat=%d label=%d",
             panel != nil, detail != nil, glass != nil, cell != nil, dcell != nil,
-            o_footerDraw != nil, o_footerLayout != nil, o_setText != nil);
+            o_footerDraw != nil, o_footerLayout != nil, chat != nil, o_setText != nil);
 }
 
 static void SkinLoadOriginal(void) {

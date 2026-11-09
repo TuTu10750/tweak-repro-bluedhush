@@ -441,6 +441,8 @@ jobs:
           path: |
             original-re/.theos/obj/debug/BluedHushRE.dylib
             original-re/.theos/obj/debug/arm64/BluedHushRE.dylib
+            original-re/.theos/obj/debug/HushSkin.dylib
+            original-re/.theos/obj/debug/arm64/HushSkin.dylib
             reference-monitor/.theos/obj/debug/HushMonitorSafe.dylib
             reference-monitor/.theos/obj/debug/arm64/HushMonitorSafe.dylib
             shim/.theos/obj/debug/substrate_shim.dylib
