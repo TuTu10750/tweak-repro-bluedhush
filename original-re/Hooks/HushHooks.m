@@ -1081,27 +1081,18 @@ static void HushPurifyRemoveOrCollapse(UIView *view, NSString *key) {
     if (!parent) return;
 
     UITableView *table = HushEnclosingTableView(view);
-    BOOL removed = NO;
-    if (table && HushViewIsInsideTableHeader(view, table)) {
-        table.tableHeaderView = nil;
-        removed = YES;
-    } else if ([parent isKindOfClass:[UIStackView class]]) {
-        [(UIStackView *)parent removeArrangedSubview:view];
-        [view removeFromSuperview];
-        removed = YES;
-    } else if (![view isKindOfClass:[UITableViewCell class]] &&
-               ![view isKindOfClass:[UICollectionViewCell class]]) {
-        [view removeFromSuperview];
-        removed = YES;
-    }
-
+    // Never detach a host-managed view while UIKit is processing
+    // didMoveToSuperview:. BDNearbyTopFixAtTheMomentView_V2 and several other
+    // nearby cards are constrained by the host; removing them (or clearing the
+    // containing tableHeaderView) leaves constraints pointing at a view with no
+    // superview and raises an NSInvalidArgumentException:
+    //   "A multiplier of 0 or a nil second item together with a location..."
+    // Keep the hierarchy intact and make the host-owned view inert. The matching
+    // BDNearbyTopFixView height hook returns zero when purify_nearby_ad is on.
+    view.hidden = YES;
+    view.alpha = 0.0;
+    view.userInteractionEnabled = NO;
     [parent setNeedsLayout];
-    if (!removed) {
-        // 真正由 Table/Collection 数据源拥有的 cell 不能直接摘掉；
-        // 对应页面的 height/topHeight 返回值由本文件的专用 hook 归零。
-        view.hidden = YES;
-        view.alpha = 0.0;
-    }
 
     static NSMutableSet *logged = nil;
     if (!logged) logged = [[NSMutableSet alloc] init];
@@ -1111,8 +1102,8 @@ static void HushPurifyRemoveOrCollapse(UIView *view, NSString *key) {
         if (![logged containsObject:cn] && logged.count < 100) {
             [logged addObject:cn];
             [HushLogger logLevel:2 format:[NSString stringWithFormat:
-                @"[Hush][净化] %@ %@ key=%@ parent=%@ table=%@",
-                removed ? @"已移除" : @"暂由数据源收起", cn, key, pn,
+                @"[Hush][净化] 已隐藏（保留宿主约束） %@ key=%@ parent=%@ table=%@",
+                cn, key, pn,
                 NSStringFromClass([table class]) ?: @"nil"]];
         }
     }

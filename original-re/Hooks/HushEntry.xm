@@ -176,6 +176,7 @@ static void HushStartWatchdog(void) {
         NSLog(@"[Hush] ctor ran, entry installed");
     }
     [HushLogger logLevel:4 format:@"[Hush] entry installed (ball inject armed)"];
+    [HushLogger logLevel:3 format:@"[Hush] build=v68.3-nearby-constraint-hotfix"];
     // 面板上的「日志等级」开关此前是死的：+loadLevelFromConfig 从未被任何地方调用，
     // gHushLogLevel 永远停在静态初值 4 —— 表现就是 switch_debug_log=0 时 D 级照样输出、
     // 打开开关也不升高。放在 entry 那行之后调用，让 entry 无论配置如何都先落地，
